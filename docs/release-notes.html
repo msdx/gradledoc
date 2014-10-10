@@ -561,59 +561,59 @@ section.footer {
  </head> 
  <body>
   <div class="text-container"> 
-   <h1>Gradle Release Notes</h1> 
-   <h3 class="releaseinfo">Version 1.12</h3> 
-   <p>Gradle 1.12 brings some nice universal performance improvements, useful new features and a slew of bug and compatibility fixes.</p> 
-   <p>In the native space, improvements have been made to the Clang support as well as improved integration with Visual Studio. Gradle also now provides support for unit testing your native code via CUnit.</p> 
-   <p>A considerable amount of work in this release went in to the dependency management engine, preparing for new APIs that allow more control over the dependency resolution process. The visible result of this work in Gradle 1.12 is the ability to specify rules that identify <em>changing</em> components (e.g. snapshots).</p> 
-   <p>Another significant area of investment in 1.12 is in the area of IDE integration, via the <a href="userguide/embedding.html">Tooling API</a>. Integration with IntelliJ IDEA in particular has been improved, along with general improvements that will offer tooling providers more integration capabilities. Optimizations have also been made to the parts of the codebase that deal with IDE import, making importing Gradle 1.12 projects into IDEs faster than any previous Gradle version.</p> 
-   <p>Gradle 1.12 set a new high watermark for contributions. It includes contributions from 16 different people. Contributions range from documentation improvements, to Ant import improvements, to support for building large zips, to Sonar improvements, to test reporting improvements and more. Thank you to all of the contributors.</p> 
-   <p>Gradle 1.12 will be the last release in the Gradle 1.x line. The next release will be Gradle 2.0. For information on what this means for you and for the future of Gradle, please see <a href="http://forums.gradle.org/gradle/topics/after_1_12_comes_2_0">the Gradle 2.0 announcement</a>.</p> 
+   <h1>Gradle 发布声明</h1> 
+   <h3 class="releaseinfo">版本 1.12</h3> 
+   <p>Gradle 1.12 带来了一些不错的通用性能的改善，有用的新特性，以及一系列的BUG和兼容性修正。<br/>Gradle 1.12 brings some nice universal performance improvements, useful new features and a slew of bug and compatibility fixes.</p> 
+   <p>在本地空间中，Gradle改进了对Clang的支持及与Visual Studio的整合。Gradle现在通过CUnit提供了对原生代码的单元测试的支持。<br/>In the native space, improvements have been made to the Clang support as well as improved integration with Visual Studio. Gradle also now provides support for unit testing your native code via CUnit.</p> 
+   <p>此次发布的版本中，大量的工作都是在依赖管理引擎，关于允许对依赖解析过程有更多控制的新的API的准备上。为Gradle 1.12 投入的工作产生的看得见的效果是，指定的规则能识别出<em>正在改变</em>的组件的能力（比如快照）。<br/>A considerable amount of work in this release went in to the dependency management engine, preparing for new APIs that allow more control over the dependency resolution process. The visible result of this work in Gradle 1.12 is the ability to specify rules that identify <em>changing</em> components (e.g. snapshots).</p> 
+   <p>在 1.12 上投入大量工作的另外一个重要方面是通过<a href="userguide/embedding.html">Tooling API</a>对IDE的整合。特别是随着与 IntelliJ IDEA 的集成的改进，和一般的改进，将为 tooling providers 带来更多的整合能力。并且优化了处理IDE导入的代码，使得在导入Gradle 1.12 的项目到IDE的过程将比 Gradle 以往的任何一个版本都要快。<br/>Another significant area of investment in 1.12 is in the area of IDE integration, via the <a href="userguide/embedding.html">Tooling API</a>. Integration with IntelliJ IDEA in particular has been improved, along with general improvements that will offer tooling providers more integration capabilities. Optimizations have also been made to the parts of the codebase that deal with IDE import, making importing Gradle 1.12 projects into IDEs faster than any previous Gradle version.</p> 
+   <p>Gradle 1.12 为一些贡献设置了一个新的高水印。它包含了来自16个不同的人的贡献。贡献范围从文档的改进，到 Ant 导入的改进，支持构建大的zip文件，Sonar的改进，测试报告的改进等等各方面。感谢所有的贡献者。<br/>Gradle 1.12 set a new high watermark for contributions. It includes contributions from 16 different people. Contributions range from documentation improvements, to Ant import improvements, to support for building large zips, to Sonar improvements, to test reporting improvements and more. Thank you to all of the contributors.</p> 
+   <p>Gradle 1.12 将会是 Gradle 1.x 的最后一个发布版本。下次发布的将是 Gradle 2.0 。这对你或者 Gradle 的特性意味着的信息，请参见：<a href="http://forums.gradle.org/gradle/topics/after_1_12_comes_2_0">the Gradle 2.0 announcement</a>。<br/>Gradle 1.12 will be the last release in the Gradle 1.x line. The next release will be Gradle 2.0. For information on what this means for you and for the future of Gradle, please see <a href="http://forums.gradle.org/gradle/topics/after_1_12_comes_2_0">the Gradle 2.0 announcement</a>.</p> 
    <section class="table-of-contents"> 
-    <h2>Table Of Contents</h2> 
+    <h2>目录 - Table of Contents</h2> 
     <ul class="toc"> 
-     <li><a href="#new-and-noteworthy">New and noteworthy</a> 
+     <li><a href="#new-and-noteworthy">新内容和值得注意的地方 - New and noteworthy</a> 
       <ul class="toc-sub"> 
-       <li><a href="#cunit-integration">CUnit integration</a></li> 
-       <li><a href="#component-metadata-rules-can-control-whether-a-component-version-is-considered-changing">Component metadata rules can control whether a component version is considered changing</a></li> 
-       <li><a href="#tooling-api-exposes-information-on-a-project's-publications">Tooling API exposes information on a project's publications</a></li> 
-       <li><a href="#tooling-api-exposes-more-information-on-how-to-launch-a-gradle-build">Tooling API exposes more information on how to launch a Gradle build</a></li> 
-       <li><a href="#easier-to-identify-ignored-tests-in-html-test-report">Easier to identify ignored tests in HTML test report</a></li> 
-       <li><a href="#support-for-building-large-zips">Support for building large zips</a></li> 
-       <li><a href="#support-for-consuming-apache-maven-poms-with-active-profiles">Support for consuming Apache Maven POMs with active profiles</a></li> 
-       <li><a href="#customise-clang-compiler-tool-chain">Customise Clang compiler tool chain</a></li> 
-       <li><a href="#improved-visual-studio-project-file-generation">Improved Visual Studio project file generation</a></li> 
-       <li><a href="#updated-mapping-of-dependencies-to-idea-classpath-scopes">Updated mapping of dependencies to IDEA classpath scopes</a></li> 
-       <li><a href="#easier-debugging-of-jvm-test-and-javaexec-processes">Easier debugging of JVM <code>Test</code> and <code>JavaExec</code> processes</a></li> 
-       <li><a href="#source-and-javadoc-artifacts-declared-in-ivy.xml-are-recognised-by-ide-plugins">Source and Javadoc artifacts declared in ivy.xml are recognised by IDE plugins</a></li> 
+       <li><a href="#cunit-integration">CUnit 集成 - CUnit integration</a></li> 
+       <li><a href="#component-metadata-rules-can-control-whether-a-component-version-is-considered-changing">组件元数据规则能够控制一个组件的版本是否被认定为正在改变 - Component metadata rules can control whether a component version is considered changing</a></li> 
+       <li><a href="#tooling-api-exposes-information-on-a-project's-publications">Tooling API 阐述有关项目发布的信息 - Tooling API exposes information on a project's publications</a></li> 
+       <li><a href="#tooling-api-exposes-more-information-on-how-to-launch-a-gradle-build">Tooling API 阐述有关如何启动Gradle 构建的更多信息 - Tooling API exposes more information on how to launch a Gradle build</a></li> 
+       <li><a href="#easier-to-identify-ignored-tests-in-html-test-report">更容易地识别出在HTML测试报告中被忽略的测试 - Easier to identify ignored tests in HTML test report</a></li> 
+       <li><a href="#support-for-building-large-zips">支持构建较大的zip文件 - Support for building large zips</a></li> 
+       <li><a href="#support-for-consuming-apache-maven-poms-with-active-profiles">支持使用Apache Maven POMs的配置 - Support for consuming Apache Maven POMs with active profiles</a></li> 
+       <li><a href="#customise-clang-compiler-tool-chain">定制 Clang 编译器工具链 - Customise Clang compiler tool chain</a></li> 
+       <li><a href="#improved-visual-studio-project-file-generation">改进 Visual Studio 项目文件的生成 - Improved Visual Studio project file generation</a></li> 
+       <li><a href="#updated-mapping-of-dependencies-to-idea-classpath-scopes">更新 IDEA 路径范围的依赖映射 - Updated mapping of dependencies to IDEA classpath scopes</a></li> 
+       <li><a href="#easier-debugging-of-jvm-test-and-javaexec-processes">更易于调试 JVM <code>Test</code> 和 <code>JavaExec</code>过程 - Easier debugging of JVM <code>Test</code> and <code>JavaExec</code> processes</a></li> 
+       <li><a href="#source-and-javadoc-artifacts-declared-in-ivy.xml-are-recognised-by-ide-plugins">通过 IDE 插件识别出定义在ivy.xml的源码及文档 - Source and Javadoc artifacts declared in ivy.xml are recognised by IDE plugins</a></li> 
        <li><a href="#https-wrapper-downloads">HTTPS wrapper downloads</a></li> 
       </ul></li> 
-     <li><a href="#fixed-issues">Fixed issues</a></li> 
-     <li><a href="#deprecations">Deprecations</a> 
+     <li><a href="#fixed-issues">修复的问题 - Fixed issues</a></li> 
+     <li><a href="#deprecations">过时的内容 - Deprecations</a> 
       <ul class="toc-sub"> 
-       <li><a href="#tooling-api-version-compatibility">Tooling API version compatibility</a></li> 
-       <li><a href="#deprecated-method-in-tooling-api">Deprecated method in Tooling API</a></li> 
+       <li><a href="#tooling-api-version-compatibility">Tooling API 版本兼容 - Tooling API version compatibility</a></li> 
+       <li><a href="#deprecated-method-in-tooling-api">Tooling API 中过时的方法 - Deprecated method in Tooling API</a></li> 
       </ul></li> 
-     <li><a href="#potential-breaking-changes">Potential breaking changes</a> 
+     <li><a href="#potential-breaking-changes">可能出现的重大修改 - Potential breaking changes</a> 
       <ul class="toc-sub"> 
-       <li><a href="#incremental-scala-compilation">Incremental Scala compilation</a></li> 
-       <li><a href="#changes-to-incubating-native-support">Changes to incubating native support</a></li> 
-       <li><a href="#change-to-junit-xml-file-for-skipped-tests">Change to JUnit XML file for skipped tests</a></li> 
-       <li><a href="#ordering-of-dependencies-in-imported-ant-builds">Ordering of dependencies in imported Ant builds</a></li> 
-       <li><a href="#invalid-large-zip-files-now-fail-the-build">Invalid large zip files now fail the build</a></li> 
-       <li><a href="#change-to-signature-of-test.filter(closure)">Change to signature of <code>Test.filter(Closure)</code></a></li> 
-       <li><a href="#change-to-signature-of-ideamodule.singleentrylibraries">Change to signature of <code>IdeaModule.singleEntryLibraries</code></a></li> 
+       <li><a href="#incremental-scala-compilation">Scala 增量翻译 - Incremental Scala compilation</a></li> 
+       <li><a href="#changes-to-incubating-native-support">逐渐形成原生支持 - Changes to incubating native support</a></li> 
+       <li><a href="#change-to-junit-xml-file-for-skipped-tests">更改JUnit XML 文件关于跳过的测试的内容 - Change to JUnit XML file for skipped tests</a></li> 
+       <li><a href="#ordering-of-dependencies-in-imported-ant-builds">在导入 Ant 构建上重新组织依赖 - Ordering of dependencies in imported Ant builds</a></li> 
+       <li><a href="#invalid-large-zip-files-now-fail-the-build">无效的大 zip 文件现在将使构建失败 - Invalid large zip files now fail the build</a></li> 
+       <li><a href="#change-to-signature-of-test.filter(closure)">修改了<code>Test.filter(Closure)</code>的签名 - Change to signature of <code>Test.filter(Closure)</code></a></li> 
+       <li><a href="#change-to-signature-of-ideamodule.singleentrylibraries">修改了<code>IdeaModule.singleEntryLibraries</code>的签名 - Change to signature of <code>IdeaModule.singleEntryLibraries</code></a></li> 
       </ul></li> 
-     <li><a href="#external-contributions">External contributions</a></li> 
-     <li><a href="#known-issues">Known issues</a></li> 
+     <li><a href="#external-contributions">外部贡献 - External contributions</a></li> 
+     <li><a href="#known-issues">已知问题 - Known issues</a></li> 
     </ul> 
    </section> 
    <section class="topic"> 
-    <h2 id="new-and-noteworthy">New and noteworthy</h2> 
-    <p>Here are the new features introduced in this Gradle release.</p> 
-    <h3 class=" incubating" id="cunit-integration">CUnit integration <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>The new Gradle <code>cunit</code> plugin provides support for compiling and executing <a href="http://cunit.sourceforge.net">CUnit</a> tests in your native-binary project.</p> 
-    <p>You simply need to include your CUnit test sources, and provide a hook for Gradle to register the suites and tests defined.</p> 
+    <h2 id="new-and-noteworthy">新内容和值得注意的地方 - New and noteworthy</h2> 
+    <p>以下是这次发布的版本的新特性介绍。<br/>Here are the new features introduced in this Gradle release.</p> 
+    <h3 class=" incubating" id="cunit-integration">CUnit 集成 - CUnit integration <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“正形成”的特性还不能保证能够向后兼容&lt;br /&gt;(点击获取更多信息)&lt;br /&gt;“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">正在形成的特性 - incubating feature</a></h3> 
+    <p>新的Gradle <code>cunit</code>插件提供了在你的本地二进制项目中编译和执行 <a href="http://cunit.sourceforge.net">CUnit</a>测试的支持。<br/>The new Gradle <code>cunit</code> plugin provides support for compiling and executing <a href="http://cunit.sourceforge.net">CUnit</a> tests in your native-binary project.</p> 
+    <p>你只需要包括你的CUnit测试代码，并提供一个钩子，用于Gradle注册测试套件和定义的测试。<br/>You simply need to include your CUnit test sources, and provide a hook for Gradle to register the suites and tests defined.</p> 
     <pre class=" code"><code><span class="java_plain">#include&nbsp;</span><span class="java_operator">&lt;</span><span class="java_type">CUnit</span><span class="java_operator">/</span><span class="java_type">Basic</span><span class="java_separator">.</span><span class="java_plain">h</span><span class="java_operator">&gt;</span><span class="java_plain"></span>
 <span class="java_plain">#include&nbsp;</span><span class="java_literal">&quot;gradle_cunit_register.h&quot;</span><span class="java_plain"></span>
 <span class="java_plain">#include&nbsp;</span><span class="java_literal">&quot;operator_tests.h&quot;</span><span class="java_plain"></span>
@@ -623,7 +623,7 @@ section.footer {
 <span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_type">CU_add_test</span><span class="java_separator">(</span><span class="java_plain">mySuite</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;test&nbsp;plus&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;test_plus</span><span class="java_separator">);</span><span class="java_plain"></span>
 <span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_type">CU_add_test</span><span class="java_separator">(</span><span class="java_plain">mySuite</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;test&nbsp;minus&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;test_minus</span><span class="java_separator">);</span><span class="java_plain"></span>
 <span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>Gradle will then generate the required boiler-plate CUnit code, build a test executable, and run your tests.</p> 
+    <p>Gradle 将生成所需要的格式的 CUnit 代码，构建一个可执行的测试，并运行你的测试。<br/>Gradle will then generate the required boiler-plate CUnit code, build a test executable, and run your tests.</p> 
     <pre class=" tt"><tt>&gt; gradle -q runFailingOperatorsTest
 
 There were test failures:
@@ -631,11 +631,11 @@ There were test failures:
   2. /home/user/gradle/samples/native-binaries/cunit/src/operatorsTest/cunit/test_plus.c:7  - plus(2, 2) == 4
 
 BUILD FAILED</tt></pre> 
-    <p>See the <a href="userguide/nativeBinaries.html#native_binaries:cunit">user guide chapter</a> and the cunit sample (<code>samples/native-binaries/cunit</code>) in the distribution to learn more. Expect deeper integration with CUnit (and other native testing tools) in the future.</p> 
-    <h3 class=" incubating" id="component-metadata-rules-can-control-whether-a-component-version-is-considered-changing">Component metadata rules can control whether a component version is considered changing <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>Component metadata rules (<a href="http://www.gradle.org/docs/1.8/release-notes#component-metadata-rules">introduced in Gradle 1.8</a>) can now be used to specify whether a component version is considered <em>changing</em>.</p> 
-    <p>A <em>changing</em> component is expected to change over time without a change to the version number. A commonly used and well understood example of a changing component is a “<code>-SNAPSHOT</code>” dependency from an Apache Maven repository (which Gradle implicitly considers to be changing).</p> 
-    <p>This new feature makes it possible to implement custom strategies for deciding if a component version is changing. In the following example, every component version whose group is “<code>my.company</code>” and whose version number ends in “<code>-dev</code>” will be considered changing:</p> 
+    <p>参见<a href="userguide/nativeBinaries.html#native_binaries:cunit">用户手册章节</a>介绍的cunit 例子(<code>samples/native-binaries/cunit</code>)以了解更多。未来将与CUnit（或其他原生测试工具）进行更深层次的整合。<br/> See the <a href="userguide/nativeBinaries.html#native_binaries:cunit">user guide chapter</a> and the cunit sample (<code>samples/native-binaries/cunit</code>) in the distribution to learn more. Expect deeper integration with CUnit (and other native testing tools) in the future.</p> 
+    <h3 class=" incubating" id="component-metadata-rules-can-control-whether-a-component-version-is-considered-changing">组件元数据规则能够控制一个组件的版本是否被认定为正在改变 - Component metadata rules can control whether a component version is considered changing <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
+    <p>组件元数据规则(<a href="http://www.gradle.org/docs/1.8/release-notes#component-metadata-rules">Gradle 1.8 推出的</a>)现在可以用来指定判断一个组件的版本是否<em>正在改变</em>。<br/>Component metadata rules (<a href="http://www.gradle.org/docs/1.8/release-notes#component-metadata-rules">introduced in Gradle 1.8</a>) can now be used to specify whether a component version is considered <em>changing</em>.</p> 
+    <p>一个<em>正在改变</em>的组件指的是随着时间在变化但却不改变其版本号。关于正在改变的组件的一个常见的很好理解的例子就是 Apache Maven仓库上的一个“<code>-SNAPSHOT</code>”依赖。<br/>A <em>changing</em> component is expected to change over time without a change to the version number. A commonly used and well understood example of a changing component is a “<code>-SNAPSHOT</code>” dependency from an Apache Maven repository (which Gradle implicitly considers to be changing).</p> 
+    <p>这一新特性使得它可以实现自定义策略，以判断一个组件的版本是否在不断变化。在以下的例子中，group为 “<code>my.company</code>” 并且版本号以“<code>-dev</code>”结尾的所有组件的版本都会被判定为正在变化中。<br/>This new feature makes it possible to implement custom strategies for deciding if a component version is changing. In the following example, every component version whose group is “<code>my.company</code>” and whose version number ends in “<code>-dev</code>” will be considered changing:</p> 
     <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
 <span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;components&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
 <span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eachComponent&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span><span class="java_type">ComponentMetadataDetails</span><span class="java_plain">&nbsp;details&nbsp;</span><span class="java_operator">-&gt;</span><span class="java_plain"></span>
@@ -645,8 +645,8 @@ BUILD FAILED</tt></pre>
 <span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
 <span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
 <span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
-    <p>This feature is especially useful when dealing with Ivy repositories, as it is a generalized form of Ivy's <code>changingPattern</code> concept.</p> 
-    <p>See <a href="javadoc/org/gradle/api/artifacts/dsl/ComponentMetadataHandler.html">ComponentMetadataHandler</a> for more information.</p> 
+    <p>这一功能在处理Ivy仓库上特别有用，因为在Ivy中 <code>变化模式</code> 概念是一种很普遍的形式。<br/>This feature is especially useful when dealing with Ivy repositories, as it is a generalized form of Ivy's <code>changingPattern</code> concept.</p> 
+    <p>参见 <a href="javadoc/org/gradle/api/artifacts/dsl/ComponentMetadataHandler.html">ComponentMetadataHandler</a> 以了解更多信息。<br/>See <a href="javadoc/org/gradle/api/artifacts/dsl/ComponentMetadataHandler.html">ComponentMetadataHandler</a> for more information.</p> 
     <h3 class=" incubating" id="tooling-api-exposes-information-on-a-project's-publications">Tooling API exposes information on a project's publications <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
     <p>The <a href="userguide/embedding.html">Tooling API</a> is a mechanism for embedding Gradle and/or driving Gradle programmatically. The new <a href="javadoc/org/gradle/tooling/model/gradle/ProjectPublications.html"><code>ProjectPublications</code></a> Tooling API model type provides basic information about a project's publications.</p> 
     <p>The following example demonstrates using the <code>ProjectPublications</code> model to print out the group/name/version of each publication.</p> 
