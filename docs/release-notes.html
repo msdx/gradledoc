@@ -580,8 +580,8 @@ section.footer {
        <li><a href="#tooling-api-exposes-more-information-on-how-to-launch-a-gradle-build">Tooling API 公开有关如何启动Gradle 构建的更多信息 - Tooling API exposes more information on how to launch a Gradle build</a></li> 
        <li><a href="#easier-to-identify-ignored-tests-in-html-test-report">在HTML测试报告中更容易地识别被忽略的测试 - Easier to identify ignored tests in HTML test report</a></li> 
        <li><a href="#support-for-building-large-zips">支持构建较大的zip文件 - Support for building large zips</a></li> 
-       <li><a href="#support-for-consuming-apache-maven-poms-with-active-profiles">支持使用Apache Maven POMs的配置 - Support for consuming Apache Maven POMs with active profiles</a></li> 
-       <li><a href="#customise-clang-compiler-tool-chain">定制 Clang 编译器工具链 - Customise Clang compiler tool chain</a></li> 
+       <li><a href="#support-for-consuming-apache-maven-poms-with-active-profiles">通过active profiles支持使用Apache Maven POMs - Support for consuming Apache Maven POMs with active profiles</a></li> 
+       <li><a href="#customise-clang-compiler-tool-chain">定制 Clang 编译工具链 - Customise Clang compiler tool chain</a></li> 
        <li><a href="#improved-visual-studio-project-file-generation">改进 Visual Studio 项目文件的生成 - Improved Visual Studio project file generation</a></li> 
        <li><a href="#updated-mapping-of-dependencies-to-idea-classpath-scopes">更新 IDEA 路径范围的依赖映射 - Updated mapping of dependencies to IDEA classpath scopes</a></li> 
        <li><a href="#easier-debugging-of-jvm-test-and-javaexec-processes">更易于调试 JVM <code>Test</code> 和 <code>JavaExec</code>过程 - Easier debugging of JVM <code>Test</code> and <code>JavaExec</code> processes</a></li> 
@@ -594,13 +594,13 @@ section.footer {
        <li><a href="#tooling-api-version-compatibility">Tooling API 版本兼容 - Tooling API version compatibility</a></li> 
        <li><a href="#deprecated-method-in-tooling-api">Tooling API 中过时的方法 - Deprecated method in Tooling API</a></li> 
       </ul></li> 
-     <li><a href="#potential-breaking-changes">可能出现的重大修改 - Potential breaking changes</a> 
+     <li><a href="#potential-breaking-changes">可能会有的重大修改 - Potential breaking changes</a> 
       <ul class="toc-sub"> 
        <li><a href="#incremental-scala-compilation">Scala 增量翻译 - Incremental Scala compilation</a></li> 
        <li><a href="#changes-to-incubating-native-support">逐渐形成原生支持 - Changes to incubating native support</a></li> 
        <li><a href="#change-to-junit-xml-file-for-skipped-tests">更改JUnit XML 文件关于跳过的测试的内容 - Change to JUnit XML file for skipped tests</a></li> 
        <li><a href="#ordering-of-dependencies-in-imported-ant-builds">在导入 Ant 构建上重新组织依赖 - Ordering of dependencies in imported Ant builds</a></li> 
-       <li><a href="#invalid-large-zip-files-now-fail-the-build">无效的大 zip 文件现在将使构建失败 - Invalid large zip files now fail the build</a></li> 
+       <li><a href="#invalid-large-zip-files-now-fail-the-build">无效较大的 zip 文件现在无法构建 - Invalid large zip files now fail the build</a></li> 
        <li><a href="#change-to-signature-of-test.filter(closure)">修改了<code>Test.filter(Closure)</code>的签名 - Change to signature of <code>Test.filter(Closure)</code></a></li> 
        <li><a href="#change-to-signature-of-ideamodule.singleentrylibraries">修改了<code>IdeaModule.singleEntryLibraries</code>的签名 - Change to signature of <code>IdeaModule.singleEntryLibraries</code></a></li> 
       </ul></li> 
@@ -674,119 +674,119 @@ BUILD FAILED</tt></pre>
     <p>zip标准不支持包含超过65535个文件，也不支持任何大于4GB或压缩后大于4GB的文件。如果你的zip文件符合了以上的任意条件，就必须设置<a href="dsl/org.gradle.api.tasks.bundling.Zip.html#org.gradle.api.tasks.bundling.Zip:zip64"><code>zip64</code> 属性</a>为<code>true</code>（默认为<code>false</code>）来构建zip文件。这个标志也适合于所有如JARs, WARs, EARs或其他使用Zip格式的文件。<br/>The zip standard does not support containing more than 65535 files, containing any file greater than 4GB or being greater than 4GB compressed. If your zip file meets any of these criteria, then the zip must be built with the <a href="dsl/org.gradle.api.tasks.bundling.Zip.html#org.gradle.api.tasks.bundling.Zip:zip64"><code>zip64</code> property</a> set to <code>true</code> (it is <code>false</code> by default). This flag also applies to all JARs, WARs, EARs and anything else that uses the Zip format.</p> 
     <p>然而，不是所有的Zip readers都支持Zip64扩展。值得注意的是，Java 7 之前的版本的<code>ZipInputStream</code>都不支持Zip64。这意味着，如果你使用Java 6或更早版本的运行环境来构建JAR文件，就不应该使用这个属性。<br/>However, not all Zip readers support the Zip64 extensions. Notably, the <code>ZipInputStream</code> JDK class does not support Zip64 for versions earlier than Java 7. This means you should not enable this property if you are building JARs to be used with Java 6 and earlier runtimes.</p> 
     <p>感谢<a href="https://github.com/MisterTea">Jason Gauci</a>对此的改进。<br/>Thanks to <a href="https://github.com/MisterTea">Jason Gauci</a> for this improvement.</p> 
-    <h3 id="support-for-consuming-apache-maven-poms-with-active-profiles">Support for consuming Apache Maven POMs with active profiles</h3> 
-    <p>Gradle now respects POM profiles that are <a href="https://maven.apache.org/pom.html#Activation">active by default</a>, during dependency resolution. More specifically, the properties, dependencies and dependency management information is now respected.</p> 
-    <h3 class=" incubating" id="customise-clang-compiler-tool-chain">Customise Clang compiler tool chain <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>In earlier Gradle versions, it was possible to customize the GCC compiler tool chain in various ways. For example, you could use the <code>cCompiler.executable</code> property to specify a custom C compiler to use.</p> 
-    <p>Now you can customize the Clang tool chain in exactly the same way as the GCC tool chain.</p> 
-    <p>For more details see <a href="dsl/org.gradle.nativebinaries.toolchain.Clang.html">Clang</a> and <a href="dsl/org.gradle.nativebinaries.toolchain.Gcc.html">GCC</a>.</p> 
-    <h3 class=" incubating" id="improved-visual-studio-project-file-generation">Improved Visual Studio project file generation <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>Gradle 1.11 added support for <a href="http://www.gradle.org/docs/current/release-notes#generate-visual-studio-configuration-for-a-native-binary-project">generating Visual Studio configuration files</a>. This feature has been improved in the following ways in Gradle 1.12:</p> 
+    <h3 id="support-for-consuming-apache-maven-poms-with-active-profiles">通过active profiles支持使用Apache Maven POMs - Support for consuming Apache Maven POMs with active profiles</h3> 
+    <p>现在Gradle通过依赖解析<a href="https://maven.apache.org/pom.html#Activation">默认启用</a>POM配置。更具体地说，现在是遵从这些属性，依赖以及依赖管理信息的。<br/>Gradle now respects POM profiles that are <a href="https://maven.apache.org/pom.html#Activation">active by default</a>, during dependency resolution. More specifically, the properties, dependencies and dependency management information is now respected.</p> 
+    <h3 class=" incubating" id="customise-clang-compiler-tool-chain">自定义Clang编译工具链 - Customise Clang compiler tool chain <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
+    <p>在早期的Gradle版本中，可以通过不同的方式自定义GCC编译工具链。例如，你可以通过<code>cCompiler.executable</code>属性来指定使用自定义的C编译器。<br/>In earlier Gradle versions, it was possible to customize the GCC compiler tool chain in various ways. For example, you could use the <code>cCompiler.executable</code> property to specify a custom C compiler to use.</p> 
+    <p>现在你可以用和GCC工具链同样的方式准确地自定义Clang工具链。<br/>Now you can customize the Clang tool chain in exactly the same way as the GCC tool chain.</p> 
+    <p>更多细节请参见<a href="dsl/org.gradle.nativebinaries.toolchain.Clang.html">Clang</a> 和 <a href="dsl/org.gradle.nativebinaries.toolchain.Gcc.html">GCC</a>。<br/>For more details see <a href="dsl/org.gradle.nativebinaries.toolchain.Clang.html">Clang</a> and <a href="dsl/org.gradle.nativebinaries.toolchain.Gcc.html">GCC</a>.</p> 
+    <h3 class=" incubating" id="improved-visual-studio-project-file-generation">改进Visual Studio的项目文件生成 - Improved Visual Studio project file generation <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
+    <p>Gradle 1.11增加了对生成Visual Studio配置文件的生成。在Gradle 1.12中这一功能将通过以下几个方面进行提升：<br/>Gradle 1.11 added support for <a href="http://www.gradle.org/docs/current/release-notes#generate-visual-studio-configuration-for-a-native-binary-project">generating Visual Studio configuration files</a>. This feature has been improved in the following ways in Gradle 1.12:</p> 
     <ul> 
-     <li>Visual studio log files are generated into <code>.vs</code> instead of the project directory</li> 
-     <li>Project files are named by <code>ProjectNativeComponent.name</code> instead of <code>ProjectNativeComponent.baseName</code></li> 
-     <li>Header files co-located with source files are now include in the generated project</li> 
+     <li>Visual studio的日志文件将在<code>.vs</code>中生成，百不是在项目目录中。<br/>Visual studio log files are generated into <code>.vs</code> instead of the project directory</li> 
+     <li>项目文件名字由<code>ProjectNativeComponent.baseName</code>改为<code>ProjectNativeComponent.name</code>。<br/>Project files are named by <code>ProjectNativeComponent.name</code> instead of <code>ProjectNativeComponent.baseName</code></li> 
+     <li>头文件现在和源文件一起包含在生成的项目里。<br/>Header files co-located with source files are now include in the generated project</li> 
     </ul> 
-    <h3 id="updated-mapping-of-dependencies-to-idea-classpath-scopes">Updated mapping of dependencies to IDEA classpath scopes</h3> 
-    <p>There were changes in IDEA project mapping related to bug reports [<a href="http://issues.gradle.org/browse/GRADLE-2017">GRADLE-2017</a>] and [<a href="http://issues.gradle.org/browse/GRADLE-2231">GRADLE-2231</a>]. Projects generated by the <a href="userguide/idea_plugin.html">IDEA plugin</a> now better map project dependencies to classpath scopes in IDEA modules.</p> 
-    <h3 class=" incubating" id="easier-debugging-of-jvm-test-and-javaexec-processes">Easier debugging of JVM <code>Test</code> and <code>JavaExec</code> processes <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
-    <p>The <a href="dsl/org.gradle.api.tasks.testing.Test.html"><code>Test</code></a> and <a href="dsl/org.gradle.api.tasks.JavaExec.html"><code>JavaExec</code></a> tasks both now support a <code>--debug-jvm</code> invocation time switch, which is equivalent to setting the <code>debug</code> property of these tasks to <code>true</code>.</p> 
-    <p>This makes it easy, for example, to launch the application in debug mode when using the <a href="userguide/application_plugin.html">Application plugin</a>…</p> 
+    <h3 id="updated-mapping-of-dependencies-to-idea-classpath-scopes">更新IDEA类路径范围的依赖映射 - Updated mapping of dependencies to IDEA classpath scopes</h3> 
+    <p>BUG报告[<a href="http://issues.gradle.org/browse/GRADLE-2017">GRADLE-2017</a>] 和 [<a href="http://issues.gradle.org/browse/GRADLE-2231">GRADLE-2231</a>]所说的IDEA项目映射问题都有了些修改。通过 <a href="userguide/idea_plugin.html">IDEA 插件</a>生成的项目，在IDEA模块的类路径范围内将有更好的项目依赖映射。<br/>There were changes in IDEA project mapping related to bug reports [<a href="http://issues.gradle.org/browse/GRADLE-2017">GRADLE-2017</a>] and [<a href="http://issues.gradle.org/browse/GRADLE-2231">GRADLE-2231</a>]. Projects generated by the <a href="userguide/idea_plugin.html">IDEA plugin</a> now better map project dependencies to classpath scopes in IDEA modules.</p> 
+    <h3 class=" incubating" id="easier-debugging-of-jvm-test-and-javaexec-processes">对JVM的<code>Test</code> 和 <code>JavaExec</code> 进程更易于调试 - Easier debugging of JVM <code>Test</code> and <code>JavaExec</code> processes <a class="incubating-marker" href="userguide/feature_lifecycle.html" title="“incubating” features are not yet guaranteed to be backwards compatible&lt;br /&gt;(click for more information)">incubating feature</a></h3> 
+    <p><a href="dsl/org.gradle.api.tasks.testing.Test.html"><code>Test</code></a> 和 <a href="dsl/org.gradle.api.tasks.JavaExec.html"><code>JavaExec</code></a>任务现在都支持<code>>--debug-jvm</code>参数，相当于设置了这些任务的<code>debug</code>属性为<code>true</code>。<br/>The <a href="dsl/org.gradle.api.tasks.testing.Test.html"><code>Test</code></a> and <a href="dsl/org.gradle.api.tasks.JavaExec.html"><code>JavaExec</code></a> tasks both now support a <code>--debug-jvm</code> invocation time switch, which is equivalent to setting the <code>debug</code> property of these tasks to <code>true</code>.</p> 
+    <p>这将使调试更容易，比如，使用<a href="userguide/application_plugin.html">Application plugin</a>以调试模式运行程序。<br/>This makes it easy, for example, to launch the application in debug mode when using the <a href="userguide/application_plugin.html">Application plugin</a>…</p> 
     <pre class=" tt"><tt>gradle run --debug-jvm</tt></pre> 
-    <p>This starts the JVM process in debug mode, and halts the process until a debugger attaches on port 5005. The same can be done for any <a href="dsl/org.gradle.api.tasks.testing.Test.html"><code>Test</code></a> task.</p> 
-    <h3 id="source-and-javadoc-artifacts-declared-in-ivy.xml-are-recognised-by-ide-plugins">Source and Javadoc artifacts declared in ivy.xml are recognised by IDE plugins</h3> 
-    <p>The Gradle <code>eclipse</code> and <code>idea</code> plugins are able to find and download the source artifacts for external dependencies, and link these artifacts into the generated IDE files.</p> 
-    <p>In addition to the conventional classifier-based scheme for locating source and javadoc artifacts, Gradle will now recognise artifacts declared in a specific configuration of an <code>ivy.xml</code> file.</p> 
-    <p>For an IDE project that references an external module located in an <code>ivy</code> repository, Gradle will now include:</p> 
+    <p>以上命令将使JVM进程以调试模式启动，并暂停进程，直到有调试器连接到5005端口。同样的方法，也可以在任何一个<a href="dsl/org.gradle.api.tasks.testing.Test.html"><code>Test</code></a>任务上做到。<br/>This starts the JVM process in debug mode, and halts the process until a debugger attaches on port 5005. The same can be done for any <a href="dsl/org.gradle.api.tasks.testing.Test.html"><code>Test</code></a> task.</p> 
+    <h3 id="source-and-javadoc-artifacts-declared-in-ivy.xml-are-recognised-by-ide-plugins">IDE插件将能够识别定义在ivy.xml里的源码和注释文档 - Source and Javadoc artifacts declared in ivy.xml are recognised by IDE plugins</h3> 
+    <p>Gradle的<code>elcipse</code>和<code>idea</code>插件现在将能够找到并下载外部依赖的源码文件，并将这些文件链接到生成的IDE文件中。<br/>The Gradle <code>eclipse</code> and <code>idea</code> plugins are able to find and download the source artifacts for external dependencies, and link these artifacts into the generated IDE files.</p> 
+    <p>除了用传统的分类方法找到源文件和注释文档，现在Gradle还会识别出在<code>ivy.xml</code>文件配置中声明的文档。<br/>In addition to the conventional classifier-based scheme for locating source and javadoc artifacts, Gradle will now recognise artifacts declared in a specific configuration of an <code>ivy.xml</code> file.</p> 
+    <p>对于一个引用了<code>ivy</code>仓库里的外部模块的IDE项目，Gradle现在将会包含以下文件：<br/>For an IDE project that references an external module located in an <code>ivy</code> repository, Gradle will now include:</p> 
     <ul> 
-     <li>Source artifacts declared in a <code>sources</code> configuration in <code>ivy.xml</code></li> 
-     <li>Javadoc artifacts declared in a <code>javadoc</code> configuration in <code>ivy.xml</code></li> 
-     <li>Source artifacts conventionally named with a <code>sources</code> classifier: eg. <code>module-1.0-sources.jar</code></li> 
-     <li>Javadoc artifacts conventionally named with a <code>javadoc</code> classifier: eg. <code>module-1.0-javadoc.jar</code></li> 
+     <li>在<code>ivy.xml</code>的<code>sources</code>配置中声明的源码文件。<br/>Source artifacts declared in a <code>sources</code> configuration in <code>ivy.xml</code></li> 
+     <li>在<code>ivy.xml</code>的<code>javadoc</code>配置中声明的Javadoc文件。<br/>Javadoc artifacts declared in a <code>javadoc</code> configuration in <code>ivy.xml</code></li> 
+     <li>源文件按<code>sources</code>这类的惯例命名。如：<code>module-1.0-sources.jar</code><br/>Source artifacts conventionally named with a <code>sources</code> classifier: eg. <code>module-1.0-sources.jar</code></li> 
+     <li>Java注释文件按<code>javadoc</code>这类的惯例命名。如：<code>module-1.0-javadoc.jar</code><br/>Javadoc artifacts conventionally named with a <code>javadoc</code> classifier: eg. <code>module-1.0-javadoc.jar</code></li> 
     </ul> 
-    <h3 id="https-wrapper-downloads">HTTPS wrapper downloads</h3> 
-    <p>The <a href="userguide/gradle_wrapper.html">Gradle Wrapper</a> is now downloaded over HTTPS. The <code>gradle-wrapper.properties</code> file created by the <code>wrapper</code> task will now specify a HTTPS URL as the location of the Gradle distribution to download.</p> 
-    <p>Existing projects should consider updating the <code>gradle/wrapper/gradle-wrapper.properties</code> file to use <code>https</code> instead of <code>http</code> for the <code>distributionUrl</code> property value. No other change to the URL is necessary.</p> 
+    <h3 id="https-wrapper-downloads">HTTPS封装下载 - HTTPS wrapper downloads</h3> 
+    <p>The <a href="userguide/gradle_wrapper.html">Gradle Wrapper</a>现在可以通过HTTPS协议下载。由<code>wrapper</code>任务创建的<code>gradle-wrapper.properties</code>文件，现在将会指定一个HTTPS地址作为所描述的Gradle的下载地址。<br/>The <a href="userguide/gradle_wrapper.html">Gradle Wrapper</a> is now downloaded over HTTPS. The <code>gradle-wrapper.properties</code> file created by the <code>wrapper</code> task will now specify a HTTPS URL as the location of the Gradle distribution to download.</p> 
+    <p>已经存在的项目应该把<code>gradle/wrapper/gradle-wrapper.properties</code>文件中<code>distributionUrl</code>属性的<code>http</code>改为<code>https</code>。除此之外，没有其他要改的。<br/>Existing projects should consider updating the <code>gradle/wrapper/gradle-wrapper.properties</code> file to use <code>https</code> instead of <code>http</code> for the <code>distributionUrl</code> property value. No other change to the URL is necessary.</p> 
    </section> 
    <section class="topic"> 
-    <h2 id="fixed-issues">Fixed issues</h2> 
+    <h2 id="fixed-issues">已修复的问题 - Fixed issues</h2> 
    </section> 
    <section class="topic"> 
-    <h2 id="deprecations">Deprecations</h2> 
-    <p>Features that have become superseded or irrelevant due to the natural evolution of Gradle become <em>deprecated</em>, and scheduled to be removed in the next major Gradle version (Gradle 2.0). See the User guide section on the “<a href="userguide/feature_lifecycle.html">Feature Lifecycle</a>” for more information.</p> 
-    <p>The following are the newly deprecated items in this Gradle release. If you have concerns about a deprecation, please raise it via the <a href="http://forums.gradle.org">Gradle Forums</a>.</p> 
-    <h3 id="tooling-api-version-compatibility">Tooling API version compatibility</h3> 
-    <p>The <a href="userguide/embedding.html">Tooling API</a> is a mechanism for embedding Gradle and/or driving Gradle programmatically. It is used by IDEs and other <em>tooling</em> to integrate with Gradle.</p> 
+    <h2 id="deprecations">已过时的内容 - Deprecations</h2> 
+    <p>一些被替代或不适用的功能因为Gradle的自然变化已经变得<em>过时</em>，并将在下一个主要的版本(Gradle 2.0)当中被移除。详情请参见用户手册中的“<a href="userguide/feature_lifecycle.html">功能全生命周期</a>”章节。<br/>Features that have become superseded or irrelevant due to the natural evolution of Gradle become <em>deprecated</em>, and scheduled to be removed in the next major Gradle version (Gradle 2.0). See the User guide section on the “<a href="userguide/feature_lifecycle.html">Feature Lifecycle</a>” for more information.</p> 
+    <p>以下内容是在这个版本中过时的内容。如果你对其中的内容有疑问，请到<a href="http://forums.gradle.org">Gradle 论坛</a>中提出。<br/>The following are the newly deprecated items in this Gradle release. If you have concerns about a deprecation, please raise it via the <a href="http://forums.gradle.org">Gradle Forums</a>.</p> 
+    <h3 id="tooling-api-version-compatibility">Tooling API版本兼容 - Tooling API version compatibility</h3> 
+    <p><a href="userguide/embedding.html">Tooling API</a>是一种用于嵌入Gradle或驱动Gradle编程的机制，用一些IDE或其他<em>tooling</em>用来集成Gradle。The <a href="userguide/embedding.html">Tooling API</a> is a mechanism for embedding Gradle and/or driving Gradle programmatically. It is used by IDEs and other <em>tooling</em> to integrate with Gradle.</p> 
     <ul> 
-     <li>Connecting to 1.0-milestone-8 and earlier providers is now deprecated and will not be supported in Gradle 2.0. This means that the Gradle 2.0 Tooling API client will not be able to run builds that use Gradle 1.0-milestone-8 and earlier.</li> 
-     <li>Client versions older than 1.2 are now deprecated and will not be supported in Gradle 2.0. This means that the Gradle 1.2 and earlier Tooling API clients will not be able to run builds that use Gradle 2.0 and later.</li> 
+     <li>现在连接到1.0-milestone-8和更早版本的providers已经过时，并且到Gradle 2.0将不再支持。这意味着，Gradle 2.0的Tooling API客户端将无法执行使用Gradle 1.0-milistone或更早期的版本的项目构建。<br/>Connecting to 1.0-milestone-8 and earlier providers is now deprecated and will not be supported in Gradle 2.0. This means that the Gradle 2.0 Tooling API client will not be able to run builds that use Gradle 1.0-milestone-8 and earlier.</li> 
+     <li>比1.2旧的客户端版本现在已经过时，并且到Gradle2.0将不再支持。这意味着Gradle 1.2或更早版本的Tooling API客户端将无法再执行Gradle 2.0或更新版本的构建。<br/>Client versions older than 1.2 are now deprecated and will not be supported in Gradle 2.0. This means that the Gradle 1.2 and earlier Tooling API clients will not be able to run builds that use Gradle 2.0 and later.</li> 
     </ul> 
-    <p>If your project is building with Gradle 1.0-milestone-8 or earlier, you are <strong>strongly</strong> encouraged to upgrade to a more recent Gradle version. All versions of integrating tools released since the release of Gradle 1.2 (September 2012) should be using a Tooling API client newer than version 1.2.</p> 
-    <h3 id="deprecated-method-in-tooling-api">Deprecated method in Tooling API</h3> 
-    <p>The <a href="javadoc/org/gradle/tooling/model/Task.html#getProject()"><code>org.gradle.tooling.model.Task.getProject()</code></a> method is now deprecated and can throw <code>UnsupportedMethodException</code>. There is no replacement as it is expected that the caller has a reference to project prior calling to this method.</p> 
+    <p>如果您的项目是在Gradle 1.0-milestone-8或更早版本之上建立的，<strong>强烈</strong>建议您升级到较新的Gradle版本。从Gradle 1.2发布后(2012年9月)发布的集成工具的所有版本，都应使用比1.2版本更新的Tooling API客户端。<br/>If your project is building with Gradle 1.0-milestone-8 or earlier, you are <strong>strongly</strong> encouraged to upgrade to a more recent Gradle version. All versions of integrating tools released since the release of Gradle 1.2 (September 2012) should be using a Tooling API client newer than version 1.2.</p> 
+    <h3 id="deprecated-method-in-tooling-api">Tooling API里过时的方法 - Deprecated method in Tooling API</h3> 
+    <p><a href="javadoc/org/gradle/tooling/model/Task.html#getProject()"><code>org.gradle.tooling.model.Task.getProject()</code></a>方法已经过时,并将抛出<code>UnsupportedMethodException</code>异常。它没有替代方法，因为考虑到调用者在调用它之前已经有一个指向项目的引用。<br/>The <a href="javadoc/org/gradle/tooling/model/Task.html#getProject()"><code>org.gradle.tooling.model.Task.getProject()</code></a> method is now deprecated and can throw <code>UnsupportedMethodException</code>. There is no replacement as it is expected that the caller has a reference to project prior calling to this method.</p> 
    </section> 
    <section class="topic"> 
-    <h2 id="potential-breaking-changes">Potential breaking changes</h2> 
-    <h3 id="incremental-scala-compilation">Incremental Scala compilation</h3> 
-    <p>The version of the Scala incremental compiler, Zinc, that Gradle uses has been upgraded to a version 0.3.0. This might be a breaking change for users who explicitly configured an early version of zinc in their build scripts. There should be very few such users, if any.</p> 
-    <h3 id="changes-to-incubating-native-support">Changes to incubating native support</h3> 
+    <h2 id="potential-breaking-changes">可能会有的重大修改Potential breaking changes</h2> 
+    <h3 id="incremental-scala-compilation">Scala增量编译 - Incremental Scala compilation</h3> 
+    <p>Gradle所使用的Scala增量编译器Zinc的版本已经升级到0.3.0。这对于那些在构建脚本当中明确配置了早期版本的zinc的用户来说，可能是一个重大修改。如果有的话，这样的用户应该很少。<br/>The version of the Scala incremental compiler, Zinc, that Gradle uses has been upgraded to a version 0.3.0. This might be a breaking change for users who explicitly configured an early version of zinc in their build scripts. There should be very few such users, if any.</p> 
+    <h3 id="changes-to-incubating-native-support">正在形成原生支持 - Changes to incubating native support</h3> 
     <ul> 
-     <li>'-Xlinker' is no longer automatically added to linker args for GCC or Clang. If you want to pass an argument directly to 'ld' you need to add this escape yourself.</li> 
-     <li>Tasks for Windows resource compilation are now named 'compileXXXX' instead of 'resourceCompileXXX'.</li> 
+     <li>GCC或Clang都不再自动添加'-Xlinker'到linker参数中。如果你想直接传一个参数到'ld'中，你需要自己加上这一参数。<br/>'-Xlinker' is no longer automatically added to linker args for GCC or Clang. If you want to pass an argument directly to 'ld' you need to add this escape yourself.</li> 
+     <li>Windows下编译资源的任务现在命名为'compileXXXX'，而不再是'resourceCompileXXXX'。<br/>Tasks for Windows resource compilation are now named 'compileXXXX' instead of 'resourceCompileXXX'.</li> 
     </ul> 
-    <h3 id="change-to-junit-xml-file-for-skipped-tests">Change to JUnit XML file for skipped tests</h3> 
-    <p>The way that skipped/ignored tests are represented in the JUnit XML output file produced by the <code>Test</code> task. Gradle now produces the same output, with regard to skipped tests, as Apache Ant and Apache Maven. This format is accepted, and expected, by all major Continuous Integration servers.</p> 
-    <p>This change is described as follows:</p> 
+    <h3 id="change-to-junit-xml-file-for-skipped-tests">修改了JUnit XML文件有关跳过的测试的内容 - Change to JUnit XML file for skipped tests</h3> 
+    <p>跳过或忽略的测试在<code>Test</code>任务产生的JUnit XML输出文件中被描述。关于跳过的测试，Gradle现在将产生和Apache Ant还有Apache Maven同样的输出。这种格式是所有主要的持续集成服务能授受的，也是所要求的。<br/>The way that skipped/ignored tests are represented in the JUnit XML output file produced by the <code>Test</code> task. Gradle now produces the same output, with regard to skipped tests, as Apache Ant and Apache Maven. This format is accepted, and expected, by all major Continuous Integration servers.</p> 
+    <p>以下描述了这个改动内容：<br/>This change is described as follows:</p> 
     <ol> 
-     <li>The <code>testsuite</code> element now contains a <code>skipped</code> attribute, indicating the number of skipped tests (may be 0)</li> 
-     <li>The element representing a test case is now always named <code>testcase</code> (previously it was named <code>ignored-testcase</code> if it was a skipped test)</li> 
-     <li>If a test case was skipped, a child <code>&lt;skipped/&gt;</code> element will be present</li> 
+     <li><code>testsuite</code>元素现在包含了一个<code>skipped</code>属性，用于标志被跳过的测试的数量（可能为0）<br/>The <code>testsuite</code> element now contains a <code>skipped</code> attribute, indicating the number of skipped tests (may be 0)</li> 
+     <li>表示测试用例的元素现在命名为<code>testcase</code>（以前如果是一个跳过的测试，会命名为<code>ignore-testcase</code>）<br/>The element representing a test case is now always named <code>testcase</code> (previously it was named <code>ignored-testcase</code> if it was a skipped test)</li> 
+     <li>如果一个测试用例被跳过，会出现一个<code>&lt;skipped/&gt;</code>的子元素<br/>If a test case was skipped, a child <code>&lt;skipped/&gt;</code> element will be present</li> 
     </ol> 
-    <p>No changes are necessary to build scripts or Continuous Integration server configuration to accommodate this change.</p> 
-    <h3 id="ordering-of-dependencies-in-imported-ant-builds">Ordering of dependencies in imported Ant builds</h3> 
-    <p>The ordering of Ant target dependencies is now respected when possible. This may cause tasks of imported Ant builds to executed in a different order from this version of Gradle on.</p> 
-    <p>Given…</p> 
+    <p>关于这个改动，持续集成服务配置或构建脚本都无需进行修改。<br/>No changes are necessary to build scripts or Continuous Integration server configuration to accommodate this change.</p> 
+    <h3 id="ordering-of-dependencies-in-imported-ant-builds">导入Ant构建时重新组织依赖 - Ordering of dependencies in imported Ant builds</h3> 
+    <p>现在如果可能，将会重新组织Ant的目标依赖。这可能导致，从这一版本起，从Ant构建导入的任务会以不同的顺序执行。<br/>The ordering of Ant target dependencies is now respected when possible. This may cause tasks of imported Ant builds to executed in a different order from this version of Gradle on.</p> 
+    <p>比如：<br/>Given…</p> 
     <pre class=" code"><code><span class="java_operator">&lt;</span><span class="java_plain">target&nbsp;name</span><span class="java_operator">=</span><span class="java_literal">'a'</span><span class="java_plain">&nbsp;depends</span><span class="java_operator">=</span><span class="java_literal">'d,c,b'</span><span class="java_operator">/&gt;</span><span class="java_plain"></span></code></pre> 
-    <p>A shouldRunAfter <a href="userguide/more_about_tasks.html#sec:ordering_tasks">task ordering</a> will be applied to the dependencies so that, <code>c.shouldRunAfter d</code> and <code>b.shouldRunAfter c</code>.</p> 
-    <p>This is in alignment with Ant's ordering of target dependencies and resolves a long standing Gradle enhancement request [<a href="http://issues.gradle.org/browse/GRADLE-1102">GRADLE-1102</a>].</p> 
-    <h3 id="invalid-large-zip-files-now-fail-the-build">Invalid large zip files now fail the build</h3> 
-    <p>If a zip file is built without the <code>zip64</code> flag (new in this release) set to true that surpasses the file size and count limits of the zip format, Gradle will now fail the build. Previously, it may have silently created an invalid zip.</p> 
-    <p>To allow the large zip to be correctly built, set the <code>zip64</code> property of the task to <code>true</code>.</p> 
-    <h3 id="change-to-signature-of-test.filter(closure)">Change to signature of <code>Test.filter(Closure)</code></h3> 
-    <p>The incubating <code>Test.filter(Closure)</code> method introduced in 1.10 for configuring the <code>TestFilter</code> has been changed to be more consistent with other configuration methods. This method now accepts an <code>Action</code> and no longer returns the <code>TestFilter</code>. This change should not require any adjustments to build scripts as this method can still be called with a <code>Closure</code>, upon which it will be implicitly converted into an <code>Action</code>.</p> 
-    <h3 id="change-to-signature-of-ideamodule.singleentrylibraries">Change to signature of <code>IdeaModule.singleEntryLibraries</code></h3> 
-    <p>The property <code>IdeaModule.singleEntryLibraries</code> was previously declared as a <code>Map</code> with values of type <code>Collection&lt;File&gt;</code>. The values are in fact <code>Iterable&lt;File&gt;</code> and the type signature has been updated.</p> 
+    <p>在这些依赖上中，将会有一个shouldRunAfter的<a href="userguide/more_about_tasks.html#sec:ordering_tasks">任务顺序</a>，所以<code>c.shouldRunAfter d</code> 并且 <code>b.shouldRunAfter c</code>。<br/>A shouldRunAfter <a href="userguide/more_about_tasks.html#sec:ordering_tasks">task ordering</a> will be applied to the dependencies so that, <code>c.shouldRunAfter d</code> and <code>b.shouldRunAfter c</code>.</p> 
+    <p>这是对Ant的目标任务的排序，并且解决了一个存在很长时间的Gradle增强请求[<a href="http://issues.gradle.org/browse/GRADLE-1102">GRADLE-1102</a>]。<br/>This is in alignment with Ant's ordering of target dependencies and resolves a long standing Gradle enhancement request [<a href="http://issues.gradle.org/browse/GRADLE-1102">GRADLE-1102</a>].</p> 
+    <h3 id="invalid-large-zip-files-now-fail-the-build">无效较大的zip文件现在无法构建 - Invalid large zip files now fail the build</h3> 
+    <p>如果在构建一个zip文件时没有设置<code>zip64</code>的标志（此版本新增的）为true，并且文件的数量或大小超过zip格式的限制，那么Gradle将会无法构建。而在此前，Gradle可能会创建一个无效的zip文件。<br/>If a zip file is built without the <code>zip64</code> flag (new in this release) set to true that surpasses the file size and count limits of the zip format, Gradle will now fail the build. Previously, it may have silently created an invalid zip.</p> 
+    <p>为了能让大的zip文件被正确地构建，请设置任务里的<code>zip64</code>属性为<code>true</code>。<br/>To allow the large zip to be correctly built, set the <code>zip64</code> property of the task to <code>true</code>.</p> 
+    <h3 id="change-to-signature-of-test.filter(closure)">修改了<code>Test.filter(Closure)</code>的签名 - Change to signature of <code>Test.filter(Closure)</code></h3> 
+    <p>从1.10引进的用于配置<code>TestFilter</code>的<code>Test.filter(Closure)</code>方法，被修改为与其他配置方法更加一致。该方法现在接受一个<code>Action</code>且不再返回<code>TestFilter</code>。由于依然可以通过一个会被隐式转换为<code>Action</code>的<code>Closure</code>来调用，此改动不要求构建脚本进行任何调整。<br/>The incubating <code>Test.filter(Closure)</code> method introduced in 1.10 for configuring the <code>TestFilter</code> has been changed to be more consistent with other configuration methods. This method now accepts an <code>Action</code> and no longer returns the <code>TestFilter</code>. This change should not require any adjustments to build scripts as this method can still be called with a <code>Closure</code>, upon which it will be implicitly converted into an <code>Action</code>.</p> 
+    <h3 id="change-to-signature-of-ideamodule.singleentrylibraries">修改了<code>IdeaModule.singleEntryLibraries</code> - Change to signature of <code>IdeaModule.singleEntryLibraries</code></h3> 
+    <p>在之前，<code>IdeaModule.singleEntryLibraries</code>属性被定义为一个值类型为<code>Collection&lt;File&gt;</code>的<code>Map</code>。而实际上它的值为<code>Iterable&lt;File&gt;</code>，并且类型已经更新。<br/>The property <code>IdeaModule.singleEntryLibraries</code> was previously declared as a <code>Map</code> with values of type <code>Collection&lt;File&gt;</code>. The values are in fact <code>Iterable&lt;File&gt;</code> and the type signature has been updated.</p> 
    </section> 
    <section class="topic"> 
-    <h2 id="external-contributions">External contributions</h2> 
-    <p>We would like to thank the following community members for making contributions to this release of Gradle.</p> 
+    <h2 id="external-contributions">外部贡献 - External contributions</h2> 
+    <p>我们要感谢以下的团队成员为此次Gradle版本的发布所做的贡献。<br/>We would like to thank the following community members for making contributions to this release of Gradle.</p> 
     <ul> 
      <li><a href="https://github.com/erdi">Marcin Erdmann</a> 
       <ul> 
-       <li>dependency ordering of imported Ant targets [<a href="http://issues.gradle.org/browse/GRADLE-1102">GRADLE-1102</a>]</li> 
-       <li>fixes for excluding tasks [<a href="http://issues.gradle.org/browse/GRADLE-2974">GRADLE-2974</a>] &amp; [<a href="http://issues.gradle.org/browse/GRADLE-3031">GRADLE-3031</a>]</li> 
+       <li>导入Ant目标的依赖排序[<a href="http://issues.gradle.org/browse/GRADLE-1102">GRADLE-1102</a>]<br/>dependency ordering of imported Ant targets [<a href="http://issues.gradle.org/browse/GRADLE-1102">GRADLE-1102</a>]</li> 
+       <li>排队任务的修正 [<a href="http://issues.gradle.org/browse/GRADLE-2974">GRADLE-2974</a>] &amp; [<a href="http://issues.gradle.org/browse/GRADLE-3031">GRADLE-3031</a>]<br/>fixes for excluding tasks [<a href="http://issues.gradle.org/browse/GRADLE-2974">GRADLE-2974</a>] &amp; [<a href="http://issues.gradle.org/browse/GRADLE-3031">GRADLE-3031</a>]</li> 
       </ul></li> 
-     <li><a href="https://github.com/jglick">Jesse Glick</a> - enabling newlines in option values passed to build</li> 
-     <li><a href="https://github.com/zeeke">Zeeke</a> - documentation improvements</li> 
-     <li><a href="https://github.com/kamilszymanski">Kamil Szymański</a> - documentation improvements</li> 
-     <li><a href="https://github.com/jkubrynski">Jakub Kubryński</a> - handling of empty string proxy system property values</li> 
-     <li><a href="https://github.com/leesdolphin">Lee Symes</a> &amp; <a href="https://github.com/soid">Greg Temchenko</a> - fix skipped test representation in JUnit XML result files [<a href="http://issues.gradle.org/browse/GRADLE-2731">GRADLE-2731</a>]</li> 
-     <li><a href="https://github.com/sainaen">Ivan Vyshnevskyi</a> - Fixes to HTML test report</li> 
-     <li><a href="https://github.com/green-coder">Vincent Cantin</a> - documentation improvements</li> 
-     <li><a href="https://github.com/big-guy">Sterling Greene</a> - Support for developing Gradle in Eclipse</li> 
-     <li><a href="https://github.com/matthewmichihara">Matthew Michihara</a> - Documentation improvements</li> 
-     <li><a href="https://github.com/ajoberstar">Andrew Oberstar</a> - Improved Sonar support on Java 1.5 [<a href="http://issues.gradle.org/browse/GRADLE-3005">GRADLE-3005</a>]</li> 
-     <li><a href="https://github.com/elucify">Mark Johnson</a> - documentation improvements</li> 
-     <li><a href="https://github.com/eskatos">Paul Merlin</a> - ignored tests tab for HTML test report</li> 
-     <li><a href="https://github.com/MisterTea">Jason Gauci</a> - Support for large zips</li> 
-     <li><a href="https://github.com/tinca">Zsolt K&uacute;ti</a> - Fixes for Gradle on FreeBSD</li> 
-     <li><a href="https://github.com/Miserlou">Rich Jones</a> - HTTPS URLs for wrapper downloads</li> 
+     <li><a href="https://github.com/jglick">Jesse Glick</a> - 当选项值传给build时能换行<br/><a href="https://github.com/jglick">Jesse Glick</a> - enabling newlines in option values passed to build</li> 
+     <li><a href="https://github.com/zeeke">Zeeke</a> - 文档改善<br/><a href="https://github.com/zeeke">Zeeke</a> - documentation improvements</li> 
+     <li><a href="https://github.com/kamilszymanski">Kamil Szymański</a> - 文档改善<br/><a href="https://github.com/kamilszymanski">Kamil Szymański</a> - documentation improvements</li> 
+     <li><a href="https://github.com/jkubrynski">Jakub Kubryński</a> - 代理系统属性值中的空字符串处理<br/><a href="https://github.com/jkubrynski">Jakub Kubryński</a> - handling of empty string proxy system property values</li> 
+     <li><a href="https://github.com/leesdolphin">Lee Symes</a> &amp; <a href="https://github.com/soid">Greg Temchenko</a> - 修复在Junit XML 结果文件中对跳过的测试的描述<br/><a href="https://github.com/leesdolphin">Lee Symes</a> &amp; <a href="https://github.com/soid">Greg Temchenko</a> - fix skipped test representation in JUnit XML result files [<a href="http://issues.gradle.org/browse/GRADLE-2731">GRADLE-2731</a>]</li> 
+     <li><a href="https://github.com/sainaen">Ivan Vyshnevskyi</a> - 修复HTML测试报告<br/><a href="https://github.com/sainaen">Ivan Vyshnevskyi</a> - Fixes to HTML test report</li> 
+     <li><a href="https://github.com/green-coder">Vincent Cantin</a> - 文档改善<br/><a href="https://github.com/green-coder">Vincent Cantin</a> - documentation improvements</li> 
+     <li><a href="https://github.com/big-guy">Sterling Greene</a> - 支持在Eclipse中开发Gradle<br/><a href="https://github.com/big-guy">Sterling Greene</a> -  Support for developing Gradle in Eclipse</li> 
+     <li><a href="https://github.com/matthewmichihara">Matthew Michihara</a> - 文档改善<br/><a href="https://github.com/matthewmichihara">Matthew Michihara</a> - Documentation improvements</li> 
+     <li><a href="https://github.com/ajoberstar">Andrew Oberstar</a> - 在Java 1.5上改进对Sonar的支持[<a href="http://issues.gradle.org/browse/GRADLE-3005">GRADLE-3005</a>]<br/><a href="https://github.com/ajoberstar">Andrew Oberstar</a> - Improved Sonar support on Java 1.5 [<a href="http://issues.gradle.org/browse/GRADLE-3005">GRADLE-3005</a>]</li> 
+     <li><a href="https://github.com/elucify">Mark Johnson</a> - 文档改善<br/><a href="https://github.com/elucify">Mark Johnson</a> - documentation improvements</li> 
+     <li><a href="https://github.com/eskatos">Paul Merlin</a> - HTML测试报告中忽略的测试的标签<br/><a href="https://github.com/eskatos">Paul Merlin</a> - ignored tests tab for HTML test report</li> 
+     <li><a href="https://github.com/MisterTea">Jason Gauci</a> - 支持较大的zip文件<br/><a href="https://github.com/MisterTea">Jason Gauci</a> - Support for large zips</li> 
+     <li><a href="https://github.com/tinca">Zsolt K&uacute;ti</a> - 修复在FreeBSD上Gradle的问题<br/><a href="https://github.com/tinca">Zsolt K&uacute;ti</a> - Fixes for Gradle on FreeBSD</li> 
+     <li><a href="https://github.com/Miserlou">Rich Jones</a> - wrapper下载的HTTPS URL问题<br/><a href="https://github.com/Miserlou">Rich Jones</a> - HTTPS URLs for wrapper downloads</li> 
     </ul> 
-    <p>We love getting contributions from the Gradle community. For information on contributing, please see <a href="http://gradle.org/contribute">gradle.org/contribute</a>.</p> 
+    <p>我们很高兴从Gradle社区获得大家的贡献。关于如何贡献的更多信息，请参见<a href="http://gradle.org/contribute">gradle.org/contribute</a>。<br/>We love getting contributions from the Gradle community. For information on contributing, please see <a href="http://gradle.org/contribute">gradle.org/contribute</a>.</p> 
    </section> 
    <section class="topic"> 
-    <h2 id="known-issues">Known issues</h2> 
-    <p>Known issues are problems that were discovered post release that are directly related to changes made in this release.</p> 
+    <h2 id="known-issues">已知问题 - Known issues</h2> 
+    <p>已知问题是在发布后已发现的直接影响到此版本的问题。<br/>Known issues are problems that were discovered post release that are directly related to changes made in this release.</p> 
    </section> 
    <section class="footer">
      Gradle 1.12 Release Notes 
