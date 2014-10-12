@@ -55,15 +55,21 @@
 					</div>
 				</div>
 			</div>
-			<p>Here is a list of some of Gradle's features.</p>
+			<p>下面是一些Gradle特性的列表。<br/>Here is a list of some of Gradle's features.</p>
 			<div class="variablelist">
 				<dl>
 					<dt>
-						<span class="term">Declarative builds and
+						<span class="term">基于声明的构建和基于约定的构建<br/>Declarative builds and
 							build-by-convention</span>
 					</dt>
 					<dd>
-						<p>At the heart of Gradle lies a rich extensible Domain
+						<p>Gradle的核心在于基于Groovy的丰富而可扩展的域描述语言(DSL)。
+							Groovy通过声明性的语言元素将基于声明的构建推向下层，你可以按你想要的方式进行组合。
+							这些元素同样也为支持Java, Groovy, OSGi, Web和Scala项目提供了基于约定的构建。
+							并且，这种声明性的语言是可以扩展的。你可以添加新的或增强现有的语言元素。
+							因此，它提供了简明、可维护和易理解的构建。
+							<br/>
+							At the heart of Gradle lies a rich extensible Domain
 							Specific Language (DSL) based on Groovy. Gradle pushes
 							declarative builds to the next level by providing declarative
 							language elements that you can assemble as you like. Those
@@ -74,20 +80,27 @@
 							and comprehensible builds.</p>
 					</dd>
 					<dt>
-						<span class="term">Language for dependency based
+						<span class="term">依赖型编程语言<br/>Language for dependency based
 							programming</span>
 					</dt>
 					<dd>
-						<p>The declarative language lies on top of a general purpose
+						<p>声明性语言位于通用任务图的顶层，你可以在开发中充分利用。
+							它提供了最大限度的灵活性，以满足你对Gradle的特殊需求。<br/>
+							The declarative language lies on top of a general purpose
 							task graph, which you can fully leverage in your builds. It
 							provides utmost flexibility to adapt Gradle to your unique needs.
 						</p>
 					</dd>
 					<dt>
-						<span class="term">Structure your build</span>
+						<span class="term">结构化你的构建<br/>Structure your build</span>
 					</dt>
 					<dd>
-						<p>The suppleness and richness of Gradle finally allows you to
+						<p>Gradle的灵活和丰富性最终能够让你将常见的设计原则应用到你的构建当中。
+							例如，它可以通过构建逻辑的可重用块使编写构建脚本变得非常简单。
+							对内联的东西，进行不必要的间接关联是不恰当的。
+							不要把原本在一起的东西强行分开（比如在你的项目结构里），从而避免让你的构建变成一场噩梦。
+							最后，你可以创建一个结构良好，易于维护，易于理解的构建。<br/>
+							The suppleness and richness of Gradle finally allows you to
 							apply common design principles to your build. For example, it is
 							very easy to compose your build from reusable pieces of build
 							logic. Inline stuff where unnecessary indirections would be
@@ -98,19 +111,23 @@
 							structured, easily maintained, comprehensible build.</p>
 					</dd>
 					<dt>
-						<span class="term">Deep API</span>
+						<span class="term">高级API<br/>Deep API</span>
 					</dt>
 					<dd>
-						<p>From being a pleasure to be used embedded to its many hooks
+						<p>Gradle允许你在构建执行的整个生命周期，对它的核心进行监视并自定义配置和执行行为。<br/>
+							From being a pleasure to be used embedded to its many hooks
 							over the whole lifecycle of build execution, Gradle allows you to
 							monitor and customize its configuration and execution behavior to
 							its very core.</p>
 					</dd>
 					<dt>
-						<span class="term">Gradle scales</span>
+						<span class="term">Gradle的扩展<br/>Gradle scales</span>
 					</dt>
 					<dd>
-						<p>Gradle scales very well. It significantly increases your
+						<p>Gradle有非常良好的扩展性。
+							从简单的单项目构建，到庞大的多项目构建，它都能显著地提升你的效率。
+							这是真正的结构化构建。通过最先进的增量构建功能，它也攻克了许多大型企业所面临的性能瓶颈问题。<br/>
+							Gradle scales very well. It significantly increases your
 							productivity, from simple single project builds up to huge
 							enterprise multi-project builds. This is true for structuring the
 							build. With the state-of-art incremental build function, this is
@@ -118,35 +135,45 @@
 							builds suffer from.</p>
 					</dd>
 					<dt>
-						<span class="term">Multi-project builds</span>
+						<span class="term">多项目构建<br/>Multi-project builds</span>
 					</dt>
 					<dd>
-						<p>Gradle's support for multi-project build is outstanding.
+						<p>Gradle对多项目构建的支持非常出色。项目依赖是最重要的。
+							我们允许你在多项目构建当中对项目依赖关系进行建模，因为它们才是你真正的问题域。
+							Gradle遵守你的布局，反之则不然。<br/>
+							Gradle's support for multi-project build is outstanding.
 							Project dependencies are first class citizens. We allow you to
 							model the project relationships in a multi-project build as they
 							really are for your problem domain. Gradle follows your layout
 							not vice versa.</p>
-						<p>Gradle provides partial builds. If you build a single
+						<p>Gradle提供了局部构建的功能。
+							如果你在构建一个单独的子项目，Gradle也会帮你构建它所依赖的所有子项目。
+							你也可以选择重新构建依赖于特定子项目的子项目。
+							这种增量构建将使得在大型构建任务中省下大量时间。<br/>
+							Gradle provides partial builds. If you build a single
 							subproject Gradle takes care of building all the subprojects that
 							subproject depends on. You can also choose to rebuild the
 							subprojects that depend on a particular subproject. Together with
 							incremental builds this is a big time saver for larger builds.</p>
 					</dd>
 					<dt>
-						<span class="term">Many ways to manage your dependencies</span>
+						<span class="term">多种方式管理依赖<br/>Many ways to manage your dependencies</span>
 					</dt>
 					<dd>
-						<p>Different teams prefer different ways to manage their
+						<p>不同的团队喜欢用不同的方式来管理他们的外部依赖。
+							从Maven和Ivy的远程仓库的传递依赖管理，到本地文件系统的jar包或目录,Gradle对所有的管理策略都提供了方便的支持。<br/>Different teams prefer different ways to manage their
 							external dependencies. Gradle provides convenient support for any
 							strategy. From transitive dependency management with remote Maven
 							and Ivy repositories to jars or dirs on the local file system.</p>
 					</dd>
 					<dt>
-						<span class="term">Gradle is the first build integration
+						<span class="term">Gradle是第一个构建集成工具<br/>Gradle is the first build integration
 							tool</span>
 					</dt>
 					<dd>
-						<p>Ant tasks are first class citizens. Even more interesting,
+						<p>Ant中任务是最重要的。而更有趣的是，Ant项目也是最重要的。
+							Gradle对任意的Ant项目提供了深度导入，并在运行时将Ant targets转换为原生的Gradle tasks。
+							你可以从Gradle上依赖它们(Ant targets)，增强它们，甚至在你的build.xml上定义对Gradle tasks的依赖。Gradle为属性、路径等等提供了同样的整合。<br/>Ant tasks are first class citizens. Even more interesting,
 							Ant projects are first class citizens as well. Gradle provides a
 							deep import for any Ant project, turning Ant targets into native
 							Gradle tasks at runtime. You can depend on them from Gradle, you
@@ -154,7 +181,8 @@
 							on Gradle tasks in your build.xml. The same integration is
 							provided for properties, paths, etc ...</p>
 						<p>
-							Gradle fully supports your existing Maven or Ivy repository
+							Gradle完全支持用于发布或检索依赖的Maven或Ivy仓库。
+							Gradle同样提供了一个转换器，用于将一个Maven <code class="filename">pom.xml</code>文件转换为一个Gradle脚本。Maven项目的运行时导入的功能将很快会有。<br/>Gradle fully supports your existing Maven or Ivy repository
 							infrastructure for publishing and retrieving dependencies. Gradle
 							also provides a converter for turning a Maven
 							<code class="filename">pom.xml</code>
@@ -163,10 +191,13 @@
 						</p>
 					</dd>
 					<dt>
-						<span class="term">Ease of migration</span>
+						<span class="term">易于移植<br/>Ease of migration</span>
 					</dt>
 					<dd>
-						<p>Gradle can adapt to any structure you have. Therefore you
+						<p>Gradle能适应你已有的任何结构。因此，你总可以在你构建项目的同一个分支当中开发你的Gradle构建脚本，并且它们能够并行进行。
+							我们通常建议编写测试，以保证生成的文件是一样的。
+							这种移植方式会尽可能的可靠和减少破坏性。这也是重构的最佳做法。<br/>
+							Gradle can adapt to any structure you have. Therefore you
 							can always develop your Gradle build in the same branch where
 							your production build lives and both can evolve in parallel. We
 							usually recommend to write tests that make sure that the produced
@@ -178,7 +209,14 @@
 						<span class="term">Groovy</span>
 					</dt>
 					<dd>
-						<p>Gradle's build scripts are written in Groovy, not XML. But
+						<p>Gradle的构建脚本是采用Groovy写的，而不是用XML。
+							但与其他方法不同，它并不只是展示了由一种动态语言编写的原始脚本的强大。
+							那样将导致维护构建变得很困难。
+							Gradle的整体设计是面向被作为一门语言，而不是一个僵化的框架。
+							并且Groovy是我们允许你通过抽象的Gradle描述你个人的story的黏合剂。
+							Gradle提供了一些标准通用的story。这是我们相比其他声明性构建系统的主要特点。
+							我们的Groovy支持也不是简单的糖衣层，整个Gradle的API都是完全groovy化的。只有通过Groovy才能去运用它并对它提高效率。<br/>
+							Gradle's build scripts are written in Groovy, not XML. But
 							unlike other approaches this is not for simply exposing the raw
 							scripting power of a dynamic language. That would just lead to a
 							very difficult to maintain build. The whole design of Gradle is
@@ -196,7 +234,12 @@
 						<span class="term">The Gradle wrapper</span>
 					</dt>
 					<dd>
-						<p>The Gradle Wrapper allows you to execute Gradle builds on
+						<p>Gradle Wrapper允许你在没有安装Gradle的机器上执行Gradle构建。
+							这一点是非常有用的。比如，对一些持续集成服务来说。
+							它对一个开源项目保持低门槛构建也是非常有用的。
+							Wrapper对企业来说也很有用，它使得对客户端计算机零配置。
+							它强制使用指定的版本，以减少兼容支持问题。<br/>
+							The Gradle Wrapper allows you to execute Gradle builds on
 							machines where Gradle is not installed. This is useful for
 							example for some continuous integration servers. It is also
 							useful for an open source project to keep the barrier low for
@@ -206,11 +249,12 @@
 							version thus minimizing support issues.</p>
 					</dd>
 					<dt>
-						<span class="term">Free and open source</span>
+						<span class="term">自由和开源<br/>Free and open source</span>
 					</dt>
 					<dd>
 						<p>
-							Gradle is an open source project, and is licensed under the <a
+							Gradle是一个开源项目，并使用<a
+								class="ulink" href="http://www.gradle.org/license" target="_top">ASL</a>授权协议。<br/>Gradle is an open source project, and is licensed under the <a
 								class="ulink" href="http://www.gradle.org/license" target="_top">ASL</a>.
 						</p>
 					</dd>
@@ -222,12 +266,16 @@
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="sec:why_groovy"></a>2.2.&nbsp;Why Groovy?
+							<a name="sec:why_groovy"></a>2.2.&nbsp;为什么使用Groovy? - 2.2.&nbsp;Why Groovy?
 						</h2>
 					</div>
 				</div>
 			</div>
 			<p>
+				我们认为内部DSL（基于一种动态的语言）在庞大的<span class="emphasis"><em>构建脚本</em></span>的情况下 比XML更有优势。它们是一对动态语言。
+				为什么使用Groovy？答案在于 Gradle 内部使用的上下文环境。
+				虽然 Gradle 核心目的是作为通用构建工具，但它还是主要面向 Java 项目。
+				这些项目中的团队成员显然熟悉 Java。我们认为一个构建工具应该尽可能地对<span class="emphasis"><em>所有</em></span>团队成员透明。<br/>
 				We think the advantages of an internal DSL (based on a dynamic
 				language) over XML are tremendous in case of <span class="emphasis"><em>build
 						scripts</em></span>. There are a couple of dynamic languages out there. Why
@@ -238,6 +286,14 @@
 				possible to <span class="emphasis"><em>all</em></span> team members.
 			</p>
 			<p>
+				你可能会想说，为什么不能使用 Java来作为构建脚本的语言。
+				我认为这是一个很有意义的问题。对你们的团队来讲，它确实会有最高的透明度和最低的学习曲线。
+				但由于 Java 本身的局限性，这种构建语言可能就不会那样友善、 富有表现力和强大。
+				<sup>[<a
+					href="#ftn.N100BF" name="N100BF" class="footnote">1</a>]
+				</sup> 这也是为什么像 Python，Groovy 或者 Ruby 这样的语言在这方面表现得更好的原因。
+				我们选择了 Groovy，因为它向Java人员提供了目前为止最大的透明度。
+				其基本的语法，类型，包结构和其他方面都与 Java一样，Groovy 在这之上又增加了许多东西。但是和Java也有着共同点。<br/>
 				You might argue why not using Java then as the language for build
 				scripts. We think this is a valid question. It would have the
 				highest transparency for your team and the lowest learning curve.
@@ -250,7 +306,10 @@
 				type system, its package structure and other things. Groovy builds a
 				lot on top of that. But on a common ground with Java.
 			</p>
-			<p>For Java teams which share also Python or Ruby knowledge or
+			<p>
+				对于那些分享和乐于去学习Python知识的Java团队而言，上述论点并不适用。
+				Gradle 的设计非常适合在 JRuby 或 Jython 中创建另一个构建脚本引擎。
+				那时候，对我们而言，它只是不再是最高优先级的了。我们很高兴去支持任何社区努力创建其他的构建脚本引擎。<br/>For Java teams which share also Python or Ruby knowledge or
 				are happy to learn it, the above arguments don't apply. The Gradle
 				design is well-suited for creating another build script engine in
 				JRuby or Jython. It just doesn't have the highest priority for us at
@@ -262,6 +321,8 @@
 			<hr align="left" width="100">
 			<div class="footnote">
 				<p>
+					<sup>[<a href="#N100BF" name="ftn.N100BF" class="para">1</a>]</sup>
+					在<a class="ulink" href="http://www.defmacro.org/ramblings/lisp.html" target="_top">http://www.defmacro.org/ramblings/lisp.html</a>这里，你会读到一篇有意思的文章，它对Ant, XML, Java 和 Lisp 进行了一些比较。这篇文章里提到“如果Java有那样的语法”，但其实那就是Groovy的语法。<br/>
 					<sup>[<a href="#N100BF" name="ftn.N100BF" class="para">1</a>]
 					</sup>At <a class="ulink"
 						href="http://www.defmacro.org/ramblings/lisp.html" target="_top">http://www.defmacro.org/ramblings/lisp.html</a>
