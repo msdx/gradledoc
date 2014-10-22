@@ -3,17 +3,17 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>第六章-构建基础 Chapter&nbsp;6.&nbsp;Build Script Basics</title>
 <link xmlns:xslthl="http://xslthl.sf.net" type="text/css"
-	rel="stylesheet" href="../base.css">
+	rel="stylesheet" href="base.css">
 <link xmlns:xslthl="http://xslthl.sf.net" type="text/css"
-	rel="stylesheet" href="../docs.css">
+	rel="stylesheet" href="docs.css">
 <link xmlns:xslthl="http://xslthl.sf.net" type="text/css"
-	rel="stylesheet" href="../userguide.css">
+	rel="stylesheet" href="userguide.css">
 <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
-<link rel="home" href="../userguide.html" title="Gradle User Guide">
-<link rel="up" href="../userguide.html" title="Gradle User Guide">
-<link rel="prev" href="../ch5/troubleshooting.html"
+<link rel="home" href="userguide.html" title="Gradle User Guide">
+<link rel="up" href="userguide.html" title="Gradle User Guide">
+<link rel="prev" href="troubleshooting.html"
 	title="Chapter&nbsp;5.&nbsp;Troubleshooting">
-<link rel="next" href="../ch7/tutorial_java_projects.html"
+<link rel="next" href="tutorial_java_projects.html"
 	title="Chapter&nbsp;7.&nbsp;Java Quickstart">
 </head>
 <body>
@@ -21,12 +21,12 @@
 		<div>
 			<div class="navbar">
 				<a xmlns:xslthl="http://xslthl.sf.net"
-					href="../ch5/troubleshooting.html"
+					href="troubleshooting.html"
 					title="Chapter&nbsp;5.&nbsp;Troubleshooting">前一页</a><span>|</span><a
-					xmlns:xslthl="http://xslthl.sf.net" href="../userguide.html"
+					xmlns:xslthl="http://xslthl.sf.net" href="userguide.html"
 					title="Gradle User Guide">返回目录</a><span>|</span><a
 					xmlns:xslthl="http://xslthl.sf.net"
-					href="../ch7/tutorial_java_projects.html"
+					href="tutorial_java_projects.html"
 					title="Chapter&nbsp;7.&nbsp;Java Quickstart">后一页</a>
 			</div>
 		</div>
@@ -175,14 +175,14 @@
 					该文档的示例中很多地方在调用gradle命令时都加了
 					<code class="option">-q</code>
 					参数. 该参数用来控制gradle的日志级别,可以保证只输出我们需要的内容. 具体可参阅本文档 <a class="xref"
-						href="../logging.html"> 第十八章 <i>日志 </i></a>来了解更多参数和信息.<br>
+						href="logging.html"> 第十八章 <i>日志 </i></a>来了解更多参数和信息.<br>
 					Most of the examples in this user guide are run with the
 					<code class="option">-q</code>
 					command-line option. This suppresses Gradle's log messages, so that
 					only the output of the tasks is shown. This keeps the example
 					output in this user guide a little clearer. You don't need to use
 					this option if you don't want. See <a class="xref"
-						href="../logging.html">Chapter&nbsp;18, <i>Logging</i></a> for
+						href="logging.html">Chapter&nbsp;18, <i>Logging</i></a> for
 					more details about the command-line options which affect Gradle's
 					output.
 				</p>
@@ -237,7 +237,7 @@ Hello world!</pre>
 					we <span class="emphasis"><em>always</em></span> mean Gradle tasks,
 					which are the equivalent to Ant's targets. If we talk about Ant
 					tasks (Ant commands), we explicitly say <span class="emphasis"><em>ant
-							task</em></span>. 
+							task</em></span>.
 			</p>
 		</div>
 		<div class="section">
@@ -316,7 +316,7 @@ Hello world!</pre>
 					<pre class="programlisting">task upper &lt;&lt; {
     String someString = <span xmlns:xslthl="http://xslthl.sf.net"
 							class="hl-string">'mY_nAmE'</span>
-    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Original: "</span> + someString 
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Original: "</span> + someString
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Upper case: "</span> + someString.toUpperCase()
 }</pre>
 					<p>
@@ -438,7 +438,7 @@ taskX</pre>
 				是 在
 				<code class="literal">taskY</code>
 				之前定义的,这在多项目构建中非常有用 关于任务依赖的更多信息可以查看<a class="xref"
-					href="../more_about_tasks.html#sec:adding_dependencies_to_tasks">章节&nbsp;15.4,
+					href="more_about_tasks.html#sec:adding_dependencies_to_tasks">章节&nbsp;15.4,
 					&ldquo;给任务添加依赖&rdquo;</a>..<br> The dependency of
 				<code class="literal">taskX</code>
 				to
@@ -447,15 +447,15 @@ taskX</pre>
 				<code class="literal">taskY</code>
 				is defined. This is very important for multi-project builds. Task
 				dependencies are discussed in more detail in <a class="xref"
-					href="../more_about_tasks.html#sec:adding_dependencies_to_tasks">Section&nbsp;15.4,
+					href="more_about_tasks.html#sec:adding_dependencies_to_tasks">Section&nbsp;15.4,
 					&ldquo;Adding dependencies to a task&rdquo;</a>.
 			</p>
 			<p>
 				注意:当引用的任务尚未定义的时候不可使用短标记法(see <a class="xref"
-					href="../tutorial_using_tasks.html#sec:shortcut_notations">章节&nbsp;6.8,
+					href="tutorial_using_tasks.html#sec:shortcut_notations">章节&nbsp;6.8,
 					&ldquo;短标记法&rdquo;</a>) 来运行任务.<br> Please notice that you can't
 				use shortcut notation (see <a class="xref"
-					href="../tutorial_using_tasks.html#sec:shortcut_notations">Section&nbsp;6.8,
+					href="tutorial_using_tasks.html#sec:shortcut_notations">Section&nbsp;6.8,
 					&ldquo;Shortcut notations&rdquo;</a>) when referring to a task that is
 				not yet defined.
 			</p>
@@ -730,10 +730,10 @@ myValue</pre>
 			</div>
 			<br class="example-break"> 自定义属性不仅仅局限于任务上,还可以做更多事情.你可以阅读<a
 				class="xref"
-				href="../writing_build_scripts.html#sec:extra_properties">章节&nbsp;13.4.2,
+				href="writing_build_scripts.html#sec:extra_properties">章节&nbsp;13.4.2,
 				&ldquo;自定义属性&rdquo;</a>来了解更多内容.<br> Extra properties aren't limited
 			to tasks. You can read more about them in <a class="xref"
-				href="../writing_build_scripts.html#sec:extra_properties">Section&nbsp;13.4.2,
+				href="writing_build_scripts.html#sec:extra_properties">Section&nbsp;13.4.2,
 				&ldquo;Extra properties&rdquo;</a>.
 		</div>
 		<div class="section">
@@ -810,11 +810,11 @@ Make the impossible possible, make the possible easy and make the easy elegant.
 			</div>
 			<br class="example-break">
 			<p>
-			         在你脚本里还可以利用Ant做更多的事情.想了解更多请参阅 
-			         <a class="xref" href="../ant.html">章节&nbsp;17,
+			         在你脚本里还可以利用Ant做更多的事情.想了解更多请参阅
+			         <a class="xref" href="ant.html">章节&nbsp;17,
                     <i>在Gradle中调用Ant</i></a><br>
 				There is lots more you can do with Ant in your build scripts. You
-				can find out more in <a class="xref" href="../ant.html">Chapter&nbsp;17,
+				can find out more in <a class="xref" href="ant.html">Chapter&nbsp;17,
 					<i>Using Ant from Gradle</i>
 				</a>.
 			</p>
@@ -887,13 +887,13 @@ I'm fond of gradle.manifesto.txt</pre>
 			    在后面的章节你会看到类似出去出来的方法可以在多项目构建中的子项目中调用.
 			    无论构建逻辑多复杂,Gradle都可以提供给你一种简便的方式来组织它们.想了解更多请参阅
 			     <a class="xref"
-                    href="../organizing_build_logic.html">章节&nbsp;59, <i>组织构建逻辑</i></a>.
+                    href="organizing_build_logic.html">章节&nbsp;59, <i>组织构建逻辑</i></a>.
                <br>
 				Later you will see that such methods can be shared among subprojects
 				in multi-project builds. If your build logic becomes more complex,
 				Gradle offers you other very convenient ways to organize it. We have
 				devoted a whole chapter to this. See <a class="xref"
-					href="../organizing_build_logic.html">Chapter&nbsp;59, <i>Organizing
+					href="organizing_build_logic.html">Chapter&nbsp;59, <i>Organizing
 						Build Logic</i></a>.
 			</p>
 		</div>
@@ -954,10 +954,10 @@ Default Running!</pre>
 			</div>
 			<br class="example-break">
 			<p>
-			
+
 			    这与直接调用<strong class="userinput"><code>gradle clean run</code></strong>效果是一样的.
 			    在多项目构建中,每个子项目都可以指定单独的默认任务.如果子项目未进行指定将会调用父项目指定的的默认任务.
-			  <br> 
+			  <br>
 				This is equivalent to running <strong class="userinput"><code>gradle
 						clean run</code></strong>. In a multi-project build every subproject can have its
 				own specific default tasks. If a subproject does not specify default
@@ -977,11 +977,11 @@ Default Running!</pre>
 			</div>
 			<p>
 			   稍后会对Gradle的配置阶段和运行阶段进行详细说明 (详见 <a class="xref"
-                    href="../build_lifecycle.html">章节&nbsp;55, <i>构建的生命周期</i></a> )配置阶段后,Gradle会了解所有要执行的任务
+                    href="build_lifecycle.html">章节&nbsp;55, <i>构建的生命周期</i></a> )配置阶段后,Gradle会了解所有要执行的任务
                     Gradle提供了一个钩子来捕获这些信息.一个例子就是可以检查已经执行的任务中有没有被释放.借由此,你可以为一些变量赋予不同的值.
                     <br>
 				As we later describe in full detail (see <a class="xref"
-					href="../build_lifecycle.html">Chapter&nbsp;55, <i>The
+					href="build_lifecycle.html">Chapter&nbsp;55, <i>The
 						Build Lifecycle</i></a>), Gradle has a configuration phase and an
 				execution phase. After the configuration phase, Gradle knows all
 				tasks that should be executed. Gradle offers you a hook to make use
@@ -1077,23 +1077,23 @@ We release now</pre>
 			</div>
 			<p>
                                            在本章中,我们了解了什么是task,但这还不够详细.欲知更多请参阅
-                <a class="xref" href="../more_about_tasks.html">章节&nbsp;15, <i>任务进阶</i></a><br>
+                <a class="xref" href="more_about_tasks.html">章节&nbsp;15, <i>任务进阶</i></a><br>
 				In this chapter, we have had a first look at tasks. But this is not
 				the end of the story for tasks. If you want to jump into more of the
 				details, have a look at <a class="xref"
-					href="../more_about_tasks.html">Chapter&nbsp;15, <i>More
+					href="more_about_tasks.html">Chapter&nbsp;15, <i>More
 						about Tasks</i>
 				</a>.
 			</p>
 			<p>
 			    另外,可以目录继续学习
-			  <a class="xref" href="../tutorial_java_projects.html">第七章&nbsp;, <i>Java
+			  <a class="xref" href="tutorial_java_projects.html">第七章&nbsp;, <i>Java
                                         快速入门</i></a> 和 <a class="xref"
-                    href="../artifact_dependencies_tutorial.html">第八章&nbsp;, <i>依赖管理基础</i></a>.<br>
+                    href="artifact_dependencies_tutorial.html">第八章&nbsp;, <i>依赖管理基础</i></a>.<br>
 				Otherwise, continue on to the tutorials in <a class="xref"
-					href="../tutorial_java_projects.html">Chapter&nbsp;7, <i>Java
+					href="tutorial_java_projects.html">Chapter&nbsp;7, <i>Java
 						Quickstart</i></a> and <a class="xref"
-					href="../artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
+					href="artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
 						Management Basics</i></a>.
 			</p>
 		</div>
@@ -1104,11 +1104,11 @@ We release now</pre>
 				<p>
 					<sup>[<a href="#N101CA" name="ftn.N101CA" class="para">2</a>]
 					附录中有命令可以更改这种默认行为. 请参阅 <a
-                        class="xref" href="../gradle_command_line.html">附录&nbsp;D,
+                        class="xref" href="gradle_command_line.html">附录&nbsp;D,
                         <i>Gradle 命令行</i>
                         <br>
 					</sup>There are command line switches to change this behavior. See <a
-						class="xref" href="../gradle_command_line.html">Appendix&nbsp;D,
+						class="xref" href="gradle_command_line.html">Appendix&nbsp;D,
 						<i>Gradle Command Line</i>
 					</a>)
 				</p>
@@ -1119,12 +1119,12 @@ We release now</pre>
 		<div>
 			<div class="navbar">
 				<a xmlns:xslthl="http://xslthl.sf.net"
-					href="../ch5/troubleshooting.html"
+					href="troubleshooting.html"
 					title="章节&nbsp;5.&nbsp;问题反馈">上一页</a><span>|</span><a
-					xmlns:xslthl="http://xslthl.sf.net" href="../userguide.html"
+					xmlns:xslthl="http://xslthl.sf.net" href="userguide.html"
 					title="Gradle User Guide">返回目录</a><span>|</span><a
 					xmlns:xslthl="http://xslthl.sf.net"
-					href="../ch7/tutorial_java_projects.html"
+					href="tutorial_java_projects.html"
 					title="章节&nbsp;7.&nbsp;Java Quickstart">下一页</a>
 			</div>
 		</div>

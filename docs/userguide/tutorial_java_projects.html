@@ -3,17 +3,17 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>第七章 - Java构建入门 Chapter&nbsp;7.&nbsp;Java Quickstart</title>
 <link xmlns:xslthl="http://xslthl.sf.net" type="text/css"
-	rel="stylesheet" href="../base.css">
+	rel="stylesheet" href="base.css">
 <link xmlns:xslthl="http://xslthl.sf.net" type="text/css"
-	rel="stylesheet" href="../docs.css">
+	rel="stylesheet" href="docs.css">
 <link xmlns:xslthl="http://xslthl.sf.net" type="text/css"
-	rel="stylesheet" href="../userguide.css">
+	rel="stylesheet" href="userguide.css">
 <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
-<link rel="home" href="../userguide.html" title="Gradle User Guide">
-<link rel="up" href="../userguide.html" title="Gradle User Guide">
-<link rel="prev" href="../ch6/tutorial_using_tasks.html"
+<link rel="home" href="userguide.html" title="Gradle User Guide">
+<link rel="up" href="userguide.html" title="Gradle User Guide">
+<link rel="prev" href="tutorial_using_tasks.html"
 	title="Chapter&nbsp;6.&nbsp;Build Script Basics">
-<link rel="next" href="../ch8/artifact_dependencies_tutorial.html"
+<link rel="next" href="artifact_dependencies_tutorial.html"
 	title="Chapter&nbsp;8.&nbsp;Dependency Management Basics">
 </head>
 <body>
@@ -21,12 +21,12 @@
 		<div>
 			<div class="navbar">
 				<a xmlns:xslthl="http://xslthl.sf.net"
-					href="../ch6/tutorial_using_tasks.html"
+					href="tutorial_using_tasks.html"
 					title="Chapter&nbsp;6.&nbsp;Build Script Basics">Previous</a><span>|</span><a
-					xmlns:xslthl="http://xslthl.sf.net" href="../userguide.html"
+					xmlns:xslthl="http://xslthl.sf.net" href="userguide.html"
 					title="Gradle User Guide">Contents</a><span>|</span><a
 					xmlns:xslthl="http://xslthl.sf.net"
-					href="../ch8/artifact_dependencies_tutorial.html"
+					href="artifact_dependencies_tutorial.html"
 					title="Chapter&nbsp;8.&nbsp;Dependency Management Basics">Next</a>
 			</div>
 		</div>
@@ -365,9 +365,9 @@ Total time: 1 secs</pre>
 				<br class="example-break">
 				<p>
 				    了解更多可参阅<a class="xref"
-                        href="../ch8/artifact_dependencies_tutorial.html">第&nbsp;8&nsbp;章, <i>依赖管理基础</i></a>.<br>
+                        href="artifact_dependencies_tutorial.html">第&nbsp;8&nsbp;章, <i>依赖管理基础</i></a>.<br>
 					You can find out more in <a class="xref"
-						href="../ch8/artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
+						href="artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
 							Management Basics</i></a>.
 				</p>
 			</div>
@@ -435,7 +435,7 @@ jar {
 				    Java插件添加的都是一些普通任务,如同他们写在Build文件中一样.这意味着前面章节展示的机制都可以用来修改这些任务的行为.
 				    例如,可以设置任务的属性,添加任务行为,更改任务依赖,甚至是重写覆盖整个任务.在下面的例子中,我们将修改    <code class="literal">test</code>任务,
 				     这是一个<a class="ulink"
-                        href="../../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code
+                        href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code
                             class="classname">Test</code></a>类型任务.让我们来在它执行时为它添加一些系统属性.<br>
 					The tasks which the Java plugin adds are regular tasks, exactly the
 					same as if they were declared in the build file. This means you can
@@ -445,7 +445,7 @@ jar {
 					a task entirely. In our sample, we will configure the
 					<code class="literal">test</code>
 					task, which is of type <a class="ulink"
-						href="../../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code
+						href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code
 							class="classname">Test</code></a>, to add a system property when the
 					tests are executed:
 				</p>
@@ -554,11 +554,11 @@ jar {
 				<br class="example-break">
 				<p>
 				 执行<strong class="userinput"><code>gradle eclipse</code></strong>来生成Eclipse项目文件.了解更多内容请参阅
-				 <a class="xref" href="../eclipse_plugin.html">第&nbsp;38&nbsp;章, <i>The Eclipse 插件</i></a>.<br>
+				 <a class="xref" href="eclipse_plugin.html">第&nbsp;38&nbsp;章, <i>The Eclipse 插件</i></a>.<br>
 					Now execute <strong class="userinput"><code>gradle
 							eclipse</code></strong> command to generate Eclipse project files. More on
 					Eclipse task can be found in <a class="xref"
-						href="../eclipse_plugin.html">Chapter&nbsp;38, <i>The Eclipse
+						href="eclipse_plugin.html">Chapter&nbsp;38, <i>The Eclipse
 							Plugin</i></a>.
 				</p>
 			</div>
@@ -673,7 +673,7 @@ uploadArchives {
   shared/</pre>
 					<div class="exampleLocation">
 						<p>
-						<span class="emphasis"><em>备注:</em></span> 
+						<span class="emphasis"><em>备注:</em></span>
 						本示例代码可在Gradle发行包的<code class="filename">samples/java/multiproject</code>位置找到<br>
 							<span class="emphasis"><em>Note:</em></span> The code for this
 							example can be found at
@@ -749,9 +749,9 @@ uploadArchives {
 				<br class="example-break">
 				<p>
 				了解更多可参阅<a class="xref"
-                        href="../multi_project_builds.html">第&nbsp;56&nbsp;章, <i>多项目构建</i></a>.<br>
+                        href="multi_project_builds.html">第&nbsp;56&nbsp;章, <i>多项目构建</i></a>.<br>
 					You can find out more about the settings file in <a class="xref"
-						href="../multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project
+						href="multi_project_builds.html">Chapter&nbsp;56, <i>Multi-project
 							Builds</i></a>.
 				</p>
 			</div>
@@ -879,13 +879,13 @@ uploadArchives {
 }</pre>
 					</div>
 				</div>
-				<br class="example-break"> 
+				<br class="example-break">
 				参阅
 				 <a class="xref"
-                    href="../multi_project_builds.html#disable_dependency_projects">56.7.1&nbsp;小节,
+                    href="multi_project_builds.html#disable_dependency_projects">56.7.1&nbsp;小节,
                     &ldquo;停用项目依赖&rdquo;</a>来了解如何停用此功能.<br>
 				See <a class="xref"
-					href="../multi_project_builds.html#disable_dependency_projects">Section&nbsp;56.7.1,
+					href="multi_project_builds.html#disable_dependency_projects">Section&nbsp;56.7.1,
 					&ldquo;Disabling the build of dependency projects&rdquo;</a> for how to
 				disable this functionality.
 			</div>
@@ -950,23 +950,23 @@ artifacts {
 			</div>
 			<p>
 			    本章中,我们了解了如何构建一个基本Java工程.但这都是一小部分基础,用Gradle还可以做很多事.关于Java插件想了解更多可参阅
-			    <a class="xref" href="../java_plugin.html">第&nbsp;23&nbsp;章, <i>The Java Plugin</i></a>,并且你可以在Gradle发行包中的
+			    <a class="xref" href="java_plugin.html">第&nbsp;23&nbsp;章, <i>The Java Plugin</i></a>,并且你可以在Gradle发行包中的
 			    <code class="filename">samples/java</code>目录找到更多例子.<br>
 				In this chapter, you have seen how to do some of the things you
 				commonly need to build a Java based project. This chapter is not
 				exhaustive, and there are many other things you can do with Java
 				projects in Gradle. You can find out more about the Java plugin in <a
-					class="xref" href="../java_plugin.html">Chapter&nbsp;23, <i>The
+					class="xref" href="java_plugin.html">Chapter&nbsp;23, <i>The
 						Java Plugin</i></a>, and you can find more sample Java projects in the
 				<code class="filename">samples/java</code>
 				directory in the Gradle distribution.
 			</p>
 			<p>
 			  另外,不要忘了继续阅读<a class="xref"
-                    href="../ch8/artifact_dependencies_tutorial.html">第&nbsp;8&nbsp;章, <i>依赖管理基础</i></a>
+                    href="artifact_dependencies_tutorial.html">第&nbsp;8&nbsp;章, <i>依赖管理基础</i></a>
                         内容哟~~~<br>
 				Otherwise, continue on to <a class="xref"
-					href="../ch8/artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
+					href="artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency
 						Management Basics</i></a>.
 			</p>
 			<p></p>
@@ -976,12 +976,12 @@ artifacts {
 		<div>
 			<div class="navbar">
 				<a xmlns:xslthl="http://xslthl.sf.net"
-					href="../ch6/tutorial_using_tasks.html"
+					href="tutorial_using_tasks.html"
 					title="章节&nbsp;6.&nbsp;构建基础">上一页</a><span>|</span><a
-					xmlns:xslthl="http://xslthl.sf.net" href="../userguide.html"
+					xmlns:xslthl="http://xslthl.sf.net" href="userguide.html"
 					title="Gradle User Guide">返回目录</a><span>|</span><a
 					xmlns:xslthl="http://xslthl.sf.net"
-					href="../ch8/artifact_dependencies_tutorial.html"
+					href="artifact_dependencies_tutorial.html"
 					title="章节&nbsp;8.&nbsp;依赖管理基础">下一页</a>
 			</div>
 		</div>
