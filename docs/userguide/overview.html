@@ -80,12 +80,12 @@
 							and comprehensible builds.</p>
 					</dd>
 					<dt>
-						<span class="term">基于编程的依赖语言<br/>Language for dependency based
+						<span class="term">为以依赖为基础的编程方式提供语言支持<br/>Language for dependency based
 							programming</span>
 					</dt>
 					<dd>
-						<p>声明性语言位于通用任务图的顶层，你可以在开发中充分利用。
-							它提供了最大限度的灵活性，以满足你对Gradle的特殊需求。<br/>
+						<p>声明性语言优点在于通用任务图，你可以将其充分利用在构建中.
+							它提供了最大限度的灵活性，以让Gradle适应你的特殊需求。<br/>
 							The declarative language lies on top of a general purpose
 							task graph, which you can fully leverage in your builds. It
 							provides utmost flexibility to adapt Gradle to your unique needs.
@@ -95,10 +95,9 @@
 						<span class="term">构建结构化<br/>Structure your build</span>
 					</dt>
 					<dd>
-						<p>Gradle的灵活和丰富性最终能够让你将常见的设计原则应用到你的构建当中。
-							例如，它可以通过构建逻辑的可重用块使编写构建脚本变得非常简单。
-							对内联的东西，进行不必要的间接关联是不恰当的。
-							不要把原本在一起的东西强行分开（比如在你的项目结构里），从而避免让你的构建变得难以维护。
+						<p>Gradle的灵活和丰富性最终能够支持在你的构建中应用通用的设计模式。
+							例如，它可以很容易地将你的构建拆分为多个可重用的模块，最后再进行组装，但不要强制地进行模块的拆分。
+							不要把原本在一起的东西强行分开（比如在你的项目结构里），从而避免让你的构建变成一场噩梦。
 							最后，你可以创建一个结构良好，易于维护，易于理解的构建。<br/>
 							The suppleness and richness of Gradle finally allows you to
 							apply common design principles to your build. For example, it is
@@ -111,10 +110,10 @@
 							structured, easily maintained, comprehensible build.</p>
 					</dd>
 					<dt>
-						<span class="term">API深入<br/>Deep API</span>
+						<span class="term">深度API<br/>Deep API</span>
 					</dt>
 					<dd>
-						<p>Gradle允许你在构建执行的整个生命周期，对它的核心进行监视并自定义配置和执行行为。<br/>
+						<p>Gradle允许你在构建执行的整个生命周期，对它的核心配置及执行行为进行监视并自定义。<br/>
 							From being a pleasure to be used embedded to its many hooks
 							over the whole lifecycle of build execution, Gradle allows you to
 							monitor and customize its configuration and execution behavior to
@@ -126,7 +125,7 @@
 					<dd>
 						<p>Gradle有非常良好的扩展性。
 							从简单的单项目构建，到庞大的多项目构建，它都能显著地提升你的效率。
-							这是真正的结构化构建。通过最先进的增量构建功能，它也攻克了许多大型企业所面临的性能瓶颈问题。<br/>
+							这才是真正的结构化构建。通过最先进的增量构建功能，它可以解决许多大型企业所面临的性能瓶颈问题。<br/>
 							Gradle scales very well. It significantly increases your
 							productivity, from simple single project builds up to huge
 							enterprise multi-project builds. This is true for structuring the
@@ -138,9 +137,9 @@
 						<span class="term">多项目构建<br/>Multi-project builds</span>
 					</dt>
 					<dd>
-						<p>Gradle对多项目构建的支持非常出色。项目依赖是最重要的。
+						<p>Gradle对多项目构建的支持非常出色。项目依赖是首先需要考虑的问题。
 							我们允许你在多项目构建当中对项目依赖关系进行建模，因为它们才是你真正的问题域。
-							Gradle遵守你的布局，反之则不然。<br/>
+							Gradle遵守你的布局。<br/>
 							Gradle's support for multi-project build is outstanding.
 							Project dependencies are first class citizens. We allow you to
 							model the project relationships in a multi-project build as they
@@ -172,7 +171,7 @@
 					</dt>
 					<dd>
 						<p>Ant tasks是最重要的。而更有趣的是，Ant projects也是最重要的。
-							Gradle对任意的Ant项目提供了深度导入，并在运行时将Ant targets转换为原生的Gradle tasks。
+							Gradle对任意的Ant项目提供了深度导入，并在运行时将Ant 目标(target)转换为原生的Gradle 任务(task)。
 							你可以从Gradle上依赖它们(Ant targets)，增强它们，甚至在你的build.xml上定义对Gradle tasks的依赖。Gradle为属性、路径等等提供了同样的整合。<br/>Ant tasks are first class citizens. Even more interesting,
 							Ant projects are first class citizens as well. Gradle provides a
 							deep import for any Ant project, turning Ant targets into native
@@ -266,8 +265,9 @@
 				<div>
 					<div>
 						<h2 class="title">
-							<a name="sec:why_groovy"></a>2.2.&nbsp;为什么使用Groovy? - 2.2.&nbsp;Why Groovy?
+							<a name="sec:why_groovy"></a>2.2.&nbsp;为什么使用Groovy?
 						</h2>
+                        <h4>2.2.&nbsp;Why Groovy?</h4>
 					</div>
 				</div>
 			</div>
