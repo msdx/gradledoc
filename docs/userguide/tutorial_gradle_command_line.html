@@ -889,7 +889,7 @@ org.codehaus.groovy:groovy-all:2.2.0
                 <br class="example-break">
                 <p>
                     这对于了解依赖关系、了解为何选择此版本作为依赖十分有用.了解更多请参阅 <a class="ulink"
-                        href="../../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html"
+                        href="../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html"
                         target="_top"><code class="classname">依赖检查报告</code></a>.<br>
                     This task is extremely useful for investigating the dependency
                     resolution, finding out where certain dependencies are coming from
@@ -903,7 +903,7 @@ org.codehaus.groovy:groovy-all:2.2.0
                      如果用了Java相关的插件,那么dependencyInsight任务已经预先被配置到'Compile'下了.
                   你只需要通过'--dependency'参数来制定所需查看的依赖即可.如果你不想用默认配置的参数项你可以通过
                    '--configuration' 参数来进行指定.了解更多请参阅 <a class="ulink"
-                        href="../../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html"
+                        href="../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html"
                         target="_top"><code class="classname">依赖检查报告</code></a>.<br>
                     The built-in dependencyInsight task is a part of the 'Help' tasks group. The task needs to configured with the dependency and the configuration. The report looks for the dependencies that match the specified dependency spec in the specified configuration. If java related plugin is applied, the dependencyInsight task is pre-configured with 'compile' configuration because typically it's the compile dependencies we are interested in. You should specify the dependency you are interested in via the command line '--dependency' option. If you don't like the defaults you may select the configuration via '--configuration' option. For more information see <a class="ulink"
                         href="../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html"
