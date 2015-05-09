@@ -1,60 +1,354 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;20.&nbsp;The Build Environment</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="gradle_daemon.html" title="Chapter&nbsp;19.&nbsp;The Gradle Daemon"><link rel="next" href="plugins.html" title="Chapter&nbsp;21.&nbsp;Gradle Plugins"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="gradle_daemon.html" title="Chapter&nbsp;19.&nbsp;The Gradle Daemon">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="plugins.html" title="Chapter&nbsp;21.&nbsp;Gradle Plugins">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="build_environment"></a>Chapter&nbsp;20.&nbsp;The Build Environment</h1></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:gradle_configuration_properties"></a>20.1.&nbsp;Configuring the build environment via gradle.properties</h2></div></div></div><p>Gradle provides several options that make it easy to configure the Java process that will be used to execute your build.
+<html>
+<head>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>第二十章. 构建环境 - Chapter&nbsp;20.&nbsp;The Build Environment</title>
+	<link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+	<link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+	<link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+	<meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+	<link rel="home" href="userguide.html" title="Gradle 用户指南">
+	<link rel="up" href="userguide.html" title="Gradle 用户指南">
+	<link rel="prev" href="gradle_daemon.html" title="第十九章. Gradle 守护进程">
+	<link rel="next" href="plugins.html" title="第二十一章. Gradle 插件"></head>
+<body>
+	<div class="navheader">
+		<div>
+			<div class="navbar">
+				<a xmlns:xslthl="http://xslthl.sf.net" href="gradle_daemon.html" title="第十九章. Gradle 守护进程">上一章</a>
+				<span>|</span>
+				<a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+				<span>|</span>
+				<a xmlns:xslthl="http://xslthl.sf.net" href="plugins.html" title="第二十一章. Gradle 插件">下一章</a>
+			</div>
+		</div>
+	</div>
+	<div class="chapter">
+		<div class="titlepage">
+			<div>
+				<div><h1 xmlns:xslthl="http://xslthl.sf.net">
+            <a name="build_environment"></a>第二十章. 构建环境</h1>
+					<h3 xmlns:xslthl="http://xslthl.sf.net">
+						<a name="build_environment"></a>
+						Chapter&nbsp;20.&nbsp;The Build Environment
+					</h3>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="titlepage">
+				<div>
+					<div><h2 class="title">
+              <a name="sec:gradle_configuration_properties"></a>20.1. 通过 gradle.properties 配置构建环境</h2>
+						<h4 class="title">
+							<a name="sec:gradle_configuration_properties"></a>
+							20.1.&nbsp;Configuring the build environment via gradle.properties
+						</h4>
+					</div>
+				</div>
+			</div>
+			<p>Gradle 提供了几个选项，可以很容易地配置将用于执行您的构建的 Java 进程。当可以通过
+        GRADLE_OPTS 或 JAVA_OPTS 在你的本地环境中配置这些选项时，如果某些设置如 JVM 内存设置， Java
+        home，
+        守护进程的开/关，它们可以和你的项目在你的版本控制系统中被版本化的话，将会更有用，这样整个团队就可以使用一致的环境了。在你的构建当中，建立一致的环境，就和把这些配置放进
+        
+        <code class="filename">gradle.properties</code>
+        文件一样简单。这些配置将会按以下顺序被应用（以防在多个地方都有配置时只有最后一个
+        生效）：<br/>
+				Gradle provides several options that make it easy to configure the Java process that will be used to execute your build.
             While it's possible to configure these in your local environment via GRADLE_OPTS or JAVA_OPTS,
             certain settings like JVM memory settings, Java home, daemon on/off
             can be more useful if they can versioned with the project in your VCS so that
             the entire team can work with consistent environment.
-            Setting up a consistent environment for your build is as simple as placing those settings into a <code class="filename">gradle.properties</code> file.
+            Setting up a consistent environment for your build is as simple as placing those settings into a
+				<code class="filename">gradle.properties</code>
+				file.
             The configuration is applied in following order
             (in case an option is configured in multiple locations the last one wins):
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">from <code class="filename">gradle.properties</code> located in project build dir.</li><li class="listitem">from <code class="filename">gradle.properties</code> located in <code class="literal">gradle user home</code>.</li><li class="listitem">from system properties, e.g. when <code class="literal">-Dsome.property</code> is used in the command line.</li></ul></div><p>
-        </p><p>
-            The following properties can be used to configure the Gradle build environment:
-            <dt><span class="term"><code class="literal">org.gradle.daemon</code></span></dt><dd><p>When set to <code class="literal">true</code> the Gradle daemon is to run the build.
+			</p>
+			<div class="itemizedlist">
+				<ul class="itemizedlist">
+					<li class="listitem">位于项目构建目录的
+            <code class="filename">gradle.properties</code>。<br/>
+						from
+						<code class="filename">gradle.properties</code>
+						located in project build dir.
+					</li>
+					<li class="listitem">位于
+            <code class="literal">gradle 用户主目录</code>的
+            <code class="filename">gradle.properties</code>。<br/>
+						from
+						<code class="filename">gradle.properties</code>
+						located in
+						<code class="literal">gradle user home</code>
+						.
+					</li>
+					<li class="listitem">系统属性，例如当在命令行中使用 
+            <code class="literal">-Dsome.property</code> 时。<br/>
+						from system properties, e.g. when
+						<code class="literal">-Dsome.property</code>
+						is used in the command line.
+					</li>
+				</ul>
+			</div>
+			<p></p>
+			<p>下面的属性可以用于配置 Gradle 构建环境：<br/>
+				The following properties can be used to configure the Gradle build environment:
+				<dt>
+					<span class="term">
+						<code class="literal">org.gradle.daemon</code>
+					</span>
+				</dt>
+				<dd>
+					<p>当设置为
+            <code class="literal">true</code> 时，Gradle
+            守护进程会运行构建。对于本地开发者的构建而言，这是我们最喜欢的属性。开发人员的环境在速度和反馈上会优化，所以我们几乎总是使用守护进程运行
+            Gradle 作业。由于 CI 环境在一致性和可靠性上的优化，我们不通过守护进程运行 CI
+            构建（即长时间运行进程） 。<br/>
+						When set to
+						<code class="literal">true</code>
+						the Gradle daemon is to run the build.
                     For local developer builds this is our favorite property. The developer environment is optimized for speed and feedback
                     so we nearly always run Gradle jobs with the daemon.
                     We don't run CI builds with the daemon (i.e. a long running process)
                     as the CI environment is optimized for consistency and reliability.
-                </p></dd>
-            <dt><span class="term"><code class="literal">org.gradle.java.home</code></span></dt><dd><p>Specifies the java home for the Gradle build process.
-                    The value can be set to either <code class="literal">jdk</code> or <code class="literal">jre</code> location,
-                    however, depending on what does your build do, <code class="literal">jdk</code> is safer.
-                    Reasonable default is used if the setting is unspecified.</p></dd>
-            <dt><span class="term"><code class="literal">org.gradle.jvmargs</code></span></dt><dd><p>Specifies the jvmargs used for the daemon process.
+					</p>
+				</dd>
+				<dt>
+					<span class="term">
+						<code class="literal">org.gradle.java.home</code>
+					</span>
+				</dt>
+				<dd>
+					<p>为 Gradle 构建进程指定 java home目录。这个值可以设置为
+            <code class="literal">jdk</code>或
+            <code class="literal">jre</code>的位置，不过，根据你的构建所做的，选择 
+            <code class="literal">jdk</code>会更安全。如果该设置未指定，将使用合理的默认值。<br/>
+						Specifies the java home for the Gradle build process.
+                    The value can be set to either
+						<code class="literal">jdk</code>
+						or
+						<code class="literal">jre</code>
+						location,
+                    however, depending on what does your build do,
+						<code class="literal">jdk</code>
+						is safer.
+                    Reasonable default is used if the setting is unspecified.
+					</p>
+				</dd>
+				<dt>
+					<span class="term">
+						<code class="literal">org.gradle.jvmargs</code>
+					</span>
+				</dt>
+				<dd>
+					<p>指定用于该守护进程的
+            jvmargs。该设置对调整内存设置特别有用。目前的内存上的默认设置很大方。<br/>
+						Specifies the jvmargs used for the daemon process.
                     The setting is particularly useful for tweaking memory settings.
-                    At the moment the default settings are pretty generous with regards to memory.</p></dd>
-            <dt><span class="term"><code class="literal">org.gradle.configureondemand</code></span></dt><dd><p>Enables new incubating mode that makes Gradle selective when configuring projects.
+                    At the moment the default settings are pretty generous with regards to memory.
+					</p>
+				</dd>
+				<dt>
+					<span class="term">
+						<code class="literal">org.gradle.configureondemand</code>
+					</span>
+				</dt>
+				<dd>
+					<p>启用新的孵化中的模式，可以在配置项目时使得 Gradle
+            具有选择性。只适用于相关的项目被配置为在大型多项目中更快地构建。请参阅
+            <a class="xref" href="multi_project_builds.html#sec:configuration_on_demand">56.1.1.1蘵，“配置 on
+            demand”</a>。
+						Enables new incubating mode that makes Gradle selective when configuring projects.
                     Only relevant projects are configured which results in faster builds for large multi-projects.
-                    See <a class="xref" href="multi_project_builds.html#sec:configuration_on_demand">Section&nbsp;56.1.1.1, &ldquo;Configuration on demand&rdquo;</a>.</p></dd>
-            <dt><span class="term"><code class="literal">org.gradle.parallel</code></span></dt><dd><p>When configured, Gradle will run in incubating parallel mode.</p></dd>
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1179E"></a>20.1.1.&nbsp;Forked java processes</h3></div></div></div><p>Many settings (like the java version and maximum heap size) can only be specified when launching a new JVM for the build process. This means that Gradle
-                must launch a separate JVM process to execute the build after parsing the various <code class="filename">gradle.properties</code> files.
+                    See
+						<a class="xref" href="multi_project_builds.html#sec:configuration_on_demand">Section&nbsp;56.1.1.1, &ldquo;Configuration on demand&rdquo;</a>
+						.
+					</p>
+				</dd>
+				<dt>
+					<span class="term">
+						<code class="literal">org.gradle.parallel</code>
+					</span>
+				</dt>
+				<dd>
+					<p>如果配置了这一个，Gradle 将在孵化中的并行模式下运行。
+						When configured, Gradle will run in incubating parallel mode.
+					</p>
+				</dd>
+			</p>
+			<div class="section">
+				<div class="titlepage">
+					<div>
+						<div>
+						<h3 class="title">
+                    <a name="N1179E"></a>20.1.1. Forked java 进程</h3>
+							<h5 class="title">
+								<a name="N1179E"></a>
+								20.1.1.&nbsp;Forked java processes
+							</h5>
+						</div>
+					</div>
+				</div>
+				<p>许多设置（如 java 版本和最大堆大小）可以在启动一个新的 JVM
+              构建进程时指定。这意味着 Gradle 在分析了各种
+              <code class="filename">gradle.properties</code>文件之后，必须启动一个单独的 JVM
+              进程，以执行构建操作。当通过守护进程运行时，带有正确参数的 JVM
+              会启动一次，并在每次的守护进程构建执行时复用。当不通过守护进程执行 Gradle
+              时，在每次构建执行中都必须启动一个新的 JVM ，除非 JVM 是由 Gradle
+              启动脚本启动的，并且恰好具有相同的参数。<br/>
+					Many settings (like the java version and maximum heap size) can only be specified when launching a new JVM for the build process. This means that Gradle
+                must launch a separate JVM process to execute the build after parsing the various
+					<code class="filename">gradle.properties</code>
+					files.
                 When running with the daemon, a JVM with the correct parameters is started once and reused for each daemon build execution.
                 When Gradle is executed without the daemon, then a new JVM must be launched for every build execution,
                 unless the JVM launched by the Gradle start script happens to have the same parameters.
-            </p><p>
-            This launching of an extra JVM on every build execution is quite expensive, which is why we highly recommend that you use the Gradle Daemon if you are
-            specifying <code class="literal">org.gradle.java.home</code> or <code class="literal">org.gradle.jvmargs</code>. See <a class="xref" href="gradle_daemon.html">Chapter&nbsp;19, <i>The Gradle Daemon</i></a> for more details.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:accessing_the_web_via_a_proxy"></a>20.2.&nbsp;Accessing the web via a proxy</h2></div></div></div><p>Configuring an HTTP proxy (for example for downloading dependencies) is done via standard JVM system properties. These properties can be set directly in the build script; for example <code class="literal">
-                System.setProperty('http.proxyHost', 'www.somehost.org')</code> for the proxy host. Alternatively, the properties can be specified in a gradle.properties file,
+				</p>
+				<p>
+					This launching of an extra JVM on every build execution is quite expensive, which is why we highly recommend that you use the Gradle Daemon if you are
+            specifying
+					<code class="literal">org.gradle.java.home</code>
+					or
+					<code class="literal">org.gradle.jvmargs</code>
+					. See
+					<a class="xref" href="gradle_daemon.html">
+						Chapter&nbsp;19, <i>The Gradle Daemon</i>
+					</a>
+					for more details.
+				</p>
+			</div>
+		</div>
+		<div class="section">
+			<div class="titlepage">
+				<div>
+					<div><h2 class="title">
+              <a name="sec:accessing_the_web_via_a_proxy"></a>20.2. 通过代理访问网站</h2>
+						<h4 class="title">
+							<a name="sec:accessing_the_web_via_a_proxy"></a>
+							20.2.&nbsp;Accessing the web via a proxy
+						</h4>
+					</div>
+				</div>
+			</div>
+			<p>配置 HTTP 代理服务器 （例如用于下载依赖） 是通过标准的 JVM
+        系统属性来做的。这些属性可以直接在构建脚本中设置；例如设置代理主机为 
+        <code class="literal">System.setProperty （&#39;http.proxyHost&#39;,
+        &#39;www.somehost.org&#39;）</code>。或者，可以在构建的根目录或 Gradle 主目录中的 gradle.properties
+        文件中指定这些属性。<br/>
+				Configuring an HTTP proxy (for example for downloading dependencies) is done via standard JVM system properties. These properties can be set directly in the build script; for example
+				<code class="literal">System.setProperty('http.proxyHost', 'www.somehost.org')</code>
+				for the proxy host. Alternatively, the properties can be specified in a gradle.properties file,
             either in the build's root directory or in the Gradle home directory.
-        </p><div class="example"><a name="N117BA"></a><p class="title"><b>Example&nbsp;20.1.&nbsp;Configuring an HTTP proxy</b></p><div class="example-contents"><p><code class="filename">gradle.properties</code></p><pre class="programlisting">systemProp.http.proxyHost=www.somehost.org
+			</p>
+			<div class="example">
+				<a name="N117BA"></a>
+				<p class="title"><b>示例 20.1. 配置 HTTP 代理服务器</b><br/>
+				<b>Example&nbsp;20.1.&nbsp;Configuring an HTTP proxy</b>
+				</p>
+				<div class="example-contents">
+					<p>
+						<code class="filename">gradle.properties</code>
+					</p>
+					<pre class="programlisting">systemProp.http.proxyHost=www.somehost.org
 systemProp.http.proxyPort=8080
 systemProp.http.proxyUser=userid
 systemProp.http.proxyPassword=password
-systemProp.http.nonProxyHosts=*.nonproxyrepos.com|localhost</pre></div></div><br class="example-break"><p>There are separate settings for HTTPS.</p><div class="example"><a name="N117C4"></a><p class="title"><b>Example&nbsp;20.2.&nbsp;Configuring an HTTPS proxy</b></p><div class="example-contents"><p><code class="filename">gradle.properties</code></p><pre class="programlisting">systemProp.https.proxyHost=www.somehost.org
+systemProp.http.nonProxyHosts=*.nonproxyrepos.com|localhost</pre>
+				</div>
+			</div>
+			<br class="example-break">
+			<p>对于 HTTPS 有单独的设置。<br/>
+			There are separate settings for HTTPS.</p>
+			<div class="example">
+				<a name="N117C4"></a>
+				<p class="title"> <b>示例 20.2. 配置 HTTPS 代理服务器</b><br/>
+				<b>Example&nbsp;20.2.&nbsp;Configuring an HTTPS proxy</b>
+				</p>
+				<div class="example-contents">
+					<p>
+						<code class="filename">gradle.properties</code>
+					</p>
+					<pre class="programlisting">systemProp.https.proxyHost=www.somehost.org
 systemProp.https.proxyPort=8080
 systemProp.https.proxyUser=userid
 systemProp.https.proxyPassword=password
-systemProp.https.nonProxyHosts=*.nonproxyrepos.com|localhost</pre></div></div><br class="example-break"><p>We could not find a good overview for all possible proxy settings. One place to look are the constants
+systemProp.https.nonProxyHosts=*.nonproxyrepos.com|localhost</pre>
+				</div>
+			</div>
+			<br class="example-break">
+			<p>我们无法很好地概述所有可能的代理服务器设置。其中可以去看的一个地方是 Ant
+        项目的一个文件中的常量。这里是SVN的视图的
+        <a class="ulink"
+        href="http://svn.apache.org/viewvc/ant/core/trunk/src/main/org/apache/tools/ant/util/ProxySetup.java?view=markup&amp;pathrev=556977"
+        target="_top">链接</a>。另一个地方是 JDK 文档的
+        <a class="ulink" href="http://download.oracle.com/javase/6/docs/technotes/guides/net/properties.html"
+        target="_top">网络属性页</a>。如果有人知道更好的概述，请发邮件让我们知道。<br/>
+				We could not find a good overview for all possible proxy settings. One place to look are the constants
             in a file from the Ant project. Here a
-            <a class="ulink" href="http://svn.apache.org/viewvc/ant/core/trunk/src/main/org/apache/tools/ant/util/ProxySetup.java?view=markup&amp;pathrev=556977" target="_top">
-                link
-            </a> to the Subversion view. The other is a
-            <a class="ulink" href="http://download.oracle.com/javase/6/docs/technotes/guides/net/properties.html" target="_top">
-                Networking Properties page
-            </a> from the JDK docs. If anyone knows a better overview, please let us know via the mailing list.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:ntlm_authentication"></a>20.2.1.&nbsp;NTLM Authentication</h3></div></div></div><p>If your proxy requires NTLM authentication, you may need to provide the authentication domain as well as the username and password.
+				<a class="ulink" href="http://svn.apache.org/viewvc/ant/core/trunk/src/main/org/apache/tools/ant/util/ProxySetup.java?view=markup&amp;pathrev=556977" target="_top">link</a>
+				to the Subversion view. The other is a
+				<a class="ulink" href="http://download.oracle.com/javase/6/docs/technotes/guides/net/properties.html" target="_top">Networking Properties page</a>
+				from the JDK docs. If anyone knows a better overview, please let us know via the mailing list.
+			</p>
+			<div class="section">
+				<div class="titlepage">
+					<div>
+						<div><h3 class="title">
+                <a name="sub:ntlm_authentication"></a>20.2.1. NTLM 身份验证</h3>
+							<h5 class="title">
+								<a name="sub:ntlm_authentication"></a>
+								20.2.1.&nbsp;NTLM Authentication
+							</h5>
+						</div>
+					</div>
+				</div>
+				<p>如果您的代理服务器需要 NTLM
+          身份验证，您可能需要提供验证域，以及用户名和密码。有两种方法可以向 NTLM
+          代理提供验证域：<br/>
+					If your proxy requires NTLM authentication, you may need to provide the authentication domain as well as the username and password.
                 There are 2 ways that you can provide the domain for authenticating to a NTLM proxy:
-                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Set the <code class="literal">http.proxyUser</code> system property to a value like <code class="literal"><em class="replaceable"><code>domain</code></em>/<em class="replaceable"><code>username</code></em></code>.
-                    </li><li class="listitem">Provide the authentication domain via the <code class="literal">http.auth.ntlm.domain</code> system property.
-                    </li></ul></div><p>
-            </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="gradle_daemon.html" title="Chapter&nbsp;19.&nbsp;The Gradle Daemon">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="plugins.html" title="Chapter&nbsp;21.&nbsp;Gradle Plugins">Next</a></div></div></div></body></html>
+				</p>
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem">将
+              <code class="literal">http.proxyUser</code>系统属性设置为一个这样的值：
+              <code class="literal">
+              <em class="replaceable">
+                <code>域</code>
+              </em>/
+              <em class="replaceable">
+                <code>用户名</code>
+              </em></code>。<br/>
+							Set the
+							<code class="literal">http.proxyUser</code>
+							system property to a value like
+							<code class="literal"><em class="replaceable"><code>domain</code></em> 
+						/ <em class="replaceable"><code>username</code></em> 
+					</code>
+					.
+				</li>
+				<li class="listitem">通过
+              <code class="literal">http.auth.ntlm.domain</code>系统属性提供验证域。<br/>
+					Provide the authentication domain via the
+					<code class="literal">http.auth.ntlm.domain</code>
+					system property.
+				</li>
+			</ul>
+		</div>
+		<p></p>
+	</div>
+</div>
+</div>
+<div class="navfooter">
+<div>
+	<div class="navbar">
+		<a xmlns:xslthl="http://xslthl.sf.net" href="gradle_daemon.html" title="第十九章. Gradle 守护进程">上一章</a>
+		<span>|</span>
+		<a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+		<span>|</span>
+		<a xmlns:xslthl="http://xslthl.sf.net" href="plugins.html" title="第二十一章. Gradle 插件">下一章</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
