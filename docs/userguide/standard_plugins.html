@@ -1,615 +1,1122 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;22.&nbsp;Standard Gradle plugins</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="plugins.html" title="Chapter&nbsp;21.&nbsp;Gradle Plugins"><link rel="next" href="java_plugin.html" title="Chapter&nbsp;23.&nbsp;The Java Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="plugins.html" title="Chapter&nbsp;21.&nbsp;Gradle Plugins">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="java_plugin.html" title="Chapter&nbsp;23.&nbsp;The Java Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="standard_plugins"></a>Chapter&nbsp;22.&nbsp;Standard Gradle plugins</h1></div></div></div><p>There are a number of plugins included in the Gradle distribution. These are listed below.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1190C"></a>22.1.&nbsp;Language plugins</h2></div></div></div><p>These plugins add support for various languages which can be compiled for and executed in the JVM.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;22.1.&nbsp;Language plugins</b></p><div class="table-contents"><table id="N11911"><thead><tr>
-                    <td>Plugin Id</td>
-                    <td>Automatically applies</td>
-                    <td>Works with</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <a class="link" href="java_plugin.html">
-                        <code class="literal">java</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">java-base</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Adds Java compilation, testing and bundling capabilities to a project. It serves
-                        as the basis for many of the other Gradle plugins. See also <a class="xref" href="tutorial_java_projects.html">Chapter&nbsp;7, <i>Java Quickstart</i></a>.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="groovy_plugin.html">
-                        <code class="literal">groovy</code>
-                    </a>
-                </td>
-                <td><code class="literal">java</code>,
-                    <code class="literal">groovy-base</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Adds support for building Groovy projects. See also <a class="xref" href="tutorial_groovy_projects.html">Chapter&nbsp;9, <i>Groovy Quickstart</i></a>.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="scala_plugin.html">
-                        <code class="literal">scala</code>
-                    </a>
-                </td>
-                <td><code class="literal">java</code>,
-                    <code class="literal">scala-base</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Adds support for building Scala projects.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="antlr_plugin.html">
-                        <code class="literal">antlr</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">java</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Adds support for generating parsers using <a class="ulink" href="http://www.antlr.org/" target="_top">Antlr</a>.
-                    </p>
-                </td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1199D"></a>22.2.&nbsp;Incubating language plugins</h2></div></div></div><p>These plugins add support for various languages:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;22.2.&nbsp;Language plugins</b></p><div class="table-contents"><table id="N119A2"><thead><tr>
-                    <td>Plugin Id</td>
-                    <td>Automatically applies</td>
-                    <td>Works with</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <a class="link" href="nativeBinaries.html">
-                        <code class="literal">assembler</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <p>Adds native assembly language capabilities to a project.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="nativeBinaries.html">
-                        <code class="literal">c</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <p>Adds C source compilation capabilities to a project.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="nativeBinaries.html">
-                        <code class="literal">cpp</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <p>Adds C++ source compilation capabilities to a project.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="nativeBinaries.html">
-                        <code class="literal">objective-c</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <p>Adds Objective-C source compilation capabilities to a project.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="nativeBinaries.html">
-                        <code class="literal">objective-cpp</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <p>Adds Objective-C++ source compilation capabilities to a project.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="nativeBinaries.html">
-                        <code class="literal">windows-resources</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <p>Adds support for including Windows resources in native binaries.</p>
-                </td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11A44"></a>22.3.&nbsp;Integration plugins</h2></div></div></div><p>These plugins provide some integration with various runtime technologies.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;22.3.&nbsp;Integration plugins</b></p><div class="table-contents"><table id="N11A49"><thead><tr>
-                    <td>Plugin Id</td>
-                    <td>Automatically applies</td>
-                    <td>Works with</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <a class="link" href="application_plugin.html">
-                        <code class="literal">application</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">java</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Adds tasks for running and bundling a Java project as a command-line application.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="ear_plugin.html">
-                        <code class="literal">ear</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>
-                    <code class="literal">java</code>
-                </td>
-                <td>
-                    <p>Adds support for building J2EE applications.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="jetty_plugin.html">
-                        <code class="literal">jetty</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">war</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Deploys your web application to a Jetty web container embedded in the build. See also <a class="xref" href="web_project_tutorial.html">Chapter&nbsp;10, <i>Web Application Quickstart</i></a>.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="maven_plugin.html">
-                        <code class="literal">maven</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td><code class="literal">java</code>,
-                    <code class="literal">war</code>
-                </td>
-                <td>
-                    <p>Adds support for publishing artifacts to Maven repositories.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="osgi_plugin.html">
-                        <code class="literal">osgi</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">java-base</code>
-                </td>
-                <td>
-                    <code class="literal">java</code>
-                </td>
-                <td>
-                    <p>Adds support for building OSGi bundles.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="war_plugin.html">
-                        <code class="literal">war</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">java</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Adds support for assembling web application WAR files. See also <a class="xref" href="web_project_tutorial.html">Chapter&nbsp;10, <i>Web Application Quickstart</i></a>.
-                    </p>
-                </td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11B08"></a>22.4.&nbsp;Incubating integration plugins</h2></div></div></div><p>These plugins provide some integration with various runtime technologies.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;22.4.&nbsp;Incubating integration plugins</b></p><div class="table-contents"><table id="N11B0D"><thead><tr>
-                    <td>Plugin Id</td>
-                    <td>Automatically applies</td>
-                    <td>Works with</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <a class="link" href="distribution_plugin.html">
-                        <code class="literal">distribution</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <p>Adds support for building ZIP and TAR distributions.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="javaLibraryDistribution_plugin.html">
-                        <code class="literal">java-library-distribution</code>
-                    </a>
-                </td>
-                <td><code class="literal">java</code>, <code class="literal">distribution</code></td>
-                <td>-</td>
-                <td>
-                    <p>Adds support for building ZIP and TAR distributions for a Java library.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="publishing_ivy.html">
-                        <code class="literal">ivy-publish</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td><code class="literal">java</code>, <code class="literal">war</code></td>
-                <td>
-                    <p>This plugin provides a new DSL to support publishing artifacts to Ivy repositories, which improves on the existing DSL.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="publishing_maven.html">
-                        <code class="literal">maven-publish</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td><code class="literal">java</code>, <code class="literal">war</code></td>
-                <td>
-                    <p>This plugin provides a new DSL to support publishing artifacts to Maven repositories, which improves on the existing DSL.
-                    </p>
-                </td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11B8B"></a>22.5.&nbsp;Software development plugins</h2></div></div></div><p>These plugins provide help with your software development process.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;22.5.&nbsp;Software development plugins</b></p><div class="table-contents"><table id="N11B90"><thead><tr>
-                    <td>Plugin Id</td>
-                    <td>Automatically applies</td>
-                    <td>Works with</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <a class="link" href="announce_plugin.html">
-                        <code class="literal">announce</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <p>Publish messages to your favourite platforms, such as Twitter or Growl.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="build_announcements_plugin.html">
-                        <code class="literal">build-announcements</code>
-                    </a>
-                </td>
-                <td>announce</td>
-                <td>-</td>
-                <td>
-                    <p>Sends local announcements to your desktop about interesting events in the build lifecycle.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="checkstyle_plugin.html">
-                        <code class="literal">checkstyle</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">java-base</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Performs quality checks on your project's Java source files using
-                        <a class="ulink" href="http://checkstyle.sourceforge.net/index.html" target="_top">Checkstyle</a>
-                        and generates reports from these checks.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="codenarc_plugin.html">
-                        <code class="literal">codenarc</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">groovy-base</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Performs quality checks on your project's Groovy source files using
-                        <a class="ulink" href="http://codenarc.sourceforge.net/index.html" target="_top">CodeNarc</a>
-                        and generates reports from these checks.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="eclipse_plugin.html">
-                        <code class="literal">eclipse</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td><code class="literal">java</code>,<code class="literal">groovy</code>,
-                    <code class="literal">scala</code>
-                </td>
-                <td>
-                    <p>Generates files that are used by <a class="ulink" href="http://eclipse.org" target="_top">Eclipse IDE</a>, thus making
-                        it possible to import the project into Eclipse. See also <a class="xref" href="tutorial_java_projects.html">Chapter&nbsp;7, <i>Java Quickstart</i></a>.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="eclipse_plugin.html">
-                        <code class="literal">eclipse-wtp</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td><code class="literal">ear</code>,
-                    <code class="literal">war</code>
-                </td>
-                <td>
-                    <p>Does the same as the eclipse plugin plus generates eclipse WTP (Web Tools Platform) configuration files.
+<html>
+<head>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>第二十二章. 标准的 Gradle 插件 - Chapter&nbsp;22.&nbsp;Standard Gradle plugins</title>
+	<link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+	<link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+	<link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+	<meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+	<link rel="home" href="userguide.html" title="Gradle 用户指南">
+	<link rel="up" href="userguide.html" title="Gradle 用户指南">
+	<link rel="prev" href="plugins.html" title="第二十一章. Gradle 插件">
+	<link rel="next" href="java_plugin.html" title="第二十三章. Java 插件"></head>
+<body>
+	<div class="navheader">
+		<div>
+			<div class="navbar">
+				<a xmlns:xslthl="http://xslthl.sf.net" href="plugins.html" title="第二十一章. Gradle 插件">上一章</a>
+				<span>|</span>
+				<a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+				<span>|</span>
+				<a xmlns:xslthl="http://xslthl.sf.net" href="java_plugin.html" title="第二十三章. Java 插件">下一章</a>
+			</div>
+		</div>
+	</div>
+	<div class="chapter">
+		<div class="titlepage">
+			<div>
+				<div>
+				<h1 xmlns:xslthl="http://xslthl.sf.net">
+            <a name="standard_plugins"></a>第二十二章. 标准的 Gradle 插件</h1>
+					<h3 xmlns:xslthl="http://xslthl.sf.net">
+						<a name="standard_plugins"></a>
+						Chapter&nbsp;22.&nbsp;Standard Gradle plugins
+					</h3>
+				</div>
+			</div>
+		</div>
+		<p>Gradle 的发行包中有大量的插件。如下列所示：<br/>
+			There are a number of plugins included in the Gradle distribution. These are listed below.
+		</p>
+		<div class="section">
+			<div class="titlepage">
+				<div>
+					<div> <h2 class="title">
+              <a name="N1190C"></a>22.1. 语言插件</h2>
+						<h4 class="title">
+							<a name="N1190C"></a>
+							22.1.&nbsp;Language plugins
+						</h4>
+					</div>
+				</div>
+			</div>
+			<p>这些插件添加了让各种语言可以被编译和在JVM执行的支持。<br/>
+				These plugins add support for various languages which can be compiled for and executed in the JVM.
+			</p>
+			<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+				<p class="title"><b>表 22.1. 语言插件</b><br/> <b>Table&nbsp;22.1.&nbsp;Language plugins</b>
+				</p>
+				<div class="table-contents">
+					<table id="N11911">
+						<thead>
+							<tr>
+								<td>插件 Id<br/>Plugin Id</td>
+								<td>自动应用<br/>Automatically applies</td>
+								<td>与什么插件一起使用<br/>Works with</td>
+								<td>描述<br/>Description</td>
+							</tr>
+						</thead>
+						<tr>
+							<td>
+								<a class="link" href="java_plugin.html">
+									<code class="literal">java</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java-base</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>向一个项目添加 Java 编译、 测试和捆绑的能力。它是很多其他 Gradle
+                  插件的基础服务。另请参阅
+                  <a class="xref" href="tutorial_java_projects.html">第 7 章， 
+                  <i>Java 快速入门</i></a>。<br/>
+									Adds Java compilation, testing and bundling capabilities to a project. It serves
+                        as the basis for many of the other Gradle plugins. See also
+									<a class="xref" href="tutorial_java_projects.html">
+										Chapter&nbsp;7, <i>Java Quickstart</i>
+									</a>
+									.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="groovy_plugin.html">
+									<code class="literal">groovy</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java</code>
+								,
+								<code class="literal">groovy-base</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>添加对 Groovy 项目构建的支持。另请参阅
+                  <a class="xref" href="tutorial_groovy_projects.html">第9章，
+                  <i>Groovy 快速入门</i></a>。<br/>
+									Adds support for building Groovy projects. See also
+									<a class="xref" href="tutorial_groovy_projects.html">
+										Chapter&nbsp;9, <i>Groovy Quickstart</i>
+									</a>
+									.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="scala_plugin.html">
+									<code class="literal">scala</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java</code>
+								,
+								<code class="literal">scala-base</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>添加对 Scala 项目构建的支持。<br/>Adds support for building Scala projects.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="antlr_plugin.html">
+									<code class="literal">antlr</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>添加对使用
+                  <a class="ulink" href="http://www.antlr.org/" target="_top">Antlr</a>作为生成解析器的支持。<br/>
+									Adds support for generating parsers using
+									<a class="ulink" href="http://www.antlr.org/" target="_top">Antlr</a>
+									.
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="titlepage">
+				<div>
+					<div> <h2 class="title">
+              <a name="N1199D"></a>22.2. 正在孵化的语言插件</h2>
+						<h4 class="title">
+							<a name="N1199D"></a>
+							22.2.&nbsp;Incubating language plugins
+						</h4>
+					</div>
+				</div>
+			</div>
+			<p>这些插件添加了对多种语言的支持：<br/>These plugins add support for various languages:</p>
+			<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+				<p class="title"> <b>表 22.2. 语言插件</b><br/><b>Table&nbsp;22.2.&nbsp;Language plugins</b>
+				</p>
+				<div class="table-contents">
+					<table id="N119A2">
+						<thead>
+							<tr>
+								<td>插件 Id<br/>Plugin Id</td>
+								<td>自动应用<br/>Automatically applies</td>
+								<td>与什么插件一起使用<br/>Works with</td>
+								<td>描述<br/>Description</td>
+							</tr>
+						</thead>
+						<tr>
+							<td>
+								<a class="link" href="nativeBinaries.html">
+									<code class="literal">assembler</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>-</td>
+							<td>
+								<p>向项目添加本机汇编语言的功能。<br/>Adds native assembly language capabilities to a project.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="nativeBinaries.html">
+									<code class="literal">c</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>-</td>
+							<td>
+								<p>向项目添加 C语言源代码编译功能。<br/>Adds C source compilation capabilities to a project.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="nativeBinaries.html">
+									<code class="literal">cpp</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>-</td>
+							<td>
+								<p>向项目添加 c++ 源代码编译功能。<br/>Adds C++ source compilation capabilities to a project.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="nativeBinaries.html">
+									<code class="literal">objective-c</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>-</td>
+							<td>
+								<p>向项目中添加 Objective-C 源代码编译功能。<br/>
+									Adds Objective-C source compilation capabilities to a project.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="nativeBinaries.html">
+									<code class="literal">objective-cpp</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>-</td>
+							<td>
+								<p>向项目中添加 Objective-C++ 源代码编译功能。<br/>
+									Adds Objective-C++ source compilation capabilities to a project.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="nativeBinaries.html">
+									<code class="literal">windows-resources</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>-</td>
+							<td>
+								<p>添加对在本地bin文件中包含 Windows 资源的支持。<br/>
+									Adds support for including Windows resources in native binaries.
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="titlepage">
+				<div>
+					<div> <h2 class="title">
+              <a name="N11A44"></a>22.3. 集成插件</h2>
+						<h4 class="title">
+							<a name="N11A44"></a>
+							22.3.&nbsp;Integration plugins
+						</h4>
+					</div>
+				</div>
+			</div>
+			<p>以下这些插件提供了一些与各种运行时技术的集成。<br/>
+				These plugins provide some integration with various runtime technologies.
+			</p>
+			<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+				<p class="title">
+					<b>表 22.3. 集成插件</b><br/><b>Table&nbsp;22.3.&nbsp;Integration plugins</b>
+				</p>
+				<div class="table-contents">
+					<table id="N11A49">
+						<thead>
+							<tr>
+								<td>插件 Id<br/>Plugin Id</td>
+								<td>自动应用<br/>Automatically applies</td>
+								<td>与什么插件一起使用<br/>Works with</td>
+								<td>描述<br/>Description</td>
+							</tr>
+						</thead>
+						<tr>
+							<td>
+								<a class="link" href="application_plugin.html">
+									<code class="literal">application</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>添加了一些任务，用于运行和捆绑一个Java项目作为命令行应用程序。<br/>
+									Adds tasks for running and bundling a Java project as a command-line application.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="ear_plugin.html">
+									<code class="literal">ear</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>
+								<code class="literal">java</code>
+							</td>
+							<td>
+								<p>添加用于构建 J2EE 应用程序的支持。<br/>Adds support for building J2EE applications.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="jetty_plugin.html">
+									<code class="literal">jetty</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">war</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>在构建中部署你的web程序到一个内嵌的Jetty web容器中。另请参阅
+                  <a class="xref" href="web_project_tutorial.html">第 10 章， 
+                  <i>Web 应用程序快速入门</i></a>。<br/>
+									Deploys your web application to a Jetty web container embedded in the build. See also
+									<a class="xref" href="web_project_tutorial.html">
+										Chapter&nbsp;10,
+										<i>Web Application Quickstart</i>
+									</a>
+									.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="maven_plugin.html">
+									<code class="literal">maven</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>
+								<code class="literal">java</code>
+								,
+								<code class="literal">war</code>
+							</td>
+							<td>
+								<p>添加用于将项目发布到 Maven 仓库的支持。<br/>Adds support for publishing artifacts to Maven repositories.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="osgi_plugin.html">
+									<code class="literal">osgi</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java-base</code>
+							</td>
+							<td>
+								<code class="literal">java</code>
+							</td>
+							<td>
+								<p>添加构建 OSGi 捆绑包的支持。<br/>Adds support for building OSGi bundles.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="war_plugin.html">
+									<code class="literal">war</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>添加用于组装 web 应用程序的 WAR 文件的支持。另请参阅
+                  <a class="xref" href="web_project_tutorial.html">第 10 章， 
+                  <i>Web 应用程序快速入门</i></a>。
+									Adds support for assembling web application WAR files. See also
+									<a class="xref" href="web_project_tutorial.html">
+										Chapter&nbsp;10,
+										<i>Web Application Quickstart</i>
+									</a>
+									.
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="titlepage">
+				<div>
+					<div><h2 class="title">
+              <a name="N11B08"></a>22.4. 孵化中的集成插件</h2>
+						<h4 class="title">
+							<a name="N11B08"></a>
+							22.4.&nbsp;Incubating integration plugins
+						</h4>
+					</div>
+				</div>
+			</div>
+			<p>以下这些插件提供了一些与各种运行时技术的集成。<br/>
+				These plugins provide some integration with various runtime technologies.
+			</p>
+			<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+				<p class="title"> <b>表 22.4. 孵化中的集成插件</b><br/>
+					<b>Table&nbsp;22.4.&nbsp;Incubating integration plugins</b>
+				</p>
+				<div class="table-contents">
+					<table id="N11B0D">
+						<thead>
+							<tr>
+								<td>插件 Id<br/>Plugin Id</td>
+								<td>自动应用<br/>Automatically applies</td>
+								<td>与什么插件一起使用<br/>Works with</td>
+								<td>描述<br/>Description</td>
+							</tr>
+						</thead>
+						<tr>
+							<td>
+								<a class="link" href="distribution_plugin.html">
+									<code class="literal">distribution</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>-</td>
+							<td>
+								<p>添加构建 ZIP 和 TAR 分发包的支持。<br/>Adds support for building ZIP and TAR distributions.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="javaLibraryDistribution_plugin.html">
+									<code class="literal">java-library-distribution</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java</code>
+								,
+								<code class="literal">distribution</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>添加构建一个Java类库的 ZIP 和 TAR 分发包的支持。<br/>
+									Adds support for building ZIP and TAR distributions for a Java library.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="publishing_ivy.html">
+									<code class="literal">ivy-publish</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>
+								<code class="literal">java</code>
+								,
+								<code class="literal">war</code>
+							</td>
+							<td>
+								<p>这个插件提供了新的 DSL，用于支持发布文件到 Ivy 存储库，改善了现有的 DSL。<br/>
+									This plugin provides a new DSL to support publishing artifacts to Ivy repositories, which improves on the existing DSL.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="publishing_maven.html">
+									<code class="literal">maven-publish</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>
+								<code class="literal">java</code>
+								,
+								<code class="literal">war</code>
+							</td>
+							<td>
+								<p>这个插件提供了新的 DSL，用于支持发布文件到 Maven 存储库，改善了现有的 DSL。<br/>
+									This plugin provides a new DSL to support publishing artifacts to Maven repositories, which improves on the existing DSL.
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="titlepage">
+				<div>
+					<div><h2 class="title">
+              <a name="N11B8B"></a>22.5. 软件开发插件</h2>
+						<h4 class="title">
+							<a name="N11B8B"></a>
+							22.5.&nbsp;Software development plugins
+						</h4>
+					</div>
+				</div>
+			</div>
+			<p>这些插件提供一些软件开发过程上的帮助。<br/>
+				These plugins provide help with your software development process.
+			</p>
+			<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+				<p class="title"> <b>表 22.5. 软件开发插件</b><br/>
+					<b>Table&nbsp;22.5.&nbsp;Software development plugins</b>
+				</p>
+				<div class="table-contents">
+					<table id="N11B90">
+						<thead>
+							<tr>
+								<td>插件 Id<br/>Plugin Id</td>
+								<td>自动应用<br/>Automatically applies</td>
+								<td>与什么插件一起使用<br/>Works with</td>
+								<td>描述<br/>Description</td>
+							</tr>
+						</thead>
+						<tr>
+							<td>
+								<a class="link" href="announce_plugin.html">
+									<code class="literal">announce</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>-</td>
+							<td>
+								<p>将消息发布到你所喜爱的平台，如 Twitter 或 Growl。<br/>
+									Publish messages to your favourite platforms, such as Twitter or Growl.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="build_announcements_plugin.html">
+									<code class="literal">build-announcements</code>
+								</a>
+							</td>
+							<td>announce</td>
+							<td>-</td>
+							<td>
+								<p>在构建的生命周期中，把本地公告中有关你感兴趣的事件发送到你的桌面。<br/>
+									Sends local announcements to your desktop about interesting events in the build lifecycle.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="checkstyle_plugin.html">
+									<code class="literal">checkstyle</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java-base</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>使用
+                  <a class="ulink" href="http://checkstyle.sourceforge.net/index.html"
+                  target="_top">Checkstyle</a>对您的项目的 Java 源文件执行质量检查并生成报告。<br/>
+									Performs quality checks on your project's Java source files using
+									<a class="ulink" href="http://checkstyle.sourceforge.net/index.html" target="_top">Checkstyle</a>
+									and generates reports from these checks.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="codenarc_plugin.html">
+									<code class="literal">codenarc</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">groovy-base</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>使用
+                  <a class="ulink" href="http://codenarc.sourceforge.net/index.html" target="_top">CodeNarc</a>对您的项目的
+                  Groovy 源文件执行质量检查并生成报告。<br/>
+									Performs quality checks on your project's Groovy source files using
+									<a class="ulink" href="http://codenarc.sourceforge.net/index.html" target="_top">CodeNarc</a>
+									and generates reports from these checks.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="eclipse_plugin.html">
+									<code class="literal">eclipse</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>
+								<code class="literal">java</code>
+								,
+								<code class="literal">groovy</code>
+								,
+								<code class="literal">scala</code>
+							</td>
+							<td>
+								<p>生成
+                  <a class="ulink" href="http://eclipse.org" target="_top">Eclipse
+                  IDE</a>所用到的文件，从而使项目能够导入到 Eclipse。另请参阅
+                  <a class="xref" href="tutorial_java_projects.html">第 7 章，
+                  <i>Java 快速入门</i></a>。<br/>
+									Generates files that are used by
+									<a class="ulink" href="http://eclipse.org" target="_top">Eclipse IDE</a>
+									, thus making
+                        it possible to import the project into Eclipse. See also
+									<a class="xref" href="tutorial_java_projects.html">
+										Chapter&nbsp;7,
+										<i>Java Quickstart</i>
+									</a>
+									.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="eclipse_plugin.html">
+									<code class="literal">eclipse-wtp</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>
+								<code class="literal">ear</code>
+								,
+								<code class="literal">war</code>
+							</td>
+							<td>
+								<p>与 eclipse 插件一样，但它还生成 eclipse WTP （Web 工具平台）
+                  的配置文件。你的war/ear项目在导入eclipse 后，应配置为能在 WTP 中使用。另请参阅
+                  <a class="xref" href="tutorial_java_projects.html">第 7 章， 
+                  <i>Java 快速入门</i></a>。<br/>
+									Does the same as the eclipse plugin plus generates eclipse WTP (Web Tools Platform) configuration files.
                         After importing to eclipse your war/ear projects should be configured to work with WTP.
-                        See also <a class="xref" href="tutorial_java_projects.html">Chapter&nbsp;7, <i>Java Quickstart</i></a>.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="findbugs_plugin.html">
-                        <code class="literal">findbugs</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">java-base</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Performs quality checks on your project's Java source files using
-                        <a class="ulink" href="http://findbugs.sourceforge.net" target="_top">FindBugs</a>
-                        and generates reports from these checks.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="idea_plugin.html">
-                        <code class="literal">idea</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>
-                    <code class="literal">java</code>
-                </td>
-                <td>
-                    <p>Generates files that are used by <a class="ulink" href="http://www.jetbrains.com/idea/index.html" target="_top">Intellij IDEA IDE</a>,
+                        See also
+									<a class="xref" href="tutorial_java_projects.html">
+										Chapter&nbsp;7,
+										<i>Java Quickstart</i>
+									</a>
+									.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="findbugs_plugin.html">
+									<code class="literal">findbugs</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java-base</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>使用
+                  <a class="ulink" href="http://findbugs.sourceforge.net" target="_top">FindBugs</a>对您的项目的 Java
+                  源文件执行质量检查并生成报告。<br/>
+									Performs quality checks on your project's Java source files using
+									<a class="ulink" href="http://findbugs.sourceforge.net" target="_top">FindBugs</a>
+									and generates reports from these checks.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="idea_plugin.html">
+									<code class="literal">idea</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>
+								<code class="literal">java</code>
+							</td>
+							<td>
+								<p>生成
+                  <a class="ulink" href="http://www.jetbrains.com/idea/index.html" target="_top">Intellij IDEA
+                  IDE</a>所用到的文件，从而使项目能够导入到 IDEA。<br/>
+									Generates files that are used by
+									<a class="ulink" href="http://www.jetbrains.com/idea/index.html" target="_top">Intellij IDEA IDE</a>
+									,
                         thus making it possible to import the project into IDEA.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="jdepend_plugin.html">
-                        <code class="literal">jdepend</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">java-base</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Performs quality checks on your project's source files using
-                        <a class="ulink" href="http://clarkware.com/software/JDepend.html" target="_top">JDepend</a>
-                        and generates reports from these checks.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="pmd_plugin.html">
-                        <code class="literal">pmd</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">java-base</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Performs quality checks on your project's Java source files using
-                        <a class="ulink" href="http://pmd.sourceforge.net" target="_top">PMD</a>
-                        and generates reports from these checks.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="project_reports_plugin.html">
-                        <code class="literal">project-report</code>
-                    </a>
-                </td>
-                <td>
-                    <code class="literal">reporting-base</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <p>Generates reports containing useful information about your Gradle build.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="signing_plugin.html">
-                        <code class="literal">signing</code>
-                    </a>
-                </td>
-                <td>base</td>
-                <td>-</td>
-                <td>
-                    <p>Adds the ability to digitally sign built files and artifacts.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="sonar_plugin.html">
-                        <code class="literal">sonar</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>java-base, java, jacoco</td>
-                <td>
-                    <p>Provides integration with the
-                        <a class="ulink" href="http://www.sonarsource.org" target="_top">Sonar</a>
-                        code quality platform. Superceeded by the <a class="link" href="sonar_runner_plugin.html"><code class="literal">sonar-runner</code></a> plugin.
-                    </p>
-                </td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11D27"></a>22.6.&nbsp;Incubating software development plugins</h2></div></div></div><p>These plugins provide help with your software development process.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;22.6.&nbsp;Software development plugins</b></p><div class="table-contents"><table id="N11D2C"><thead><tr>
-                    <td>Plugin Id</td>
-                    <td>Automatically applies</td>
-                    <td>Works with</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <a class="link" href="buildDashboard_plugin.html">
-                        <code class="literal">build-dashboard</code>
-                    </a>
-                </td>
-                <td>reporting-base</td>
-                <td>-</td>
-                <td>
-                    <p>Generates build dashboard report.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="build_init_plugin.html">
-                        <code class="literal">build-init</code>
-                    </a>
-                </td>
-                <td>wrapper</td>
-                <td>-</td>
-                <td>
-                    <p>Adds support for initializing a new Gradle build. Handles converting a Maven build to a Gradle build.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="nativeBinaries.html">
-                        <code class="literal">cunit</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <p>Adds support for running <a class="ulink" href="http://cunit.sourceforge.net" target="_top">CUnit</a> tests.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="jacoco_plugin.html">
-                        <code class="literal">jacoco</code>
-                    </a>
-                </td>
-                <td>reporting-base</td>
-                <td>java</td>
-                <td>
-                    <p>Provides integration with the
-                        <a class="ulink" href="http://www.eclemma.org/jacoco/" target="_top">JaCoCo</a>
-                            code coverage library for Java.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="sonar_runner_plugin.html">
-                        <code class="literal">sonar-runner</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>java-base, java, jacoco</td>
-                <td>
-                    <p>Provides integration with the
-                        <a class="ulink" href="http://www.sonarsource.org" target="_top">Sonar</a>
-                        code quality platform. Supersedes the <a class="link" href="sonar_plugin.html"><code class="literal">sonar</code></a> plugin.
-                    </p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="nativeBinaries.html">
-                        <code class="literal">visual-studio</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>native language plugins</td>
-                <td>
-                    <p>Adds integration with Visual Studio.</p>
-                </td>
-            </tr><tr>
-                <td>
-                    <a class="link" href="wrapper_plugin.html">
-                        <code class="literal">wrapper</code>
-                    </a>
-                </td>
-                <td>-</td>
-                <td>-</td>
-                <td>
-                    <p>Adds a <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a> task for generating Gradle wrapper files.
-                    </p>
-                </td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11DFC"></a>22.7.&nbsp;Base plugins</h2></div></div></div><p>These plugins form the basic building blocks which the other plugins are assembled from. They are
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="jdepend_plugin.html">
+									<code class="literal">jdepend</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java-base</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>使用
+                  <a class="ulink" href="http://clarkware.com/software/JDepend.html"
+                  target="_top">JDepend</a>对您的项目的源文件执行质量检查并生成报告。<br/>
+									Performs quality checks on your project's source files using
+									<a class="ulink" href="http://clarkware.com/software/JDepend.html" target="_top">JDepend</a>
+									and generates reports from these checks.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="pmd_plugin.html">
+									<code class="literal">pmd</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">java-base</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>使用
+                  <a class="ulink" href="http://pmd.sourceforge.net" target="_top">PMD</a>对您的项目的 Java
+                  源文件执行质量检查并生成报告。<br/>
+									Performs quality checks on your project's Java source files using
+									<a class="ulink" href="http://pmd.sourceforge.net" target="_top">PMD</a>
+									and generates reports from these checks.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="project_reports_plugin.html">
+									<code class="literal">project-report</code>
+								</a>
+							</td>
+							<td>
+								<code class="literal">reporting-base</code>
+							</td>
+							<td>-</td>
+							<td>
+								<p>生成关于Gradle构建中有用的信息的报告。<br/>
+									Generates reports containing useful information about your Gradle build.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="signing_plugin.html">
+									<code class="literal">signing</code>
+								</a>
+							</td>
+							<td>base</td>
+							<td>-</td>
+							<td>
+								<p>添加对生成的文件或构件进行数字签名的功能。<br/>
+									Adds the ability to digitally sign built files and artifacts.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="sonar_plugin.html">
+									<code class="literal">sonar</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>java-base, java, jacoco</td>
+							<td>
+								<p>提供对
+                  <a class="ulink" href="http://www.sonarsource.org" target="_top">Sonar</a>代码质量平台的集成。由 
+                  <a class="link" href="sonar_runner_plugin.html">
+                    <code class="literal">sonar-runner</code>
+                  </a>插件取代。<br/>
+									Provides integration with the
+									<a class="ulink" href="http://www.sonarsource.org" target="_top">Sonar</a>
+									code quality platform. Superceeded by the
+									<a class="link" href="sonar_runner_plugin.html">
+										<code class="literal">sonar-runner</code>
+									</a>
+									plugin.
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="titlepage">
+				<div>
+					<div>
+					<h2 class="title">
+              <a name="N11D27"></a>22.6. 孵化中的软件开发插件</h2>
+						<h4 class="title">
+							<a name="N11D27"></a>
+							22.6.&nbsp;Incubating software development plugins
+						</h4>
+					</div>
+				</div>
+			</div>
+			<p>这些插件提供一些软件开发过程上的帮助。<br/>
+				These plugins provide help with your software development process.
+			</p>
+			<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+				<p class="title"><b>表 22.6. 软件开发插件</b><br/>
+					<b>Table&nbsp;22.6.&nbsp;Software development plugins</b>
+				</p>
+				<div class="table-contents">
+					<table id="N11D2C">
+						<thead>
+							<tr>
+								<td>插件 Id<br/>Plugin Id</td>
+								<td>自动应用<br/>Automatically applies</td>
+								<td>与什么插件一起使用<br/>Works with</td>
+								<td>描述<br/>Description</td>
+							</tr>
+						</thead>
+						<tr>
+							<td>
+								<a class="link" href="buildDashboard_plugin.html">
+									<code class="literal">build-dashboard</code>
+								</a>
+							</td>
+							<td>reporting-base</td>
+							<td>-</td>
+							<td>
+								<p>生成构建的主控面板的报表。<br/>Generates build dashboard report.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="build_init_plugin.html">
+									<code class="literal">build-init</code>
+								</a>
+							</td>
+							<td>wrapper</td>
+							<td>-</td>
+							<td>
+								<p>添加用于初始化一个新 Gradle 构建的支持。处理转换 Maven 构建为 Gradle 构建。<br/>
+									Adds support for initializing a new Gradle build. Handles converting a Maven build to a Gradle build.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="nativeBinaries.html">
+									<code class="literal">cunit</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>-</td>
+							<td>
+								<p>添加用于运行
+                  <a class="ulink" href="http://cunit.sourceforge.net" target="_top">CUnit</a>测试的支持。<br/>
+									Adds support for running
+									<a class="ulink" href="http://cunit.sourceforge.net" target="_top">CUnit</a>
+									tests.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="jacoco_plugin.html">
+									<code class="literal">jacoco</code>
+								</a>
+							</td>
+							<td>reporting-base</td>
+							<td>java</td>
+							<td>
+								<p>提供对 Java 的
+                  <a class="ulink" href="http://www.eclemma.org/jacoco/" target="_top">JaCoCo</a>代码覆盖率库的集成。<br/>
+									Provides integration with the
+									<a class="ulink" href="http://www.eclemma.org/jacoco/" target="_top">JaCoCo</a>
+									code coverage library for Java.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="sonar_runner_plugin.html">
+									<code class="literal">sonar-runner</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>java-base, java, jacoco</td>
+							<td>
+								<p>提供对
+                  <a class="ulink" href="http://www.sonarsource.org" target="_top">Sonar</a>代码质量平台的集成。由 
+                  <a class="link" href="sonar_plugin.html">
+                    <code class="literal">sonar</code>
+                  </a>插件取代。<br/>
+									Provides integration with the
+									<a class="ulink" href="http://www.sonarsource.org" target="_top">Sonar</a>
+									code quality platform. Supersedes the
+									<a class="link" href="sonar_plugin.html">
+										<code class="literal">sonar</code>
+									</a>
+									plugin.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="nativeBinaries.html">
+									<code class="literal">visual-studio</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>本机语言插件<br/>native language plugins</td>
+							<td>
+								<p>添加对 Visual Studio 的集成。<br/>Adds integration with Visual Studio.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<a class="link" href="wrapper_plugin.html">
+									<code class="literal">wrapper</code>
+								</a>
+							</td>
+							<td>-</td>
+							<td>-</td>
+							<td>
+								<p>添加一个用于生成 Gradle wrapper 文件的
+                  <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top">
+                    <code class="classname">Wrapper</code>
+                  </a>任务。<br/>
+									Adds a
+									<a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top">
+										<code class="classname">Wrapper</code>
+									</a>
+									task for generating Gradle wrapper files.
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="titlepage">
+				<div>
+					<div><h2 class="title">
+              <a name="N11DFC"></a>22.7. 基本插件</h2>
+						<h4 class="title">
+							<a name="N11DFC"></a>
+							22.7.&nbsp;Base plugins
+						</h4>
+					</div>
+				</div>
+			</div>
+			<p>这些插件组成了基本的构建块，其他插件都由此组装而来。它们可供你在你的构建文件中使用，并在此处完整列出。然而，请注意它们都不被认为是
+        Gradle 公共 API 的一部分。因此，这些插件都不在用户指南中记录。您可能会引用他们的 API
+        文档，以了解更多关于它们的信息。<br/>
+				These plugins form the basic building blocks which the other plugins are assembled from. They are
             available for you to use in your build files, and are listed here for completeness. However, be aware that
             they are not yet considered part of Gradle's public API. As such, these plugins are not documented in the
             user guide. You might refer to their API documentation to learn more about them.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;22.7.&nbsp;Base plugins</b></p><div class="table-contents"><table id="N11E01"><thead><tr>
-                    <td>Plugin Id</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>base</td>
-                <td>
-                    <p>Adds the standard lifecycle tasks and configures reasonable defaults for the archive tasks:
-                        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">adds build
-                                <em class="replaceable"><code>ConfigurationName</code></em>
-                                tasks.
+			</p>
+			<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+				<p class="title">
+					<b>表 22.7. 基本插件</b><br/><b>Table&nbsp;22.7.&nbsp;Base plugins</b>
+				</p>
+				<div class="table-contents">
+					<table id="N11E01">
+						<thead>
+							<tr>
+								<td>插件 Id<br/>Plugin Id</td>
+								<td>描述<br/>Description</td>
+							</tr>
+						</thead>
+						<tr>
+							<td>base</td>
+							<td>
+								<p>添加标准的生命周期任务，并为归档任务默认进行合理的配置：<br/>
+									Adds the standard lifecycle tasks and configures reasonable defaults for the archive tasks:
+								</p>
+								<div class="itemizedlist">
+									<ul class="itemizedlist">
+										<li class="listitem">添加构建 
+                      <em class="replaceable">
+                        <code>ConfigurationName</code>
+                      </em>任务。这些任务组装成属于指定配置的构件。<br/>
+											adds build <em class="replaceable"><code>ConfigurationName</code></em> 
+											tasks.
                                 Those tasks assemble the artifacts belonging to the specified configuration.
-                            </li><li class="listitem">adds upload
-                                <em class="replaceable"><code>ConfigurationName</code></em>
-                                tasks.
+										</li>
+										<li class="listitem">添加上传
+                      <em class="replaceable">
+                        <code>ConfigurationName</code>
+                      </em>任务。这些任务组装并上传属于指定的配置的构件。<br/>
+											adds upload <em class="replaceable"><code>ConfigurationName</code></em> 
+											tasks.
                                 Those tasks assemble and upload the artifacts belonging to the specified configuration.
-                            </li><li class="listitem">configures reasonable default values for all archive tasks (e.g. tasks that inherit from
-                                <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.AbstractArchiveTask.html" target="_top"><code class="classname">AbstractArchiveTask</code></a>).
-                                For example, the archive tasks are tasks of types: <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top"><code class="classname">Jar</code></a>,
-                                <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a>, <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a>.
-                                Specifically, <code class="literal">destinationDir</code>,
-                                <code class="literal">baseName</code>
-                                and
-                                <code class="literal">version</code>
-                                properties of the archive tasks are preconfigured with defaults.
+										</li>
+										<li class="listitem">为所有归档任务配置合适的默认值（比如从
+                      <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.AbstractArchiveTask.html" target="_top">
+                        <code class="classname">AbstractArchiveTask</code>
+                      </a>继承来任务）。例如，以下类型的归档任务： 
+                      <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top">
+                        <code class="classname">Jar</code>
+                      </a>，
+                      <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top">
+                        <code class="classname">Tar</code>
+                      </a>，
+                      <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top">
+                        <code class="classname">Zip</code>
+                      </a>。特别是，归档任务的
+                      <code class="literal">destinationDir</code>、 
+                      <code class="literal">baseName</code>和
+                      <code class="literal">version</code>属性被预先配置了默认值。这是非常有用的，因为它促进了跨项目的一致性
+                      ；完成了有关构件命名规范及构建之后的位置上的一致。<br/>
+											configures reasonable default values for all archive tasks (e.g. tasks that inherit from
+											<a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.AbstractArchiveTask.html" target="_top">
+												<code class="classname">AbstractArchiveTask</code>
+											</a>
+											).
+                                For example, the archive tasks are tasks of types:
+											<a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top">
+												<code class="classname">Jar</code>
+											</a>
+											,
+											<a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top">
+												<code class="classname">Tar</code>
+											</a>
+											,
+											<a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top">
+												<code class="classname">Zip</code>
+											</a>
+											.
+                                Specifically,
+											<code class="literal">destinationDir</code>
+											,
+											<code class="literal">baseName</code>
+											and
+											<code class="literal">version</code>
+											properties of the archive tasks are preconfigured with defaults.
                                 This is extremely useful because it drives consistency across projects;
                                 the consistency regarding naming conventions of archives and their location after the build completed.
-                            </li></ul></div><p>
-                    </p>
-                </td>
-            </tr><tr>
-                <td>java-base</td>
-                <td>
-                    <p>Adds the source sets concept to the project. Does not add any particular source sets.</p>
-                </td>
-            </tr><tr>
-                <td>groovy-base</td>
-                <td>
-                    <p>Adds the Groovy source sets concept to the project.</p>
-                </td>
-            </tr><tr>
-                <td>scala-base</td>
-                <td>
-                    <p>Adds the Scala source sets concept to the project.</p>
-                </td>
-            </tr><tr>
-                <td>reporting-base</td>
-                <td>
-                    <p>Adds some shared convention properties to the project, relating to report generation.</p>
-                </td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11E6F"></a>22.8.&nbsp;Third party plugins</h2></div></div></div><p>You can find a list of external plugins on the
-            <a class="ulink" href="http://wiki.gradle.org/display/GRADLE/Plugins" target="_top">wiki</a>.
-        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="plugins.html" title="Chapter&nbsp;21.&nbsp;Gradle Plugins">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="java_plugin.html" title="Chapter&nbsp;23.&nbsp;The Java Plugin">Next</a></div></div></div></body></html>
+										</li>
+									</ul>
+								</div>
+								<p></p>
+							</td>
+						</tr>
+						<tr>
+							<td>java-base</td>
+							<td>
+								<p>对项目添加源集的概念。不会添加任何特定的源集。
+									Adds the source sets concept to the project. Does not add any particular source sets.
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td>groovy-base</td>
+							<td>
+								<p>向项目中添加Groovy 的源集概念。<br/>Adds the Groovy source sets concept to the project.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>scala-base</td>
+							<td>
+								<p>向项目中添加Scala 的源集概念。<br/>Adds the Scala source sets concept to the project.</p>
+							</td>
+						</tr>
+						<tr>
+							<td>reporting-base</td>
+							<td>
+								<p>将一些共享的公约属性添加到项目中，它们与报告的生成有关。<br/>
+									Adds some shared convention properties to the project, relating to report generation.
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="titlepage">
+				<div>
+					<div><h2 class="title">
+              <a name="N11E6F"></a>22.8. 第三方插件</h2>
+						<h4 class="title">
+							<a name="N11E6F"></a>
+							22.8.&nbsp;Third party plugins
+						</h4>
+					</div>
+				</div>
+			</div>
+			<p>你可以在
+        <a class="ulink" href="http://wiki.gradle.org/display/GRADLE/Plugins"
+        target="_top">维基</a>上找到外部插件的列表。<br/>
+				You can find a list of external plugins on the
+				<a class="ulink" href="http://wiki.gradle.org/display/GRADLE/Plugins" target="_top">wiki</a>
+				.
+			</p>
+		</div>
+	</div>
+	<div class="navfooter">
+		<div>
+			<div class="navbar">
+				<a xmlns:xslthl="http://xslthl.sf.net" href="plugins.html" title="第二十一章. Gradle 插件">上一章</a>
+				<span>|</span>
+				<a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+				<span>|</span>
+				<a xmlns:xslthl="http://xslthl.sf.net" href="java_plugin.html" title="第二十三章. Java 插件">下一章</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
