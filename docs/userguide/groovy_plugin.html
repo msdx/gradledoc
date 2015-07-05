@@ -1,97 +1,363 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;24.&nbsp;The Groovy Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="java_plugin.html" title="Chapter&nbsp;23.&nbsp;The Java Plugin"><link rel="next" href="scala_plugin.html" title="Chapter&nbsp;25.&nbsp;The Scala Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="java_plugin.html" title="Chapter&nbsp;23.&nbsp;The Java Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="scala_plugin.html" title="Chapter&nbsp;25.&nbsp;The Scala Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="groovy_plugin"></a>Chapter&nbsp;24.&nbsp;The Groovy Plugin</h1></div></div></div><p>The Groovy plugin extends the Java plugin to add support for Groovy projects. It can deal with
+<html>
+<head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>第二十四章. Groovy 插件 - Chapter&nbsp;24.&nbsp;The Groovy Plugin</title>
+    <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+    <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+    <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+    <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+    <link rel="home" href="userguide.html" title="Gradle 用户指南">
+    <link rel="up" href="userguide.html" title="Gradle 用户指南">
+    <link rel="prev" href="java_plugin.html" title="第二十三章. Java 插件">
+    <link rel="next" href="scala_plugin.html" title="第二十五章. Scala 插件"></head>
+<body>
+    <div class="navheader">
+        <div>
+            <div class="navbar">
+                <a xmlns:xslthl="http://xslthl.sf.net" href="java_plugin.html" title="第二十三章. Java 插件">上一章</a>
+                <span>|</span>
+                <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+                <span>|</span>
+                <a xmlns:xslthl="http://xslthl.sf.net" href="scala_plugin.html" title="第二十五章. Scala 插件">下一章</a>
+            </div>
+        </div>
+    </div>
+    <div class="chapter">
+        <div class="titlepage">
+            <div>
+                <div><h1 xmlns:xslthl="http://xslthl.sf.net">
+            <a name="groovy_plugin"></a>第二十四章. Groovy 插件</h1>
+                    <h3 xmlns:xslthl="http://xslthl.sf.net">
+                        <a name="groovy_plugin"></a>
+                        Chapter&nbsp;24.&nbsp;The Groovy Plugin
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <p>Groovy 的插件继承自 Java 插件并添加了对 Groovy 项目的支持。它可以处理 Groovy
+      代码，以及混合的 Groovy 和 Java 代码，甚至是纯 Java
+      代码（尽管我们不一定推荐使用）。该插件支持
+      <span class="emphasis">
+        <em>联合编译</em>
+      </span>，可以任意地混合及匹配Groovy 和 Java 代码各自的依赖。例如，一个 Groovy
+      类可以继承自一个 Java 类，而这个 Java 类也可以继承自一个 Groovy
+      类。这样一来，我们就能够在项目中使用最适合的语言，并且在有需要的情况下用其他的语言重写其中的任何类。<br/>
+            The Groovy plugin extends the Java plugin to add support for Groovy projects. It can deal with
         Groovy code, mixed Groovy and Java code, and even pure Java code (although we don't necessarily recommend to use it for the latter).
-        The plugin supports <span class="emphasis"><em>joint compilation</em></span>, which allows to freely mix and match Groovy and Java code,
+        The plugin supports
+            <span class="emphasis"> <em>joint compilation</em>
+            </span>
+            , which allows to freely mix and match Groovy and Java code,
         with dependencies in both directions. For example, a Groovy class can extend a Java class that in turn extends a Groovy class.
         This makes it possible to use the best language for the job, and to rewrite any class in the other language if needed.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N129EF"></a>24.1.&nbsp;Usage</h2></div></div></div><p>To use the Groovy plugin, include in your build script:</p><div class="example"><a name="useGroovyPlugin"></a><p class="title"><b>Example&nbsp;24.1.&nbsp;Using the Groovy plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N129FE"></a>24.2.&nbsp;Tasks</h2></div></div></div><p>The Groovy plugin adds the following tasks to the project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;24.1.&nbsp;Groovy plugin - tasks</b></p><div class="table-contents"><table id="N12A03"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td><code class="literal">compileGroovy</code></td>
-                <td><code class="literal">compileJava</code></td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.GroovyCompile.html" target="_top"><code class="classname">GroovyCompile</code></a></td>
-                <td>Compiles production Groovy source files.</td>
-            </tr><tr>
-                <td><code class="literal">compileTestGroovy</code></td>
-                <td><code class="literal">compileTestJava</code></td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.GroovyCompile.html" target="_top"><code class="classname">GroovyCompile</code></a></td>
-                <td>Compiles test Groovy source files.</td>
-            </tr><tr>
-                <td><code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Groovy</code></td>
-                <td><code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Java</code></td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.GroovyCompile.html" target="_top"><code class="classname">GroovyCompile</code></a></td>
-                <td>Compiles the given source set's Groovy source files.</td>
-            </tr><tr>
-                <td><code class="literal">groovydoc</code></td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.javadoc.Groovydoc.html" target="_top"><code class="classname">Groovydoc</code></a></td>
-                <td>Generates API documentation for the production Groovy source files.</td>
-            </tr></table></div></div><p>The Groovy plugin adds the following dependencies to tasks added by the Java plugin.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;24.2.&nbsp;Groovy plugin - additional task dependencies</b></p><div class="table-contents"><table id="N12A68"><thead><td>Task name</td><td>Depends on</td></thead><tr>
-                <td>classes</td>
-                <td>compileGroovy</td>
-            </tr><tr>
-                <td>testClasses</td>
-                <td>compileTestGroovy</td>
-            </tr><tr>
-                <td><em class="replaceable"><code>sourceSet</code></em>Classes</td>
-                <td>compile<em class="replaceable"><code>SourceSet</code></em>Groovy</td>
-            </tr></table></div></div><div class="figure"><a name="N12A8D"></a><p class="title"><b>Figure&nbsp;24.1.&nbsp;Groovy plugin - tasks</b></p><div class="figure-contents"><img src="img/groovyPluginTasks.png" alt="Groovy plugin - tasks"></div></div><br class="figure-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12A93"></a>24.3.&nbsp;Project layout</h2></div></div></div><p>The Groovy plugin assumes the project layout shown in <a class="xref" href="groovy_plugin.html#groovylayout" title="Table&nbsp;24.3.&nbsp;Groovy plugin - project layout">Table&nbsp;24.3, &ldquo;Groovy plugin - project layout&rdquo;</a>. All the Groovy
-            source directories can contain Groovy <span class="emphasis"><em>and</em></span> Java code. The Java source directories may
-            only contain Java source code.
-            <sup>[<a href="#ftn.N12A9E" name="N12A9E" class="footnote">11</a>]</sup>
-            None of these directories need to exist or have anything in them; the Groovy plugin will simply compile
+        </p>
+        <div class="section">
+            <div class="titlepage">
+                <div>
+                    <div><h2 class="title">
+              <a name="N129EF"></a>24.1. 用法</h2>
+                        <h4 class="title">
+                            <a name="N129EF"></a>
+                            24.1.&nbsp;Usage
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <p>要使用 Groovy 的插件，请在构建脚本中包含以下语句：<br/>To use the Groovy plugin, include in your build script:</p>
+            <div class="example">
+                <a name="useGroovyPlugin"></a>
+                <p class="title"><b>示例 24.1. 使用 Groovy 插件</b><br/><b>Example&nbsp;24.1.&nbsp;Using the Groovy plugin</b>
+                </p>
+                <div class="example-contents">
+                    <p>
+                        <code class="filename">build.gradle</code>
+                    </p>
+                    <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy'</span></pre>
+                </div>
+            </div>
+            <br class="example-break"></div>
+        <div class="section">
+            <div class="titlepage">
+                <div>
+                    <div><h2 class="title">
+              <a name="N129FE"></a>24.2. 任务</h2>
+                        <h4 class="title">
+                            <a name="N129FE"></a>
+                            24.2.&nbsp;Tasks
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <p>Groovy 的插件向project 中添加了以下任务。<br/>The Groovy plugin adds the following tasks to the project.</p>
+            <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+                <p class="title"> <b>表 24.1. Groovy 插件 - 任务</b><br/><b>Table&nbsp;24.1.&nbsp;Groovy plugin - tasks</b>
+                </p>
+                <div class="table-contents">
+                    <table id="N12A03">
+                        <thead>
+                            <tr>
+                                <td>任务名称<br/>Task name</td>
+                                <td>依赖于<br/>Depends on</td>
+                                <td>类型<br/>Type</td>
+                                <td>描述<br/>Description</td>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td>
+                                <code class="literal">compileGroovy</code>
+                            </td>
+                            <td>
+                                <code class="literal">compileJava</code>
+                            </td>
+                            <td>
+                                <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.GroovyCompile.html" target="_top">
+                                    <code class="classname">GroovyCompile</code>
+                                </a>
+                            </td>
+                            <td>编译production 的 Groovy 源文件。<br/>Compiles production Groovy source files.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code class="literal">compileTestGroovy</code>
+                            </td>
+                            <td>
+                                <code class="literal">compileTestJava</code>
+                            </td>
+                            <td>
+                                <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.GroovyCompile.html" target="_top">
+                                    <code class="classname">GroovyCompile</code>
+                                </a>
+                            </td>
+                            <td>编译test 的 Groovy 的源文件。<br/>Compiles test Groovy source files.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em> 
+                            Groovy
+                        </code>
+                    </td>
+                    <td>
+                        <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em> 
+                    Java
+                </code>
+            </td>
+            <td>
+                <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.GroovyCompile.html" target="_top">
+                    <code class="classname">GroovyCompile</code>
+                </a>
+            </td>
+            <td>编译给定的source set 里的 Groovy 源文件。<br/>Compiles the given source set's Groovy source files.</td>
+        </tr>
+        <tr>
+            <td>
+                <code class="literal">groovydoc</code>
+            </td>
+            <td>-</td>
+            <td>
+                <a class="ulink" href="../dsl/org.gradle.api.tasks.javadoc.Groovydoc.html" target="_top">
+                    <code class="classname">Groovydoc</code>
+                </a>
+            </td>
+            <td>为production 里的 Groovy 源文件生成 API 文档。<br/>
+                Generates API documentation for the production Groovy source files.
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
+<p>Groovy 的插件向 Java 插件所加入的 tasks 添加了以下的依赖。<br/>
+The Groovy plugin adds the following dependencies to tasks added by the Java plugin.
+</p>
+<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+<p class="title"><b>表 24.2. Groovy 插件 - 额外的task 依赖</b><br/>
+    <b>Table&nbsp;24.2.&nbsp;Groovy plugin - additional task dependencies</b> 
+</p>
+<div class="table-contents">
+    <table id="N12A68">
+        <thead>
+            <td>任务名称<br/>Task name</td>
+            <td>依赖于<br/>Depends on</td>
+        </thead>
+        <tr>
+            <td>classes</td>
+            <td>compileGroovy</td>
+        </tr>
+        <tr>
+            <td>testClasses</td>
+            <td>compileTestGroovy</td>
+        </tr>
+        <tr>
+            <td> <em class="replaceable"><code>sourceSet</code>
+                </em>
+                Classes
+            </td>
+            <td>
+                compile
+                <em class="replaceable"><code>SourceSet</code>
+                </em>
+                Groovy
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
+<div class="figure">
+<a name="N12A8D"></a>
+<p class="title"><b>图 24.1. Groovy 插件 - tasks</b><br/>
+    <b>Figure&nbsp;24.1.&nbsp;Groovy plugin - tasks</b>
+</p>
+<div class="figure-contents">
+    <img src="img/groovyPluginTasks.png" alt="Groovy plugin - tasks"></div>
+</div>
+<br class="figure-break"></div>
+<div class="section">
+<div class="titlepage">
+<div>
+    <div><h2 class="title">
+              <a name="N12A93"></a>24.3. 项目布局</h2>
+        <h4 class="title">
+            <a name="N12A93"></a>
+            24.3.&nbsp;Project layout
+        </h4>
+    </div>
+</div>
+</div>
+<p>Groovy 的插件会假定项目的布局如
+        <a class="xref" href="groovy_plugin.html#groovylayout" title="表 24.3. Groovy 插件 - 项目布局">表 24.3，“Groovy
+        插件 - 项目布局”</a>中所示。所有 Groovy 的源目录都可以包含 Groovy
+        <span class="emphasis">
+          <em>和</em>
+        </span>Java 代码。Java 源目录只能包含 Java 源代码。
+        <sup>[
+        <a href="#ftn.N12A9E" name="N12A9E"
+        class="footnote">11</a>]</sup>这些目录不一定得存在或是里面包含有什么内容；Groovy
+        的插件只会进行编译，而不管它发现什么。<br/>
+The Groovy plugin assumes the project layout shown in
+<a class="xref" href="groovy_plugin.html#groovylayout" title="Table&nbsp;24.3.&nbsp;Groovy plugin - project layout">
+    Table&nbsp;24.3, &ldquo;Groovy plugin - project layout&rdquo;
+</a>
+. All the Groovy
+            source directories can contain Groovy
+<span class="emphasis">
+    <em>and</em>
+</span>
+Java code. The Java source directories may
+            only contain Java source code. <sup>[
+    <a href="#ftn.N12A9E" name="N12A9E" class="footnote">11</a>
+    ]</sup> 
+None of these directories need to exist or have anything in them; the Groovy plugin will simply compile
             whatever it finds.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;24.3.&nbsp;Groovy plugin - project layout</b></p><div class="table-contents"><table id="groovylayout"><thead><tr>
-                    <td>Directory</td>
-                    <td>Meaning</td>
-                </tr></thead><tr>
-        <td>
-            <code class="filename">src/main/java</code>
-        </td>
-        <td>Production Java source</td>
-    </tr><tr>
-        <td>
-            <code class="filename">src/main/resources</code>
-        </td>
-        <td>Production resources</td>
-    </tr><tr>
-                <td>
-                    <code class="filename">src/main/groovy</code>
-                </td>
-                <td>Production Groovy sources. May also contain Java sources for joint compilation.</td>
-            </tr><tr>
-        <td>
-            <code class="filename">src/test/java</code>
-        </td>
-        <td>Test Java source</td>
-    </tr><tr>
-        <td>
-            <code class="filename">src/test/resources</code>
-        </td>
-        <td>Test resources</td>
-    </tr><tr>
-                <td>
-                    <code class="filename">src/test/groovy</code>
-                </td>
-                <td>Test Groovy sources. May also contain Java sources for joint compilation.</td>
-            </tr><tr>
-        <td>
-            <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/java</code>
-        </td>
-        <td>Java source for the given source set</td>
-    </tr><tr>
-        <td>
-            <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/resources</code>
-        </td>
-        <td>Resources for the given source set</td>
-    </tr><tr>
-                <td>
-                    <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/groovy</code>
-                </td>
-                <td>Groovy sources for the given source set. May also contain Java sources for joint compilation.</td>
-            </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N12B27"></a>24.3.1.&nbsp;Changing the project layout</h3></div></div></div><p>Just like the Java plugin, the Groovy plugin allows to configure custom locations for Groovy production and test sources.</p><div class="example"><a name="customGroovySourceLayout"></a><p class="title"><b>Example&nbsp;24.2.&nbsp;Custom Groovy source layout</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceSets {
+</p>
+<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+<p class="title"><b>表 24.3. Groovy 插件 - 项目布局</b><br/>
+    <b>Table&nbsp;24.3.&nbsp;Groovy plugin - project layout</b>
+</p>
+<div class="table-contents">
+    <table id="groovylayout">
+        <thead>
+            <tr>
+                <td>目录<br/>Directory</td>
+                <td>意义<br/>Meaning</td>
+            </tr>
+        </thead>
+        <tr>
+            <td>
+                <code class="filename">src/main/java</code>
+            </td>
+            <td>产品的Java源代码<br/>Production Java source</td>
+        </tr>
+        <tr>
+            <td>
+                <code class="filename">src/main/resources</code>
+            </td>
+            <td>产品的资源<br/>Production resources</td>
+        </tr>
+        <tr>
+            <td>
+                <code class="filename">src/main/groovy</code>
+            </td>
+            <td>Production Groovy 源代码。此外可能包含联合编译的 Java 源代码。<br/>
+                Production Groovy sources. May also contain Java sources for joint compilation.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="filename">src/test/java</code>
+            </td>
+            <td>Java 测试源代码<br/>Test Java source</td>
+        </tr>
+        <tr>
+            <td>
+                <code class="filename">src/test/resources</code>
+            </td>
+            <td>测试资源<br/>Test resources</td>
+        </tr>
+        <tr>
+            <td>
+                <code class="filename">src/test/groovy</code>
+            </td>
+            <td>Test Groovy 源代码。此外可能包含联合编译的 Java 源代码。<br/>
+                Test Groovy sources. May also contain Java sources for joint compilation.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <code class="filename">src/<em class="replaceable"><code>sourceSet</code>
+            </em>
+            /java
+        </code>
+    </td>
+    <td>给定的源集的Java源代码<br/>Java source for the given source set</td>
+</tr>
+<tr>
+    <td>
+        <code class="filename">src/<em class="replaceable"><code>sourceSet</code>
+    </em>
+    /resources
+</code>
+</td>
+<td>给定的源集的资源<br/>Resources for the given source set</td>
+</tr>
+<tr>
+<td>
+<code class="filename">src/<em class="replaceable"><code>sourceSet</code>
+</em>
+/groovy
+</code>
+</td>
+<td>给定的source set 的 Groovy 源代码。此外可能包含联合编译的 Java 源代码。<br/>
+Groovy sources for the given source set. May also contain Java sources for joint compilation.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="section">
+<div class="titlepage">
+<div>
+<div><h3 class="title">
+                <a name="N12B27"></a>24.3.1. 更改项目布局</h3>
+<h5 class="title">
+<a name="N12B27"></a>
+24.3.1.&nbsp;Changing the project layout
+</h5>
+</div>
+</div>
+</div>
+<p>和 Java 插件一样，Groovy 插件允许把 Groovy 的production 和test
+          的源文件配置为自定义的位置。<br/>
+Just like the Java plugin, the Groovy plugin allows to configure custom locations for Groovy production and test sources.
+</p>
+<div class="example">
+<a name="customGroovySourceLayout"></a>
+<p class="title"><b>示例 24.2. 自定义 Groovy 自定义源文件布局</b><br/>
+<b>Example&nbsp;24.2.&nbsp;Custom Groovy source layout</b>
+</p>
+<div class="example-contents">
+<p>
+<code class="filename">build.gradle</code>
+</p>
+<pre class="programlisting">sourceSets {
     main {
         groovy {
             srcDirs = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/groovy'</span>]
@@ -103,32 +369,126 @@
             srcDirs = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'test/groovy'</span>]
         }
     }
-}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12B36"></a>24.4.&nbsp;Dependency management</h2></div></div></div><p>Because Gradle's build language is based on Groovy, and parts of Gradle are implemented in Groovy, Gradle already ships
+}</pre>
+</div>
+</div>
+<br class="example-break"></div>
+</div>
+<div class="section">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+              <a name="N12B36"></a>24.4. 依赖管理</h2>
+<h4 class="title">
+<a name="N12B36"></a>
+24.4.&nbsp;Dependency management
+</h4>
+</div>
+</div>
+</div>
+<p>由于 Gradle 的构建语言基于 Groovy 的，且部分的 Groovy 使用 Groovy 实现，因此 Gradle
+        已经带有了一个 Groovy 库 （截至 Gradle 1.6所带的 Groovy 库的版本是 1.8.6）。然而，Groovy
+        项目需要显式地声明一个 Groovy
+        依赖。这个依赖会在编译和运行的类路径时用到。它还将用于分别获取Groovy 编译器及 Groovydoc
+        工具。<br/>
+Because Gradle's build language is based on Groovy, and parts of Gradle are implemented in Groovy, Gradle already ships
             with a Groovy library (1.8.6 as of Gradle 1.6). Nevertheless, Groovy projects need to explicitly declare a Groovy dependency.
             This dependency will then be used on compile and runtime class paths. It will also be used to get hold of the Groovy compiler
             and Groovydoc tool, respectively.
-        </p><p>
-            If Groovy is used for production code, the Groovy dependency should be added to the <code class="literal">compile</code>
-            configuration:
-        </p><div class="example"><a name="quickstartGroovyDependency"></a><p class="title"><b>Example&nbsp;24.3.&nbsp;Configuration of Groovy dependency</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+</p>
+<p>如果 Groovy 用于production 代码，Groovy 依赖应该添加到
+        <code class="literal">compile</code>配置中：<br/>
+If Groovy is used for production code, the Groovy dependency should be added to the
+<code class="literal">compile</code>
+configuration:
+</p>
+<div class="example">
+<a name="quickstartGroovyDependency"></a>
+<p class="title"><b>示例 24.3. Groovy 的依赖配置</b><br/>
+<b>Example&nbsp;24.3.&nbsp;Configuration of Groovy dependency</b>
+</p>
+<div class="example-contents">
+<p>
+<code class="filename">build.gradle</code>
+</p>
+<pre class="programlisting">repositories {
     mavenCentral()
 }
 
 dependencies {
     compile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.codehaus.groovy:groovy-all:2.2.0'</span>
-}</pre></div></div><br class="example-break"><p>
-            If Groovy is only used for test code, the Groovy dependency should be added to the <code class="literal">testCompile</code>
-            configuration:
-        </p><div class="example"><a name="groovyTestDependency"></a><p class="title"><b>Example&nbsp;24.4.&nbsp;Configuration of Groovy test dependency</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+}</pre>
+</div>
+</div>
+<br class="example-break">
+<p>如果 Groovy 仅用于测试代码，Groovy 的依赖应该被添加到
+        <code class="literal">testCompile</code>配置中：<br/>
+If Groovy is only used for test code, the Groovy dependency should be added to the
+<code class="literal">testCompile</code>
+configuration:
+</p>
+<div class="example">
+<a name="groovyTestDependency"></a>
+<p class="title"><b>示例 24.4. 配置Groovy 测试依赖</b><br/>
+<b>Example&nbsp;24.4.&nbsp;Configuration of Groovy test dependency</b> 
+</p>
+<div class="example-contents">
+<p>
+<code class="filename">build.gradle</code>
+</p>
+<pre class="programlisting">dependencies {
     testCompile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.codehaus.groovy:groovy-all:2.2.0"</span>
-}</pre></div></div><br class="example-break"><p>
-            To use the Groovy library that ships with Gradle, declare a <code class="literal">localGroovy()</code> dependency. Note that
-            different Gradle versions ship with different Groovy versions; as such, using <code class="literal">localGroovy()</code> is less
+}</pre>
+</div>
+</div>
+<br class="example-break">
+<p>如果要使用 Gradle 所带的 Groovy 库，请声明
+        <code class="literal">localGroovy()</code>依赖。注意，不同 Gradle 版本附带的 Groovy
+        版本不同；因此，声明一个固定的 Groovy 依赖要比使用
+        <code class="literal">localGroovy()</code>更安全一些。<br/>
+To use the Groovy library that ships with Gradle, declare a
+<code class="literal">localGroovy()</code>
+dependency. Note that
+            different Gradle versions ship with different Groovy versions; as such, using
+<code class="literal">localGroovy()</code>
+is less
             safe then declaring a regular Groovy dependency.
-        </p><div class="example"><a name="bundledGroovyDependency"></a><p class="title"><b>Example&nbsp;24.5.&nbsp;Configuration of bundled Groovy dependency</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+</p>
+<div class="example">
+<a name="bundledGroovyDependency"></a>
+<p class="title"><b>示例 24.5. 配置捆绑的 Groovy 依赖</b><br/>
+<b>
+Example&nbsp;24.5.&nbsp;Configuration of bundled Groovy dependency
+</b>
+</p>
+<div class="example-contents">
+<p>
+<code class="filename">build.gradle</code>
+</p>
+<pre class="programlisting">dependencies {
     compile localGroovy()
-}</pre></div></div><br class="example-break"><p>The Groovy library doesn't necessarily have to come from a remote repository. It could also come from a local
-            <code class="literal">lib</code> directory, perhaps checked in to source control:</p><div class="example"><a name="groovyFileDependency"></a><p class="title"><b>Example&nbsp;24.6.&nbsp;Configuration of Groovy file dependency</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+}</pre>
+</div>
+</div>
+<br class="example-break">
+<p>Groovy 库不一定得从远程仓库中获取。它也可以获取自本地中可能检入版本控制的
+        <code class="literal">lib</code>目录：<br/>
+The Groovy library doesn't necessarily have to come from a remote repository. It could also come from a local
+<code class="literal">lib</code>
+directory, perhaps checked in to source control:
+</p>
+<div class="example">
+<a name="groovyFileDependency"></a>
+<p class="title"><b>示例 24.6. 配置Groovy 文件依赖</b><br/>
+<b>
+Example&nbsp;24.6.&nbsp;Configuration of Groovy file dependency
+</b>
+</p>
+<div class="example-contents">
+<p>
+<code class="filename">build.gradle</code>
+</p>
+<pre class="programlisting">repositories {
     flatDir { dirs <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'lib'</span> }
 }
 
@@ -141,118 +501,421 @@ dependencies {
             dependencies(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.apache.ant:ant-junit:1.9.3@jar'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.apache.ant:ant-launcher:1.9.3'</span>)
         }
     }
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12B7A"></a>24.5.&nbsp;Automatic configuration of groovyClasspath</h2></div></div></div><p>
-            <code class="literal">GroovyCompile</code> and <code class="literal">Groovydoc</code> tasks consume Groovy in two ways: on their <code class="literal">classpath</code>,
-            and on their <code class="literal">groovyClasspath</code>. The former is used to locate classes referenced by the source code, and will typically
+}</pre>
+</div>
+</div>
+<br class="example-break"></div>
+<div class="section">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+              <a name="N12B7A"></a>24.5. groovyClasspath 的自动配置</h2>
+<h4 class="title">
+<a name="N12B7A"></a>
+24.5.&nbsp;Automatic configuration of groovyClasspath
+</h4>
+</div>
+</div>
+</div>
+<p><code class="literal">GroovyCompile</code>和
+        <code class="literal">Groovydoc</code> tasks 会以两种方式使用 Groovy： 在它们的
+        <code class="literal">classpath</code>以及它们的
+        <code class="literal">groovyClasspath</code>上。前者用于在源代码中查找类的引用，通常会包含 Groovy
+        库和其他库。后者用来分别加载和执行 Groovy 编译器和 Groovydoc 工具，并且应该只包含 Groovy
+        库及其依赖项。<br/>
+<code class="literal">GroovyCompile</code>
+and
+<code class="literal">Groovydoc</code>
+tasks consume Groovy in two ways: on their
+<code class="literal">classpath</code>
+,
+            and on their
+<code class="literal">groovyClasspath</code>
+. The former is used to locate classes referenced by the source code, and will typically
             contain the Groovy library along with other libraries. The latter is used to load and execute the Groovy compiler and Groovydoc tool,
             respectively, and should only contain the Groovy library and its dependencies.
-        </p><p>
-            Unless a task's <code class="literal">groovyClasspath</code> is configured explicitly, the Groovy (base) plugin will try to infer it
-            from the task's <code class="literal">classpath</code>. This is done as follows:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
-                    If a <code class="literal">groovy-all(-indy)</code> Jar is found on <code class="literal">classpath</code>, the same Jar will be added to
-                    <code class="literal">groovyClasspath</code>.
-                </li><li class="listitem">
-                    If a <code class="literal">groovy(-indy)</code> Jar is found on <code class="literal">classpath</code>, and the project has at least one repository declared,
-                    a corresponding <code class="literal">groovy(-indy)</code> repository dependency will be added to <code class="literal">groovyClasspath</code>.
-                </li><li class="listitem">
-                    Otherwise, execution of the task will fail with a message saying that <code class="literal">groovyClasspath</code> could not be inferred.
-                </li></ul></div><p>
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12BB3"></a>24.6.&nbsp;Convention properties</h2></div></div></div><p>The Groovy plugin does not add any convention properties to the project.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12BB8"></a>24.7.&nbsp;Source set properties</h2></div></div></div><p>The Groovy plugin adds the following convention properties to each source set in the project. You can
+</p>
+<p>除非显式配置了一个 task 的
+        <code class="literal">groovyClasspath</code> ，否则 Groovy（基础）插件会尝试推断该 task 的
+        <code class="literal">classpath</code>。以如下方式进行：<br/>
+Unless a task's
+<code class="literal">groovyClasspath</code>
+is configured explicitly, the Groovy (base) plugin will try to infer it
+            from the task's
+<code class="literal">classpath</code>
+. This is done as follows:
+</p>
+<div class="itemizedlist">
+<ul class="itemizedlist">
+<li class="listitem">如果在
+            <code class="literal">classpath</code>中找到
+            <code class="literal">groovy-all(-indy)</code> Jar，相同的 Jar 将添加到
+            <code class="literal">groovyClasspath</code>中。<br/>
+If a
+<code class="literal">groovy-all(-indy)</code>
+Jar is found on
+<code class="literal">classpath</code>
+, the same Jar will be added to
+<code class="literal">groovyClasspath</code>
+.
+</li>
+<li class="listitem">如果在
+            <code class="literal">classpath</code>中找到
+            <code class="literal">groovy(-indy)</code> Jar
+            ，并且该项目已经在至少一个仓库中声明了它，那么相应的
+            <code class="literal">groovy(-indy)</code>的仓库依赖将添加到
+            <code class="literal">groovyClasspath</code>中。<br/>
+If a
+<code class="literal">groovy(-indy)</code>
+Jar is found on
+<code class="literal">classpath</code>
+, and the project has at least one repository declared,
+                    a corresponding
+<code class="literal">groovy(-indy)</code>
+repository dependency will be added to
+<code class="literal">groovyClasspath</code>
+.
+</li>
+<li class="listitem">其他情况，该task 将执行失败，并提示无法推断 
+            <code class="literal">groovyClasspath</code>。<br/>
+Otherwise, execution of the task will fail with a message saying that
+<code class="literal">groovyClasspath</code>
+could not be inferred.
+</li>
+</ul>
+</div>
+<p></p>
+</div>
+<div class="section">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+              <a name="N12BB3"></a>24.6. 常规属性</h2>
+<h4 class="title">
+<a name="N12BB3"></a>
+24.6.&nbsp;Convention properties
+</h4>
+</div>
+</div>
+</div>
+<p>Groovy 的插件没有向 project 添加任何的常规属性。<br/>
+The Groovy plugin does not add any convention properties to the project.
+</p>
+</div>
+<div class="section">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+              <a name="N12BB8"></a>24.7. source set 属性</h2>
+<h4 class="title">
+<a name="N12BB8"></a>
+24.7.&nbsp;Source set properties
+</h4>
+</div>
+</div>
+</div>
+<p>Groovy 的插件向 project 的每一个source set
+        添加了下列的常规属性。你可以在你的构建脚本中，把这些属性当成是source set
+        对象中的属性一样使用 （见
+        <a class="xref" href="plugins.html#sub:more_about_convention_objects">第 21.3，“公约”</a>）。<br/>
+The Groovy plugin adds the following convention properties to each source set in the project. You can
             use these properties in your build script as though they were properties of the source set object (see
-            <a class="xref" href="plugins.html#sub:more_about_convention_objects">Section&nbsp;21.3, &ldquo;Conventions&rdquo;</a>).</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;24.4.&nbsp;Groovy plugin - source set properties</b></p><div class="table-contents"><table id="N12BC0"><thead><tr>
-                    <td>Property name</td>
-                    <td>Type</td>
-                    <td>Default value</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">groovy</code>
-                </td>
-                <td>
-                    <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
-                </td>
-                <td>
-                    Not null
-                </td>
-                <td>
-                    The Groovy source files of this source set. Contains all <code class="filename">.groovy</code> and
-                    <code class="filename">.java</code> files found in the Groovy source directories, and excludes all other
+<a class="xref" href="plugins.html#sub:more_about_convention_objects">Section&nbsp;21.3, &ldquo;Conventions&rdquo;</a>
+).
+</p>
+<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+<p class="title"><b>表 24.4. Groovy 插件 - source set 属性</b><br/>
+<b>Table&nbsp;24.4.&nbsp;Groovy plugin - source set properties</b>
+</p>
+<div class="table-contents">
+<table id="N12BC0">
+<thead>
+<tr>
+<td>属性名称<br/>Property name</td>
+<td>类型<br/>Type</td>
+<td>默认值<br/>Default value</td>
+<td>描述<br/>Description</td>
+</tr>
+</thead>
+<tr>
+<td>
+<code class="literal">groovy</code>
+</td>
+<td>
+<a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top">
+<code class="classname">SourceDirectorySet</code>
+</a>
+(read-only)
+</td>
+<td>非空<br/>Not null</td>
+<td>该source set 中的 Groovy 源文件。包含在 Groovy 源目录中找到的所有的
+                <code class="filename">.groovy</code>和
+                <code class="filename">.java</code>文件，并排除所有其他类型的文件。<br/>
+The Groovy source files of this source set. Contains all
+<code class="filename">.groovy</code>
+and
+<code class="filename">.java</code>
+files found in the Groovy source directories, and excludes all other
                     types of files.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">groovy.srcDirs</code>
-                </td>
-                <td>
-                    <code class="classname">Set&lt;File&gt;</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.
-                </td>
-                <td>
-                    <code class="literal">[<em class="replaceable"><code>projectDir</code></em>/src/<em class="replaceable"><code>name</code></em>/groovy]</code>
-                </td>
-                <td>
-                    The source directories containing the Groovy source files of this source set. May also contain
+</td>
+</tr>
+<tr>
+<td>
+<code class="literal">groovy.srcDirs</code>
+</td>
+<td><code class="classname">Set&lt;File&gt;</code>. 可以使用
+                <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">16.5
+                章节，&quot;指定一组输入文件&quot;</a>中所讲到的任何一个来设置。<br/>
+<code class="classname">Set&lt;File&gt;</code>
+. Can set using anything described in
+<a class="xref" href="working_with_files.html#sec:specifying_multiple_files">
+Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;
+</a>
+.
+</td>
+<td>
+<code class="literal">[<em class="replaceable"><code>projectDir</code>
+</em>
+/src/
+<em class="replaceable">
+<code>name</code>
+</em>
+/groovy]
+</code>
+</td>
+<td>源目录包含该 source set 中的 Groovy 源文件。此外可能还包含用于联合编译的 Java
+                源文件。<br/>
+The source directories containing the Groovy source files of this source set. May also contain
                     Java source files for joint compilation.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">allGroovy</code>
-                </td>
-                <td>
-                    <a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a> (read-only)
-                </td>
-                <td>
-                    Not null
-                </td>
-                <td>
-                    All Groovy source files of this source set. Contains only the <code class="filename">.groovy</code> files
+</td>
+</tr>
+<tr>
+<td>
+<code class="literal">allGroovy</code>
+</td>
+<td>
+<a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top">
+<code class="classname">FileTree</code>
+</a>
+(read-only)
+</td>
+<td>非空<br/>Not null</td>
+<td>该source set 中的所有 Groovy 源文件。包含在 Groovy 源目录中找到的所有的
+                <code class="filename">.groovy</code>文件。<br/>
+All Groovy source files of this source set. Contains only the
+<code class="filename">.groovy</code>
+files
                     found in the Groovy source directories.
-                </td>
-            </tr></table></div></div><p>These properties are provided by a convention object of type <a class="ulink" href="../dsl/org.gradle.api.tasks.GroovySourceSet.html" target="_top"><code class="classname">GroovySourceSet</code></a>.</p><p>The Groovy plugin also modifies some source set properties:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;24.5.&nbsp;Groovy plugin - source set properties</b></p><div class="table-contents"><table id="N12C30"><thead><tr>
-                    <td>Property name</td>
-                    <td>Change</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">allJava</code>
-                </td>
-                <td>Adds all <code class="filename">.java</code> files found in the Groovy source directories.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">allSource</code>
-                </td>
-                <td>Adds all source files found in the Groovy source directories.</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:groovyCompile"></a>24.8.&nbsp;GroovyCompile</h2></div></div></div><p>The Groovy plugin adds a <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.GroovyCompile.html" target="_top"><code class="classname">GroovyCompile</code></a> task for
-            each source set in the project. The task type extends the <code class="literal">JavaCompile</code>
-            task (see <a class="xref" href="java_plugin.html#sec:compile">Section&nbsp;23.11, &ldquo;CompileJava&rdquo;</a>). Unless <code class="literal">groovyOptions.useAnt</code> is set to <code class="literal">true</code>,
+</td>
+</tr>
+</table>
+</div>
+</div>
+<p>这些属性由一个
+        <a class="ulink" href="../dsl/org.gradle.api.tasks.GroovySourceSet.html" target="_top">
+          <code class="classname">GroovySourceSet</code>
+        </a> 的约定对象提供。<br/>
+These properties are provided by a convention object of type
+<a class="ulink" href="../dsl/org.gradle.api.tasks.GroovySourceSet.html" target="_top">
+<code class="classname">GroovySourceSet</code>
+</a>
+.
+</p>
+<p>Groovy 的插件还修改了一些 source set 的属性：<br/>The Groovy plugin also modifies some source set properties:</p>
+<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+<p class="title"><b>表 24.5. Groovy 的插件 - source set 属性</b><br/>
+<b>Table&nbsp;24.5.&nbsp;Groovy plugin - source set properties</b>
+</p>
+<div class="table-contents">
+<table id="N12C30">
+<thead>
+<tr>
+<td>属性名称<br/>Property name</td>
+<td>修改的内容<br/>Change</td>
+</tr>
+</thead>
+<tr>
+<td>
+<code class="literal">allJava</code>
+</td>
+<td>添加在 Groovy 源目录中找到的所有
+                <code class="filename">.java</code>文件。<br/>
+Adds all
+<code class="filename">.java</code>
+files found in the Groovy source directories.
+</td>
+</tr>
+<tr>
+<td>
+<code class="literal">allSource</code>
+</td>
+<td>添加在 Groovy 的源目录中找到的所有源文件。<br/>
+Adds all source files found in the Groovy source directories.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+              <a name="sec:groovyCompile"></a>24.8.GroovyCompile</h2>
+<h4 class="title">
+<a name="sec:groovyCompile"></a>
+24.8.&nbsp;GroovyCompile
+</h4>
+</div>
+</div>
+</div>
+<p>Java 插件向 project 里的每个source set 添加了一个
+        <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.GroovyCompile.html" target="_top">
+          <code class="classname">JavaCompile</code>
+        </a> task。这个task 的类型继承自
+        <code class="literal">JavaCompile</code> task（见
+        <a class="xref" href="java_plugin.html#sec:compile">第 23.11 节，“CompileJava”</a>）。除非
+        <code class="literal">groovyOptions.useAnt</code>设置为
+        <code class="literal">true</code>，否则将使用 Gradle 集成的本地的 Groovy
+        编译器。对于大多数项目而言，这相比基于 Ant 编译器，是个更好的选择。
+        <code class="literal">GroovyCompile</code> task 支持官方的 Groovy 编译器的大多数配置选项。<br/>
+The Groovy plugin adds a
+<a class="ulink" href="../dsl/org.gradle.api.tasks.compile.GroovyCompile.html" target="_top">
+<code class="classname">GroovyCompile</code>
+</a>
+task for
+            each source set in the project. The task type extends the
+<code class="literal">JavaCompile</code>
+task (see
+<a class="xref" href="java_plugin.html#sec:compile">Section&nbsp;23.11, &ldquo;CompileJava&rdquo;</a>
+). Unless
+<code class="literal">groovyOptions.useAnt</code>
+is set to
+<code class="literal">true</code>
+,
             Gradle's native Groovy compiler integration is used. For most projects, this is the better choice than the Ant-based compiler.
-            The <code class="literal">GroovyCompile</code> task supports most configuration options of the official Groovy compiler.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;24.6.&nbsp;Groovy plugin - GroovyCompile properties</b></p><div class="table-contents"><table id="N12C6F"><thead><tr>
-                    <td>Task Property</td>
-                    <td>Type</td>
-                    <td>Default Value</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">classpath</code>
-                </td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td>
-                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.compileClasspath</code></td>
-            </tr><tr>
-                <td>
-                    <code class="literal">source</code>
-                </td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.</td>
-                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.groovy</code></td>
-            </tr><tr>
-                <td>
-                    <code class="literal">destinationDir</code>
-                </td>
-                <td><code class="classname">File</code>.</td>
-                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.output.classesDir</code></td>
-            </tr><tr>
-                <td>
-                    <code class="literal">groovyClasspath</code>
-                </td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td>
-                <td><code class="literal">groovy</code> configuration if non-empty; Groovy library found on <code class="literal">classpath</code> otherwise</td>
-            </tr></table></div></div></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N12A9E" name="ftn.N12A9E" class="para">11</a>] </sup>We are using the same conventions as introduced by Russel Winder's Gant tool (<a class="ulink" href="http://gant.codehaus.org" target="_top">http://gant.codehaus.org</a>).
-                </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="java_plugin.html" title="Chapter&nbsp;23.&nbsp;The Java Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="scala_plugin.html" title="Chapter&nbsp;25.&nbsp;The Scala Plugin">Next</a></div></div></div></body></html>
+            The
+<code class="literal">GroovyCompile</code>
+task supports most configuration options of the official Groovy compiler.
+</p>
+<div xmlns:xslthl="http://xslthl.sf.net" class="table">
+<p class="title"> <b>表 24.6. Groovy 插件 - GroovyCompile 属性</b><br/>
+<b>
+Table&nbsp;24.6.&nbsp;Groovy plugin - GroovyCompile properties
+</b>
+</p>
+<div class="table-contents">
+<table id="N12C6F">
+<thead>
+<tr>
+<td>任务属性<br/>Task Property</td>
+<td>类型<br/>Type</td>
+<td>默认值<br/>Default Value</td>
+</tr>
+</thead>
+<tr>
+<td>
+<code class="literal">classpath</code>
+</td>
+<td>
+<a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top">
+<code class="classname">FileCollection</code>
+</a>
+</td>
+<td>
+<code class="literal"><em class="replaceable"><code>sourceSet</code>
+</em>
+.compileClasspath
+</code>
+</td>
+</tr>
+<tr>
+<td>
+<code class="literal">source</code>
+</td>
+<td><a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top">
+                  <code class="classname">FileTree</code>
+                </a>. 可以使用
+                <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">16.5
+                章节，&quot;指定一组输入文件&quot;</a>中所讲到的任何一种方式来设置。<br/>
+<a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top">
+<code class="classname">FileTree</code>
+</a>
+. Can set using anything described in
+<a class="xref" href="working_with_files.html#sec:specifying_multiple_files">
+Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;
+</a>
+.
+</td>
+<td>
+<code class="literal"><em class="replaceable"><code>sourceSet</code>
+</em>
+.groovy
+</code>
+</td>
+</tr>
+<tr>
+<td>
+<code class="literal">destinationDir</code>
+</td>
+<td>
+<code class="classname">File</code>
+.
+</td>
+<td>
+<code class="literal"><em class="replaceable"><code>sourceSet</code>
+</em>
+.output.classesDir
+</code>
+</td>
+</tr>
+<tr>
+<td>
+<code class="literal">groovyClasspath</code>
+</td>
+<td>
+<a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top">
+<code class="classname">FileCollection</code>
+</a>
+</td>
+<td>如果 <code class="literal">groovy</code> 配置不为空，则为该配置；否则为 <code class="literal">classpath</code> 中找到的 Groovy 库<br/>
+<code class="literal">groovy</code>
+configuration if non-empty; Groovy library found on
+<code class="literal">classpath</code>
+otherwise
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<br>
+<hr align="left" width="100">
+<div class="footnote">
+<p><sup>[
+          <a href="#N12A9E" name="ftn.N12A9E" class="para">11</a>]</sup> 我们使用和 Russel Winder 的 Gant
+          工具同样的约定（
+          <a class="ulink" href="http://gant.codehaus.org" target="_top">http://gant.codehaus.org</a>）。<br/><sup>[
+<a href="#N12A9E" name="ftn.N12A9E" class="para">11</a>
+]</sup> 
+We are using the same conventions as introduced by Russel Winder's Gant tool (
+<a class="ulink" href="http://gant.codehaus.org" target="_top">http://gant.codehaus.org</a>
+).
+</p>
+</div>
+</div>
+</div>
+<div class="navfooter">
+<div>
+<div class="navbar">
+<a xmlns:xslthl="http://xslthl.sf.net" href="java_plugin.html" title="第二十三章. Java 插件">上一章</a>
+<span>|</span>
+<a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+<span>|</span>
+<a xmlns:xslthl="http://xslthl.sf.net" href="scala_plugin.html" title="第二十五章. Scala 插件">下一章</a>
+</div>
+</div>
+</div>
+</body>
+</html>
