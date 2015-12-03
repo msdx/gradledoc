@@ -1,36 +1,160 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;37.&nbsp;The OSGi Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="sonar_runner_plugin.html" title="Chapter&nbsp;36.&nbsp;The Sonar Runner Plugin"><link rel="next" href="eclipse_plugin.html" title="Chapter&nbsp;38.&nbsp;The Eclipse Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="sonar_runner_plugin.html" title="Chapter&nbsp;36.&nbsp;The Sonar Runner Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="eclipse_plugin.html" title="Chapter&nbsp;38.&nbsp;The Eclipse Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="osgi_plugin"></a>Chapter&nbsp;37.&nbsp;The OSGi Plugin</h1></div></div></div><p>The OSGi plugin provides a factory method to create an
-        <a class="ulink" href="../javadoc/org/gradle/api/plugins/osgi/OsgiManifest.html" target="_top"><code class="classname">OsgiManifest</code></a> object. <code class="literal">OsgiManifest</code> extends
-        <a class="ulink" href="../javadoc/org/gradle/api/java/archives/Manifest.html" target="_top"><code class="classname">Manifest</code></a>. To learn more
-        about generic manifest handling, see <a class="xref" href="java_plugin.html#sub:manifest">Section&nbsp;23.13.1, &ldquo;Manifest&rdquo;</a>. If the Java plugins is applied, the OSGi plugin
-        replaces the manifest object of the default jar with an <code class="literal">OsgiManifest</code> object. The replaced manifest
-        is merged into the new one.
-    </p><p>The OSGi plugin makes heavy use of Peter Kriens <a class="ulink" href="http://www.aqute.biz/Code/Bnd" target="_top">BND tool</a>.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13C55"></a>37.1.&nbsp;Usage</h2></div></div></div><p>To use the OSGi plugin, include in your build script:</p><div class="example"><a name="useOsgiPlugin"></a><p class="title"><b>Example&nbsp;37.1.&nbsp;Using the OSGi plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'osgi'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13C64"></a>37.2.&nbsp;Implicitly applied plugins</h2></div></div></div><p>Applies the Java base plugin.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13C69"></a>37.3.&nbsp;Tasks</h2></div></div></div><p>This plugin does not add any tasks.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13C6E"></a>37.4.&nbsp;Dependency management</h2></div></div></div><p>TBD</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13C73"></a>37.5.&nbsp;Convention object</h2></div></div></div><p>The OSGi plugin adds the following convention object: <a class="ulink" href="../dsl/org.gradle.api.plugins.osgi.OsgiPluginConvention.html" target="_top"><code class="classname">OsgiPluginConvention</code></a>
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N13C7D"></a>37.5.1.&nbsp;Convention properties</h3></div></div></div><p>The OSGi plugin does not add any convention properties to the project.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N13C82"></a>37.5.2.&nbsp;Convention methods</h3></div></div></div><p>The OSGi plugin adds the following methods. For more details, see the API documentation of the convention
-                object.
-            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;37.1.&nbsp;OSGi methods</b></p><div class="table-contents"><table id="N13C87"><thead><tr>
-                        <td>Method</td>
-                        <td>Return Type</td>
-                        <td>Description</td>
-                    </tr></thead><tr>
-                    <td>osgiManifest()</td>
-                    <td>
-                        <a class="ulink" href="../javadoc/org/gradle/api/plugins/osgi/OsgiManifest.html" target="_top"><code class="classname">OsgiManifest</code></a>
-                    </td>
-                    <td>Returns an OsgiManifest object.</td>
-                </tr><tr>
-                    <td>osgiManifest(Closure cl)</td>
-                    <td>
-                        <a class="ulink" href="../javadoc/org/gradle/api/plugins/osgi/OsgiManifest.html" target="_top"><code class="classname">OsgiManifest</code></a>
-                    </td>
-                    <td>Returns an OsgiManifest object configured by the closure.</td>
-                </tr></table></div></div></div></div><div class="section"><div class="titlepage"></div><p>The classes in the classes dir are analyzed regarding there package dependencies and the packages they expose.
-            Based on this the <span class="emphasis"><em>Import-Package</em></span> and the <span class="emphasis"><em>Export-Package</em></span> values of the
-            OSGi Manifest are calculated. If the classpath contains jars with an OSGi bundle, the bundle
-            information is used to specify version information for the <span class="emphasis"><em>Import-Package</em></span>
-            value. Beside the explicit properties of the <code class="literal">OsgiManifest</code> object you can add instructions.
-        </p><div class="example"><a name="osgi"></a><p class="title"><b>Example&nbsp;37.2.&nbsp;Configuration of OSGi MANIFEST.MF file</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">jar {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第三十七章. OSGi 插件 - Chapter&nbsp;37.&nbsp;The OSGi Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="sonar_runner_plugin.html" title="第三十六章. Sonar Runner 插件">
+  <link rel="next" href="eclipse_plugin.html" title="第三十八章. Eclipse 插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="sonar_runner_plugin.html" title="第三十六章. Sonar Runner 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="eclipse_plugin.html" title="第三十八章. Eclipse 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="osgi_plugin"></a>第三十七章. OSGi 插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="osgi_plugin"></a>Chapter&nbsp;37.&nbsp;The OSGi Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <p>OSGi 插件提供了工厂方法来创建一个<a class="ulink" href="../javadoc/org/gradle/api/plugins/osgi/OsgiManifest.html" target="_top"><code class="classname">OsgiManifest</code></a>对象。<code class="literal">OsgiManifest</code> 继承自 <a class="ulink" href="../javadoc/org/gradle/api/java/archives/Manifest.html" target="_top"><code class="classname">Manifest</code></a>。要了解常见的清单处理的更多信息，请参阅<a class="xref" href="java_plugin.html#sub:manifest">第 23.13.1节，“Manifest”</a>。如果应用了 Java 插件，OSGi 插件将把默认 jar 的 manifest 对象替换为一个<code class="literal">OsgiManifest</code>对象。被替换的manifest 会被合并到新的对象单中。 <br>The OSGi plugin provides a factory method to create an <a class="ulink" href="../javadoc/org/gradle/api/plugins/osgi/OsgiManifest.html" target="_top"><code class="classname">OsgiManifest</code></a> object. <code class="literal">OsgiManifest</code> extends <a class="ulink" href="../javadoc/org/gradle/api/java/archives/Manifest.html" target="_top"><code class="classname">Manifest</code></a>. To learn more about generic manifest handling, see <a class="xref" href="java_plugin.html#sub:manifest">Section&nbsp;23.13.1, “Manifest”</a>. If the Java plugins is applied, the OSGi plugin replaces the manifest object of the default jar with an <code class="literal">OsgiManifest</code> object. The replaced manifest is merged into the new one.</p>
+   <p>OSGi 插件使 Peter Kriens <a class="ulink" href="http://www.aqute.biz/Code/Bnd" target="_top">BND tool</a> 大量使用。 <br>The OSGi plugin makes heavy use of Peter Kriens <a class="ulink" href="http://www.aqute.biz/Code/Bnd" target="_top">BND tool</a>.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13C55"></a>37.1.&nbsp;用法</h2>
+       <h4 class="title"><a name="N13C55"></a>37.1.&nbsp;Usage</h4>
+      </div>
+     </div>
+    </div>
+    <p>要使用 OSGi 插件，请在构建脚本中包含以下语句：<br>To use the OSGi plugin, include in your build script:</p>
+    <div class="example">
+     <a name="useOsgiPlugin"></a>
+     <p class="title"><b>示例 37.1. 使用 OSGi 插件 - Example&nbsp;37.1.&nbsp;Using the OSGi plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'osgi'</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13C64"></a>37.2. 隐式应用插件</h2>
+       <h4 class="title"><a name="N13C64"></a>37.2.&nbsp;Implicitly applied plugins</h4>
+      </div>
+     </div>
+    </div>
+    <p>适用于 Java 基础插件。<br>Applies the Java base plugin.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13C69"></a>37.3. 任务</h2>
+       <h4 class="title"><a name="N13C69"></a>37.3.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>此插件不会添加任何任务。<br>This plugin does not add any tasks.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13C6E"></a>37.4. 依赖管理</h2>
+       <h4 class="title"><a name="N13C6E"></a>37.4.&nbsp;Dependency management</h4>
+      </div>
+     </div>
+    </div>
+    <p>待决定<br>TBD</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13C73"></a>37.5.&nbsp;约定对象</h2>
+       <h4 class="title"><a name="N13C73"></a>37.5.&nbsp;Convention object</h4>
+      </div>
+     </div>
+    </div>
+    <p>OSGi 插件添加了下列约定对象： <a class="ulink" href="../dsl/org.gradle.api.plugins.osgi.OsgiPluginConvention.html" target="_top"> <code class="classname">OsgiPluginConvention</code> </a> <br>The OSGi plugin adds the following convention object: <a class="ulink" href="../dsl/org.gradle.api.plugins.osgi.OsgiPluginConvention.html" target="_top"><code class="classname">OsgiPluginConvention</code></a></p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N13C7D"></a>37.5.1. 约定属性</h3>
+        <h5 class="title"><a name="N13C7D"></a>37.5.1.&nbsp;Convention properties</h5>
+       </div>
+      </div>
+     </div>
+     <p>OSGi 插件没有向 project 添加任何的公约属性。 <br>The OSGi plugin does not add any convention properties to the project.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N13C82"></a>37.5.2.&nbsp;约定方法</h3>
+        <h5 class="title"><a name="N13C82"></a>37.5.2.&nbsp;Convention methods</h5>
+       </div>
+      </div>
+     </div>
+     <p>OSGi 插件添加了以下方法。有关更多详细信息，请参见约定对象的 API 文档。 <br>The OSGi plugin adds the following methods. For more details, see the API documentation of the convention object.</p>
+     <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+      <p class="title"><b>表 37.1. OSGi 方法 - Table&nbsp;37.1.&nbsp;OSGi methods</b></p>
+      <div class="table-contents">
+       <table id="N13C87">
+        <thead>
+         <tr> 
+          <td>方法<br>Method</td> 
+          <td>返回类型<br>Return Type</td> 
+          <td>描述<br>Description</td> 
+         </tr>
+        </thead>
+        <tbody>
+         <tr> 
+          <td>osgiManifest()</td> 
+          <td> <a class="ulink" href="../javadoc/org/gradle/api/plugins/osgi/OsgiManifest.html" target="_top"><code class="classname">OsgiManifest</code></a> </td> 
+          <td>返回一个 OsgiManifest 对象。<br>Returns an OsgiManifest object.</td> 
+         </tr>
+         <tr> 
+          <td>osgiManifest(Closure cl)</td> 
+          <td> <a class="ulink" href="../javadoc/org/gradle/api/plugins/osgi/OsgiManifest.html" target="_top"><code class="classname">OsgiManifest</code></a> </td> 
+          <td>返回一个通过闭包配置的 OsgiManifest 对象。<br>Returns an OsgiManifest object configured by the closure.</td> 
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage"></div>
+    <p>在classes 目录下的类文件会被分析出关于它们的包的依赖，以及它们所公布的包名。并基于此计算 OSGi Manifest 中<span class="emphasis"><em>Import-Package</em></span>和<span class="emphasis"><em>Export-Package</em></span>的值。如果 classpath 中包含了 jar 包和 OSGi bundle，bundle 信息会被用来指定 <span class="emphasis"><em>Import-Package</em></span>的值的版本信息。在 <code class="literal">OsgiManifest</code> 对象的显式属性旁边，你可以添加instructions。 <br>The classes in the classes dir are analyzed regarding there package dependencies and the packages they expose. Based on this the <span class="emphasis"><em>Import-Package</em></span> and the <span class="emphasis"><em>Export-Package</em></span> values of the OSGi Manifest are calculated. If the classpath contains jars with an OSGi bundle, the bundle information is used to specify version information for the <span class="emphasis"><em>Import-Package</em></span> value. Beside the explicit properties of the <code class="literal">OsgiManifest</code> object you can add instructions.</p>
+    <div class="example">
+     <a name="osgi"></a>
+     <p class="title"><b>示例 37.2. OSGi MANIFEST.MF 文件配置 - Example&nbsp;37.2.&nbsp;Configuration of OSGi MANIFEST.MF file</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">jar {
     manifest { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// the manifest of the default jar is of type OsgiManifest</span>
         name = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'overwrittenSpecialOsgiName'</span>
         instruction <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Private-Package'</span>,
@@ -43,8 +167,25 @@
 }
 task fooJar(type: Jar) {
     manifest = osgiManifest {
-        instruction <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Bundle-Vendor'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'MyCompany'</span>    
+        ~instruction <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Bundle-Vendor'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'MyCompany'</span>
     }
-}</pre></div></div><br class="example-break"><p>The first argument of the instruction call is the key of the property. The other arguments form the value.
-            They are joined by Gradle with the <code class="literal">,</code> separator. To learn more about the available
-            instructions have a look at the <a class="ulink" href="http://www.aqute.biz/Code/Bnd" target="_top">BND tool</a>.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="sonar_runner_plugin.html" title="Chapter&nbsp;36.&nbsp;The Sonar Runner Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="eclipse_plugin.html" title="Chapter&nbsp;38.&nbsp;The Eclipse Plugin">Next</a></div></div></div></body></html>
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>instruction 调用的第一个参数是属性的键。其他参数构成了它的值。他们由 Gradle 使用<code class="literal">,</code>分隔符连接。要了解更多关于 instructions 的信息，可以看看<a class="ulink" href="http://www.aqute.biz/Code/Bnd" target="_top">BND tool</a>。<br>The first argument of the instruction call is the key of the property. The other arguments form the value. They are joined by Gradle with the <code class="literal">,</code> separator. To learn more about the available instructions have a look at the <a class="ulink" href="http://www.aqute.biz/Code/Bnd" target="_top">BND tool</a>.</p>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="sonar_runner_plugin.html" title="第三十六章. Sonar Runner 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="eclipse_plugin.html" title="第三十八章. Eclipse 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
