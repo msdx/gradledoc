@@ -1,28 +1,112 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;36.&nbsp;The Sonar Runner Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="sonar_plugin.html" title="Chapter&nbsp;35.&nbsp;The Sonar Plugin"><link rel="next" href="osgi_plugin.html" title="Chapter&nbsp;37.&nbsp;The OSGi Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="sonar_plugin.html" title="Chapter&nbsp;35.&nbsp;The Sonar Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="osgi_plugin.html" title="Chapter&nbsp;37.&nbsp;The OSGi Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="sonar_runner_plugin"></a>Chapter&nbsp;36.&nbsp;The Sonar Runner Plugin</h1></div></div></div><div class="note"><p>
-            The Sonar runner plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.
-        </p></div><p>The Sonar Runner plugin provides integration with <a class="ulink" href="http://www.sonarsource.org" target="_top">Sonar</a>,
-        a web-based platform for monitoring code quality. It is based on the <a class="ulink" href="http://docs.codehaus.org/display/SONAR/Analyzing+with+Sonar+Runner" target="_top">Sonar Runner</a>,
-        a Sonar client component that analyzes source code and build outputs, and stores all collected information in the Sonar database.
-        Compared to using the standalone Sonar Runner, the Sonar Runner plugin offers the following benefits:
-    </p><div class="variablelist"><dl><dt><span class="term">Automatic provisioning of Sonar Runner</span></dt><dd><p>The ability to execute the Sonar Runner via a regular Gradle task makes it available anywhere Gradle is available
-                    (developer build, CI server, etc.), without the need to download, setup, and maintain a Sonar Runner installation.</p></dd><dt><span class="term">Dynamic configuration from Gradle build scripts</span></dt><dd><p>All of Gradle's scripting features can be leveraged to configure Sonar Runner as needed.</p></dd><dt><span class="term">Extensive configuration defaults</span></dt><dd><p>Gradle already has much of the information needed for Sonar Runner to successfully analyze a project. By preconfiguring
-                    the Sonar Runner based on that information, the need for manual configuration is reduced significantly.</p></dd></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13A68"></a>36.1.&nbsp;Plugin Status and Compatibility</h2></div></div></div><p>
-            The Sonar Runner plugin is the successor to the <a class="link" href="sonar_plugin.html">Sonar Plugin</a>. It is currently
-            <a class="link" href="feature_lifecycle.html#sec:incubating_state">incubating</a>. The plugin is based on Sonar Runner 2.0, which makes it compatible
-            with Sonar 2.11 and higher. Unlike the Sonar plugin, the Sonar Runner plugin works fine with Sonar 3.4 and higher.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13A75"></a>36.2.&nbsp;Getting Started</h2></div></div></div><p>To get started, apply the Sonar Runner plugin to the project to be analyzed.</p><div class="example"><a name="quickstart"></a><p class="title"><b>Example&nbsp;36.1.&nbsp;Applying the Sonar Runner plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar-runner"</span></pre></div></div><br class="example-break"><p>
-            Assuming a local Sonar server with out-of-the-box settings is up and running, no further mandatory configuration is required.
-            Execute <strong class="userinput"><code>gradle sonarRunner</code></strong> and wait until the build has completed, then open the web page indicated
-            at the bottom of the Sonar Runner output. You should now be able to browse the analysis results.
-        </p><p>
-            Before executing the <code class="literal">sonarRunner</code> task, all tasks producing output to be analysed by Sonar need to be executed.
-            Typically, these are compile tasks, test tasks, and code coverage tasks. To meet these needs, the plugins adds a task dependency
-            from <code class="literal">sonarRunner</code> on <code class="literal">test</code> if the <code class="literal">java</code> plugin is applied. Further task dependencies can be
-            added as needed.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13A97"></a>36.3.&nbsp;Configuring the Sonar Runner</h2></div></div></div><p>The Sonar Runner plugin adds a <a class="ulink" href="../groovydoc/org/gradle/api/sonar/runner/SonarRunner.html" target="_top"><code class="classname">SonarRunner</code></a> extension to the project,
-            which allows to configure the Sonar Runner via key/value pairs known as <em class="firstterm">Sonar properties</em>. A typical base line configuration
-            includes connection settings for the Sonar server and database.
-        </p><div class="example"><a name="quickstart"></a><p class="title"><b>Example&nbsp;36.2.&nbsp;Configuring Sonar connection settings</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sonarRunner {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第三十六章. Sonar Runner 插件 - Chapter&nbsp;36.&nbsp;The Sonar Runner Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="sonar_plugin.html" title="第三十五章. Sonar 插件">
+  <link rel="next" href="osgi_plugin.html" title="第三十七章. OSGi 插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="sonar_plugin.html" title="第三十五章. Sonar 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="osgi_plugin.html" title="第三十七章. OSGi 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="sonar_runner_plugin"></a>第三十六章. Sonar Runner 插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="sonar_runner_plugin"></a>Chapter&nbsp;36.&nbsp;The Sonar Runner Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <div class="note">
+    <p> Sonar runner 插件是目前仍是<a class="link" href="feature_lifecycle.html">孵化</a>状态。请务必注意，在以后的 Gradle 版本中，相关的 DSL 和其他配置可能会有所改变。 <br>The Sonar runner plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.</p>
+   </div>
+   <p>Sonar Runner 插件提供了对 <a class="ulink" href="http://www.sonarsource.org" target="_top">Sonar</a>，一个基于 web 的代码质量监测平台的集成。它基于<a class="ulink" href="http://docs.codehaus.org/display/SONAR/Analyzing+with+Sonar+Runner" target="_top">Sonar Runner</a>，一个分析源代码及构建输出，并将所有收集的信息储存在 Sonar 数据库的 Sonar 客户端组件。相比单独使用 Sonar Runner，Sonar Runner 插件提供了以下便利： <br>The Sonar Runner plugin provides integration with <a class="ulink" href="http://www.sonarsource.org" target="_top">Sonar</a>, a web-based platform for monitoring code quality. It is based on the <a class="ulink" href="http://docs.codehaus.org/display/SONAR/Analyzing+with+Sonar+Runner" target="_top">Sonar Runner</a>, a Sonar client component that analyzes source code and build outputs, and stores all collected information in the Sonar database. Compared to using the standalone Sonar Runner, the Sonar Runner plugin offers the following benefits:</p>
+   <div class="variablelist">
+    <dl>
+     <dt>
+      <span class="term">自动配置 Sonar Runner<br>Automatic provisioning of Sonar Runner</span>
+     </dt>
+     <dd>
+      <p>可以通过一个正规的 Gradle 任务来执行 Sonar Runner，这使得在任何 Gradle 可用的地方，它都可以用（开发人员构建，CI 服务器等），而无需下载，安装，和维护 Sonar Runner 的安装。<br>The ability to execute the Sonar Runner via a regular Gradle task makes it available anywhere Gradle is available (developer build, CI server, etc.), without the need to download, setup, and maintain a Sonar Runner installation.</p>
+     </dd>
+     <dt>
+      <span class="term">通过 Gradle 构建脚本动态配置<br>Dynamic configuration from Gradle build scripts</span>
+     </dt>
+     <dd>
+      <p>根据需要，可以利用 Gradle 脚本的所有特性去配置 Sonar Runner。<br>All of Gradle's scripting features can be leveraged to configure Sonar Runner as needed.</p>
+     </dd>
+     <dt>
+      <span class="term">提供了广泛范围的默认配置<br>Extensive configuration defaults</span>
+     </dt>
+     <dd>
+      <p>Gradle 已经有很多 Sonar Runner 成功分析一个项目所需的信息。基于这些信息对 Sonar Runner 进行预配置，减少了许多手动配置的需要。<br>Gradle already has much of the information needed for Sonar Runner to successfully analyze a project. By preconfiguring the Sonar Runner based on that information, the need for manual configuration is reduced significantly.</p>
+     </dd>
+    </dl>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13A68"></a>36.1. 插件状态和兼容性</h2>
+       <h4 class="title"><a name="N13A68"></a>36.1.&nbsp;Plugin Status and Compatibility</h4>
+      </div>
+     </div>
+    </div>
+    <p> Sonar Runner 插件是<a class="link" href="sonar_plugin.html">Sonar 插件</a>的继任者。目前它还在<a class="link" href="feature_lifecycle.html#sec:incubating_state">孵化中</a>的状态。该插件基于Sonar Runner 2.0，这使它与Sonar 2.11 或更高的版本相兼容。不同于 Sonar 插件，Sonar Runner 插件与 Sonar 3.4 或更高的版本一起使用时也表现正常。 <br>The Sonar Runner plugin is the successor to the <a class="link" href="sonar_plugin.html">Sonar Plugin</a>. It is currently <a class="link" href="feature_lifecycle.html#sec:incubating_state">incubating</a>. The plugin is based on Sonar Runner 2.0, which makes it compatible with Sonar 2.11 and higher. Unlike the Sonar plugin, the Sonar Runner plugin works fine with Sonar 3.4 and higher.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13A75"></a>36.2. 入门</h2>
+       <h4 class="title"><a name="N13A75"></a>36.2.&nbsp;Getting Started</h4>
+      </div>
+     </div>
+    </div>
+    <p>若要开始，请对要分析的项目配置使用 Sonar Runner 插件。<br>To get started, apply the Sonar Runner plugin to the project to be analyzed.</p>
+    <div class="example">
+     <a name="quickstart"></a>
+     <p class="title"><b>示例 36.1. 配置使用 Sonar Runner 插件 - Example&nbsp;36.1.&nbsp;Applying the Sonar Runner plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar-runner"</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 假设一个本地的 Sonar 服务使用开箱即用的设置启动和运行，则不需要进一步的强制性的配置。执行<strong class="userinput"><code>gradle sonarRunner</code></strong>并等待构建完成，然后打开 Sonar Runner 输出结果的底部所指示的网页。你现在应该能够看到分析结果了。 <br>Assuming a local Sonar server with out-of-the-box settings is up and running, no further mandatory configuration is required. Execute <strong class="userinput"><code>gradle sonarRunner</code></strong> and wait until the build has completed, then open the web page indicated at the bottom of the Sonar Runner output. You should now be able to browse the analysis results.</p>
+    <p> 在执行<code class="literal">sonarRunner</code>任务前，所有产生输出以用于 Sonar 分析的需要都需要被执行。通常情况下，它们是编译任务、测试任务和代码覆盖任务。为了满足这些需要，如果应用了<code class="literal">java</code>插件，Sonar Runner 插件将从<code class="literal">sonarRunner</code>添加一个对 <code class="literal">test</code> 的任务依赖。根据需要，可以添加更多的任务依赖。 <br>Before executing the <code class="literal">sonarRunner</code> task, all tasks producing output to be analysed by Sonar need to be executed. Typically, these are compile tasks, test tasks, and code coverage tasks. To meet these needs, the plugins adds a task dependency from <code class="literal">sonarRunner</code> on <code class="literal">test</code> if the <code class="literal">java</code> plugin is applied. Further task dependencies can be added as needed.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13A97"></a>36.3. 配置 Sonar Runner</h2>
+       <h4 class="title"><a name="N13A97"></a>36.3.&nbsp;Configuring the Sonar Runner</h4>
+      </div>
+     </div>
+    </div>
+    <p>Sonar Runner 插件向 project 添加了一个<a class="ulink" href="../groovydoc/org/gradle/api/sonar/runner/SonarRunner.html" target="_top"> <code class="classname">SonarRunner</code></a>扩展，它允许通过被称为 <em class="firstterm">Sonar 属性</em> 的键/值对配置 Sonar Runner。一个典型的基线配置包括了Sonar 服务器和数据库的连接设置。 <br>The Sonar Runner plugin adds a <a class="ulink" href="../groovydoc/org/gradle/api/sonar/runner/SonarRunner.html" target="_top"><code class="classname">SonarRunner</code></a> extension to the project, which allows to configure the Sonar Runner via key/value pairs known as <em class="firstterm">Sonar properties</em>. A typical base line configuration includes connection settings for the Sonar server and database.</p>
+    <div class="example">
+     <a name="quickstart"></a>
+     <p class="title"><b>示例 36.2. 配置 Sonar 连接设置 - Example&nbsp;36.2.&nbsp;Configuring Sonar connection settings</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">sonarRunner {
     sonarProperties {
         property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.host.url"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://my.server.com"</span>
         property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.jdbc.url"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"jdbc:mysql://my.server.com/sonar"</span>
@@ -30,79 +114,136 @@
         property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.jdbc.username"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Fred Flintstone"</span>
         property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.jdbc.password"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"very clever"</span>
     }
-}</pre></div></div><br class="example-break"><p>
-            For a complete list of standard Sonar properties, consult the <a class="ulink" href="http://docs.codehaus.org/display/SONAR/Analysis+Parameters" target="_top">Sonar documentation</a>.
-            If you happen to use additional Sonar plugins, consult their documentation.
-        </p><p>
-            Alternatively, Sonar properties can be set from the command line. See <a class="xref" href="sonar_plugin.html#sec:sonar_command_line_parameters">Section&nbsp;35.6, &ldquo;Configuring Sonar Settings from the Command Line&rdquo;</a> for more information.
-        </p><p>
-            The Sonar Runner plugin leverages information contained in Gradle's object model to provide smart defaults for many of the standard Sonar properties.
-            The defaults are summarized in the tables below. Notice that additional defaults are provided for projects that have the <code class="literal">java-base</code>
-            or <code class="literal">java</code> plugin applied. For some properties (notably server and database connection settings), determining a suitable default
-            is left to the Sonar Runner.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;36.1.&nbsp;Gradle defaults for standard Sonar properties</b></p><div class="table-contents"><table id="N13AC1"><thead><tr>
-                    <td>Property</td>
-                    <td>Gradle default</td>
-                </tr></thead><tr>
-                <td>sonar.projectKey</td>
-                <td>"$project.group:$project.name" (for root project of analysed hierarchy; left to Sonar Runner otherwise)</td>
-            </tr><tr>
-                <td>sonar.projectName</td>
-                <td>project.name</td>
-            </tr><tr>
-                <td>sonar.projectDescription</td>
-                <td>project.description</td>
-            </tr><tr>
-                <td>sonar.projectVersion</td>
-                <td>project.version</td>
-            </tr><tr>
-                <td>sonar.projectBaseDir</td>
-                <td>project.projectDir</td>
-            </tr><tr>
-                <td>sonar.working.directory</td>
-                <td>"$project.buildDir/sonar"</td>
-            </tr><tr>
-                <td>sonar.dynamicAnalysis</td>
-                <td>"reuseReports"</td>
-            </tr></table></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;36.2.&nbsp;Additional defaults when <code class="literal">java-base</code> plugin is applied</b></p><div class="table-contents"><table id="N13B05"><thead><tr>
-                    <td>Property</td>
-                    <td>Gradle default</td>
-                </tr></thead><tr>
-                <td>sonar.java.source</td>
-                <td>project.sourceCompatibility</td>
-            </tr><tr>
-                <td>sonar.java.target</td>
-                <td>project.targetCompatibility</td>
-            </tr></table></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;36.3.&nbsp;Additional defaults when <code class="literal">java</code> plugin is applied</b></p><div class="table-contents"><table id="N13B24"><thead><tr>
-                    <td>Property</td>
-                    <td>Gradle default</td>
-                </tr></thead><tr>
-                <td>sonar.sources</td>
-                <td>sourceSets.main.allSource.srcDirs (filtered to only include existing directories)</td>
-            </tr><tr>
-                <td>sonar.tests</td>
-                <td>sourceSets.test.allSource.srcDirs (filtered to only include existing directories)</td>
-            </tr><tr>
-                <td>sonar.binaries</td>
-                <td>sourceSets.main.runtimeClasspath (filtered to only include directories)</td>
-            </tr><tr>
-                <td>sonar.libraries</td>
-                <td>sourceSets.main.runtimeClasspath (filtering to only include files; <code class="literal">rt.jar</code> added if necessary)</td>
-            </tr><tr>
-                <td>sonar.surefire.reportsPath</td>
-                <td>test.testResultsDir (if the directory exists)</td>
-            </tr><tr>
-                <td>sonar.junit.reportsPath</td>
-                <td>test.testResultsDir (if the directory exists)</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13B66"></a>36.4.&nbsp;Analyzing Multi-Project Builds</h2></div></div></div><p>The Sonar Runner is capable of analyzing whole project hierarchies at once. This yields a hierarchical view in the
-            Sonar web interface, with aggregated metrics and the ability to drill down into subprojects. Analyzing a project hierarchy
-            also takes less time than analyzing each project separately.
-        </p><p>
-            To analyze a project hierarchy, apply the Sonar Runner plugin to the root project of the hierarchy.
-            Typically (but not necessarily) this will be the root project of the Gradle build. Information pertaining to the
-            analysis as a whole, like server and database connections settings, have to be configured in the <code class="literal">sonarRunner</code>
-            block of this project. Any Sonar properties set on the command line also apply to this project.
-        </p><div class="example"><a name="multiProject"></a><p class="title"><b>Example&nbsp;36.3.&nbsp;Global configuration settings</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sonarRunner {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 对于标准的 Sonar 属性的完整列表，请参阅<a class="ulink" href="http://docs.codehaus.org/display/SONAR/Analysis+Parameters" target="_top"> Sonar 文档</a>。如果你碰巧使用另外的 Sonar 插件，请参考它们的文档。 <br>For a complete list of standard Sonar properties, consult the <a class="ulink" href="http://docs.codehaus.org/display/SONAR/Analysis+Parameters" target="_top">Sonar documentation</a>. If you happen to use additional Sonar plugins, consult their documentation.</p>
+    <p> 或者，可以从命令行设置 Sonar 属性。有关更多信息，请参见<a class="xref" href="sonar_plugin.html#sec:sonar_command_line_parameters">第35.6节，“从命令行配置 Sonar 设置”</a> 。 <br>Alternatively, Sonar properties can be set from the command line. See <a class="xref" href="sonar_plugin.html#sec:sonar_command_line_parameters">Section&nbsp;35.6, “Configuring Sonar Settings from the Command Line”</a> for more information.</p>
+    <p> Sonar Runner 插件利用 Gradle 的对象模型所包含的信息，提供了许多标准的 Sonar 属性的智能默认值。下表总结了这些默认值。注意，对于配置使用了 <code class="literal">java-base</code> 或 <code class="literal">java</code> 插件的project，有提供另外的默认值。对于一些属性（尤其是服务器和数据库的连接配置），确定留给 Sonar Runner 一个合适的默认值。 <br>The Sonar Runner plugin leverages information contained in Gradle's object model to provide smart defaults for many of the standard Sonar properties. The defaults are summarized in the tables below. Notice that additional defaults are provided for projects that have the <code class="literal">java-base</code> or <code class="literal">java</code> plugin applied. For some properties (notably server and database connection settings), determining a suitable default is left to the Sonar Runner.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 36.1. 标准 Sonar 属性的 Gradle 默认值 - Table&nbsp;36.1.&nbsp;Gradle defaults for standard Sonar properties</b></p>
+     <div class="table-contents">
+      <table id="N13AC1">
+       <thead>
+        <tr> 
+         <td>Property</td> 
+         <td>Gradle 默认值<br>Gradle default</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td>sonar.projectKey</td> 
+         <td>"$project.group:$project.name" （所分析的层次结构的根项目，否则留给 Sonar Runner 处理）<br>"$project.group:$project.name" (for root project of analysed hierarchy; left to Sonar Runner otherwise)</td> 
+        </tr>
+        <tr> 
+         <td>sonar.projectName</td> 
+         <td>project.name</td> 
+        </tr>
+        <tr> 
+         <td>sonar.projectDescription</td> 
+         <td>project.description</td> 
+        </tr>
+        <tr> 
+         <td>sonar.projectVersion</td> 
+         <td>project.version</td> 
+        </tr>
+        <tr> 
+         <td>sonar.projectBaseDir</td> 
+         <td>project.projectDir</td> 
+        </tr>
+        <tr> 
+         <td>sonar.working.directory</td> 
+         <td>"$project.buildDir/sonar"</td> 
+        </tr>
+        <tr> 
+         <td>sonar.dynamicAnalysis</td> 
+         <td>"reuseReports"</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 36.2. 配置使用 <code class="literal">java-base</code> 插件时另外添加的默认值 - Table&nbsp;36.2.&nbsp;Additional defaults when <code class="literal">java-base</code> plugin is applied</b></p>
+     <div class="table-contents">
+      <table id="N13B05">
+       <thead>
+        <tr> 
+         <td>Property</td> 
+         <td>Gradle 默认值<br>Gradle default</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td>sonar.java.source</td> 
+         <td>project.sourceCompatibility</td> 
+        </tr>
+        <tr> 
+         <td>sonar.java.target</td> 
+         <td>project.targetCompatibility</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 36.2. 配置使用 <code class="literal">java</code> 插件时另外添加的默认值 - Table&nbsp;36.3.&nbsp;Additional defaults when <code class="literal">java</code> plugin is applied</b></p>
+     <div class="table-contents">
+      <table id="N13B24">
+       <thead>
+        <tr> 
+         <td>Property</td> 
+         <td>Gradle 默认值<br>Gradle default</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td>sonar.sources</td> 
+         <td>sourceSets.main.allSource.srcDirs（过滤为只包含存在的目录）<br>sourceSets.main.allSource.srcDirs (filtered to only include existing directories)</td> 
+        </tr>
+        <tr> 
+         <td>sonar.tests</td> 
+         <td>sourceSets.test.allSource.srcDirs（过滤为只包含存在的目录）<br>sourceSets.test.allSource.srcDirs (filtered to only include existing directories)</td> 
+        </tr>
+        <tr> 
+         <td>sonar.binaries</td> 
+         <td>sourceSets.main.runtimeClasspath （过滤为只包含存在的目录）<br>sourceSets.main.runtimeClasspath (filtered to only include directories)</td> 
+        </tr>
+        <tr> 
+         <td>sonar.libraries</td> 
+         <td>sourceSets.main.runtimeClasspath （过滤为仅包括文件 ；如果有必要会加上 <code class="literal">rt.jar</code>）</td> 
+        </tr>
+        <tr> 
+         <td>sonar.surefire.reportsPath</td> 
+         <td>test.testResultsDir （如果该目录存在）<br>test.testResultsDir (if the directory exists)</td> 
+        </tr>
+        <tr> 
+         <td>sonar.junit.reportsPath</td> 
+         <td>test.testResultsDir （如果该目录存在）<br>test.testResultsDir (if the directory exists)</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13B66"></a>36.4. 分析多项目构建</h2>
+       <h4 class="title"><a name="N13B66"></a>36.4.&nbsp;Analyzing Multi-Project Builds</h4>
+      </div>
+     </div>
+    </div>
+    <p>Sonar Runner 插件能够一次分析整个项目的层次结构。它能够在 Sonar 的 web 界面生成一个层次图，该层次图包含了综合的指标且能够深入到子项目中。分析一个项目的层次结果还可以比单独分析每个项目花费更省时间。 <br>The Sonar Runner is capable of analyzing whole project hierarchies at once. This yields a hierarchical view in the Sonar web interface, with aggregated metrics and the ability to drill down into subprojects. Analyzing a project hierarchy also takes less time than analyzing each project separately.</p>
+    <p> 要分析一个项目的层次结构， 需要把 Sonar Runner 插件应用于层次结构的最顶层项目。通常（但不是一定）会是这个 Gradle 构建的根项目。与分析有关的信息作为一个整体，比如服务器和数据库的连接设置，必须在这一个 project 的<code class="literal">sonarRunner</code>块中进行配置。在命令行上设置的任何 Sonar 属性也会应用到这个 project 中。 <br>To analyze a project hierarchy, apply the Sonar Runner plugin to the root project of the hierarchy. Typically (but not necessarily) this will be the root project of the Gradle build. Information pertaining to the analysis as a whole, like server and database connections settings, have to be configured in the <code class="literal">sonarRunner</code> block of this project. Any Sonar properties set on the command line also apply to this project.</p>
+    <div class="example">
+     <a name="multiProject"></a>
+     <p class="title"><b>示例 36.3. 全局配置设置 - Example&nbsp;36.3.&nbsp;Global configuration settings</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">sonarRunner {
     sonarProperties {
         property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.host.url"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://my.server.com"</span>
         property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.jdbc.url"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"jdbc:mysql://my.server.com/sonar"</span>
@@ -110,83 +251,193 @@
         property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.jdbc.username"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Fred Flintstone"</span>
         property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.jdbc.password"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"very clever"</span>
     }
-}</pre></div></div><br class="example-break"><p>
-            Configuration shared between subprojects can be configured in a <code class="literal">subprojects</code> block.
-        </p><div class="example"><a name="multiProject"></a><p class="title"><b>Example&nbsp;36.4.&nbsp;Shared configuration settings</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">subprojects {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 在<code class="literal">subprojects</code>块中，可以配置共享子项目之间的配置。 <br>Configuration shared between subprojects can be configured in a <code class="literal">subprojects</code> block.</p>
+    <div class="example">
+     <a name="multiProject"></a>
+     <p class="title"><b>示例 36.4. 共享的配置设置 - Example&nbsp;36.4.&nbsp;Shared configuration settings</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">subprojects {
     sonarRunner {
         sonarProperties {
             property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.sourceEncoding"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"UTF-8"</span>
         }
     }
-}</pre></div></div><br class="example-break"><p>
-            Project-specific information is configured in the <code class="literal">sonarRunner</code> block
-            of the corresponding project.
-        </p><div class="example"><a name="multiProject"></a><p class="title"><b>Example&nbsp;36.5.&nbsp;Individual configuration settings</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":project1"</span>) {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 特定项目的信息在对应的 project 的<code class="literal">sonarRunner</code>块中配置。 <br>Project-specific information is configured in the <code class="literal">sonarRunner</code> block of the corresponding project.</p>
+    <div class="example">
+     <a name="multiProject"></a>
+     <p class="title"><b>示例 36.5. 个别配置设置 - Example&nbsp;36.5.&nbsp;Individual configuration settings</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">project
     sonarRunner {
         sonarProperties {
             property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.language"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"grvy"</span>
         }
     }
-}</pre></div></div><br class="example-break"><p>
-            The skip Sonar analysis for a particular subproject, set <code class="literal">sonarRunner.skipProject</code>.
-        </p><div class="example"><a name="multiProject"></a><p class="title"><b>Example&nbsp;36.6.&nbsp;Skipping analysis of a project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":project2"</span>) {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 对于一个特定的子项目，要跳过 Sonar 分析，可以设置<code class="literal">sonarRunner.skipProject</code>。 <br>The skip Sonar analysis for a particular subproject, set <code class="literal">sonarRunner.skipProject</code>.</p>
+    <div class="example">
+     <a name="multiProject"></a>
+     <p class="title"><b>示例 36.6. 跳过项目分析 - Example&nbsp;36.6.&nbsp;Skipping analysis of a project</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">project
     sonarRunner {
         skipProject = true
     }
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13BA7"></a>36.5.&nbsp;Analyzing Custom Source Sets</h2></div></div></div><p>By default, the Sonar Runner plugin passes on the project's <code class="literal">main</code> source set as production sources, and the
-             project's <code class="literal">test</code> source set as test sources. This works regardless of the project's source directory layout.
-             Additional source sets can be added as needed.
-        </p><div class="example"><a name="advanced"></a><p class="title"><b>Example&nbsp;36.7.&nbsp;Analyzing custom source sets</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sonarRunner {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13BA7"></a>36.5. 分析自定义的Source Sets</h2>
+       <h4 class="title"><a name="N13BA7"></a>36.5.&nbsp;Analyzing Custom Source Sets</h4>
+      </div>
+     </div>
+    </div>
+    <p>默认情况下， Sonar Runner 插件传给project 的<code class="literal">main</code> source set 将作为生产源文件，传给project 的<code class="literal">test</code> source sets 将作为测试源文件。这个过程与project 的源目录布局无关。根据需要，可以添加额外的 source sets。 <br>By default, the Sonar Runner plugin passes on the project's <code class="literal">main</code> source set as production sources, and the project's <code class="literal">test</code> source set as test sources. This works regardless of the project's source directory layout. Additional source sets can be added as needed.</p>
+    <div class="example">
+     <a name="advanced"></a>
+     <p class="title"><b>示例 36.7. 分析自定义的Source Sets - Example&nbsp;36.7.&nbsp;Analyzing custom source sets</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">sonarRunner {
     sonarProperties {
         properties[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.sources"</span>] += sourceSets.custom.allSource.srcDirs
         properties[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.tests"</span>] += sourceSets.integTest.allSource.srcDirs
     }
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13BBC"></a>36.6.&nbsp;Analyzing languages other than Java</h2></div></div></div><p>
-            To analyze code written in a language other than Java, install the corresponding
-            <a class="ulink" href="http://www.sonarsource.com/products/plugins/languages/" target="_top">Sonar plugin</a>, and set
-            <code class="literal">sonar.project.language</code> accordingly:
-        </p><div class="example"><a name="advanced"></a><p class="title"><b>Example&nbsp;36.8.&nbsp;Analyzing languages other than Java</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sonarRunner {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13BBC"></a>36.6. 分析非 Java 语言</h2>
+       <h4 class="title"><a name="N13BBC"></a>36.6.&nbsp;Analyzing languages other than Java</h4>
+      </div>
+     </div>
+    </div>
+    <p> 要分析非 Java 语言编写的代码，请安装相应的<a class="ulink" href="http://www.sonarsource.com/products/plugins/languages/" target="_top">Sonar 插件</a>，并相应地设置<code class="literal">sonar.project.language</code> ： <br>To analyze code written in a language other than Java, install the corresponding <a class="ulink" href="http://www.sonarsource.com/products/plugins/languages/" target="_top">Sonar plugin</a>, and set <code class="literal">sonar.project.language</code> accordingly:</p>
+    <div class="example">
+     <a name="advanced"></a>
+     <p class="title"><b>示例 36.8. 分析非 Java 语言 - Example&nbsp;36.8.&nbsp;Analyzing languages other than Java</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">sonarRunner {
     sonarProperties {
         property <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sonar.language"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"grvy"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// set language to Groovy</span>
     }
-}</pre></div></div><br class="example-break"><p>
-            As of Sonar 3.4, only one language per project can be analyzed. It is, however, possible to analyze a different language
-            for each project in a multi-project build.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13BD4"></a>36.7.&nbsp;More on configuring Sonar properties</h2></div></div></div><p>
-            Let's take a closer look at the <code class="literal">sonarRunner.sonarProperties {}</code> block. As we have already seen in the examples,
-            the <code class="literal">property()</code> method allows to set new properties or override existing ones. Furthermore, all properties that have
-            been configured up to this point, including all properties preconfigured by Gradle, are available via the <code class="literal">properties</code>
-            accessor.
-        </p><p>
-        </p><p>
-            Entries in the <code class="literal">properties</code> map can be read and written with the usual Groovy syntax. To facilitate their manipulation,
-            values still have their "idiomatic" type (<code class="classname">File</code>, <code class="classname">List</code>, etc.). After the sonarProperties block
-            has been evaluated, values are converted to Strings as follows: Collection values are (recursively) converted to comma-separated Strings,
-            and all other values are converted by calling their <code class="literal">toString()</code> method.
-        </p><p>
-            Because the <code class="literal">sonarProperties</code> block is evaluated lazily, properties of Gradle's object model can be safely referenced
-            from within the block, without having to fear that they have not yet been set.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:sonar_command_line_parameters"></a>36.8.&nbsp;Setting Sonar Properties from the Command Line</h2></div></div></div><p>
-            Sonar Properties can also be set from the command line, by setting a system property named exactly like the Sonar property in question.
-            This can be useful when dealing with sensitive information (e.g. credentials), environment information, or for ad-hoc configuration.
-        </p><pre class="programlisting">gradle sonarRunner -Dsonar.host.url=http://sonar.mycompany.com -Dsonar.jdbc.password=myPassword -Dsonar.verbose=true</pre><div class="note"><p>
-                While certainly useful at times, we do recommend to keep the bulk of the configuration in a (versioned) build script, readily
-                available to everyone.
-            </p></div><p>A Sonar property value set via a system property overrides any value set in a build script (for the same property). When
-            analyzing a project hierarchy, values set via system properties apply to the root project of the analyzed hierarchy.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13C03"></a>36.9.&nbsp;Executing Sonar Runner in a separate process</h2></div></div></div><p>
-            Depending on project size, the Sonar Runner may require a lot of memory. For this and other (mainly isolation) reasons,
-            it is desirable to execute the Sonar Runner in a separate process. This feature will be provided once Sonar Runner 2.1
-            has been released and adopted by the Sonar Runner plugin. Until then, the Sonar Runner is executed in the
-            main Gradle process. See <a class="xref" href="build_environment.html#sec:gradle_configuration_properties">Section&nbsp;20.1, &ldquo;Configuring the build environment via gradle.properties&rdquo;</a> for how to manage memory settings for that process.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13C0B"></a>36.10.&nbsp;Tasks</h2></div></div></div><p>The Sonar Runner plugin adds the following tasks to the project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;36.4.&nbsp;Sonar Runner plugin - tasks</b></p><div class="table-contents"><table id="N13C10"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td><code class="literal">sonarRunner</code></td>
-                <td>-</td>
-                <td><a class="ulink" href="../groovydoc/org/gradle/api/sonar/runner/SonarRunner.html" target="_top"><code class="classname">SonarRunner</code></a></td>
-                <td>Analyzes a project hierarchy and stores the results in the Sonar database.</td>
-            </tr></table></div></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="sonar_plugin.html" title="Chapter&nbsp;35.&nbsp;The Sonar Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="osgi_plugin.html" title="Chapter&nbsp;37.&nbsp;The OSGi Plugin">Next</a></div></div></div></body></html>
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 截至 Sonar 3.4，每个项目只可以分析一种语言。不过，在多项目构建中你可以为每一个项目分析一种不同的语言。 <br>As of Sonar 3.4, only one language per project can be analyzed. It is, however, possible to analyze a different language for each project in a multi-project build.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13BD4"></a>36.7. 更多关于配置 Sonar 的属性</h2>
+       <h4 class="title"><a name="N13BD4"></a>36.7.&nbsp;More on configuring Sonar properties</h4>
+      </div>
+     </div>
+    </div>
+    <p> 让我们再详细看看<code class="literal">sonarRunner.sonarProperties {}</code>块。正如我们在示例中已经看到的， <code class="literal">property()</code>方法允许设置新属性或重写现有的属性。此外，所有已配置到这一点的属性，包括通过 Gradle 预配置的所有属性，还可通过<code class="literal">properties</code>访问器进行使用。 <br>Let's take a closer look at the <code class="literal">sonarRunner.sonarProperties {}</code> block. As we have already seen in the examples, the <code class="literal">property()</code> method allows to set new properties or override existing ones. Furthermore, all properties that have been configured up to this point, including all properties preconfigured by Gradle, are available via the <code class="literal">properties</code> accessor.</p>
+    <p> </p>
+    <p> 在<code class="literal">properties</code> map的条目可以使用常见的 Groovy 语法来读取和写入。为了方便它们的操作，这些值值仍然使用它们惯用的类型 （<code class="classname">File</code>，<code class="classname">List</code>等）。SonarProperties 块在经过评估后，这些值值被转换为字符串，如下所示： 集合的值（递归） 转换为以逗号分隔的字符串，其他所有的值通过调用其<code class="literal">tostring ()</code>方法进行转换。 <br>Entries in the <code class="literal">properties</code> map can be read and written with the usual Groovy syntax. To facilitate their manipulation, values still have their "idiomatic" type (<code class="classname">File</code>, <code class="classname">List</code>, etc.). After the sonarProperties block has been evaluated, values are converted to Strings as follows: Collection values are (recursively) converted to comma-separated Strings, and all other values are converted by calling their <code class="literal">toString()</code> method.</p>
+    <p> 因为<code class="literal">sonarProperties</code>块的评估是惰性的，Gradle 的对象模型的属性可以在块中被安全地引用，而无需担心它们还没有被赋值。 <br>Because the <code class="literal">sonarProperties</code> block is evaluated lazily, properties of Gradle's object model can be safely referenced from within the block, without having to fear that they have not yet been set.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:sonar_command_line_parameters"></a>36.8. 从命令行设置 Sonar 属性。</h2>
+       <h4 class="title"><a name="sec:sonar_command_line_parameters"></a>36.8.&nbsp;Setting Sonar Properties from the Command Line</h4>
+      </div>
+     </div>
+    </div>
+    <p> Sonar 属性也可以从命令行中设置，通过设置一个系统属性，名称就像正在考虑中的 Sonar 属性。当处理敏感信息 （例如证件），环境信息，或点对点配置时，这会非常有用。 <br>Sonar Properties can also be set from the command line, by setting a system property named exactly like the Sonar property in question. This can be useful when dealing with sensitive information (e.g. credentials), environment information, or for ad-hoc configuration.</p>
+    <pre class="programlisting">gradle sonarRunner -Dsonar.host.url=http://sonar.mycompany.com -Dsonar.jdbc.password=myPassword -Dsonar.verbose=true</pre>
+    <div class="note">
+     <p> 虽然有时当然很有用，但我们建议在 （版本控制的）构建脚本中，能够方便地让每个人都保持大部分的配置。 <br>While certainly useful at times, we do recommend to keep the bulk of the configuration in a (versioned) build script, readily available to everyone.</p>
+    </div>
+    <p>通过一个系统属性设置的 Sonar 属性值将覆盖构建脚本中设置的任何值（同样的属性名称）。当分析项目的层次结构时，通过系统属性设置的值应用于所分析层次结构的根项目。 <br>A Sonar property value set via a system property overrides any value set in a build script (for the same property). When analyzing a project hierarchy, values set via system properties apply to the root project of the analyzed hierarchy.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13C03"></a>36.9.&nbsp;在一个单独的进程中执行 Sonar Runner</h2>
+       <h4 class="title"><a name="N13C03"></a>36.9.&nbsp;Executing Sonar Runner in a separate process</h4>
+      </div>
+     </div>
+    </div>
+    <p> 根据项目大小，Sonar Runner 可能需要大量的内存。由于这个和其他（主要是隔离）的原因，最好在一个独立的进程中执行Sonar Runner。一旦 Sonar Runner 2.1 发布，将提供这个功能，并由 Sonar Runner 插件采用。到那时，Sonar Runner 会在 Gradle 主进程中执行。有关如何管理这一进程的内存设置，请参阅<a class="xref" href="build_environment.html#sec:gradle_configuration_properties">第 20.1 节，“通过 gradle.properties 配置构建环境"的第 20.1 条”</a>。 <br>Depending on project size, the Sonar Runner may require a lot of memory. For this and other (mainly isolation) reasons, it is desirable to execute the Sonar Runner in a separate process. This feature will be provided once Sonar Runner 2.1 has been released and adopted by the Sonar Runner plugin. Until then, the Sonar Runner is executed in the main Gradle process. See <a class="xref" href="build_environment.html#sec:gradle_configuration_properties">Section&nbsp;20.1, “Configuring the build environment via gradle.properties”</a> for how to manage memory settings for that process.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13C0B"></a>36.10. 任务</h2>
+       <h4 class="title"><a name="N13C0B"></a>36.10.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>Sonar Runner插件向 project 中添加了以下任务。<br>The Sonar Runner plugin adds the following tasks to the project.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 36.4. Sonnar Runner 插件 - 任务 - Table&nbsp;36.4.&nbsp;Sonar Runner plugin - tasks</b></p>
+     <div class="table-contents">
+      <table id="N13C10">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td><code class="literal">sonarRunner</code></td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../groovydoc/org/gradle/api/sonar/runner/SonarRunner.html" target="_top"><code class="classname">sonarRunner</code></a></td> 
+         <td>分析项目层次结构，并将结果存储在 Sonar 数据库。<br>Analyzes a project hierarchy and stores the results in the Sonar database.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="sonar_plugin.html" title="第三十五章. Sonar 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="osgi_plugin.html" title="第三十七章. OSGi 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
