@@ -1,97 +1,225 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;56.&nbsp;Multi-project Builds</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="build_lifecycle.html" title="Chapter&nbsp;55.&nbsp;The Build Lifecycle"><link rel="next" href="custom_tasks.html" title="Chapter&nbsp;57.&nbsp;Writing Custom Task Classes"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="build_lifecycle.html" title="Chapter&nbsp;55.&nbsp;The Build Lifecycle">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="custom_tasks.html" title="Chapter&nbsp;57.&nbsp;Writing Custom Task Classes">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="multi_project_builds"></a>Chapter&nbsp;56.&nbsp;Multi-project Builds</h1></div></div></div><p>The powerful support for multi-project builds is one of Gradle's unique selling points. This topic is also the
-        most intellectually challenging.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:cross_project_configuration"></a>56.1.&nbsp;Cross project configuration</h2></div></div></div><p>Let's start with a very simple multi-project build. After all Gradle is a general purpose build tool at
-            its core, so the projects don't have to be java projects. Our first examples are about marine life.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15EFD"></a>56.1.1.&nbsp;Configuration and execution</h3></div></div></div><p><a class="xref" href="build_lifecycle.html#sec:build_phases">Section&nbsp;55.1, &ldquo;Build phases&rdquo;</a> describes the phases of every Gradle build.
-                Let's zoom into configuration and execution phases of a multi-project build.
-                The configuration of all projects happens before any task is executed.
-                This means that when a single task, from a single project is requested,
-                <span class="emphasis"><em>all</em></span> projects of multi-project build are configured first.
-                The reason every project needs to be configured is to support
-                the flexibility of accessing and changing any part of Gradle project model.
-            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec:configuration_on_demand"></a>56.1.1.1.&nbsp;Configuration on demand</h4></div></div></div><p>Configuration injection feature and access to the complete project model
-                    are possible because every project is configured before the execution phase.
-                    Yet, this approach may not be the most efficient in a very large multi-project builds.
-                    There are Gradle builds with a hierarchy of hundreds of subprojects.
-                    Configuration time of huge multi-project builds may become noticeable.
-                    Scalability is an important requirement for Gradle. Hence, starting from version 1.4
-                    new incubating 'configuration on demand' mode is introduced.</p><p>
-                    Configuration on demand mode attempts to configure only projects that are relevant for requested tasks.
-                    This way, the configuration time of a large multi-project build is greatly improved.
-                    In the long term, this mode will become the default mode, possibly the only mode for Gradle build execution.
-                    The configuration on demand feature is incubating so not every build is guaranteed to work correctly.
-                    The feature should work very well for multi-project builds that have decoupled projects (<a class="xref" href="multi_project_builds.html#sec:decoupled_projects">Section&nbsp;56.9, &ldquo;Decoupled Projects&rdquo;</a>).
-                    In configuration on demand mode projects are configured as follows:
-                    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Root project is always configured.
-                            This way the typical common configuration is supported (allprojects or subprojects script blocks).</li><li class="listitem">Project in the directory where the build is executed is also configured, but only when Gradle is executed without any tasks.
-                            This way the default tasks behave correctly when projects are configured on demand.</li><li class="listitem">The standard project dependencies are supported and makes relevant projects configured.
-                            If project A has a compile dependency on project B then building A causes configuration of both projects: A and B.</li><li class="listitem">The task dependencies declared via task path are supported and cause relevant projects configured.
-                            Example: someTask.dependsOn(":someOtherProject:someOtherTask")
-                        </li><li class="listitem">Task requested via task path from the command line (or Tooling API) causes the relevant project configured.
-                            Building 'projectA:projectB:someTask' causes configuration of projectB.
-                        </li></ul></div><p>
-                </p><p>
-                    Eager to try out this new feature? To configure on demand with every build run see <a class="xref" href="build_environment.html#sec:gradle_configuration_properties">Section&nbsp;20.1, &ldquo;Configuring the build environment via gradle.properties&rdquo;</a>.
-                    To configure on demand just for given build please see <a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>.
-                </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15F26"></a>56.1.2.&nbsp;Defining common behavior</h3></div></div></div><p>We have the following project tree. This is a multi-project build with a root project
-                <code class="literal">water</code> and a subproject <code class="literal">bluewhale</code>.
-            </p><div class="example"><a name="multiprojectFirstExample"></a><p class="title"><b>Example&nbsp;56.1.&nbsp;Multi-project tree - water &amp; bluewhale projects</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">water/
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第五十六章.&nbsp;多项目构建 - Chapter&nbsp;56.&nbsp;Multi-project Builds</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="build_lifecycle.html" title="第55章. 构建的生命周期">
+  <link rel="next" href="custom_tasks.html" title="第五十七章. 编写自定义任务类">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="build_lifecycle.html" title="第55章. 构建的生命周期">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="custom_tasks.html" title="第五十七章. 编写自定义任务类">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="multi_project_builds"></a>第五十六章.&nbsp;多项目构建</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="multi_project_builds"></a>Chapter&nbsp;56.&nbsp;Multi-project Builds</h3>
+     </div>
+    </div>
+   </div>
+   <p>对多项目构建的强大支持是 Gradle 的独特优点之一。本主题也是最具智力挑战性的。 <br>The powerful support for multi-project builds is one of Gradle's unique selling points. This topic is also the most intellectually challenging.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:cross_project_configuration"></a>56.1. 跨项目配置</h2>
+       <h4 class="title"><a name="sec:cross_project_configuration"></a>56.1.&nbsp;Cross project configuration</h4>
+      </div>
+     </div>
+    </div>
+    <p>让我们从一个非常简单的多项目构建开始。在全部 Gradle 的核心都是作为一个通用构建工具后，我们的项目并不一定得是个 java 项目。我们的第一个例子是关于海洋生活的。 <br>Let's start with a very simple multi-project build. After all Gradle is a general purpose build tool at its core, so the projects don't have to be java projects. Our first examples are about marine life.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15EFD"></a>56.1.1. 配置和执行</h3>
+        <h5 class="title"><a name="N15EFD"></a>56.1.1.&nbsp;Configuration and execution</h5>
+       </div>
+      </div>
+     </div>
+     <p><a class="xref" href="build_lifecycle.html#sec:build_phases">第 55.1 节，“构建阶段”</a>描述了每个 Gradle 构建阶段。让我们放大一个多项目构建的配置和执行阶段。所有项目的配置都发生在任何任务执行之前。这意味着，当从一个项目请求一个任务时，首先会配置多项目构建的<span class="emphasis"><em>所有</em></span>项目。每个项目需要配置的原因是为了支持灵活地访问及更改 Gradle 项目模型的任何部分。 <br><a class="xref" href="build_lifecycle.html#sec:build_phases">Section&nbsp;55.1, “Build phases”</a> describes the phases of every Gradle build. Let's zoom into configuration and execution phases of a multi-project build. The configuration of all projects happens before any task is executed. This means that when a single task, from a single project is requested, <span class="emphasis"><em>all</em></span> projects of multi-project build are configured first. The reason every project needs to be configured is to support the flexibility of accessing and changing any part of Gradle project model.</p>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="sec:configuration_on_demand"></a>56.1.1.1. 按需配置</h4>
+         <h6 class="title"><a name="sec:configuration_on_demand"></a>56.1.1.1.&nbsp;Configuration on demand</h6>
+        </div>
+       </div>
+      </div>
+      <p>由于每个项目都在执行阶段之前配置，所以也能做到配置注入功能以及访问整个项目模型。然而，在一个非常大的多项目构建里，这种方法可能不是最有效的。存在着一些项目，它们在层次结构上有上百个的子项目。对于巨大的项目，这个配置时间就会变得非常可观。可伸缩性是 Gradle 的一项重要要求。因此，从 1.4 版本起，新引入了一个孵化功能“按需配置”。<br>Configuration injection feature and access to the complete project model are possible because every project is configured before the execution phase. Yet, this approach may not be the most efficient in a very large multi-project builds. There are Gradle builds with a hierarchy of hundreds of subprojects. Configuration time of huge multi-project builds may become noticeable. Scalability is an important requirement for Gradle. Hence, starting from version 1.4 new incubating 'configuration on demand' mode is introduced.</p>
+      <p> 按需配置模式尝试只配置所请求的任务相关的项目。这种方式，大大提高了大型多项目构建的配置时间。长远来看，这种模式将成为默认模式，可能会是 Gradle 构建执行的唯一模式。配置需求功能正在孵化中，所以还无法保证每次的构建都能正确。对于解耦的多项目构建，这个功能应该会运行得很好（<a class="xref" href="multi_project_builds.html#sec:decoupled_projects">第 56.9 节，“解耦项目”</a>）。在按需配置的模式下项目会如下配置︰ <br>Configuration on demand mode attempts to configure only projects that are relevant for requested tasks. This way, the configuration time of a large multi-project build is greatly improved. In the long term, this mode will become the default mode, possibly the only mode for Gradle build execution. The configuration on demand feature is incubating so not every build is guaranteed to work correctly. The feature should work very well for multi-project builds that have decoupled projects (<a class="xref" href="multi_project_builds.html#sec:decoupled_projects">Section&nbsp;56.9, “Decoupled Projects”</a>). In configuration on demand mode projects are configured as follows:</p>
+      <div class="itemizedlist">
+       <ul class="itemizedlist">
+        <li class="listitem">根项目始终会被配置。这种方式的典型常见配置已经支持（allprojects 或subprojects 脚本块）。<br>Root project is always configured. This way the typical common configuration is supported (allprojects or subprojects script blocks).</li>
+        <li class="listitem">执行构建的所在目录的项目也会被配置，但是仅在Gradle 被执行但没有任务时。这种方式当项目按需配置时默认任务的行为正确。<br>Project in the directory where the build is executed is also configured, but only when Gradle is executed without any tasks. This way the default tasks behave correctly when projects are configured on demand.</li>
+        <li class="listitem">标准项目的依赖也被支持，并且使相关的项目也被配置。如果项目 A 对项目 B 有编译依赖，那么构建A的时候也会导致 A和B两个项目的配置。<br>The standard project dependencies are supported and makes relevant projects configured. If project A has a compile dependency on project B then building A causes configuration of both projects: A and B.</li>
+        <li class="listitem">通过任务路径定义的任务依赖也被支持，并且会导致相关的项目被配置。示例：someTask.dependsOn(":someOtherProject:someOtherTask") <br>The task dependencies declared via task path are supported and cause relevant projects configured. Example: someTask.dependsOn(":someOtherProject:someOtherTask")</li>
+        <li class="listitem">通过从命令行 （或Tooling API）任务路径所请求的任务会导致相关的项目被配置。构建 “projectA:projectB:someTask”使项目B被配置。 <br>Task requested via task path from the command line (or Tooling API) causes the relevant project configured. Building 'projectA:projectB:someTask' causes configuration of projectB.</li>
+       </ul>
+      </div>
+      <p> </p>
+      <p> 想尝试这一新功能？要在每次构建时都按需配置，请参阅<a class="xref" href="build_environment.html#sec:gradle_configuration_properties">第 20.1 节，“通过 gradle.properties配置构建环境”</a>。只对指定的构建按需配置，请参见<a class="xref" href="gradle_command_line.html">附录 D， <i>Gradle 命令行</i></a>。 <br>Eager to try out this new feature? To configure on demand with every build run see <a class="xref" href="build_environment.html#sec:gradle_configuration_properties">Section&nbsp;20.1, “Configuring the build environment via gradle.properties”</a>. To configure on demand just for given build please see <a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>.</p>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15F26"></a>56.1.2.&nbsp;定义共同行为</h3>
+        <h5 class="title"><a name="N15F26"></a>56.1.2.&nbsp;Defining common behavior</h5>
+       </div>
+      </div>
+     </div>
+     <p>我们有以下的项目树。这是一个多项目构建，它有一个根项目<code class="literal">water</code>，和一个子项目<code class="literal">bluewhale</code>。 <br>We have the following project tree. This is a multi-project build with a root project <code class="literal">water</code> and a subproject <code class="literal">bluewhale</code>.</p>
+     <div class="example">
+      <a name="multiprojectFirstExample"></a>
+      <p class="title"><b>示例 56.1. 多项目树- water &amp; bluewhale 项目 - Example&nbsp;56.1.&nbsp;Multi-project tree - water &amp; bluewhale projects</b></p>
+      <div class="example-contents">
+       <p>构建布局<br>Build layout</p>
+       <pre class="programlisting">water/
   build.gradle
   settings.gradle
-  bluewhale/</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/firstExample/water</code> which is in both the binary and source distributions of Gradle.</p></div><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'bluewhale'</span></pre></div></div><br class="example-break"><p>And where is the build script for the <code class="literal">bluewhale</code> project? In Gradle build scripts are optional.
-                Obviously for a single project build, a project without a build script doesn't make much sense. For
-                multiproject builds the situation is different. Let's look at the build script for the <code class="literal">water</code> project and
-                execute it:
-            </p><div class="example"><a name="multiprojectFirstExample"></a><p class="title"><b>Example&nbsp;56.2.&nbsp;Build script of water (parent) project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">Closure cl = { task -&gt; println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm $task.project.name"</span> }
+  bluewhale/</pre>
+       <div class="exampleLocation">
+        <p><span class="emphasis"><em>注︰</em> </span>此示例的代码可以在Gradle 的二进制及源码分发包的<code class="filename">samples/userguide/multiproject/firstExample/water</code>中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/firstExample/water</code> which is in both the binary and source distributions of Gradle.</p>
+       </div>
+       <p><code class="filename">settings.gradle</code></p>
+       <pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'bluewhale'</span></pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>那么，<code class="literal">bluewhale</code>项目的构建脚本在哪儿？在 Gradle 中，构建脚本是可选的。显然对于一个单项目构建，如果一个项目没有构建脚本是没道理的。对于 multiproject 构建，这咱情况则不同。让我们看看<code class="literal">water</code>项目的构建脚本并执行它︰ <br>And where is the build script for the <code class="literal">bluewhale</code> project? In Gradle build scripts are optional. Obviously for a single project build, a project without a build script doesn't make much sense. For multiproject builds the situation is different. Let's look at the build script for the <code class="literal">water</code> project and execute it:</p>
+     <div class="example">
+      <a name="multiprojectFirstExample"></a>
+      <p class="title"><b>示例 56.2. water（父）项目的构建脚本 - Example&nbsp;56.2.&nbsp;Build script of water (parent) project</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">Closure cl = { task -&gt; println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm $task.project.name"</span> }
 task hello &lt;&lt; cl
 project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':bluewhale'</span>) {
     task hello &lt;&lt; cl
-}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+}</pre>
+       <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+       <pre class="screen">&gt; gradle -q hello
 I'm water
-I'm bluewhale</pre></div></div><br class="example-break"><p>Gradle allows you to access any project of the multi-project build from any build script. The Project
-                API provides a method called <code class="literal">project()</code>, which takes a path as an argument and returns
-                the Project object for this path. The capability to configure a project build from any build script we
-                call <em class="firstterm">cross project configuration</em>. Gradle implements this via
-                <em class="firstterm">configuration injection</em>.
-            </p><p>We are not that happy with the build script of the <code class="literal">water</code>  project. It is inconvenient to add the task
-                explicitly for every project. We can do better. Let's first add another project called
-                <code class="literal">krill</code> to our multi-project build.
-            </p><div class="example"><a name="multiprojectAddKrill"></a><p class="title"><b>Example&nbsp;56.3.&nbsp;Multi-project tree - water, bluewhale  &amp; krill projects</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">water/
+I'm bluewhale</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>Gradle 允许你从任何构建脚本访问多项目构建的任意一个project。Project API 提供了一个叫做<code class="literal">project()</code>的方法，它将路径作为参数，返回此路径的Project 对象。而这种从其他构建脚本配置一个项目构建的能力，我们叫做 <em class="firstterm">交叉项目配置</em>。Gradle 通过<em class="firstterm">configuration injection</em>来实现它。 <br>Gradle allows you to access any project of the multi-project build from any build script. The Project API provides a method called <code class="literal">project()</code>, which takes a path as an argument and returns the Project object for this path. The capability to configure a project build from any build script we call <em class="firstterm">cross project configuration</em>. Gradle implements this via <em class="firstterm">configuration injection</em>.</p>
+     <p>我们对这个 <code class="literal">water</code> 项目的构建脚本不是很满意。因为要为每一个project 添加任务显示很不方便。我们可以进行改善。让我们先添加另一个叫做<code class="literal">krill</code>的项目到我们的多项目构建中。 <br>We are not that happy with the build script of the <code class="literal">water</code> project. It is inconvenient to add the task explicitly for every project. We can do better. Let's first add another project called <code class="literal">krill</code> to our multi-project build.</p>
+     <div class="example">
+      <a name="multiprojectAddKrill"></a>
+      <p class="title"><b>示例 56.3. 多项目树- water &amp; bluewhale &amp; krill 项目 - Example&nbsp;56.3.&nbsp;Multi-project tree - water, bluewhale &amp; krill projects</b></p>
+      <div class="example-contents">
+       <p>构建布局<br>Build layout</p>
+       <pre class="programlisting">water/
   build.gradle
   settings.gradle
   bluewhale/
-  krill/</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/addKrill/water</code> which is in both the binary and source distributions of Gradle.</p></div><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'bluewhale'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'krill'</span></pre></div></div><br class="example-break"><p>Now we rewrite the <code class="literal">water</code> build script and boil it down to a single line.</p><div class="example"><a name="multiprojectAddKrill"></a><p class="title"><b>Example&nbsp;56.4.&nbsp;Water project build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">allprojects {
+  krill/</pre>
+       <div class="exampleLocation">
+        <p><span class="emphasis"><em>注︰</em> </span>此示例的代码可以在Gradle 的二进制及源码分发包的<code class="filename">samples/userguide/multiproject/addKrill/water</code>中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/addKrill/water</code> which is in both the binary and source distributions of Gradle.</p>
+       </div>
+       <p><code class="filename">settings.gradle</code></p>
+       <pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'bluewhale'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'krill'</span></pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>现在我们改写<code class="literal">water</code>的构建脚本，并把它归结成为一行。<br>Now we rewrite the <code class="literal">water</code> build script and boil it down to a single line.</p>
+     <div class="example">
+      <a name="multiprojectAddKrill"></a>
+      <p class="title"><b>示例 56.4. Water项目构建脚本 - Example&nbsp;56.4.&nbsp;Water project build script</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">allprojects {
     task hello &lt;&lt; { task -&gt; println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm $task.project.name"</span> }
-}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+}</pre>
+       <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+       <pre class="screen">&gt; gradle -q hello
 I'm water
 I'm bluewhale
-I'm krill</pre></div></div><br class="example-break"><p>Is this cool or is this cool? And how does this work? The Project API provides a property
-                <code class="literal">allprojects</code>
-                which returns a list with the current project and all its subprojects underneath it. If you call
-                <code class="literal">allprojects</code>
-                with a closure, the statements of the closure are delegated to the projects associated with <code class="literal">
-                    allprojects</code>. You could also do an iteration via <code class="literal">allprojects.each</code>, but
-                that would be more verbose.
-            </p><p>Other build systems use inheritance as the primary means for defining common behavior. We also offer
-                inheritance for projects as you will see later. But Gradle uses configuration injection as the usual way
-                of defining common behavior. We think it provides a very powerful and flexible way of configuring
-                multiproject builds.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:subproject_configuration"></a>56.2.&nbsp;Subproject configuration</h2></div></div></div><p>The Project API also provides a property for accessing the subprojects only.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15FB5"></a>56.2.1.&nbsp;Defining common behavior</h3></div></div></div><div class="example"><a name="multiprojectUseSubprojects"></a><p class="title"><b>Example&nbsp;56.5.&nbsp;Defining common behaviour of all projects and subprojects</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">allprojects {
+I'm krill</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>是刚才的那个酷还是现在的这个酷？它是怎么实现的？Project API 提供了一个<code class="literal">allprojects</code> 属性，它返回一个当前项目的list，该项目的所有子项目都在这个list中。如果你使用一个闭包调用<code class="literal">allprojects</code>，这个闭包的声明会被委托给与<code class="literal">allprojects</code>关联的项目。你也可以通过<code class="literal">allprojects.each</code>来进行迭代，不过这样写会比较冗长。 <br>Is this cool or is this cool? And how does this work? The Project API provides a property <code class="literal">allprojects</code> which returns a list with the current project and all its subprojects underneath it. If you call <code class="literal">allprojects</code> with a closure, the statements of the closure are delegated to the projects associated with <code class="literal"> allprojects</code>. You could also do an iteration via <code class="literal">allprojects.each</code>, but that would be more verbose.</p>
+     <p>其他构建系统使用继承作为主要手段，用于定义共同的行为。稍后您将看到，我们也提供了项目继承。但 Gradle 使用配置注入来作为定义共同行为的常用方式。我们认为它提供了配置 multiproject 的构建非常强大和灵活的方式。 <br>Other build systems use inheritance as the primary means for defining common behavior. We also offer inheritance for projects as you will see later. But Gradle uses configuration injection as the usual way of defining common behavior. We think it provides a very powerful and flexible way of configuring multiproject builds.</p>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:subproject_configuration"></a>56.2.&nbsp;子项目配置</h2>
+       <h4 class="title"><a name="sec:subproject_configuration"></a>56.2.&nbsp;Subproject configuration</h4>
+      </div>
+     </div>
+    </div>
+    <p>Project API 还提供了一个属性只用于访问子项目。 <br>The Project API also provides a property for accessing the subprojects only.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15FB5"></a>56.2.1.&nbsp;定义共同行为</h3>
+        <h5 class="title"><a name="N15FB5"></a>56.2.1.&nbsp;Defining common behavior</h5>
+       </div>
+      </div>
+     </div>
+     <div class="example">
+      <a name="multiprojectUseSubprojects"></a>
+      <p class="title"><b>示例 56.5. 定义所有项目以及子项目的共同行为 - Example&nbsp;56.5.&nbsp;Defining common behaviour of all projects and subprojects</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">allprojects {
     task hello &lt;&lt; {task -&gt; println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm $task.project.name"</span> }
 }
 subprojects {
     hello &lt;&lt; {println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- I depend on water"</span>}
-}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+}</pre>
+       <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+       <pre class="screen">&gt; gradle -q hello
 I'm water
 I'm bluewhale
 - I depend on water
 I'm krill
-- I depend on water</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:adding_specific_behavior"></a>56.2.2.&nbsp;Adding specific behavior</h3></div></div></div><p>You can add specific behavior on top of the common behavior. Usually we put the project specific
-                behavior in the build script of the project where we want to apply this specific behavior. But as we
-                have already seen, we don't have to do it this way. We could add project specific behavior for the
-                <code class="literal">bluewhale</code> project like this:
-            </p><div class="example"><a name="multiprojectSubprojectsAddFromTop"></a><p class="title"><b>Example&nbsp;56.6.&nbsp;Defining specific behaviour for particular project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">allprojects {
+- I depend on water</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sub:adding_specific_behavior"></a>56.2.2. 添加特定的行为</h3>
+        <h5 class="title"><a name="sub:adding_specific_behavior"></a>56.2.2.&nbsp;Adding specific behavior</h5>
+       </div>
+      </div>
+     </div>
+     <p>你可以在共同行为上面再添加特定的行为。通常我们会把项目的特定行为放到我们想添加的这个项目的构建脚本里。但正如我们已经看到的，我们可以不这样做。我们可以这样为<code class="literal">bluewhale</code>项目添加特定行为︰ <br>You can add specific behavior on top of the common behavior. Usually we put the project specific behavior in the build script of the project where we want to apply this specific behavior. But as we have already seen, we don't have to do it this way. We could add project specific behavior for the <code class="literal">bluewhale</code> project like this:</p>
+     <div class="example">
+      <a name="multiprojectSubprojectsAddFromTop"></a>
+      <p class="title"><b>示例 56.6. 为特定项目定义特定行为 - Example&nbsp;56.6.&nbsp;Defining specific behaviour for particular project</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">allprojects {
     task hello &lt;&lt; {task -&gt; println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm $task.project.name"</span> }
 }
 subprojects {
@@ -99,46 +227,101 @@ subprojects {
 }
 project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':bluewhale'</span>).hello &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- I'm the largest animal that has ever lived on this planet."</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+}</pre>
+       <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+       <pre class="screen">&gt; gradle -q hello
 I'm water
 I'm bluewhale
 - I depend on water
 - I'm the largest animal that has ever lived on this planet.
 I'm krill
-- I depend on water</pre></div></div><br class="example-break"><p>As we have said, we usually prefer to put project specific behavior into the build script of this
-                project. Let's refactor and also add some project specific behavior to the <code class="literal">krill</code>
-                project.
-            </p><div class="example"><a name="multiprojectSpreadSpecifics"></a><p class="title"><b>Example&nbsp;56.7.&nbsp;Defining specific behaviour for project krill</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">water/
+- I depend on water</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>正如前面所说的，我们通常更愿意把项目的特定行为放到这个项目的构建脚本中。让我们重构并且向<code class="literal">krill</code>项目添加一些项目特定的行为。 <br>As we have said, we usually prefer to put project specific behavior into the build script of this project. Let's refactor and also add some project specific behavior to the <code class="literal">krill</code> project.</p>
+     <div class="example">
+      <a name="multiprojectSpreadSpecifics"></a>
+      <p class="title"><b>示例 56.7. 为krill项目定义特定的行为 - Example&nbsp;56.7.&nbsp;Defining specific behaviour for project krill</b></p>
+      <div class="example-contents">
+       <p>构建布局<br>Build layout</p>
+       <pre class="programlisting">water/
   build.gradle
   settings.gradle
   bluewhale/
     build.gradle
   krill/
-    build.gradle</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/spreadSpecifics/water</code> which is in both the binary and source distributions of Gradle.</p></div><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'bluewhale'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'krill'</span></pre><p><code class="filename">bluewhale/build.gradle</code></p><pre class="programlisting">hello.doLast { println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- I'm the largest animal that has ever lived on this planet."</span> }</pre><p><code class="filename">krill/build.gradle</code></p><pre class="programlisting">hello.doLast {
+    build.gradle</pre>
+       <div class="exampleLocation">
+        <p><span class="emphasis"><em>注︰</em> </span>此示例的代码可以在Gradle 的二进制及源码分发包的<code class="filename">samples/userguide/multiproject/spreadSpecifics/water</code>中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/spreadSpecifics/water</code> which is in both the binary and source distributions of Gradle.</p>
+       </div>
+       <p><code class="filename">settings.gradle</code></p>
+       <pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'bluewhale'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'krill'</span></pre>
+       <p><code class="filename">bluewhale/build.gradle</code></p>
+       <pre class="programlisting">hello.doLast { println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- I'm the largest animal that has ever lived on this planet."</span> }</pre>
+       <p><code class="filename">krill/build.gradle</code></p>
+       <pre class="programlisting">hello.doLast {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- The weight of my species in summer is twice as heavy as all human beings."</span>
-}</pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">allprojects {
+}</pre>
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">allprojects {
     task hello &lt;&lt; {task -&gt; println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm $task.project.name"</span> }
 }
 subprojects {
     hello &lt;&lt; {println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- I depend on water"</span>}
-}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+}</pre>
+       <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+       <pre class="screen">&gt; gradle -q hello
 I'm water
 I'm bluewhale
 - I depend on water
 - I'm the largest animal that has ever lived on this planet.
 I'm krill
 - I depend on water
-- The weight of my species in summer is twice as heavy as all human beings.</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:project_filtering"></a>56.2.3.&nbsp;Project filtering</h3></div></div></div><p>To show more of the power of configuration injection, let's add another project
-                called <code class="literal">tropicalFish</code> and add more behavior to the build via the build script of the
-                <code class="literal">water</code> project.
-            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ssub:filtering_by_name"></a>56.2.3.1.&nbsp;Filtering by name</h4></div></div></div><div class="example"><a name="multiprojectAddTropical"></a><p class="title"><b>Example&nbsp;56.8.&nbsp;Adding custom behaviour to some projects (filtered by project name)</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">water/
+- The weight of my species in summer is twice as heavy as all human beings.</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sub:project_filtering"></a>56.2.3. 项目筛选</h3>
+        <h5 class="title"><a name="sub:project_filtering"></a>56.2.3.&nbsp;Project filtering</h5>
+       </div>
+      </div>
+     </div>
+     <p>若要体现配置注入的更强大之处，让我们添加另一个项目<code class="literal">tropicalFish</code>，并通过<code class="literal">water</code>项目的构建脚本向这个构建添加更多的行为。 <br>To show more of the power of configuration injection, let's add another project called <code class="literal">tropicalFish</code> and add more behavior to the build via the build script of the <code class="literal">water</code> project.</p>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="ssub:filtering_by_name"></a>56.2.3.1. 按名称过滤</h4>
+         <h6 class="title"><a name="ssub:filtering_by_name"></a>56.2.3.1.&nbsp;Filtering by name</h6>
+        </div>
+       </div>
+      </div>
+      <div class="example">
+       <a name="multiprojectAddTropical"></a>
+       <p class="title"><b>示例 56.8. 将自定义行为添加到某些项目中（按项目名称筛选） - Example&nbsp;56.8.&nbsp;Adding custom behaviour to some projects (filtered by project name)</b></p>
+       <div class="example-contents">
+        <p>构建布局<br>Build layout</p>
+        <pre class="programlisting">water/
   build.gradle
   settings.gradle
   bluewhale/
     build.gradle
   krill/
     build.gradle
-  tropicalFish/</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/addTropical/water</code> which is in both the binary and source distributions of Gradle.</p></div><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'bluewhale'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'krill'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'tropicalFish'</span></pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">allprojects {
+  tropicalFish/</pre>
+        <div class="exampleLocation">
+         <p><span class="emphasis"><em>注︰</em> </span>此示例的代码可以在Gradle 的二进制及源码分发包的<code class="filename">samples/userguide/multiproject/addTropical/water</code>中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/addTropical/water</code> which is in both the binary and source distributions of Gradle.</p>
+        </div>
+        <p><code class="filename">settings.gradle</code></p>
+        <pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'bluewhale'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'krill'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'tropicalFish'</span></pre>
+        <p><code class="filename">build.gradle</code></p>
+        <pre class="programlisting">allprojects {
     task hello &lt;&lt; {task -&gt; println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm $task.project.name"</span> }
 }
 subprojects {
@@ -146,7 +329,9 @@ subprojects {
 }
 configure(subprojects.findAll {it.name != <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'tropicalFish'</span>}) {
     hello &lt;&lt; {println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'- I love to spend time in the arctic waters.'</span>}
-}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+}</pre>
+        <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+        <pre class="screen">&gt; gradle -q hello
 I'm water
 I'm bluewhale
 - I depend on water
@@ -157,11 +342,28 @@ I'm krill
 - I love to spend time in the arctic waters.
 - The weight of my species in summer is twice as heavy as all human beings.
 I'm tropicalFish
-- I depend on water</pre></div></div><br class="example-break"><p>The <code class="literal">configure()</code> method takes a list as an argument and applies the
-                    configuration to the projects in this list.
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ssub:filtering_by_properties"></a>56.2.3.2.&nbsp;Filtering by properties</h4></div></div></div><p>Using the project name for filtering is one option. Using extra project properties is another.
-                    (See <a class="xref" href="writing_build_scripts.html#sec:extra_properties">Section&nbsp;13.4.2, &ldquo;Extra properties&rdquo;</a> for more information on extra properties.)
-                </p><div class="example"><a name="multiprojectTropicalWithProperties"></a><p class="title"><b>Example&nbsp;56.9.&nbsp;Adding custom behaviour to some projects (filtered by project properties)</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">water/
+- I depend on water</pre>
+       </div>
+      </div>
+      <br class="example-break">
+      <p><code class="literal">configure()</code>方法接受一个list作为参数，并将配置应用到这个list里的项目。 <br>The <code class="literal">configure()</code> method takes a list as an argument and applies the configuration to the projects in this list.</p>
+     </div>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="ssub:filtering_by_properties"></a>56.2.3.2. 通过属性筛选</h4>
+         <h6 class="title"><a name="ssub:filtering_by_properties"></a>56.2.3.2.&nbsp;Filtering by properties</h6>
+        </div>
+       </div>
+      </div>
+      <p>我们可以选择使用project的名称来筛选，或者是使用额外的项目属性。（有关额外属性的更多信息，请参见<a class="xref" href="writing_build_scripts.html#sec:extra_properties">第 13.4.2 节，“额外属性”</a>。） <br>Using the project name for filtering is one option. Using extra project properties is another. (See <a class="xref" href="writing_build_scripts.html#sec:extra_properties">Section&nbsp;13.4.2, “Extra properties”</a> for more information on extra properties.)</p>
+      <div class="example">
+       <a name="multiprojectTropicalWithProperties"></a>
+       <p class="title"><b>示例 56.9. 将自定义行为添加到某些项目中（按项目属性筛选） - Example&nbsp;56.9.&nbsp;Adding custom behaviour to some projects (filtered by project properties)</b></p>
+       <div class="example-contents">
+        <p>构建布局<br>Build layout</p>
+        <pre class="programlisting">water/
   build.gradle
   settings.gradle
   bluewhale/
@@ -169,11 +371,24 @@ I'm tropicalFish
   krill/
     build.gradle
   tropicalFish/
-    build.gradle</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/tropicalWithProperties/water</code> which is in both the binary and source distributions of Gradle.</p></div><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'bluewhale'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'krill'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'tropicalFish'</span></pre><p><code class="filename">bluewhale/build.gradle</code></p><pre class="programlisting">ext.arctic = true
-hello.doLast { println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- I'm the largest animal that has ever lived on this planet."</span> }</pre><p><code class="filename">krill/build.gradle</code></p><pre class="programlisting">ext.arctic = true
+    build.gradle</pre>
+        <div class="exampleLocation">
+         <p><span class="emphasis"><em>注︰</em> </span>此示例的代码可以在Gradle 的二进制及源码分发包的<code class="filename">samples/userguide/multiproject/tropicalWithProperties/water</code>中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/tropicalWithProperties/water</code> which is in both the binary and source distributions of Gradle.</p>
+        </div>
+        <p><code class="filename">settings.gradle</code></p>
+        <pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'bluewhale'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'krill'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'tropicalFish'</span></pre>
+        <p><code class="filename">bluewhale/build.gradle</code></p>
+        <pre class="programlisting">ext.arctic = true
+hello.doLast { println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- I'm the largest animal that has ever lived on this planet."</span> }</pre>
+        <p><code class="filename">krill/build.gradle</code></p>
+        <pre class="programlisting">ext.arctic = true
 hello.doLast {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- The weight of my species in summer is twice as heavy as all human beings."</span>
-}</pre><p><code class="filename">tropicalFish/build.gradle</code></p><pre class="programlisting">ext.arctic = false</pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">allprojects {
+}</pre>
+        <p><code class="filename">tropicalFish/build.gradle</code></p>
+        <pre class="programlisting">ext.arctic = false</pre>
+        <p><code class="filename">build.gradle</code></p>
+        <pre class="programlisting">allprojects {
     task hello &lt;&lt; {task -&gt; println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm $task.project.name"</span> }
 }
 subprojects {
@@ -185,7 +400,9 @@ subprojects {
             }
         }
     }
-}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+}</pre>
+        <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+        <pre class="screen">&gt; gradle -q hello
 I'm water
 I'm bluewhale
 - I depend on water
@@ -196,43 +413,70 @@ I'm krill
 - The weight of my species in summer is twice as heavy as all human beings.
 - I love to spend time in the arctic waters.
 I'm tropicalFish
-- I depend on water</pre></div></div><br class="example-break"><p>In the build file of the <code class="literal">water</code> project we use an <code class="literal">afterEvaluate</code>
-                    notification. This means that the closure we are passing gets evaluated <span class="emphasis"><em>after</em></span>
-                    the build scripts of the subproject are evaluated. As the property <code class="literal">arctic</code>
-                    is set in those build scripts, we have to do it this way. You will find more on this topic in
-                    <a class="xref" href="multi_project_builds.html#sec:dependencies_which_dependencies">Section&nbsp;56.6, &ldquo;Dependencies - Which dependencies?&rdquo;</a>
-                </p></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:execution_rules_for_multi_project_builds"></a>56.3.&nbsp;Execution rules for multi-project builds</h2></div></div></div><p>When we have executed the <code class="literal">hello</code> task from the root project dir things behaved in an
-            intuitive way. All the <code class="literal">hello</code> tasks of the different projects were executed. Let's switch
-            to the <code class="literal">bluewhale</code> dir and see what happens if we execute Gradle from there.
-        </p><div class="example"><a name="multiprojectSubBuild"></a><p class="title"><b>Example&nbsp;56.10.&nbsp;Running build from subproject</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+- I depend on water</pre>
+       </div>
+      </div>
+      <br class="example-break">
+      <p>在这个<code class="literal">water</code>项目的构建文件中，我们使用了一个<code class="literal">afterEvaluate</code>通知。这意味着我们所传的闭包在子项目的构建脚本评估<span class="emphasis"><em>之后</em></span>才被评估。由于<code class="literal">arctic</code>属性被设置在那些构建脚本中，我们不得不这样做。在 <a class="xref" href="multi_project_builds.html#sec:dependencies_which_dependencies">第&nbsp;56.6 节， “依赖——哪些依赖”</a>，你可以看到更多关于这个主题的内容。 <br>In the build file of the <code class="literal">water</code> project we use an <code class="literal">afterEvaluate</code> notification. This means that the closure we are passing gets evaluated <span class="emphasis"><em>after</em></span> the build scripts of the subproject are evaluated. As the property <code class="literal">arctic</code> is set in those build scripts, we have to do it this way. You will find more on this topic in <a class="xref" href="multi_project_builds.html#sec:dependencies_which_dependencies">Section&nbsp;56.6, “Dependencies - Which dependencies?”</a></p>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:execution_rules_for_multi_project_builds"></a>56.3.&nbsp;多项目构建的执行规则</h2>
+       <h4 class="title"><a name="sec:execution_rules_for_multi_project_builds"></a>56.3.&nbsp;Execution rules for multi-project builds</h4>
+      </div>
+     </div>
+    </div>
+    <p>当我们从根项目的目录执行了<code class="literal">hello</code>任务时，事情会以一种直观的方式来表现。不同项目的所有<code class="literal">hello</code>任务被都会被执行。让我们切换到<code class="literal">bluewhale</code>目录，看看如果我们从那里执行 Gradle 会发生什么。 <br>When we have executed the <code class="literal">hello</code> task from the root project dir things behaved in an intuitive way. All the <code class="literal">hello</code> tasks of the different projects were executed. Let's switch to the <code class="literal">bluewhale</code> dir and see what happens if we execute Gradle from there.</p>
+    <div class="example">
+     <a name="multiprojectSubBuild"></a>
+     <p class="title"><b>示例 56.10. 从子项目的运行构建 - Example&nbsp;56.10.&nbsp;Running build from subproject</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+      <pre class="screen">&gt; gradle -q hello
 I'm bluewhale
 - I depend on water
 - I'm the largest animal that has ever lived on this planet.
-- I love to spend time in the arctic waters.</pre></div></div><br class="example-break"><p>The basic rule behind Gradle's behavior is simple. Gradle looks down the hierarchy, starting with the
-            <span class="emphasis"><em>current dir</em></span>, for tasks with the name
-            <code class="literal">hello</code>
-            an executes them. One thing is very important to note. Gradle
-            <span class="emphasis"><em>always</em></span>
-            evaluates
-            <span class="emphasis"><em>every</em></span>
-            project of the multi-project build and creates all existing task objects. Then, according to the task name
-            arguments and the current dir, Gradle filters the tasks which should be executed. Because of Gradle's
-            cross project configuration <span class="emphasis"><em>every</em></span> project has to be evaluated before <span class="emphasis"><em>any</em></span>
-            task gets executed. We will have a closer look at this in the next section. Let's now have our last marine
-            example. Let's add a task to <code class="literal">bluewhale</code> and <code class="literal">krill</code>.
-        </p><div class="example"><a name="multiprojectPartialTasks"></a><p class="title"><b>Example&nbsp;56.11.&nbsp;Evaluation and execution of projects</b></p><div class="example-contents"><p><code class="filename">bluewhale/build.gradle</code></p><pre class="programlisting">ext.arctic = true
+- I love to spend time in the arctic waters.</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>Gradle 的行为背后的基本规则是很简单的。Gradle 从<span class="emphasis"><em>当前目录</em></span>开始，按层次结构往下查找名称为<code class="literal">hello</code>任务，开始执行它们。注意，有一件事情很重要。Gradle<span class="emphasis"><em>总是</em></span>评估<span class="emphasis">多项目构建的<em>每一个</em></span>项目，以及创建所有存在的任务对象。然后，根据任务名称参数和当前目录，Gradle 过滤出应该执行的任务。由于 Gradle 的跨项目配置<span class="emphasis"><em>每一个</em></span>项目不得不在它们的<span class="emphasis"><em>任何</em></span>任务执行之前，先对项目进行评估。我们将在下一节详细讨论这一点。现在让我们讲最后一个marine的例子。我们先将任务添加到<code class="literal">bluewhale</code>和<code class="literal">krill</code>。 <br>The basic rule behind Gradle's behavior is simple. Gradle looks down the hierarchy, starting with the <span class="emphasis"><em>current dir</em></span>, for tasks with the name <code class="literal">hello</code> an executes them. One thing is very important to note. Gradle <span class="emphasis"><em>always</em></span> evaluates <span class="emphasis"><em>every</em></span> project of the multi-project build and creates all existing task objects. Then, according to the task name arguments and the current dir, Gradle filters the tasks which should be executed. Because of Gradle's cross project configuration <span class="emphasis"><em>every</em></span> project has to be evaluated before <span class="emphasis"><em>any</em></span> task gets executed. We will have a closer look at this in the next section. Let's now have our last marine example. Let's add a task to <code class="literal">bluewhale</code> and <code class="literal">krill</code>.</p>
+    <div class="example">
+     <a name="multiprojectPartialTasks"></a>
+     <p class="title"><b>示例 56.11. 项目的评估和执行 - Example&nbsp;56.11.&nbsp;Evaluation and execution of projects</b></p>
+     <div class="example-contents">
+      <p><code class="filename">bluewhale/build.gradle</code></p>
+      <pre class="programlisting">ext.arctic = true
 hello &lt;&lt; { println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- I'm the largest animal that has ever lived on this planet."</span> }
 
 task distanceToIceberg &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'20 nautical miles'</span>
-}</pre><p><code class="filename">krill/build.gradle</code></p><pre class="programlisting">ext.arctic = true
+}</pre>
+      <p><code class="filename">krill/build.gradle</code></p>
+      <pre class="programlisting">ext.arctic = true
 hello &lt;&lt; { println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"- The weight of my species in summer is twice as heavy as all human beings."</span> }
 
 task distanceToIceberg &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'5 nautical miles'</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle -q distanceToIceberg</code></strong></p><pre class="screen">&gt; gradle -q distanceToIceberg
+}</pre>
+      <p><strong class="userinput"><code>gradle -q distanceToIceberg</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q distanceToIceberg</code></strong></p>
+      <pre class="screen">&gt; gradle -q distanceToIceberg
 20 nautical miles
-5 nautical miles</pre></div></div><br class="example-break"><p>Here the output without the <code class="literal">-q</code> option:</p><div class="example"><a name="multiprojectPartialTasksNotQuiet"></a><p class="title"><b>Example&nbsp;56.12.&nbsp;Evaluation and execution of projects</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle distanceToIceberg</code></strong></p><pre class="screen">&gt; gradle distanceToIceberg
+5 nautical miles</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>这里是不使用<code class="literal">-q</code>选项的输出结果︰<br>Here the output without the <code class="literal">-q</code> option:</p>
+    <div class="example">
+     <a name="multiprojectPartialTasksNotQuiet"></a>
+     <p class="title"><b>示例 56.12. 项目的评估和执行 - Example&nbsp;56.12.&nbsp;Evaluation and execution of projects</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle distanceToIceberg</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle distanceToIceberg</code></strong></p>
+      <pre class="screen">&gt; gradle distanceToIceberg
 :bluewhale:distanceToIceberg
 20 nautical miles
 :krill:distanceToIceberg
@@ -240,179 +484,325 @@ task distanceToIceberg &lt;&lt; {
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"><p>The build is executed from the <code class="literal">water</code> project. Neither <code class="literal">water</code> nor
-            <code class="literal">tropicalFish</code> have a task with the name <code class="literal">distanceToIceberg</code>. Gradle does
-            not care. The simple rule mentioned already above is: Execute all tasks down the hierarchy which have this
-            name. Only complain if there is <span class="emphasis"><em>no</em></span> such task!
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:running_partial_build_from_the_root"></a>56.4.&nbsp;Running tasks by their absolute path</h2></div></div></div><p>As we have seen, you can run a multi-project build by entering any subproject dir and execute the build
-            from there. All matching task names of the project hierarchy starting with the current dir are executed. But
-            Gradle also offers to execute tasks by their absolute path (see also <a class="xref" href="multi_project_builds.html#sec:project_and_task_paths">Section&nbsp;56.5, &ldquo;Project and task paths&rdquo;</a>):
-        </p><div class="example"><a name="multiprojectAbsoluteTaskPaths"></a><p class="title"><b>Example&nbsp;56.13.&nbsp;Running tasks by their absolute path</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q :hello :krill:hello hello</code></strong></p><pre class="screen">&gt; gradle -q :hello :krill:hello hello
+Total time: 1 secs</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>这个构建从<code class="literal">water</code>项目执行。<code class="literal">water</code>和<code class="literal">tropicalFish</code>项目都没有一个叫<code class="literal">distanceToIceberg</code>的任务。Gradle 不关心这个问题。上面已经提到的简单的规则是︰ 执行在该层次结构下具体该名字的所有任务。如果<span class="emphasis"><em>没有</em></span>这样的任务，那只能complain。 <br>The build is executed from the <code class="literal">water</code> project. Neither <code class="literal">water</code> nor <code class="literal">tropicalFish</code> have a task with the name <code class="literal">distanceToIceberg</code>. Gradle does not care. The simple rule mentioned already above is: Execute all tasks down the hierarchy which have this name. Only complain if there is <span class="emphasis"><em>no</em></span> such task!</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:running_partial_build_from_the_root"></a>56.4. 按绝对路径运行任务</h2>
+       <h4 class="title"><a name="sec:running_partial_build_from_the_root"></a>56.4.&nbsp;Running tasks by their absolute path</h4>
+      </div>
+     </div>
+    </div>
+    <p>正如我们所看到的，你可以通过进入任何子项目的目录，运行多项目构建并在那里执行构建。从当前目录开始的该项目层级里，所有名称匹配的任务会被执行。但 Gradle 也提供了按绝对路径执行任务（见<a class="xref" href="multi_project_builds.html#sec:project_and_task_paths">第56.5节，“项目和任务路径”</a>）︰ <br>As we have seen, you can run a multi-project build by entering any subproject dir and execute the build from there. All matching task names of the project hierarchy starting with the current dir are executed. But Gradle also offers to execute tasks by their absolute path (see also <a class="xref" href="multi_project_builds.html#sec:project_and_task_paths">Section&nbsp;56.5, “Project and task paths”</a>):</p>
+    <div class="example">
+     <a name="multiprojectAbsoluteTaskPaths"></a>
+     <p class="title"><b>示例56.13. 按绝对路径运行任务 - Example&nbsp;56.13.&nbsp;Running tasks by their absolute path</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle -q :hello :krill:hello hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q :hello :krill:hello hello</code></strong></p>
+      <pre class="screen">&gt; gradle -q :hello :krill:hello hello
 I'm water
 I'm krill
 - I depend on water
 - The weight of my species in summer is twice as heavy as all human beings.
 - I love to spend time in the arctic waters.
 I'm tropicalFish
-- I depend on water</pre></div></div><br class="example-break"><p>The build is executed from the <code class="literal">tropicalFish</code> project. We execute the <code class="literal">hello</code>
-            tasks of the <code class="literal">water</code>, the <code class="literal">krill</code> and the <code class="literal">tropicalFish</code>
-            project. The first two tasks are specified by there absolute path, the last task is executed on the name
-            matching mechanism described above.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:project_and_task_paths"></a>56.5.&nbsp;Project and task paths</h2></div></div></div><p>A project path has the following pattern: It starts always with a colon, which denotes the root project.
-            The root project is the only project in a path that is not specified by its name. The path
-            <code class="literal">:bluewhale</code>
-            corresponds to the file system path
-            <code class="literal">water/bluewhale</code>
-            in the case of the example above.
-        </p><p>The path of a task is simply its project path plus the task name. For example <code class="literal">
-            :bluewhale:hello</code>. Within a project you can address a task of the same project just by its name.
-            This is interpreted as a relative path.
-        </p><p>Originally Gradle has used the
-            <code class="literal">'/'</code>
-            character as a natural path separator. With the introduction of directory tasks (see <a class="xref" href="tutorial_this_and_that.html#sec:directory_creation">Section&nbsp;14.1, &ldquo;Directory creation&rdquo;</a>) this was no longer possible, as the name of the directory task
-            contains the
-            <code class="literal">'/'</code>
-            character.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:dependencies_which_dependencies"></a>56.6.&nbsp;Dependencies - Which dependencies?</h2></div></div></div><p>The examples from the last section were special, as the projects had no <span class="emphasis"><em>Execution
-            Dependencies</em></span>. They had only <span class="emphasis"><em>Configuration Dependencies</em></span>. Here is an example
-            where this is different:
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:execution_time_dependencies"></a>56.6.1.&nbsp;Execution dependencies</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ssub:dependencies_and_execution_order"></a>56.6.1.1.&nbsp;Dependencies and execution order</h4></div></div></div><div class="example"><a name="multiprojectFirstMessages"></a><p class="title"><b>Example&nbsp;56.14.&nbsp;Dependencies and execution order</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">messages/
+- I depend on water</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>这个构建是从<code class="literal">tropicalFish</code>项目执行的。我们执行了<code class="literal">water</code>、<code class="literal">krill</code>和<code class="literal">tropicalFish</code>项目的<code class="literal">hello</code>任务。前两个任务由它们的绝对路径指定，最后一项任务通过上面所述的匹配机制执行。 <br>The build is executed from the <code class="literal">tropicalFish</code> project. We execute the <code class="literal">hello</code> tasks of the <code class="literal">water</code>, the <code class="literal">krill</code> and the <code class="literal">tropicalFish</code> project. The first two tasks are specified by there absolute path, the last task is executed on the name matching mechanism described above.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:project_and_task_paths"></a>56.5. 项目和任务路径</h2>
+       <h4 class="title"><a name="sec:project_and_task_paths"></a>56.5.&nbsp;Project and task paths</h4>
+      </div>
+     </div>
+    </div>
+    <p>一个项目路径有以下模式︰它总是始于一个冒号，表示根项目。根项目是唯一的在一个不由其名称指定的路径中的项目。在上面的示例中，该路径<code class="literal">:bluewhale</code>对应于文件系统路径<code class="literal">water/bluewhale</code>。 <br>A project path has the following pattern: It starts always with a colon, which denotes the root project. The root project is the only project in a path that is not specified by its name. The path <code class="literal">:bluewhale</code> corresponds to the file system path <code class="literal">water/bluewhale</code> in the case of the example above.</p>
+    <p>一项任务的路径只是它的项目路径加上其任务名称。例如<code class="literal"> :bluewhale:hello</code>。在一个项目内，你可以通过任务的名称得到同一个项目的任务。这被解释为相对路径。 <br>The path of a task is simply its project path plus the task name. For example <code class="literal"> :bluewhale:hello</code>. Within a project you can address a task of the same project just by its name. This is interpreted as a relative path.</p>
+    <p>原来 Gradle 使用<code class="literal">/</code>字符作为自然路径分隔符。在引入目录任务（见<a class="xref" href="tutorial_this_and_that.html#sec:directory_creation">第 14.1节，“创建目录”</a>）后将不能再这样做，因为目录任务的名称包含<code class="literal">/</code>字符。 <br>Originally Gradle has used the <code class="literal">'/'</code> character as a natural path separator. With the introduction of directory tasks (see <a class="xref" href="tutorial_this_and_that.html#sec:directory_creation">Section&nbsp;14.1, “Directory creation”</a>) this was no longer possible, as the name of the directory task contains the <code class="literal">'/'</code> character.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:dependencies_which_dependencies"></a>56.6. 依赖-哪些依赖？</h2>
+       <h4 class="title"><a name="sec:dependencies_which_dependencies"></a>56.6.&nbsp;Dependencies - Which dependencies?</h4>
+      </div>
+     </div>
+    </div>
+    <p>上一节的例子很特别，因为项目里没有<span class="emphasis"><em>执行依赖</em></span>。它们只有<span class="emphasis"><em>配置依赖</em></span>。下面是一个展示不同之处的例子： <br>The examples from the last section were special, as the projects had no <span class="emphasis"><em>Execution Dependencies</em></span>. They had only <span class="emphasis"><em>Configuration Dependencies</em></span>. Here is an example where this is different:</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sub:execution_time_dependencies"></a>56.6.1.&nbsp;执行依赖</h3>
+        <h5 class="title"><a name="sub:execution_time_dependencies"></a>56.6.1.&nbsp;Execution dependencies</h5>
+       </div>
+      </div>
+     </div>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="ssub:dependencies_and_execution_order"></a>56.6.1.1.&nbsp;依赖和执行顺序</h4>
+         <h6 class="title"><a name="ssub:dependencies_and_execution_order"></a>56.6.1.1.&nbsp;Dependencies and execution order</h6>
+        </div>
+       </div>
+      </div>
+      <div class="example">
+       <a name="multiprojectFirstMessages"></a>
+       <p class="title"><b>示例 56.14.&nbsp;依赖和执行顺序 - Example&nbsp;56.14.&nbsp;Dependencies and execution order</b></p>
+       <div class="example-contents">
+        <p>构建布局<br>Build layout</p>
+        <pre class="programlisting">messages/
   settings.gradle
   consumer/
     build.gradle
   producer/
-    build.gradle</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/dependencies/firstMessages/messages</code> which is in both the binary and source distributions of Gradle.</p></div><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'consumer'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'producer'</span></pre><p><code class="filename">consumer/build.gradle</code></p><pre class="programlisting">task action &lt;&lt; {
+    build.gradle</pre>
+        <div class="exampleLocation">
+         <p><span class="emphasis"><em>注︰</em> </span>此示例的代码可以在 Gradle 二进制和源码分发包的<code class="filename">samples/userguide/multiproject/dependencies/firstMessages/messages</code>中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/dependencies/firstMessages/messages</code> which is in both the binary and source distributions of Gradle.</p>
+        </div>
+        <p><code class="filename">settings.gradle</code></p>
+        <pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'consumer'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'producer'</span></pre>
+        <p><code class="filename">consumer/build.gradle</code></p>
+        <pre class="programlisting">task action &lt;&lt; {
     println(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Consuming message: ${rootProject.producerMessage}"</span>)
-}</pre><p><code class="filename">producer/build.gradle</code></p><pre class="programlisting">task action &lt;&lt; {
+}</pre>
+        <p><code class="filename">producer/build.gradle</code></p>
+        <pre class="programlisting">task action &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Producing message:"</span>
     rootProject.producerMessage = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Watch the order of execution.'</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle -q action</code></strong></p><pre class="screen">&gt; gradle -q action
+}</pre>
+        <p><strong class="userinput"><code>gradle -q action</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q action</code></strong></p>
+        <pre class="screen">&gt; gradle -q action
 Consuming message: null
-Producing message:</pre></div></div><br class="example-break"><p>This did not work out. If nothing else is defined, Gradle executes the task in alphanumeric order.
-                    Therefore
-                    <code class="literal">:consumer:action</code>
-                    is executed before <code class="literal">:producer:action</code>. Let's try to solve this with a hack and
-                    rename the producer project to <code class="literal">aProducer</code>.
-                </p><div class="example"><a name="multiprojectMessagesHack"></a><p class="title"><b>Example&nbsp;56.15.&nbsp;Dependencies and execution order</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">messages/
+Producing message:</pre>
+       </div>
+      </div>
+      <br class="example-break">
+      <p>它并没有成功。如果没有别的定义，Gradle 会按字母数字顺序执行该任务。因此<code class="literal">:consumer:action</code>会在<code class="literal">:producer:action</code>之前执行。让我们试着用一个技巧解决这个问题，并将生产者项目命名为<code class="literal">aProducer</code>。 <br>This did not work out. If nothing else is defined, Gradle executes the task in alphanumeric order. Therefore <code class="literal">:consumer:action</code> is executed before <code class="literal">:producer:action</code>. Let's try to solve this with a hack and rename the producer project to <code class="literal">aProducer</code>.</p>
+      <div class="example">
+       <a name="multiprojectMessagesHack"></a>
+       <p class="title"><b>示例 56.15.&nbsp;依赖和执行顺序 - Example&nbsp;56.15.&nbsp;Dependencies and execution order</b></p>
+       <div class="example-contents">
+        <p>构建布局<br>Build layout</p>
+        <pre class="programlisting">messages/
   settings.gradle
   aProducer/
     build.gradle
   consumer/
-    build.gradle</pre><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'consumer'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'aProducer'</span></pre><p><code class="filename">aProducer/build.gradle</code></p><pre class="programlisting">task action &lt;&lt; {
+    build.gradle</pre>
+        <p><code class="filename">settings.gradle</code></p>
+        <pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'consumer'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'aProducer'</span></pre>
+        <p><code class="filename">aProducer/build.gradle</code></p>
+        <pre class="programlisting">task action &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Producing message:"</span>
     rootProject.producerMessage = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Watch the order of execution.'</span>
-}</pre><p><code class="filename">consumer/build.gradle</code></p><pre class="programlisting">task action &lt;&lt; {
+}</pre>
+        <p><code class="filename">consumer/build.gradle</code></p>
+        <pre class="programlisting">task action &lt;&lt; {
     println(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Consuming message: ${rootProject.producerMessage}"</span>)
-}</pre><p>Output of <strong class="userinput"><code>gradle -q action</code></strong></p><pre class="screen">&gt; gradle -q action
+}</pre>
+        <p><strong class="userinput"><code>gradle -q action</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q action</code></strong></p>
+        <pre class="screen">&gt; gradle -q action
 Producing message:
-Consuming message: Watch the order of execution.</pre></div></div><br class="example-break"><p>Now we take the air out of this hack. We simply switch to the <code class="literal">consumer</code> dir and
-                    execute the build.
-                </p><div class="example"><a name="multiprojectMessagesHackBroken"></a><p class="title"><b>Example&nbsp;56.16.&nbsp;Dependencies and execution order</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q action</code></strong></p><pre class="screen">&gt; gradle -q action
-Consuming message: null</pre></div></div><br class="example-break"><p>For Gradle the two
-                    <code class="literal">action</code>
-                    tasks are just not related. If you execute the build from the
-                    <code class="literal">messages</code>
-                    project Gradle executes them both because they have the same name and they are down the hierarchy.
-                    In the last example only one
-                    <code class="literal">action</code>
-                    was down the hierarchy and therefore it was the only task that got executed. We need something
-                    better than this hack.
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ssub:declaring_dependencies"></a>56.6.1.2.&nbsp;Declaring dependencies</h4></div></div></div><div class="example"><a name="multiprojectMessagesDependencies"></a><p class="title"><b>Example&nbsp;56.17.&nbsp;Declaring dependencies</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">messages/
+Consuming message: Watch the order of execution.</pre>
+       </div>
+      </div>
+      <br class="example-break">
+      <p>现在我们来看这个技巧。我们简单地切换到<code class="literal">consumer</code>目录并执行构建。 <br>Now we take the air out of this hack. We simply switch to the <code class="literal">consumer</code> dir and execute the build.</p>
+      <div class="example">
+       <a name="multiprojectMessagesHackBroken"></a>
+       <p class="title"><b>示例 56.16.&nbsp;依赖和执行顺序 - Example&nbsp;56.16.&nbsp;Dependencies and execution order</b></p>
+       <div class="example-contents">
+        <p><strong class="userinput"><code>gradle -q action</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q action</code></strong></p>
+        <pre class="screen">&gt; gradle -q action
+Consuming message: null</pre>
+       </div>
+      </div>
+      <br class="example-break">
+      <p>对于 Gradle 而言，这两个<code class="literal">action</code>任务不相关。如果你从 <code class="literal">messages</code> 项目执行构建，Gradle 会执行它们两个，因为他们具有相同的名称，并且它们在该层次结构下。在上一个例子中只有一个<code class="literal">action</code>是在这个层次结构下，因此它是唯一一个被执行的任务。我们需要比这种技巧更好的实现。 <br>For Gradle the two <code class="literal">action</code> tasks are just not related. If you execute the build from the <code class="literal">messages</code> project Gradle executes them both because they have the same name and they are down the hierarchy. In the last example only one <code class="literal">action</code> was down the hierarchy and therefore it was the only task that got executed. We need something better than this hack.</p>
+     </div>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="ssub:declaring_dependencies"></a>56.6.1.2. 声明依赖</h4>
+         <h6 class="title"><a name="ssub:declaring_dependencies"></a>56.6.1.2.&nbsp;Declaring dependencies</h6>
+        </div>
+       </div>
+      </div>
+      <div class="example">
+       <a name="multiprojectMessagesDependencies"></a>
+       <p class="title"><b>示例 56.17. 声明依赖 - Example&nbsp;56.17.&nbsp;Declaring dependencies</b></p>
+       <div class="example-contents">
+        <p>构建布局<br>Build layout</p>
+        <pre class="programlisting">messages/
   settings.gradle
   consumer/
     build.gradle
   producer/
-    build.gradle</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/dependencies/messagesWithDependencies/messages</code> which is in both the binary and source distributions of Gradle.</p></div><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'consumer'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'producer'</span></pre><p><code class="filename">consumer/build.gradle</code></p><pre class="programlisting">task action(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":producer:action"</span>) &lt;&lt; {
+    build.gradle</pre>
+        <div class="exampleLocation">
+         <p><span class="emphasis"><em>注︰</em> </span>此示例的代码可以在 Gradle 二进制和源码分发包的<code class="filename">samples/userguide/multiproject/dependencies/messagesWithDependencies/messages</code>中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/dependencies/messagesWithDependencies/messages</code> which is in both the binary and source distributions of Gradle.</p>
+        </div>
+        <p><code class="filename">settings.gradle</code></p>
+        <pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'consumer'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'producer'</span></pre>
+        <p><code class="filename">consumer/build.gradle</code></p>
+        <pre class="programlisting">task action(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":producer:action"</span>) &lt;&lt; {
     println(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Consuming message: ${rootProject.producerMessage}"</span>)
-}</pre><p><code class="filename">producer/build.gradle</code></p><pre class="programlisting">task action &lt;&lt; {
+}</pre>
+        <p><code class="filename">producer/build.gradle</code></p>
+        <pre class="programlisting">task action &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Producing message:"</span>
     rootProject.producerMessage = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Watch the order of execution.'</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle -q action</code></strong></p><pre class="screen">&gt; gradle -q action
+}</pre>
+        <p><strong class="userinput"><code>gradle -q action</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q action</code></strong></p>
+        <pre class="screen">&gt; gradle -q action
 Producing message:
-Consuming message: Watch the order of execution.</pre></div></div><br class="example-break"><p>Running this from the <code class="literal">consumer</code> directory gives:</p><div class="example"><a name="multiprojectMessagesDependenciesSubBuild"></a><p class="title"><b>Example&nbsp;56.18.&nbsp;Declaring dependencies</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q action</code></strong></p><pre class="screen">&gt; gradle -q action
+Consuming message: Watch the order of execution.</pre>
+       </div>
+      </div>
+      <br class="example-break">
+      <p>从<code class="literal">consumer</code>目录运行如下：<br>Running this from the <code class="literal">consumer</code> directory gives:</p>
+      <div class="example">
+       <a name="multiprojectMessagesDependenciesSubBuild"></a>
+       <p class="title"><b>示例 56.18. 声明依赖 - Example&nbsp;56.18.&nbsp;Declaring dependencies</b></p>
+       <div class="example-contents">
+        <p><strong class="userinput"><code>gradle -q action</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q action</code></strong></p>
+        <pre class="screen">&gt; gradle -q action
 Producing message:
-Consuming message: Watch the order of execution.</pre></div></div><br class="example-break"><p>We have now declared that the
-                    <code class="literal">action</code> task in the <code class="literal">consumer</code>
-                    project has an
-                    <span class="emphasis"><em>execution dependency</em></span>
-                    on the <code class="literal">action</code> task on the
-                    <code class="literal">producer</code>
-                    project.
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="ssub:the_nature_of_cross_project_task_dependencies"></a>56.6.1.3.&nbsp;The nature of cross project task dependencies</h4></div></div></div><p>Of course, task dependencies across different projects are not limited to tasks with the same name.
-                    Let's change the naming of our tasks and execute the build.
-                </p><div class="example"><a name="multiprojectMessagesTaskDependencies"></a><p class="title"><b>Example&nbsp;56.19.&nbsp;Cross project task dependencies</b></p><div class="example-contents"><p><code class="filename">consumer/build.gradle</code></p><pre class="programlisting">task consume(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':producer:produce'</span>) &lt;&lt; {
+Consuming message: Watch the order of execution.</pre>
+       </div>
+      </div>
+      <br class="example-break">
+      <p>我们现在声明了<code class="literal">consumer</code>项目的<code class="literal">action</code>任务对<code class="literal">producer</code>项目上的<code class="literal">action</code>任务有<span class="emphasis"><em>执行依赖</em></span>。 <br>We have now declared that the <code class="literal">action</code> task in the <code class="literal">consumer</code> project has an <span class="emphasis"><em>execution dependency</em></span> on the <code class="literal">action</code> task on the <code class="literal">producer</code> project.</p>
+     </div>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="ssub:the_nature_of_cross_project_task_dependencies"></a>56.6.1.3.&nbsp;跨项目任务依赖的本质</h4>
+         <h6 class="title"><a name="ssub:the_nature_of_cross_project_task_dependencies"></a>56.6.1.3.&nbsp;The nature of cross project task dependencies</h6>
+        </div>
+       </div>
+      </div>
+      <p>当然，在不同项目之间的任务依赖并不限于具有相同名称的任务。让我们改变我们的任务的命名，执行构建。 <br>Of course, task dependencies across different projects are not limited to tasks with the same name. Let's change the naming of our tasks and execute the build.</p>
+      <div class="example">
+       <a name="multiprojectMessagesTaskDependencies"></a>
+       <p class="title"><b>56.19.&nbsp;跨项目任务依赖 - Example&nbsp;56.19.&nbsp;Cross project task dependencies</b></p>
+       <div class="example-contents">
+        <p><code class="filename">consumer/build.gradle</code></p>
+        <pre class="programlisting">task consume(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':producer:produce'</span>) &lt;&lt; {
     println(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Consuming message: ${rootProject.producerMessage}"</span>)
-}</pre><p><code class="filename">producer/build.gradle</code></p><pre class="programlisting">task produce &lt;&lt; {
+}</pre>
+        <p><code class="filename">producer/build.gradle</code></p>
+        <pre class="programlisting">task produce &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Producing message:"</span>
     rootProject.producerMessage = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Watch the order of execution.'</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle -q consume</code></strong></p><pre class="screen">&gt; gradle -q consume
+}</pre>
+        <p><strong class="userinput"><code>gradle -q consume</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q consume</code></strong></p>
+        <pre class="screen">-&gt; gradle -q action
 Producing message:
-Consuming message: Watch the order of execution.</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:configuration_time_dependencies"></a>56.6.2.&nbsp;Configuration time dependencies</h3></div></div></div><p>Let's have one more example with our producer-consumer build before we enter
-                <span class="emphasis"><em>Java</em></span>
-                land. We add a property to the producer project and create now a configuration time dependency from
-                consumer on producer.
-            </p><div class="example"><a name="multiprojectMessagesConfigDependenciesBroken"></a><p class="title"><b>Example&nbsp;56.20.&nbsp;Configuration time dependencies</b></p><div class="example-contents"><p><code class="filename">consumer/build.gradle</code></p><pre class="programlisting">message = rootProject.producerMessage
+Consuming message: Watch the order of execution.</pre>
+       </div>
+      </div>
+      <br class="example-break">
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sub:configuration_time_dependencies"></a>56.6.2.&nbsp;配置时依赖</h3>
+        <h5 class="title"><a name="sub:configuration_time_dependencies"></a>56.6.2.&nbsp;Configuration time dependencies</h5>
+       </div>
+      </div>
+     </div>
+     <p>让我们在进入<span class="emphasis"><em>Java</em></span>领域之前，有更多的生产者-消费者构建的例子。我们添加一个属性到生产者项目，并且在生产者上创建一个来自消费者的配置时依赖。 <br>Let's have one more example with our producer-consumer build before we enter <span class="emphasis"><em>Java</em></span> land. We add a property to the producer project and create now a configuration time dependency from consumer on producer.</p>
+     <div class="example">
+      <a name="multiprojectMessagesConfigDependenciesBroken"></a>
+      <p class="title"><b>示例 56.20.&nbsp;配置时依赖 - Example&nbsp;56.20.&nbsp;Configuration time dependencies</b></p>
+      <div class="example-contents">
+       <p><code class="filename">consumer/build.gradle</code></p>
+       <pre class="programlisting">message = rootProject.producerMessage
 
 task consume &lt;&lt; {
     println(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Consuming message: "</span> + message)
-}</pre><p><code class="filename">producer/build.gradle</code></p><pre class="programlisting">rootProject.producerMessage = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Watch the order of evaluation.'</span></pre><p>Output of <strong class="userinput"><code>gradle -q consume</code></strong></p><pre class="screen">&gt; gradle -q consume
-Consuming message: null</pre></div></div><br class="example-break"><p>The default
-                <span class="emphasis"><em>evaluation</em></span>
-                order of the projects is alphanumeric (for the same nesting level). Therefore the
-                <code class="literal">consumer</code>
-                project is evaluated before the
-                <code class="literal">producer</code>
-                project and the
-                <code class="literal">key</code>
-                value of the
-                <code class="literal">producer</code>
-                is set
-                <span class="emphasis"><em>after</em></span>
-                it is read by the
-                <code class="literal">consumer</code>
-                project. Gradle offers a solution for this.
-            </p><div class="example"><a name="multiprojectMessagesConfigDependencies"></a><p class="title"><b>Example&nbsp;56.21.&nbsp;Configuration time dependencies - evaluationDependsOn</b></p><div class="example-contents"><p><code class="filename">consumer/build.gradle</code></p><pre class="programlisting">evaluationDependsOn(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':producer'</span>)
+}</pre>
+       <p><code class="filename">producer/build.gradle</code></p>
+       <pre class="programlisting">rootProject.producerMessage = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Watch the order of evaluation.'</span></pre>
+       <p><strong class="userinput"><code>gradle -q consume</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q consume</code></strong></p>
+       <pre class="screen">&gt; gradle -q consume
+Consuming message: null</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>默认的项目<span class="emphasis"><em>评估</em></span>顺序是按字母数字（同一嵌套级别）。因此<code class="literal">consumer</code>项目评估会在<code class="literal">producer</code>项目之前，并且<code class="literal">producer</code>的<code class="literal">key</code>值在它被<code class="literal">consumer</code>项目读取<span class="emphasis"><em>后</em></span>设置。Gradle 为此提供了一个解决方案。 <br>The default <span class="emphasis"><em>evaluation</em></span> order of the projects is alphanumeric (for the same nesting level). Therefore the <code class="literal">consumer</code> project is evaluated before the <code class="literal">producer</code> project and the <code class="literal">key</code> value of the <code class="literal">producer</code> is set <span class="emphasis"><em>after</em></span> it is read by the <code class="literal">consumer</code> project. Gradle offers a solution for this.</p>
+     <div class="example">
+      <a name="multiprojectMessagesConfigDependencies"></a>
+      <p class="title"><b>示例 56.21. 配置时依赖——evaluationDependsOn - Example&nbsp;56.21.&nbsp;Configuration time dependencies - evaluationDependsOn</b></p>
+      <div class="example-contents">
+       <p><code class="filename">consumer/build.gradle</code></p>
+       <pre class="programlisting">evaluationDependsOn(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':producer'</span>)
 
 message = rootProject.producerMessage
 
 task consume &lt;&lt; {
     println(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Consuming message: "</span> + message)
-}</pre><p>Output of <strong class="userinput"><code>gradle -q consume</code></strong></p><pre class="screen">&gt; gradle -q consume
-Consuming message: Watch the order of evaluation.</pre></div></div><br class="example-break"><p>The command
-                <code class="literal">evaluationDependsOn</code>
-                triggers the evaluation of
-                <code class="literal">producer</code>
-                <span class="emphasis"><em>before</em></span>
-                <code class="literal">consumer</code>
-                is evaluated. The example is a bit contrived for the sake of showing the mechanism. In
-                <span class="emphasis"><em>this</em></span>
-                case there would be an easier solution by reading the key property at execution time.
-            </p><div class="example"><a name="multiprojectMessagesConfigDependenciesAltSolution"></a><p class="title"><b>Example&nbsp;56.22.&nbsp;Configuration time dependencies</b></p><div class="example-contents"><p><code class="filename">consumer/build.gradle</code></p><pre class="programlisting">task consume &lt;&lt; {
+}</pre>
+       <p><strong class="userinput"><code>gradle -q consume</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q consume</code></strong></p>
+       <pre class="screen">&gt; gradle -q consume
+Consuming message: Watch the order of evaluation.</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>命令<code class="literal">evaluationDependsOn</code>触发了<code class="literal">producer</code><span class="emphasis"><em>在</em></span><code class="literal">consumer</code>之前评估。该示例也有点有意展示这个机制。在<span class="emphasis"><em>这种</em></span>情况下，通过在执行时读key属性是一种更简单的解决方案。 <br>The command <code class="literal">evaluationDependsOn</code> triggers the evaluation of <code class="literal">producer</code> <span class="emphasis"><em>before</em></span> <code class="literal">consumer</code> is evaluated. The example is a bit contrived for the sake of showing the mechanism. In <span class="emphasis"><em>this</em></span> case there would be an easier solution by reading the key property at execution time.</p>
+     <div class="example">
+      <a name="multiprojectMessagesConfigDependenciesAltSolution"></a>
+      <p class="title"><b>示例 56.22.&nbsp;配置时依赖 - Example&nbsp;56.22.&nbsp;Configuration time dependencies</b></p>
+      <div class="example-contents">
+       <p><code class="filename">consumer/build.gradle</code></p>
+       <pre class="programlisting">task consume &lt;&lt; {
     println(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Consuming message: ${rootProject.producerMessage}"</span>)
-}</pre><p>Output of <strong class="userinput"><code>gradle -q consume</code></strong></p><pre class="screen">&gt; gradle -q consume
-Consuming message: Watch the order of evaluation.</pre></div></div><br class="example-break"><p>Configuration dependencies are very different to execution dependencies. Configuration dependencies
-                are between projects whereas execution dependencies are always resolved to task dependencies. Another
-                difference is that always all projects are configured, even when you start the build from a subproject.
-                The default configuration order is top down, which is usually what is needed.
-            </p><p>
-                To change the the default configuration order to be bottom up, That means that a project configuration
-                depends on the configuration of its child projects, the <code class="literal">evaluationDependsOnChildren()</code> method can be used.
-            </p><p>On the same nesting level the configuration order depends on the alphanumeric position. The most
-                common use case is to have multi-project builds that share a common lifecycle (e.g. all projects use the
-                Java plugin). If you declare with
-                <code class="literal">dependsOn</code>
-                a
-                <span class="emphasis"><em>execution dependency</em></span>
-                between different projects, the default behavior of this method is to create also a
-                <span class="emphasis"><em>configuration</em></span>
-                dependency between the two projects. Therefore it is likely that you don't have to define configuration
-                dependencies explicitly.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:real_life_examples"></a>56.6.3.&nbsp;Real life examples</h3></div></div></div><p>Gradle's multi-project features are driven by real life use cases. The first example for describing
-                such a use case, consists of two webapplication projects and a parent project that creates a
-                distribution out of them.
-                <sup>[<a href="#ftn.N162AF" name="N162AF" class="footnote">21</a>]</sup>
-                For the example we use only one build script and do <span class="emphasis"><em>cross project configuration</em></span>.
-            </p><div class="example"><a name="webdist"></a><p class="title"><b>Example&nbsp;56.23.&nbsp;Dependencies - real life example - crossproject configuration</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">webDist/
+}</pre>
+       <p><strong class="userinput"><code>gradle -q consume</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q consume</code></strong></p>
+       <pre class="screen">&gt; gradle -q consume
+Consuming message: Watch the order of evaluation.</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>配置依赖与执行依赖有很大上的不同。配置依赖是项目之间的，而执行依赖总是被解析为任务依赖。另一个区别是，所有的项目都总是被配置，即使你是从子项目开始构建的。默认的配置顺序是通常所需要的从顶至下的顺序。 <br>Configuration dependencies are very different to execution dependencies. Configuration dependencies are between projects whereas execution dependencies are always resolved to task dependencies. Another difference is that always all projects are configured, even when you start the build from a subproject. The default configuration order is top down, which is usually what is needed.</p>
+     <p> 如果要把默认配置的顺序改为从下到上，这意味着项目配置将会依赖于它的子项目的配置，可以使用<code class="literal">evaluationDependsOnChildren()</code>方法。 <br>To change the the default configuration order to be bottom up, That means that a project configuration depends on the configuration of its child projects, the <code class="literal">evaluationDependsOnChildren()</code> method can be used.</p>
+     <p>如果是相同的嵌套级别，则配置顺序取决于字母数字的位置。最常见的用例是，要分享共同的生命周期（例如所有项目都使用 Java 插件） 的多项目构建。如果你通过<code class="literal">dependsOn</code>声明了不同的项目之间的<span class="emphasis"><em>执行依赖</em></span>，该方法的默认行为也会创建这两个项目之间的<span class="emphasis"><em>配置</em></span>依赖。因此，很可能你不需要显式地定义配置依赖。 <br>On the same nesting level the configuration order depends on the alphanumeric position. The most common use case is to have multi-project builds that share a common lifecycle (e.g. all projects use the Java plugin). If you declare with <code class="literal">dependsOn</code> a <span class="emphasis"><em>execution dependency</em></span> between different projects, the default behavior of this method is to create also a <span class="emphasis"><em>configuration</em></span> dependency between the two projects. Therefore it is likely that you don't have to define configuration dependencies explicitly.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sub:real_life_examples"></a>56.6.3.&nbsp;实际生活中的例子</h3>
+        <h5 class="title"><a name="sub:real_life_examples"></a>56.6.3.&nbsp;Real life examples</h5>
+       </div>
+      </div>
+     </div>
+     <p>Gradle 的多项目特性是由现实生活中的用例所驱动的。第一个例子用于描述这种使用情况，包括两个 webapplication 项目，以及创建了它们的分布情况的父项目。<sup>[<a href="#ftn.N162AF" name="N162AF" class="footnote">21</a>]</sup> 对于这个例子，我们仅使用了一个构建脚本，并且进行了<span class="emphasis"><em>跨项目的配置</em></span>。 <br>Gradle's multi-project features are driven by real life use cases. The first example for describing such a use case, consists of two webapplication projects and a parent project that creates a distribution out of them. <sup>[<a href="#ftn.N162AF" name="N162AF" class="footnote">21</a>]</sup> For the example we use only one build script and do <span class="emphasis"><em>cross project configuration</em></span>.</p>
+     <div class="example">
+      <a name="webdist"></a>
+      <p class="title"><b>示例 56.23. 依赖——真实生活中的例子——跨项目配置 - Example&nbsp;56.23.&nbsp;Dependencies - real life example - crossproject configuration</b></p>
+      <div class="example-contents">
+       <p>构建布局<br>Build layout</p>
+       <pre class="programlisting">webDist/
   settings.gradle
   build.gradle
   date/
@@ -422,7 +812,14 @@ Consuming message: Watch the order of evaluation.</pre></div></div><br class="ex
   hello/
     src/main/java/
       org/gradle/sample/
-        HelloServlet.java</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/dependencies/webDist</code> which is in both the binary and source distributions of Gradle.</p></div><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'date'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span></pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">allprojects {
+        HelloServlet.java</pre>
+       <div class="exampleLocation">
+        <p><span class="emphasis"><em>注︰</em> </span>此示例的代码可以在 Gradle 二进制和源码分发包的<code class="filename">samples/userguide/multiproject/dependencies/webDist/messages</code>中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/dependencies/webDist</code> which is in both the binary and source distributions of Gradle.</p>
+       </div>
+       <p><code class="filename">settings.gradle</code></p>
+       <pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'date'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span></pre>
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">allprojects {
     apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
     group = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample'</span>
     version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>
@@ -448,37 +845,30 @@ task explodedDist(dependsOn: assemble) &lt;&lt; {
             }
         }
     }
-}</pre></div></div><br class="example-break"><p>We have an interesting set of dependencies. Obviously the
-                <code class="literal">date</code>
-                and
-                <code class="literal">hello</code>
-                projects have a
-                <span class="emphasis"><em>configuration</em></span>
-                dependency on <code class="literal">webDist</code>, as all the build logic for the webapp projects is injected by
-                <code class="literal">webDist</code>. The
-                <span class="emphasis"><em>execution</em></span>
-                dependency is in the other direction, as
-                <code class="literal">webDist</code>
-                depends on the build artifacts of
-                <code class="literal">date</code>
-                and <code class="literal">hello</code>. There is even a third dependency.
-                <code class="literal">webDist</code>
-                has a
-                <span class="emphasis"><em>configuration</em></span>
-                dependency on
-                <code class="literal">date</code>
-                and
-                <code class="literal">hello</code>
-                because it needs to know the <code class="literal">archivePath</code>. But it asks for this information at
-                <span class="emphasis"><em>execution time</em></span>. Therefore we have no circular dependency.
-            </p><p>Such and other dependency patterns are daily bread in the problem space of multi-project builds. If a
-                build system does not support such patterns, you either can't solve your problem or you need to do ugly
-                hacks which are hard to maintain and massively afflict your productivity as a build master.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:project_jar_dependencies"></a>56.7.&nbsp;Project lib dependencies</h2></div></div></div><p>What if one projects needs the jar produced by another project in its compile path? And not just the jar
-            but also the transitive dependencies of this jar? Obviously this is a very common use case for Java
-            multi-project builds. As already mentioned in <a class="xref" href="dependency_management.html#sub:project_dependencies">Section&nbsp;50.4.3, &ldquo;Project dependencies&rdquo;</a>, Gradle
-            offers project lib dependencies for this.
-        </p><div class="example"><a name="javadependencies_1"></a><p class="title"><b>Example&nbsp;56.24.&nbsp;Project lib dependencies</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">java/
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>我们有一套有意思的依赖。很明显，<code class="literal">date</code> 和 <code class="literal">hello</code> 都有一个 <span class="emphasis"><em>配置</em></span> 依赖于 <code class="literal">webDist</code>，作为webapp项目的所有构建逻辑都被<code class="literal">webDist</code>注入了。<span class="emphasis"><em>执行</em></span>依赖则是另一个方面，因为<code class="literal">webDist</code>依赖于<code class="literal">date</code> 和 <code class="literal">hello</code>所构建的构件。这里甚至有第三个依赖。<code class="literal">webDist</code>有一个<span class="emphasis"><em>配置</em></span> 依赖于 <code class="literal">date</code> 和 <code class="literal">hello</code>，因为它需要知道 <code class="literal">archivePath</code>。但它在<span class="emphasis"><em>执行时</em></span>才需要这些信息。因此，我们没有循环依赖。 <br>We have an interesting set of dependencies. Obviously the <code class="literal">date</code> and <code class="literal">hello</code> projects have a <span class="emphasis"><em>configuration</em></span> dependency on <code class="literal">webDist</code>, as all the build logic for the webapp projects is injected by <code class="literal">webDist</code>. The <span class="emphasis"><em>execution</em></span> dependency is in the other direction, as <code class="literal">webDist</code> depends on the build artifacts of <code class="literal">date</code> and <code class="literal">hello</code>. There is even a third dependency. <code class="literal">webDist</code> has a <span class="emphasis"><em>configuration</em></span> dependency on <code class="literal">date</code> and <code class="literal">hello</code> because it needs to know the <code class="literal">archivePath</code>. But it asks for this information at <span class="emphasis"><em>execution time</em></span>. Therefore we have no circular dependency.</p>
+     <p>在多项目构建中，这样或其他的依赖模式是很常见的。如果一个构建系统不支持这种模式，你就不能解决你的问题，或者你需要用一些恶心的 hack方法，这样就会很难维护，并且非常影响你的生产力。 <br>Such and other dependency patterns are daily bread in the problem space of multi-project builds. If a build system does not support such patterns, you either can't solve your problem or you need to do ugly hacks which are hard to maintain and massively afflict your productivity as a build master.</p>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:project_jar_dependencies"></a>56.7.&nbsp;项目库依赖</h2>
+       <h4 class="title"><a name="sec:project_jar_dependencies"></a>56.7.&nbsp;Project lib dependencies</h4>
+      </div>
+     </div>
+    </div>
+    <p>可能会出现，一个项目在它的编译路径中需要由另一个项目所输出的jar包？并且，不止是这个jar包，还包括了它的传递依赖？显示，对于Java 多项目构建当中，这是很常见的情况。<a class="xref" href="dependency_management.html#sub:project_dependencies">第50.4.3节，“项目依赖”</a>中已经提到，Gradle 为此提供了项目库依赖。 <br>What if one projects needs the jar produced by another project in its compile path? And not just the jar but also the transitive dependencies of this jar? Obviously this is a very common use case for Java multi-project builds. As already mentioned in <a class="xref" href="dependency_management.html#sub:project_dependencies">Section&nbsp;50.4.3, “Project dependencies”</a>, Gradle offers project lib dependencies for this.</p>
+    <div class="example">
+     <a name="javadependencies_1"></a>
+     <p class="title"><b>56.24.&nbsp;项目库依赖 - Example&nbsp;56.24.&nbsp;Project lib dependencies</b></p>
+     <div class="example-contents">
+      <p>构建布局<br>Build layout</p>
+      <pre class="programlisting">java/
   settings.gradle
   build.gradle
   api/
@@ -499,11 +889,22 @@ task explodedDist(dependsOn: assemble) &lt;&lt; {
   shared/
     src/main/java/
       org/gradle/sample/shared/
-        Helper.java</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/dependencies/java</code> which is in both the binary and source distributions of Gradle.</p></div></div></div><br class="example-break"><p>We have the projects <code class="literal">shared</code>, <code class="literal">api</code> and<code class="literal">personService</code>.
-            <code class="literal">personService</code> has a lib dependency on the other two projects. <code class="literal">api</code>
-            has a lib dependency on <code class="literal">shared</code>.
-            <sup>[<a href="#ftn.N16335" name="N16335" class="footnote">22</a>]</sup>
-        </p><div class="example"><a name="javadependencies_2"></a><p class="title"><b>Example&nbsp;56.25.&nbsp;Project lib dependencies</b></p><div class="example-contents"><p><code class="filename">settings.gradle</code></p><pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'api'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'shared'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'services:personService'</span></pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">subprojects {
+        Helper.java</pre>
+      <div class="exampleLocation">
+       <p><span class="emphasis"><em>注︰</em> </span>此示例的代码可以在 Gradle 二进制和源码分发包的<code class="filename">samples/userguide/multiproject/dependencies/java/messages</code>中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/multiproject/dependencies/java</code> which is in both the binary and source distributions of Gradle.</p>
+      </div>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>我们有这些项目： <code class="literal">shared</code>， <code class="literal">api</code> 和<code class="literal">personService</code>。<code class="literal">personService</code> 对其他两个项目有一个库依赖。<code class="literal">api</code> 对 <code class="literal">shared</code>有一个库依赖。<sup>[<a href="#ftn.N16335" name="N16335" class="footnote">22</a>]</sup> <br>We have the projects <code class="literal">shared</code>, <code class="literal">api</code> and<code class="literal">personService</code>. <code class="literal">personService</code> has a lib dependency on the other two projects. <code class="literal">api</code> has a lib dependency on <code class="literal">shared</code>. <sup>[<a href="#ftn.N16335" name="N16335" class="footnote">22</a>]</sup></p>
+    <div class="example">
+     <a name="javadependencies_2"></a>
+     <p class="title"><b>示例 56.25.&nbsp;项目库依赖 - Example&nbsp;56.25.&nbsp;Project lib dependencies</b></p>
+     <div class="example-contents">
+      <p><code class="filename">settings.gradle</code></p>
+      <pre class="programlisting">include <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'api'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'shared'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'services:personService'</span></pre>
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">subprojects {
     apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
     group = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample'</span>
     version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>
@@ -525,22 +926,18 @@ project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':services:p
     dependencies {
         compile project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':shared'</span>), project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':api'</span>)
     }
-}</pre></div></div><br class="example-break"><p>All the build logic is in the
-            <code class="literal">build.gradle</code> of the root project.
-            <sup>[<a href="#ftn.N16351" name="N16351" class="footnote">23</a>]</sup>
-            A <span class="emphasis"><em>lib</em></span>
-            dependency is a special form of an execution dependency. It causes the other project to be built first and
-            adds the jar with the classes of the other project to the classpath. It also adds the dependencies of the
-            other project to the classpath. So you can enter the
-            <code class="literal">api</code>
-            directory and trigger a <strong class="userinput"><code>gradle compile</code></strong>. First
-            <code class="literal">shared</code>
-            is built and then
-            <code class="literal">api</code>
-            is built. Project dependencies enable partial multi-project builds.
-        </p><p>If you come from Maven land you might be perfectly happy with this. If you come from Ivy land, you might
-            expect some more fine grained control. Gradle offers this to you:
-        </p><div class="example"><a name="javaWithCustomConf"></a><p class="title"><b>Example&nbsp;56.26.&nbsp;Fine grained control over dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">subprojects {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>所有的构建逻辑都在根项目的<code class="literal">build.gradle</code>中。<sup>[<a href="#ftn.N16351" name="N16351" class="footnote">23</a>]</sup> 一个 <span class="emphasis"><em>lib</em></span> 依赖是一种特殊形式的执行依赖。它使其他项目先构建，并把其他项目的生成的 jar 文件添加到类路径中。它也把其他项目的依赖添加到类路径中。所以你可以进入<code class="literal">api</code>目录并触发<strong class="userinput"><code>gradle compile</code></strong>。首先会先构建<code class="literal">shared</code>，然后构建<code class="literal">api</code> 。项目依赖项启用了部分的多项目构建。 <br>All the build logic is in the <code class="literal">build.gradle</code> of the root project. <sup>[<a href="#ftn.N16351" name="N16351" class="footnote">23</a>]</sup> A <span class="emphasis"><em>lib</em></span> dependency is a special form of an execution dependency. It causes the other project to be built first and adds the jar with the classes of the other project to the classpath. It also adds the dependencies of the other project to the classpath. So you can enter the <code class="literal">api</code> directory and trigger a <strong class="userinput"><code>gradle compile</code></strong>. First <code class="literal">shared</code> is built and then <code class="literal">api</code> is built. Project dependencies enable partial multi-project builds.</p>
+    <p>如果你是从Maven中转过来的，那么你会对这一点很满意。如果你是从Ivy转过来的，你可能想要一些更细粒度的控制。Gradle 也向你提供了这种更细粒度的控制： <br>If you come from Maven land you might be perfectly happy with this. If you come from Ivy land, you might expect some more fine grained control. Gradle offers this to you:</p>
+    <div class="example">
+     <a name="javaWithCustomConf"></a>
+     <p class="title"><b>示例 56.26. 对依赖的细粒度的控制 - Example&nbsp;56.26.&nbsp;Fine grained control over dependencies</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">subprojects {
     apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
     group = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample'</span>
     version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0'</span>
@@ -570,69 +967,85 @@ project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':services:p
         compile project(path: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':api'</span>, configuration: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'spi'</span>)
         testCompile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"junit:junit:4.11"</span>, project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':api'</span>)
     }
-}</pre></div></div><br class="example-break"><p>The Java plugin adds per default a jar to your project libraries which contains all the classes. In this
-            example we create an
-            <span class="emphasis"><em>additional</em></span>
-            library containing only the interfaces of the
-            <code class="literal">api</code>
-            project. We assign this library to a new <span class="emphasis"><em>dependency configuration</em></span>. For the person
-            service we declare that the project should be compiled only against the
-            <code class="literal">api</code>
-            interfaces but tested with all classes from <code class="literal">api</code>.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="disable_dependency_projects"></a>56.7.1.&nbsp;Disabling the build of dependency projects</h3></div></div></div><p>Sometimes you don't want depended on projects to be built when doing a partial build.
-                To disable the build of the depended on projects you can run Gradle with the <code class="code">-a</code> option.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:parallel_execution"></a>56.8.&nbsp;Parallel project execution</h2></div></div></div><p>With more and more CPU cores available on developer desktops and CI servers,
-            it is important that Gradle is able to fully utilise these processing resources.
-            More specifically, the parallel execution attempts to:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Reduce total build time for a multi-project build where execution is IO bound or otherwise does not consume all available CPU resources.</li><li class="listitem">Provide faster feedback for execution of small projects without awaiting completion of other projects.</li></ul></div><p>
-            Although Gradle already offers parallel test execution via <a class="ulink" href="../javadoc/org/gradle/api/tasks/testing/Test.html#setMaxParallelForks(int)" target="_top"><code class="classname">Test.setMaxParallelForks()</code></a>
-            the feature described in this section is parallel execution at a project level.
-            Parallel execution is an incubating feature. Please use it and let us know how it works for you.
-        </p><p>
-            Parallel project execution allows the separate projects in a decoupled multi-project build to be executed in parallel
-            (see also: <a class="xref" href="multi_project_builds.html#sec:decoupled_projects">Section&nbsp;56.9, &ldquo;Decoupled Projects&rdquo;</a>).
-            While parallel execution does not strictly require decoupling at configuration time,
-            the long-term goal is to provide a powerful set of features that will be available for fully decoupled projects.
-            Such features include:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><a class="xref" href="multi_project_builds.html#sec:configuration_on_demand">Section&nbsp;56.1.1.1, &ldquo;Configuration on demand&rdquo;</a>.</li><li class="listitem">Configuration of projects in parallel.</li><li class="listitem">Re-use of configuration for unchanged projects.</li><li class="listitem">Project-level up-to-date checks.</li><li class="listitem">Using pre-built artifacts in the place of building dependent projects.</li></ul></div><p>
-        </p><p>
-            How does the parallel execution work? First, you need to tell Gradle to use the parallel mode.
-            You can use the command line argument (<a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>) or configure your build environment (<a class="xref" href="build_environment.html#sec:gradle_configuration_properties">Section&nbsp;20.1, &ldquo;Configuring the build environment via gradle.properties&rdquo;</a>).
-            Unless you provide specific number of parallel threads Gradle attempts to choose the right number based on available CPU cores.
-            Every parallel worker exclusively owns a given project while executing a task.
-            This means that 2 tasks from the same project are never executed in parallel.
-            Therefore only multi-project builds can take advantage of parallel execution.
-            Task dependencies are fully supported and parallel workers will start executing upstream tasks first.
-            Bear in mind that the alphabetical scheduling of decoupled tasks, known from the sequential execution, does not really work in parallel mode.
-            You need to make sure the task dependencies are declared correctly to avoid ordering issues.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:decoupled_projects"></a>56.9.&nbsp;Decoupled Projects</h2></div></div></div><p>Gradle allows any project to access any other project during both the configuration and execution phases. While this provides a great deal of power
-            and flexibility to the build author, it also limits the flexibility that Gradle has when building those projects. For instance, this tight <span class="emphasis"><em>coupling</em></span> of projects
-            effectively prevents Gradle from building multiple projects in parallel, or from substituting a pre-built artifact in place of a project dependency.
-        </p><p>Two projects are said to be <span class="emphasis"><em>decoupled</em></span> if they do not directly access each other's project model. Decoupled projects may only interact in terms of
-            declared dependencies: project dependencies (<a class="xref" href="dependency_management.html#sub:project_dependencies">Section&nbsp;50.4.3, &ldquo;Project dependencies&rdquo;</a>) and/or task dependencies (<a class="xref" href="tutorial_using_tasks.html#sec:task_dependencies">Section&nbsp;6.5, &ldquo;Task dependencies&rdquo;</a>).
-            Any other form of project interaction (i.e. by modifying another project object or by reading a value from another project object) causes the projects to
-            be coupled.
-        </p><p>
-            A very common way for projects to be coupled is by using configuration injection (<a class="xref" href="multi_project_builds.html#sec:cross_project_configuration">Section&nbsp;56.1, &ldquo;Cross project configuration&rdquo;</a>). It may not be immediately apparent, but using key
-            Gradle features like the <code class="literal">allprojects</code> and <code class="literal">subprojects</code> keywords automatically cause your projects to be coupled. This is
-            because these keywords are used in a <code class="literal">build.gradle</code> file, which defines a project. Often this is a "root project" that does nothing more than
-            define common configuration, but as far as Gradle is concerned this root project is still a fully-fledged project, and by using <code class="literal">allprojects</code>
-            that project is effectively coupled to all other projects.
-        </p><p>This means that using any form of shared build script logic or configuration injection (<code class="literal">allprojects</code>, <code class="literal">subprojects</code>, etc.)
-            will cause your projects to be coupled. As we extend the concept of project decoupling and provide features that take advantage of decoupled projects,
-            we will also introduce new features to help you to solve common use cases (like configuration injection) without causing your projects to be coupled.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:multiproject_build_and_test"></a>56.10.&nbsp;Multi-Project Building and Testing</h2></div></div></div><p>The <code class="literal">build</code> task of the Java plugin is typically used to compile, test, and perform
-            code style checks (if the CodeQuality plugin is used) of a single project.  In multi-project builds
-            you may often want to do all of these tasks across a range of projects.  The <code class="literal">buildNeeded</code>
-            and <code class="literal">buildDependents</code> tasks can help with this.
-        </p><p>Let's use the project structure shown in <a class="xref" href="multi_project_builds.html#javadependencies_2" title="Example&nbsp;56.25.&nbsp;Project lib dependencies">Example&nbsp;56.25, &ldquo;Project lib dependencies&rdquo;</a>.  In this
-            example :services:personservice depends on both :api and :shared.  The :api project also depends on
-            :shared.
-        </p><p>Assume you are working on a single project, the :api project.  You have been making changes, but
-            have not built the entire project since performing a clean.  You want to build any necessary supporting
-            jars, but only perform code quality and unit tests on the project you have changed.
-            The <code class="literal">build</code> task does this.
-        </p><div class="example"><a name="multitestingBuild"></a><p class="title"><b>Example&nbsp;56.27.&nbsp;Build and Test Single Project</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle :api:build</code></strong></p><pre class="screen">&gt; gradle :api:build
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>Java 插件向你的项目的每个库添加了一个默认的jar，它包含了所有类。在这个示例中，我们创建了一个<span class="emphasis"><em>额外的</em></span>的库，它只包含<code class="literal">api</code>项目的接口。我们将这个库指定给一个新的<span class="emphasis"><em>依赖配置</em></span>。对于 person service，我们定义了这个项目应该仅针对<code class="literal">api</code> 接口编译，但是对<code class="literal">api</code>里的所有类进行测试。 <br>The Java plugin adds per default a jar to your project libraries which contains all the classes. In this example we create an <span class="emphasis"><em>additional</em></span> library containing only the interfaces of the <code class="literal">api</code> project. We assign this library to a new <span class="emphasis"><em>dependency configuration</em></span>. For the person service we declare that the project should be compiled only against the <code class="literal">api</code> interfaces but tested with all classes from <code class="literal">api</code>.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="disable_dependency_projects"></a>56.7.1.&nbsp;禁止依赖项目的构建</h3>
+        <h5 class="title"><a name="disable_dependency_projects"></a>56.7.1.&nbsp;Disabling the build of dependency projects</h5>
+       </div>
+      </div>
+     </div>
+     <p>有时候，在做局部构建时，你不想依赖的项目也进行构建。如果要禁止依赖项目的构建，你可以使用<code class="code">-a</code> 选项运行 Gradle。 <br>Sometimes you don't want depended on projects to be built when doing a partial build. To disable the build of the depended on projects you can run Gradle with the <code class="code">-a</code> option.</p>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:parallel_execution"></a>56.8.&nbsp;并行项目执行</h2>
+       <h4 class="title"><a name="sec:parallel_execution"></a>56.8.&nbsp;Parallel project execution</h4>
+      </div>
+     </div>
+    </div>
+    <p>随着在开发人员的台式机和CI服务器上，有越来越多的CPU内核可用，Gradle 能够充分利用这些处理资源就很重要。更具体地说，并行执行尝试︰ <br>With more and more CPU cores available on developer desktops and CI servers, it is important that Gradle is able to fully utilise these processing resources. More specifically, the parallel execution attempts to:</p>
+    <div class="itemizedlist">
+     <ul class="itemizedlist">
+      <li class="listitem">通过让执行进行IO绑定，或者是其他不消耗所有可用资源的方式，减少多项目构建 的总构建时间<br>Reduce total build time for a multi-project build where execution is IO bound or otherwise does not consume all available CPU resources.</li>
+      <li class="listitem">对于一些小项目的执行，提供更快的反馈，而不必等待其他项目的完成。<br>Provide faster feedback for execution of small projects without awaiting completion of other projects.</li>
+     </ul>
+    </div>
+    <p> 虽然 Gradle 已经通过<a class="ulink" href="../javadoc/org/gradle/api/tasks/testing/Test.html#setMaxParallelForks(int)" target="_top"><code class="classname">Test.setMaxParallelForks()</code></a>提供了并行执行，本节所描述的这个功能是在项目级别上的并行执行。并行执行仍是一个孵化中的功能。请使用它，并且让我们知道它是帮助你的。 <br>Although Gradle already offers parallel test execution via <a class="ulink" href="../javadoc/org/gradle/api/tasks/testing/Test.html#setMaxParallelForks(int)" target="_top"><code class="classname">Test.setMaxParallelForks()</code></a> the feature described in this section is parallel execution at a project level. Parallel execution is an incubating feature. Please use it and let us know how it works for you.</p>
+    <p> 并行项目执行允许在一个解耦的多项目构建中的一些单独的项目被并行执行（参见︰<a class="xref" href="multi_project_builds.html#sec:decoupled_projects">第 56.9节，“解耦项目”</a>）。而并行执行并不严格要求在配置时解耦，它的长期目标是提供一套强大的可用于全解耦的项目的功能。这些功能包括︰ <br>Parallel project execution allows the separate projects in a decoupled multi-project build to be executed in parallel (see also: <a class="xref" href="multi_project_builds.html#sec:decoupled_projects">Section&nbsp;56.9, “Decoupled Projects”</a>). While parallel execution does not strictly require decoupling at configuration time, the long-term goal is to provide a powerful set of features that will be available for fully decoupled projects. Such features include:</p>
+    <div class="itemizedlist">
+     <ul class="itemizedlist">
+      <li class="listitem"><a class="xref" href="multi_project_builds.html#sec:configuration_on_demand">第 56.1.1.1 节，“按需配置”</a>。<br><a class="xref" href="multi_project_builds.html#sec:configuration_on_demand">Section&nbsp;56.1.1.1, “Configuration on demand”</a>.</li>
+      <li class="listitem">并行的项目配置。<br>Configuration of projects in parallel.</li>
+      <li class="listitem">对于不变的项目复用配置。<br>Re-use of configuration for unchanged projects.</li>
+      <li class="listitem">项目级别的 up-to-date 检查。<br>Project-level up-to-date checks.</li>
+      <li class="listitem">在构建依赖项目时使用预构建的构件。<br>Using pre-built artifacts in the place of building dependent projects.</li>
+     </ul>
+    </div>
+    <p> </p>
+    <p> 并行执行是怎么做的？首先，你需要告诉 Gradle 使用并行模式。你可以使用命令行参数（<a class="xref" href="gradle_command_line.html">附录 D， <i>Gradle 命令行</i></a>），或者是配置你的构建环境（<a class="xref" href="build_environment.html#sec:gradle_configuration_properties">第 20.1 节，“通过 gradle.properties 配置构建环境”</a>）。除非你提供了特定数量的并行线程，否则Gradle 将基于可用的 CPU 内核尝试选择正确的线程数。当执行一个任务时，每一个并行的worker都仅拥有一个给定的项目。这意味着同一个项目的两个任务都永远不会被执行。因此并行执行只对多项目构建有用。完全支持任务依赖，并且平行的workers将会首先开始执行上游的任务。记住，解耦的任务按字母顺序调度，并且这个顺序执行，而不是真的在并行模式下执行。你需要确保正确地声明任务，以避免排序的问题。 <br>How does the parallel execution work? First, you need to tell Gradle to use the parallel mode. You can use the command line argument (<a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>) or configure your build environment (<a class="xref" href="build_environment.html#sec:gradle_configuration_properties">Section&nbsp;20.1, “Configuring the build environment via gradle.properties”</a>). Unless you provide specific number of parallel threads Gradle attempts to choose the right number based on available CPU cores. Every parallel worker exclusively owns a given project while executing a task. This means that 2 tasks from the same project are never executed in parallel. Therefore only multi-project builds can take advantage of parallel execution. Task dependencies are fully supported and parallel workers will start executing upstream tasks first. Bear in mind that the alphabetical scheduling of decoupled tasks, known from the sequential execution, does not really work in parallel mode. You need to make sure the task dependencies are declared correctly to avoid ordering issues.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:decoupled_projects"></a>56.9.&nbsp;解耦的项目</h2>
+       <h4 class="title"><a name="sec:decoupled_projects"></a>56.9.&nbsp;Decoupled Projects</h4>
+      </div>
+     </div>
+    </div>
+    <p>Gradle 允许任何项目在配置和执行阶段访问其他项目。虽然这能为构建作者提供强大的功能和灵活性，但它也限制了在构建这些项目时Gradle 的灵活性。例如，紧<span class="emphasis"><em>耦合</em></span>的项目实际上会阻碍 Gradle 在多项目上的并行构建，或是使用预构建的构件来代替某个项目依赖。 <br>Gradle allows any project to access any other project during both the configuration and execution phases. While this provides a great deal of power and flexibility to the build author, it also limits the flexibility that Gradle has when building those projects. For instance, this tight <span class="emphasis"><em>coupling</em></span> of projects effectively prevents Gradle from building multiple projects in parallel, or from substituting a pre-built artifact in place of a project dependency.</p>
+    <p>如果两个项目不能直接访问彼此的项目模型，那么可以说它们是<span class="emphasis"><em>解耦的</em></span>。解耦的项目可能只在声明依赖方面会互相影响：项目依赖（<a class="xref" href="dependency_management.html#sub:project_dependencies">第&nbsp;50.4.3节, “项目依赖”</a>）， 或者是任务依赖（<a class="xref" href="tutorial_using_tasks.html#sec:task_dependencies">第&nbsp;6.5节, “任务依赖”</a>）。任何其他形式的项目交互（即通过修改另一个project对象或从另一个项目对象中读取值）将会导致项目的耦合。 <br>Two projects are said to be <span class="emphasis"><em>decoupled</em></span> if they do not directly access each other's project model. Decoupled projects may only interact in terms of declared dependencies: project dependencies (<a class="xref" href="dependency_management.html#sub:project_dependencies">Section&nbsp;50.4.3, “Project dependencies”</a>) and/or task dependencies (<a class="xref" href="tutorial_using_tasks.html#sec:task_dependencies">Section&nbsp;6.5, “Task dependencies”</a>). Any other form of project interaction (i.e. by modifying another project object or by reading a value from another project object) causes the projects to be coupled.</p>
+    <p> 使项目之间耦合的一种很常的方式是使用配置注入（<a class="xref" href="multi_project_builds.html#sec:cross_project_configuration">第56.1节， “跨项目配置”</a>）。它可能不明显，但使用关键的 Gradle 特性，像<code class="literal">allprojects</code>和<code class="literal">subprojets</code>关键字会自动导致你的项目耦合。这是因为这些关键字在 <code class="literal">build.gradle</code> 文件中使用，而这个文件定义了一个project。通常这是一个“根项目”，除了定义常见的配置不执行任何操作，但对 Gradle 而言这个根项目仍然是一个成熟的项目，并且通过使用<code class="literal">allprojects</code>，该项目有效地与所有其他项目耦合。 <br>A very common way for projects to be coupled is by using configuration injection (<a class="xref" href="multi_project_builds.html#sec:cross_project_configuration">Section&nbsp;56.1, “Cross project configuration”</a>). It may not be immediately apparent, but using key Gradle features like the <code class="literal">allprojects</code> and <code class="literal">subprojects</code> keywords automatically cause your projects to be coupled. This is because these keywords are used in a <code class="literal">build.gradle</code> file, which defines a project. Often this is a "root project" that does nothing more than define common configuration, but as far as Gradle is concerned this root project is still a fully-fledged project, and by using <code class="literal">allprojects</code> that project is effectively coupled to all other projects.</p>
+    <p>这意味着，使用任何形式的共享构建脚本逻辑或配置注入（<code class="literal">allprojects</code>、<code class="literal">subprojects</code>等）会导致你的项目耦合。当我们扩大项目解耦的概念，并提供利用了解耦项目的功能，我们也将引入新的功能来帮助你解决常见的情况（如配置注入）而不会导致你的项目耦合。 <br>This means that using any form of shared build script logic or configuration injection (<code class="literal">allprojects</code>, <code class="literal">subprojects</code>, etc.) will cause your projects to be coupled. As we extend the concept of project decoupling and provide features that take advantage of decoupled projects, we will also introduce new features to help you to solve common use cases (like configuration injection) without causing your projects to be coupled.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:multiproject_build_and_test"></a>56.10.&nbsp;多项目构建和测试</h2>
+       <h4 class="title"><a name="sec:multiproject_build_and_test"></a>56.10.&nbsp;Multi-Project Building and Testing</h4>
+      </div>
+     </div>
+    </div>
+    <p>Java 插件的<code class="literal">build</code> 通常用于一个项目的编译，测试和执行代码风格检查（如果使用了CodeQuality插件的话）。在多项目构建中，你可能经常想跨多项目范围执行这些任务。<code class="literal">buildNeeded</code> 和 <code class="literal">buildDependents</code> 任务能帮你做到这一点。 <br>The <code class="literal">build</code> task of the Java plugin is typically used to compile, test, and perform code style checks (if the CodeQuality plugin is used) of a single project. In multi-project builds you may often want to do all of these tasks across a range of projects. The <code class="literal">buildNeeded</code> and <code class="literal">buildDependents</code> tasks can help with this.</p>
+    <p>让我们使用<a class="xref" href="multi_project_builds.html#javadependencies_2" title="示例 56.25.&nbsp;项目库依赖">示例 56.25，“项目库依赖”</a>中显示的项目结构。在这个例子中 :services:personservice 同时依赖于 :api 和 :shared。:api 项目还依赖于 :shared. <br>Let's use the project structure shown in <a class="xref" href="multi_project_builds.html#javadependencies_2" title="Example&nbsp;56.25.&nbsp;Project lib dependencies">Example&nbsp;56.25, “Project lib dependencies”</a>. In this example :services:personservice depends on both :api and :shared. The :api project also depends on :shared.</p>
+    <p>假设你在 :api 这一个项目上。你做了一些修改，但从执行clean以来还没有构建整个项目。你想要构建出所有必需的支持jar包，但只对这个你修改了的项目进行代码质量和单元测试。<code class="literal">build</code> 任务能做到这一点。 <br>Assume you are working on a single project, the :api project. You have been making changes, but have not built the entire project since performing a clean. You want to build any necessary supporting jars, but only perform code quality and unit tests on the project you have changed. The <code class="literal">build</code> task does this.</p>
+    <div class="example">
+     <a name="multitestingBuild"></a>
+     <p class="title"><b>示例 56.27. 构建和测试单个项目 - Example&nbsp;56.27.&nbsp;Build and Test Single Project</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle :api:build</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle :api:build</code></strong></p>
+      <pre class="screen">&gt; gradle :api:build
 :shared:compileJava
 :shared:processResources
 :shared:classes
@@ -651,12 +1064,21 @@ project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':services:p
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"><p>While you are working in a typical development cycle repeatedly building and testing changes to
-            the :api project (knowing that you are only changing files in this one project), you may not want to
-            even suffer the expense of :shared:compile checking to see what has changed in the :shared project.
-            Adding the <code class="literal">-a</code> option will cause Gradle to use cached jars to resolve any project lib
-            dependencies and not try to re-build the depended on projects.
-        </p><div class="example"><a name="multitestingBuildDashA"></a><p class="title"><b>Example&nbsp;56.28.&nbsp;Partial Build and Test Single Project</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -a :api:build</code></strong></p><pre class="screen">&gt; gradle -a :api:build
+Total time: 1 secs</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>当你在进行一个典型的开发周期的构建，或者是测试:api项目的修改（要知道你只修改了一个项目的文件），你可能不想经历:shared:compile 花费检查来看在:shared项目里修改了什么内容。添加<code class="literal">-a</code>选项会导致 Gradle 使用缓存的jar 来解决任何项目库依赖，并且不会尝试重新生构建所依赖的项目。 <br>While you are working in a typical development cycle repeatedly building and testing changes to the :api project (knowing that you are only changing files in this one project), you may not want to even suffer the expense of :shared:compile checking to see what has changed in the :shared project. Adding the <code class="literal">-a</code> option will cause Gradle to use cached jars to resolve any project lib dependencies and not try to re-build the depended on projects.</p>
+    <div class="example">
+     <a name="multitestingBuildDashA"></a>
+     <p class="title"><b>示例 56.28. 部分构建和测试单个项目 - Example&nbsp;56.28.&nbsp;Partial Build and Test Single Project</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle :api:build</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -a :api:build</code></strong></p>
+      <pre class="screen">-&gt; gradle :api:build
+:shared:compileJava
+:shared:processResources
+:shared:classes
+:shared:jar
 :api:compileJava
 :api:processResources
 :api:classes
@@ -671,11 +1093,17 @@ Total time: 1 secs</pre></div></div><br class="example-break"><p>While you are w
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"><p>If you have just gotten the latest version of source from your version control system which included changes
-            in other projects that :api depends on, you might want to not only build all the projects you depend on,
-            but test them as well. The <code class="literal">buildNeeded</code> task also tests all the projects from the
-            project lib dependencies of the testRuntime configuration.
-        </p><div class="example"><a name="multitestingBuildNeeded"></a><p class="title"><b>Example&nbsp;56.29.&nbsp;Build and Test Depended On Projects</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle :api:buildNeeded</code></strong></p><pre class="screen">&gt; gradle :api:buildNeeded
+Total time: 1 secs</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>如果你只是刚刚从你的版本控制系统中获取到最新的代码，它包含了:api依赖的其他项目的修改，你可能不只想构建所有你依赖的项目，还想对它们进行测试。<code class="literal">buildNeeded</code> 任务也用于测试这个项目在testRuntime配置中依赖的所有库项目。 <br>If you have just gotten the latest version of source from your version control system which included changes in other projects that :api depends on, you might want to not only build all the projects you depend on, but test them as well. The <code class="literal">buildNeeded</code> task also tests all the projects from the project lib dependencies of the testRuntime configuration.</p>
+    <div class="example">
+     <a name="multitestingBuildNeeded"></a>
+     <p class="title"><b>示例 56.29. 构建和测试被依赖的项目 - Example&nbsp;56.29.&nbsp;Build and Test Depended On Projects</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle: api:buildNeeded</code> </strong>的输出结果<br>Output of <strong class="userinput"><code>gradle :api:buildNeeded</code></strong></p>
+      <pre class="screen">&gt; gradle :api:buildNeeded
 :shared:compileJava
 :shared:processResources
 :shared:classes
@@ -703,12 +1131,17 @@ Total time: 1 secs</pre></div></div><br class="example-break"><p>If you have jus
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"><p>You also might want to refactor some part of the :api project that is used in other projects.
-            If you make these types of changes, it is not sufficient to test just the :api
-            project, you also need to test all projects that depend on the :api project.
-            The <code class="literal">buildDependents</code> task also tests all the projects that have a project lib dependency
-            (in the testRuntime configuration) on the specified project.
-        </p><div class="example"><a name="multitestingBuildDependents"></a><p class="title"><b>Example&nbsp;56.30.&nbsp;Build and Test Dependent Projects</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle :api:buildDependents</code></strong></p><pre class="screen">&gt; gradle :api:buildDependents
+Total time: 1 secs</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>你也可能想要重构:api 项目中一些被其他项目用到的内容。如果你做这一类的修改，只测试:api 项目并不足够，你还需要测试依赖于:api项目的所有项目。<code class="literal">buildDependents</code>任务也用于测试依赖于（在testRuntime配置）指定项目的所有项目。 <br>You also might want to refactor some part of the :api project that is used in other projects. If you make these types of changes, it is not sufficient to test just the :api project, you also need to test all projects that depend on the :api project. The <code class="literal">buildDependents</code> task also tests all the projects that have a project lib dependency (in the testRuntime configuration) on the specified project.</p>
+    <div class="example">
+     <a name="multitestingBuildDependents"></a>
+     <p class="title"><b>示例 56.30. 构建和测试依赖它的项目 - Example&nbsp;56.30.&nbsp;Build and Test Dependent Projects</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle :api:buildDependents</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle :api:buildDependents</code></strong></p>
+      <pre class="screen">&gt; gradle :api:buildDependents
 :shared:compileJava
 :shared:processResources
 :shared:classes
@@ -740,41 +1173,63 @@ Total time: 1 secs</pre></div></div><br class="example-break"><p>You also might 
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"><p>Finally, you may want to build and test everything in all projects. Any task you run in the root project folder
-        will cause that same named task to be run on all the children. So you can just run
-        <code class="literal">gradle build</code> to build and test all projects.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:property_and_method_inheritance"></a>56.11.&nbsp;Property and method inheritance</h2></div></div></div><p>Properties and methods declared in a project are inherited to all its subprojects. This is an alternative
-            to configuration injection. But we think that the model of inheritance does not reflect the problem space of
-            multi-project builds very well. In a future edition of this user guide we might write more about this.
-        </p><p>Method inheritance might be interesting to use as Gradle's
-            <span class="emphasis"><em>Configuration Injection</em></span>
-            does not support methods yet (but will in a future release).
-        </p><p>You might be wondering why we have implemented a feature we obviously don't like that much. One reason is
-            that it is offered by other tools and we want to have the check mark in a feature comparison :). And we like
-            to offer our users a choice.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N16445"></a>56.12.&nbsp;Summary</h2></div></div></div><p>Writing this chapter was pretty exhausting and reading it might have a similar effect. Our final message
-            for this chapter is that multi-project builds with Gradle are usually
-            <span class="emphasis"><em>not</em></span>
-            difficult. There are five elements you need to remember: <code class="literal">allprojects</code>, <code class="literal">
-            subprojects</code>, <code class="literal">evaluationDependsOn</code>, <code class="literal">evaluationDependsOnChildren</code>
-            and project lib dependencies.
-            <sup>[<a href="#ftn.N16459" name="N16459" class="footnote">24</a>]</sup>
-            With those elements, and keeping in mind that Gradle has a distinct configuration and execution phase, you
-            have already a lot of flexibility. But when you enter steep territory Gradle does not become an obstacle and
-            usually accompanies and carries you to the top of the mountain.
-        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N162AF" name="ftn.N162AF" class="para">21</a>] </sup>The real use case we had, was using <a class="ulink" href="http://lucene.apache.org/solr" target="_top">http://lucene.apache.org/solr</a>, where you
-                        need a separate war for each index you are accessing. That was one reason why we have created a
-                        distribution of webapps. The Resin servlet container allows us, to let such a distribution point
-                        to a base installation of the servlet container.
-                    </p></div><div class="footnote"><p><sup>[<a href="#N16335" name="ftn.N16335" class="para">22</a>] </sup>
-                    <code class="literal">services</code>
-                    is also a project, but we use it just as a container. It has no build script and gets nothing
-                    injected by another build script.
-                </p></div><div class="footnote"><p><sup>[<a href="#N16351" name="ftn.N16351" class="para">23</a>] </sup>We do this here, as it makes the layout a bit easier. We usually put the project specific stuff
-                    into the build script of the respective projects.
-                </p></div><div class="footnote"><p><sup>[<a href="#N16459" name="ftn.N16459" class="para">24</a>] </sup>So we are well in the range of the
-                    <a class="ulink" href="http://en.wikipedia.org/wiki/The_Magical_Number_Seven,_Plus_or_Minus_Two" target="_top">7 plus 2
-                        Rule
-                    </a>
-                    :)
-                </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="build_lifecycle.html" title="Chapter&nbsp;55.&nbsp;The Build Lifecycle">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="custom_tasks.html" title="Chapter&nbsp;57.&nbsp;Writing Custom Task Classes">Next</a></div></div></div></body></html>
+Total time: 1 secs</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>最后，你可能想要构建和测试所有项目的所有内容。你在根项目文件夹运行的任何项目，都会导致所有子项目的同名任务被运行。因此，你可以只执行<code class="literal">gradle build</code> 来构建和测试所有的项目。 <br>Finally, you may want to build and test everything in all projects. Any task you run in the root project folder will cause that same named task to be run on all the children. So you can just run <code class="literal">gradle build</code> to build and test all projects.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:property_and_method_inheritance"></a>56.11. 属性和方法的继承</h2>
+       <h4 class="title"><a name="sec:property_and_method_inheritance"></a>56.11.&nbsp;Property and method inheritance</h4>
+      </div>
+     </div>
+    </div>
+    <p>定义在一个项目里的属性和方法都会被继承到它所有的子项目中。这是配置注入的另一种方法。但我们认为，继承模型并不能好地反映多项目构建的问题。在本用户指南的未来版本中，我们可能会写一下与之有关的更多内容。 <br>Properties and methods declared in a project are inherited to all its subprojects. This is an alternative to configuration injection. But we think that the model of inheritance does not reflect the problem space of multi-project builds very well. In a future edition of this user guide we might write more about this.</p>
+    <p>方法继承可能值得使用，尽管 Gradle 的<span class="emphasis"><em>配置注射</em></span>还未支持方法（但会在以后的版本中支持的）。 <br>Method inheritance might be interesting to use as Gradle's <span class="emphasis"><em>Configuration Injection</em></span> does not support methods yet (but will in a future release).</p>
+    <p>你可能想知道，为什么我们要实现一个我们显然不喜欢做的功能。原因之一是其他工具也有这个功能，而我们想要在功能比较中有这一点。我们想为我们的用户提供一种选择。 <br>You might be wondering why we have implemented a feature we obviously don't like that much. One reason is that it is offered by other tools and we want to have the check mark in a feature comparison :). And we like to offer our users a choice.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N16445"></a>56.12.&nbsp;总结</h2>
+       <h4 class="title"><a name="N16445"></a>56.12.&nbsp;Summary</h4>
+      </div>
+     </div>
+    </div>
+    <p>写这一章相当耗费精力，可能你想起来也有同样的感受。我们对这一章最后要说的是，使用 Gradle 的多项目构建通常<span class="emphasis"><em>不会</em></span>很难。你需要记住的是五个元素：<code class="literal">allprojects</code>，<code class="literal"> subprojects</code>，<code class="literal">evaluationDependsOn</code>， <code class="literal">evaluationDependsOnChildren</code> 和项目库依赖。<sup>[<a href="#ftn.N16459" name="N16459" class="footnote">24</a>]</sup> 使用这些元素，并记住 Gradle 具有不同的配置和执行阶段，你就已经可以很灵活地使用它。当你进入一个陡峭的领域的时候，Gradle 不会成为你的障碍，并且通常会伴随着你并且带你到达峰顶。 <br>Writing this chapter was pretty exhausting and reading it might have a similar effect. Our final message for this chapter is that multi-project builds with Gradle are usually <span class="emphasis"><em>not</em></span> difficult. There are five elements you need to remember: <code class="literal">allprojects</code>, <code class="literal"> subprojects</code>, <code class="literal">evaluationDependsOn</code>, <code class="literal">evaluationDependsOnChildren</code> and project lib dependencies. <sup>[<a href="#ftn.N16459" name="N16459" class="footnote">24</a>]</sup> With those elements, and keeping in mind that Gradle has a distinct configuration and execution phase, you have already a lot of flexibility. But when you enter steep territory Gradle does not become an obstacle and usually accompanies and carries you to the top of the mountain.</p>
+   </div>
+   <div class="footnotes">
+    <br>
+    <hr align="left" width="100">
+    <div class="footnote">
+     <p><sup>[<a href="#N162AF" name="ftn.N162AF" class="para">21</a>] </sup>我们真正的使用情况，正使用<a class="ulink" href="http://lucene.apache.org/solr" target="_top">http://lucene.apache.org/solr</a>，在上面你所访问的每一个索引你都需要一个单独的war。这是为什么我们创建一个 webapps 分发包的原因之一。Resin servlet 容器能允许我们让这样的一个分发指向一个基本安装的servlet容器中。 <br><sup>[<a href="#N162AF" name="ftn.N162AF" class="para">21</a>] </sup>The real use case we had, was using <a class="ulink" href="http://lucene.apache.org/solr" target="_top">http://lucene.apache.org/solr</a>, where you need a separate war for each index you are accessing. That was one reason why we have created a distribution of webapps. The Resin servlet container allows us, to let such a distribution point to a base installation of the servlet container.</p>
+    </div>
+    <div class="footnote">
+     <p><sup>[<a href="#N16335" name="ftn.N16335" class="para">22</a>] </sup> <code class="literal">services</code> 也是一个项目，但我们只是把它用作一个容器。它没有构建脚本，并且其他项目也没有向它注入内容。 <br><sup>[<a href="#N16335" name="ftn.N16335" class="para">22</a>] </sup> <code class="literal">services</code> is also a project, but we use it just as a container. It has no build script and gets nothing injected by another build script.</p>
+    </div>
+    <div class="footnote">
+     <p><sup>[<a href="#N16351" name="ftn.N16351" class="para">23</a>] </sup>我们在这里实现，因为它可以使布局更容易。我们通常把项目的具体东西放到各自的项目的构建脚本里。 <br><sup>[<a href="#N16351" name="ftn.N16351" class="para">23</a>] </sup>We do this here, as it makes the layout a bit easier. We usually put the project specific stuff into the build script of the respective projects.</p>
+    </div>
+    <div class="footnote">
+     <p><sup>[<a href="#N16459" name="ftn.N16459" class="para">24</a>] </sup>因为在 <a class="ulink" href="http://en.wikipedia.org/wiki/The_Magical_Number_Seven,_Plus_or_Minus_Two" target="_top">7 plus 2 Rule </a> 的范围内我们做得很好:) <br><sup>[<a href="#N16459" name="ftn.N16459" class="para">24</a>] </sup>So we are well in the range of the <a class="ulink" href="http://en.wikipedia.org/wiki/The_Magical_Number_Seven,_Plus_or_Minus_Two" target="_top">7 plus 2 Rule </a> :)</p>
+    </div>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="build_lifecycle.html" title="第55章. 构建的生命周期">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="custom_tasks.html" title="第五十七章. 编写自定义任务类">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
