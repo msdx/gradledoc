@@ -1,25 +1,82 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;53.&nbsp;The Signing Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="maven_plugin.html" title="Chapter&nbsp;52.&nbsp;The Maven Plugin"><link rel="next" href="nativeBinaries.html" title="Chapter&nbsp;54.&nbsp;Building native binaries"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="maven_plugin.html" title="Chapter&nbsp;52.&nbsp;The Maven Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="nativeBinaries.html" title="Chapter&nbsp;54.&nbsp;Building native binaries">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="signing_plugin"></a>Chapter&nbsp;53.&nbsp;The Signing Plugin</h1></div></div></div><p>
-        The signing plugin adds the ability to digitally sign built files and artifacts.
-        These digital signatures can then be used to prove who built the artifact the signature is attached to
-        as well as other information such as when the signature was generated.
-    </p><p>
-        The signing plugin currently only provides support for generating <a class="ulink" href="http://www.pgpi.org/" target="_top">PGP signatures</a> 
-        (which is the signature format <a class="ulink" href="https://docs.sonatype.org/display/Repository/Central+Sync+Requirements" target="_top">required for 
-        publication to the Maven Central Repository</a>).
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N156EC"></a>53.1.&nbsp;Usage</h2></div></div></div><p>To use the Signing plugin, include in your build script:</p><div class="example"><a name="useSigningPlugin"></a><p class="title"><b>Example&nbsp;53.1.&nbsp;Using the Signing plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'signing'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N156FB"></a>53.2.&nbsp;Signatory credentials</h2></div></div></div><p>
-            In order to create PGP signatures, you will need a key pair (instructions on creating a key pair using the <a class="ulink" href="http://www.gnupg.org/" target="_top">GnuPG tools</a> 
-            can be found in the <a class="ulink" href="http://www.gnupg.org/documentation/howtos.html" target="_top">GnuPG HOWTOs</a>). You need to provide the signing plugin
-            with your key information, which means three things: 
-        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>The public key ID (an 8 character hexadecimal string).</p></li><li class="listitem"><p>The absolute path to the secret key ring file containing your private key.</p></li><li class="listitem"><p>The passphrase used to protect your private key.</p></li></ul></div><p>
-            These items must be supplied as the property projects <code class="literal">signing.keyId</code>, <code class="literal">signing.password</code> 
-            and <code class="literal">signing.secretKeyRingFile</code> respectively. Given the personal and private nature of these values, a good practice
-            is to store them in the user <code class="literal">gradle.properties</code> file (described in <a class="xref" href="tutorial_this_and_that.html#sec:gradle_properties_and_system_properties">Section&nbsp;14.2, &ldquo;Gradle properties and system properties&rdquo;</a>).
-        </p><pre class="programlisting">signing.keyId=24875D73
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第五十三章. 签名插件 - Chapter&nbsp;53.&nbsp;The Signing Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="maven_plugin.html" title="第五十二章. Maven 插件">
+  <link rel="next" href="nativeBinaries.html" title="第54章. 构建原生二进制文件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="maven_plugin.html" title="第五十二章. Maven 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="nativeBinaries.html" title="第54章. 构建原生二进制文件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="signing_plugin"></a>第五十三章. 签名插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="signing_plugin"></a>Chapter&nbsp;53.&nbsp;The Signing Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <p> 签名插件添加了对构件的文件和artifacts进行数字签名的功能。这些数字签名可以用于证明使用这个签名的artifact是谁构建的，以及其他的信息，比如签名是什么时候生成的。 <br>The signing plugin adds the ability to digitally sign built files and artifacts. These digital signatures can then be used to prove who built the artifact the signature is attached to as well as other information such as when the signature was generated.</p>
+   <p> 签名插件目前只提供了生成<a class="ulink" href="http://www.pgpi.org/" target="_top">PGP 签名</a>的支持（这是<a class="ulink" href="https://docs.sonatype.org/display/Repository/Central+Sync+Requirements" target="_top">发布到Maven 中央库所需的</a>签名格式）。 <br>The signing plugin currently only provides support for generating <a class="ulink" href="http://www.pgpi.org/" target="_top">PGP signatures</a> (which is the signature format <a class="ulink" href="https://docs.sonatype.org/display/Repository/Central+Sync+Requirements" target="_top">required for publication to the Maven Central Repository</a>).</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N156EC"></a>53.1.&nbsp;用法</h2>
+       <h4 class="title"><a name="N156EC"></a>53.1.&nbsp;Usage</h4>
+      </div>
+     </div>
+    </div>
+    <p>要使用 Signing 插件，请在构建脚本中包含以下语句：<br>To use the Signing plugin, include in your build script:</p>
+    <div class="example">
+     <a name="useSigningPlugin"></a>
+     <p class="title"><b>示例 53.1. 使用Signing插件 - Example&nbsp;53.1.&nbsp;Using the Signing plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'signing'</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N156FB"></a>53.2.&nbsp;签名凭证</h2>
+       <h4 class="title"><a name="N156FB"></a>53.2.&nbsp;Signatory credentials</h4>
+      </div>
+     </div>
+    </div>
+    <p> 为了创建 PGP 签名，你将需要一个密钥对（有关使用<a class="ulink" href="http://www.gnupg.org/" target="_top">GnuPG 工具</a>创建密钥对的介绍可以在<a class="ulink" href="http://www.gnupg.org/documentation/howtos.html" target="_top">GnuPG Howto</a>中找到）。您需要向签名插件提供你的关键信息，即如下三项信息： <br>In order to create PGP signatures, you will need a key pair (instructions on creating a key pair using the <a class="ulink" href="http://www.gnupg.org/" target="_top">GnuPG tools</a> can be found in the <a class="ulink" href="http://www.gnupg.org/documentation/howtos.html" target="_top">GnuPG HOWTOs</a>). You need to provide the signing plugin with your key information, which means three things:</p>
+    <div class="itemizedlist">
+     <ul class="itemizedlist">
+      <li class="listitem"><p>公钥 ID （一个8位字符的十六进制字符串）。</p><br><p>The public key ID (an 8 character hexadecimal string).</p></li>
+      <li class="listitem"><p>指向包含了你的私钥的密钥环文件的绝对路径。</p><br><p>The absolute path to the secret key ring file containing your private key.</p></li>
+      <li class="listitem"><p>用来保护你的私钥的密码。</p><br><p>The passphrase used to protect your private key.</p></li>
+     </ul>
+    </div>
+    <p> 这些条目必须分别作为属性项目<code class="literal">signing.keyId</code>、 <code class="literal">signing.password</code>和<code class="literal">signing.secretKeyRingFile</code> 进行提供。鉴于这些值的个人和私人性质，一个好的做法是将它们保存在用户的<code class="literal">gradle.properties</code>文件（<a class="xref" href="tutorial_this_and_that.html#sec:gradle_properties_and_system_properties">第14.2 节，“Gradle 属性和系统属性”</a>中所述）。 <br>These items must be supplied as the property projects <code class="literal">signing.keyId</code>, <code class="literal">signing.password</code> and <code class="literal">signing.secretKeyRingFile</code> respectively. Given the personal and private nature of these values, a good practice is to store them in the user <code class="literal">gradle.properties</code> file (described in <a class="xref" href="tutorial_this_and_that.html#sec:gradle_properties_and_system_properties">Section&nbsp;14.2, “Gradle properties and system properties”</a>).</p>
+    <pre class="programlisting">signing.keyId=24875D73
 signing.password=secret
-signing.secretKeyRingFile=/Users/me/.gnupg/secring.gpg</pre><p>
-            If specifying this information in the user <code class="literal">gradle.properties</code> file is not feasible for your environment, you can source the information
-            however you need to and set the project properties manually.
-        </p><pre class="programlisting">import org.gradle.plugins.signing.Sign
+signing.secretKeyRingFile=/Users/me/.gnupg/secring.gpg</pre>
+    <p> 如果在用户的<code class="literal">gradle.properties</code>文件中指定的信息不适合你的环境，你可以提供这些信息，但你需要手动设置项目的属性。 <br>If specifying this information in the user <code class="literal">gradle.properties</code> file is not feasible for your environment, you can source the information however you need to and set the project properties manually.</p>
+    <pre class="programlisting">import org.gradle.plugins.signing.Sign
 
 gradle.taskGraph.whenReady { taskGraph -&gt;
     if (taskGraph.allTasks.any { it instanceof Sign }) {
@@ -37,20 +94,46 @@ gradle.taskGraph.whenReady { taskGraph -&gt;
 
         console.printf "\nThanks.\n\n"
     }
-}</pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1572D"></a>53.3.&nbsp;Specifying what to sign</h2></div></div></div><p>
-            As well as configuring how things are to be signed (i.e. the signatory configuration), you must also specify what is to be signed. 
-            The Signing plugin provides a DSL that allows you to specify the tasks and/or configurations that should be signed.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15732"></a>53.3.1.&nbsp;Signing Configurations</h3></div></div></div><p>
-                It is common to want to sign the artifacts of a configuration. For example, the <a class="link" href="java_plugin.html">Java plugin</a> 
-                configures a jar to built and this jar artifact is added to the <code class="literal">archives</code> configuration. 
-                Using the Signing DSL, you can specify that all of the artifacts of this configuration should be signed.
-            </p><div class="example"><a name="signingArchives"></a><p class="title"><b>Example&nbsp;53.2.&nbsp;Signing a configuration</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">signing {
+}</pre>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1572D"></a>53.3. 指定要签名的内容</h2>
+       <h4 class="title"><a name="N1572D"></a>53.3.&nbsp;Specifying what to sign</h4>
+      </div>
+     </div>
+    </div>
+    <p> 除了配置内容要如何签名（即签名配置），你还必须指定哪些文件要签名。Signing 插件提供了一个DSL，它允许你指定应签名的任务及配置。 <br>As well as configuring how things are to be signed (i.e. the signatory configuration), you must also specify what is to be signed. The Signing plugin provides a DSL that allows you to specify the tasks and/or configurations that should be signed.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15732"></a>53.3.1. 签名配置</h3>
+        <h5 class="title"><a name="N15732"></a>53.3.1.&nbsp;Signing Configurations</h5>
+       </div>
+      </div>
+     </div>
+     <p> 签名一个配置的artifacts是很常见的情况。例如， <a class="link" href="java_plugin.html">Java 插件</a>配置了构建一个jar文件，并且把 jar 文件添加到<code class="literal">archives</code>配置。使用Signing DSL，你可以指定这个配置的所有 artifacts 都应该被签名。 <br>It is common to want to sign the artifacts of a configuration. For example, the <a class="link" href="java_plugin.html">Java plugin</a> configures a jar to built and this jar artifact is added to the <code class="literal">archives</code> configuration. Using the Signing DSL, you can specify that all of the artifacts of this configuration should be signed.</p>
+     <div class="example">
+      <a name="signingArchives"></a>
+      <p class="title"><b>53.3.2. 签名一个配置 - Example&nbsp;53.2.&nbsp;Signing a configuration</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">signing {
     sign configurations.archives
-}</pre></div></div><br class="example-break"><p>
-                This will create a task (of type <a class="ulink" href="../dsl/org.gradle.plugins.signing.Sign.html" target="_top"><code class="classname">Sign</code></a>) in your project named &ldquo;<code class="literal">signArchives</code>&rdquo;, 
-                that will build any <code class="literal">archives</code> artifacts (if needed) and then generate signatures for them. The signature files will be placed
-                alongside the artifacts being signed.
-            </p><div class="example"><a name="signingArchivesOutput"></a><p class="title"><b>Example&nbsp;53.3.&nbsp;Signing a configuration output</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle signArchives</code></strong></p><pre class="screen">&gt; gradle signArchives
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 这将在你的项目中创建一个名为“<code class="literal">signArchives</code>”的任务（<a class="ulink" href="../dsl/org.gradle.plugins.signing.Sign.html" target="_top"><code class="classname">Sign</code></a>类型），这个任务会构建任何<code class="literal">archives</code>的artifacts（如果需要），然后为它们生成签名。签名文件将和被签名的artifacts放在一起。 <br>This will create a task (of type <a class="ulink" href="../dsl/org.gradle.plugins.signing.Sign.html" target="_top"><code class="classname">Sign</code></a>) in your project named “<code class="literal">signArchives</code>”, that will build any <code class="literal">archives</code> artifacts (if needed) and then generate signatures for them. The signature files will be placed alongside the artifacts being signed.</p>
+     <div class="example">
+      <a name="signingArchivesOutput"></a>
+      <p class="title"><b>示例 53.3. 签署一个配置的输出 - Example&nbsp;53.3.&nbsp;Signing a configuration output</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle signArchives</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle signArchives</code></strong></p>
+       <pre class="screen">&gt; gradle signArchives
 :compileJava
 :processResources
 :classes
@@ -59,58 +142,132 @@ gradle.taskGraph.whenReady { taskGraph -&gt;
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1575F"></a>53.3.2.&nbsp;Signing Tasks</h3></div></div></div><p>
-                In some cases the artifact that you need to sign may not be part of a configuration. In this case you can directly sign the task that
-                produces the artifact to sign.
-            </p><div class="example"><a name="signingTasks"></a><p class="title"><b>Example&nbsp;53.4.&nbsp;Signing a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task stuffZip (type: Zip) {
+Total time: 1 secs</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N1575F"></a>53.3.2. 签名任务</h3>
+        <h5 class="title"><a name="N1575F"></a>53.3.2.&nbsp;Signing Tasks</h5>
+       </div>
+      </div>
+     </div>
+     <p> 在某些情况下，你需要签名的artifact 可能不是配置的一部分。在这种情况下，你可以直接签名生成了要签名的artifact 的任务。 <br>In some cases the artifact that you need to sign may not be part of a configuration. In this case you can directly sign the task that produces the artifact to sign.</p>
+     <div class="example">
+      <a name="signingTasks"></a>
+      <p class="title"><b>53.4. 签名一个任务 - Example&nbsp;53.4.&nbsp;Signing a task</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task stuffZip (type: Zip) {
     baseName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"stuff"</span>
     from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"src/stuff"</span>
 }
 
 signing {
     sign stuffZip
-}</pre></div></div><br class="example-break"><p>
-                This will create a task (of type <a class="ulink" href="../dsl/org.gradle.plugins.signing.Sign.html" target="_top"><code class="classname">Sign</code></a>) in your project named &ldquo;<code class="literal">signStuffZip</code>&rdquo;, 
-                that will build the input task's archive (if needed) and then sign it. The signature file will be placed
-                alongside the artifact being signed.
-            </p><div class="example"><a name="signingTaskOutput"></a><p class="title"><b>Example&nbsp;53.5.&nbsp;Signing a task output</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle signStuffZip</code></strong></p><pre class="screen">&gt; gradle signStuffZip
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 这将在您的项目创建一个名为“<code class="literal">signStuffZip</code>”的（<a class="ulink" href="../dsl/org.gradle.plugins.signing.Sign.html" target="_top"><code class="classname">Sign</code></a>类型） 的任务，这个任务会构建输入任务的archive（如果需要），并进行签字。签名文件将和被签名的 artifact 放在一起。 <br>This will create a task (of type <a class="ulink" href="../dsl/org.gradle.plugins.signing.Sign.html" target="_top"><code class="classname">Sign</code></a>) in your project named “<code class="literal">signStuffZip</code>”, that will build the input task's archive (if needed) and then sign it. The signature file will be placed alongside the artifact being signed.</p>
+     <div class="example">
+      <a name="signingTaskOutput"></a>
+      <p class="title"><b>示例 53.5. 签名一个任务的输出 - Example&nbsp;53.5.&nbsp;Signing a task output</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle signStuffZip</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle signStuffZip</code></strong></p>
+       <pre class="screen">&gt; gradle signStuffZip
 :stuffZip
 :signStuffZip
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"><p>
-                For a task to be &ldquo;signable&rdquo;, it must produce an archive of some type. Tasks that do this are the <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a>,
-                <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a>, <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top"><code class="classname">Jar</code></a>, 
-                <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.War.html" target="_top"><code class="classname">War</code></a> and <a class="ulink" href="../dsl/org.gradle.plugins.ear.Ear.html" target="_top"><code class="classname">Ear</code></a> tasks.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1579D"></a>53.3.3.&nbsp;Conditional Signing</h3></div></div></div><p>
-                A common usage pattern is to only sign build artifacts under certain conditions. For example, you may not wish to sign artifacts for non release versions.
-                To achieve this, you can specify that signing is only required under certain conditions.
-            </p><div class="example"><a name="conditionalSigning"></a><p class="title"><b>Example&nbsp;53.6.&nbsp;Conditional signing</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0-SNAPSHOT'</span>
+Total time: 1 secs</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 一个“可签名”的任务，必须输出某种类型的archive。这样的任务有 <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a>， <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a>， <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top"><code class="classname">Jar</code></a>， <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.War.html" target="_top"><code class="classname">War</code></a> 及 <a class="ulink" href="../dsl/org.gradle.plugins.ear.Ear.html" target="_top"><code class="classname">Ear</code></a>任务。 <br>For a task to be “signable”, it must produce an archive of some type. Tasks that do this are the <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a>, <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a>, <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top"><code class="classname">Jar</code></a>, <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.War.html" target="_top"><code class="classname">War</code></a> and <a class="ulink" href="../dsl/org.gradle.plugins.ear.Ear.html" target="_top"><code class="classname">Ear</code></a> tasks.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N1579D"></a>53.3.3.&nbsp;有条件的签名</h3>
+        <h5 class="title"><a name="N1579D"></a>53.3.3.&nbsp;Conditional Signing</h5>
+       </div>
+      </div>
+     </div>
+     <p> 常见的使用模式是只在一定条件下签名构建的artifacts。例如，你可能不想对非发布版本签名artifacts。要做到这一点，你可以指定只在一定条件下才要求签名。 <br>A common usage pattern is to only sign build artifacts under certain conditions. For example, you may not wish to sign artifacts for non release versions. To achieve this, you can specify that signing is only required under certain conditions.</p>
+     <div class="example">
+      <a name="conditionalSigning"></a>
+      <p class="title"><b>53.6.&nbsp;有条件的签名 - Example&nbsp;53.6.&nbsp;Conditional signing</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0-SNAPSHOT'</span>
 ext.isReleaseVersion = !version.endsWith(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"SNAPSHOT"</span>)
 
 signing {
     required { isReleaseVersion &amp;&amp; gradle.taskGraph.hasTask(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"uploadArchives"</span>) }
     sign configurations.archives
-}</pre></div></div><br class="example-break"><p>
-                In this example, we only want to require signing if we are building a release version and we are going to publish it. Because we are inspecting the task
-                graph to determine if we are going to be publishing, we must set the <code class="literal">signing.required</code> property to a closure to defer the evaluation. See
-                <a class="ulink" href="../groovydoc/org/gradle/plugins/signing/SigningExtension.html#setRequired(java.lang.Object)" target="_top"><code class="classname">SigningExtension.setRequired()</code></a> for more information.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N157B6"></a>53.4.&nbsp;Publishing the signatures</h2></div></div></div><p>
-            When specifying what is to be signed via the Signing DSL, the resultant signature artifacts are automatically added to the <code class="literal">signatures</code> and
-            <code class="literal">archives</code> dependency configurations. This means that if you want to upload your signatures to your distribution repository along
-            with the artifacts you simply execute the <code class="literal">uploadArchives</code> task as normal.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N157C4"></a>53.5.&nbsp;Signing POM files</h2></div></div></div><p>
-            When deploying signatures for your artifacts to a Maven repository, you will also want to sign the published POM file. The signing plugin adds a
-            <code class="literal">signing.signPom()</code> (see: <a class="ulink" href="../dsl/org.gradle.plugins.signing.SigningExtension.html#org.gradle.plugins.signing.SigningExtension:signPom(org.gradle.api.artifacts.maven.MavenDeployment, groovy.lang.Closure)" target="_top"><code class="classname">SigningExtension.signPom()</code></a>) method that can be used in the
-            <code class="literal">beforeDeployment()</code> block in your upload task configuration.
-        </p><div class="example"><a name="signingMavenPom"></a><p class="title"><b>Example&nbsp;53.7.&nbsp;Signing a POM for deployment</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">uploadArchives {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 在此示例中，我们只想要在我们构建一个我们即将去发布的发布版本的时候，才进行签名。由于我们正在检查任务图，以确定是否打算发布，我们必须将<code class="literal">signing.required</code>属性设置为一个闭包以推迟evaluation。更多的信息，请参阅<a class="ulink" href="../groovydoc/org/gradle/plugins/signing/SigningExtension.html#setRequired(java.lang.Object)" target="_top"><code class="classname">SigningExtension.setRequired()</code> </a> 。 <br>In this example, we only want to require signing if we are building a release version and we are going to publish it. Because we are inspecting the task graph to determine if we are going to be publishing, we must set the <code class="literal">signing.required</code> property to a closure to defer the evaluation. See <a class="ulink" href="../groovydoc/org/gradle/plugins/signing/SigningExtension.html#setRequired(java.lang.Object)" target="_top"><code class="classname">SigningExtension.setRequired()</code></a> for more information.</p>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N157B6"></a>53.4.&nbsp;发布签名</h2>
+       <h4 class="title"><a name="N157B6"></a>53.4.&nbsp;Publishing the signatures</h4>
+      </div>
+     </div>
+    </div>
+    <p> 当通过 Signing DSL指定什么要被签名的时候，生成的signature会自动地加入到 <code class="literal">signatures</code> 和 <code class="literal">archives</code> 的依赖配置中。这意味着，如果你想要将你的签名以及artifacts上传到你的分布仓库中，正常来讲你只需要执行<code class="literal">uploadArchives</code>任务。 <br>When specifying what is to be signed via the Signing DSL, the resultant signature artifacts are automatically added to the <code class="literal">signatures</code> and <code class="literal">archives</code> dependency configurations. This means that if you want to upload your signatures to your distribution repository along with the artifacts you simply execute the <code class="literal">uploadArchives</code> task as normal.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N157C4"></a>53.5. 签名 POM 文件</h2>
+       <h4 class="title"><a name="N157C4"></a>53.5.&nbsp;Signing POM files</h4>
+      </div>
+     </div>
+    </div>
+    <p> 当为你的artifacts部署签名到 Maven 仓库时，你还想签名发布的 POM 文件。签名插件添加了一个<code class="literal">signing.signPom()</code> （请参见： <a class="ulink" href="../dsl/org.gradle.plugins.signing.SigningExtension.html#org.gradle.plugins.signing.SigningExtension:signPom(org.gradle.api.artifacts.maven.MavenDeployment, groovy.lang.Closure)" target="_top"> <code class="classname">SigningExtension.signPom()</code></a>）方法，这个方法可以在你的上传任务配置的<code class="literal">beforeDeployment()</code>块中使用。 <br>When deploying signatures for your artifacts to a Maven repository, you will also want to sign the published POM file. The signing plugin adds a <code class="literal">signing.signPom()</code> (see: <a class="ulink" href="../dsl/org.gradle.plugins.signing.SigningExtension.html#org.gradle.plugins.signing.SigningExtension:signPom(org.gradle.api.artifacts.maven.MavenDeployment, groovy.lang.Closure)" target="_top"><code class="classname">SigningExtension.signPom()</code></a>) method that can be used in the <code class="literal">beforeDeployment()</code> block in your upload task configuration.</p>
+    <div class="example">
+     <a name="signingMavenPom"></a>
+     <p class="title"><b>示例 53.7. 为部署签名 POM - Example&nbsp;53.7.&nbsp;Signing a POM for deployment</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -&gt; signing.signPom(deployment) }
         }
     }
-}</pre></div></div><br class="example-break"><p>
-            When signing is not required and the POM cannot be signed due to insufficient configuration (i.e. no credentials for signing) then the
-            <code class="literal">signPom()</code> method will silently do nothing.
-        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="maven_plugin.html" title="Chapter&nbsp;52.&nbsp;The Maven Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="nativeBinaries.html" title="Chapter&nbsp;54.&nbsp;Building native binaries">Next</a></div></div></div></body></html>
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 当不需要签名，以及由于缺少配置（即没有签名证书）而不能签名 POM 的时候，<code class="literal">signPom()</code>方法将什么都不会做，并且不会进行任何的提示。 <br>When signing is not required and the POM cannot be signed due to insufficient configuration (i.e. no credentials for signing) then the <code class="literal">signPom()</code> method will silently do nothing.</p>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="maven_plugin.html" title="第五十二章. Maven 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="nativeBinaries.html" title="第54章. 构建原生二进制文件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
