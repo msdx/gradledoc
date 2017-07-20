@@ -1,50 +1,105 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;61.&nbsp;The Gradle Wrapper</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="init_scripts.html" title="Chapter&nbsp;60.&nbsp;Initialization Scripts"><link rel="next" href="embedding.html" title="Chapter&nbsp;62.&nbsp;Embedding Gradle"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="Chapter&nbsp;60.&nbsp;Initialization Scripts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="embedding.html" title="Chapter&nbsp;62.&nbsp;Embedding Gradle">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="gradle_wrapper"></a>Chapter&nbsp;61.&nbsp;The Gradle Wrapper</h1></div></div></div><p>
-        The Gradle Wrapper (henceforth referred to as the &ldquo;wrapper) is the preferred way of starting a Gradle build. The wrapper
-        is a batch script on Windows, and a shell script for other operating systems. When you start a Gradle build via the wrapper,
-        Gradle will be automatically downloaded and used to run the build. 
-    </p><p>
-        The wrapper is something you <span class="emphasis"><em>should</em></span> check into version control. By distributing the wrapper with your project,
-        anyone can work with it without needing to install Gradle beforehand. Even better, users of the build are guaranteed to use the 
-        version of Gradle that the build was designed to work with. Of course, this is also great for 
-        <a class="ulink" href="http://en.wikipedia.org/wiki/Continuous_integration" target="_top">continuous integration</a> servers (i.e. servers that regularly
-        build your project) as it requires no configuration on the server.
-    </p><p>
-        You install the wrapper into your project by adding and configuring a <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a> 
-        task in your build script, and then executing it.
-    </p><div class="example"><a name="wrapperSimple"></a><p class="title"><b>Example&nbsp;61.1.&nbsp;Wrapper task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task wrapper(type: Wrapper) {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第六十一章.&nbsp;Gradle包装器 - Chapter&nbsp;61.&nbsp;The Gradle Wrapper</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="init_scripts.html" title="第六十章. 初始化脚本">
+  <link rel="next" href="embedding.html" title="第六十二章. 嵌入 Gradle">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="第六十章. 初始化脚本">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="embedding.html" title="第六十二章. 嵌入 Gradle">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="gradle_wrapper"></a>第六十一章.&nbsp;Gradle包装器</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="gradle_wrapper"></a>Chapter&nbsp;61.&nbsp;The Gradle Wrapper</h3>
+     </div>
+    </div>
+   </div>
+   <p> Gradle 包装器（下称“包装器”）是启动 Gradle 构建的首选方法。这个包装器是Windows上的一个批处理脚本和以及用于其他操作系统的shell 脚本。当你通过包装器启动 Gradle 构建时，Gradle 将被自动下载并用于运行这个构建。 <br>The Gradle Wrapper (henceforth referred to as the “wrapper) is the preferred way of starting a Gradle build. The wrapper is a batch script on Windows, and a shell script for other operating systems. When you start a Gradle build via the wrapper, Gradle will be automatically downloaded and used to run the build.</p>
+   <p> The wrapper is something you <span class="emphasis"><em>should</em></span> check into version control. By distributing the wrapper with your project, anyone can work with it without needing to install Gradle beforehand. 甚至还有更好的效果，能保证用户在构建中所使用的Gradle版本一致。当然，也方便用于 <a class="ulink" href="http://en.wikipedia.org/wiki/Continuous_integration" target="_top">持续集成</a> 服务器（即有规律地构建你的项目的服务器），因为它不需要在服务器上进行配置。 <br>The wrapper is something you <span class="emphasis"><em>should</em></span> check into version control. By distributing the wrapper with your project, anyone can work with it without needing to install Gradle beforehand. Even better, users of the build are guaranteed to use the version of Gradle that the build was designed to work with. Of course, this is also great for <a class="ulink" href="http://en.wikipedia.org/wiki/Continuous_integration" target="_top">continuous integration</a> servers (i.e. servers that regularly build your project) as it requires no configuration on the server.</p>
+   <p> 你可以通过在你的构建脚本中添加及配置一个 <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a> 任务，然后执行它来把包装器安装到你的项目中。 <br>You install the wrapper into your project by adding and configuring a <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a> task in your build script, and then executing it.</p>
+   <div class="example">
+    <a name="wrapperSimple"></a>
+    <p class="title"><b>示例 61.1。 Wrapper任务 - Example&nbsp;61.1.&nbsp;Wrapper task</b></p>
+    <div class="example-contents">
+     <p><code class="filename">build.gradle</code></p>
+     <pre class="programlisting">task wrapper(type: Wrapper) {
     gradleVersion = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.4'</span>
-}</pre></div></div><br class="example-break"><p>
-        After such an execution you find the following new or updated files in your project directory 
-        (in case the default configuration of the wrapper task is used).
-    </p><div class="example"><a name="wrapperSimple"></a><p class="title"><b>Example&nbsp;61.2.&nbsp;Wrapper generated files</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">simple/
+}</pre>
+    </div>
+   </div>
+   <br class="example-break">
+   <p> 在这样执行之后，你会在你的项目目录中发现以下新生成的或更新的文件（在所使用的wrapper任务为默认配置的情况下）。 <br>After such an execution you find the following new or updated files in your project directory (in case the default configuration of the wrapper task is used).</p>
+   <div class="example">
+    <a name="wrapperSimple"></a>
+    <p class="title"><b>示例 61.2. 包装器生成的文件 - Example&nbsp;61.2.&nbsp;Wrapper generated files</b></p>
+    <div class="example-contents">
+     <p>构建布局<br>Build layout</p>
+     <pre class="programlisting">simple/
   gradlew
   gradlew.bat
   gradle/wrapper/
     gradle-wrapper.jar
-    gradle-wrapper.properties</pre></div></div><br class="example-break"><p>
-        All of these files <span class="emphasis"><em>should</em></span> be submitted to your version control system. This only needs to be done once. After
-        these files have been added to the project, the project should then be built with the added <span class="command"><strong>gradlew</strong></span> command.
-        The <span class="command"><strong>gradlew</strong></span> command can be used <span class="emphasis"><em>exactly</em></span> the same way as the <span class="command"><strong>gradle</strong></span> command.
-    </p><p>If you want to switch to a new version of Gradle you don't need to rerun the wrapper task. It is good enough
-        to change the respective entry in the <code class="literal">gradle-wrapper.properties</code> file. But if there is for
-        example an improvement in the gradle-wrapper functionality you need to regenerate the wrapper files.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuration"></a>61.1.&nbsp;Configuration</h2></div></div></div><p>If you run Gradle with <span class="command"><strong>gradlew</strong></span>, the wrapper checks if a Gradle distribution for the wrapper
-            is available. If not it tries to download it, otherwise it delegates to the <span class="command"><strong>gradle</strong></span>
-            command of this distribution with all the arguments passed originally to the <span class="command"><strong>gradlew</strong></span>
-            command.
-        </p><p>
-            When you configure the <code class="literal">Wrapper</code> task, you can specify the Gradle version you wish to use. The <span class="command"><strong>gradlew</strong></span>
-            command will download the appropriate distribution from the Gradle repository.
-            Alternatively, you can specify the download URL of the Gradle distribution. The <span class="command"><strong>gradlew</strong></span> command will use this URL to download
-            the distribution.
-            If you specify neither a Gradle version or download URL, the <span class="command"><strong>gradlew</strong></span> command will by default download whichever version
-            of Gradle was used to generate the wrapper files.
-        </p><p>For the details on how to configure the wrapper, see <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a>
-        </p><p>If you don't want any download to happen when your project is build via <span class="command"><strong>gradlew</strong></span>, simply add the Gradle
-            distribution zip to your version control at the location specified by your wrapper configuration.
-            A relative URL is supported - you can specify a distribution file relative to the location of <code class="literal">gradle-wrapper.properties</code> file.
-        </p><p>If you build via the wrapper, any existing Gradle distribution installed on the machine is ignored.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:unix_file_permissions"></a>61.2.&nbsp;Unix file permissions</h2></div></div></div><p>The Wrapper task adds appropriate file permissions to allow the execution for the gradlew *NIX command.
-            Subversion preserves this file permission. We are not sure how other version control systems deal with this.
-            What should always work is to execute <code class="literal">sh gradlew</code>.
-        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="Chapter&nbsp;60.&nbsp;Initialization Scripts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="embedding.html" title="Chapter&nbsp;62.&nbsp;Embedding Gradle">Next</a></div></div></div></body></html>
+    gradle-wrapper.properties</pre>
+    </div>
+   </div>
+   <br class="example-break">
+   <p> 所有这些文件都<span class="emphasis"><em>应该</em></span> 被提交到你的版本控制系统中。这只需要做一次。在这些文件都已经被添加到项目中之后，这个项目以后应该使用所添加的 <span class="command"><strong>gradlew</strong></span>命令进行构建。这个<span class="command"><strong>gradlew</strong></span> 命令可以和 <span class="command"><strong>gradle</strong></span> 命令 <span class="emphasis"><em>完全</em></span> 一样地使用。 <br>All of these files <span class="emphasis"><em>should</em></span> be submitted to your version control system. This only needs to be done once. After these files have been added to the project, the project should then be built with the added <span class="command"><strong>gradlew</strong></span> command. The <span class="command"><strong>gradlew</strong></span> command can be used <span class="emphasis"><em>exactly</em></span> the same way as the <span class="command"><strong>gradle</strong></span> command.</p>
+   <p>如果你想要切换到一个新的Gradle版本，你不需要重新运行wrapper任务。只需要修改<code class="literal">gradle wrapper.properties</code>文件中的相应属性就够了。但如果有例如gradle包装器功能的提升的话，你还是需要重新生成包装器的文件。 <br>If you want to switch to a new version of Gradle you don't need to rerun the wrapper task. It is good enough to change the respective entry in the <code class="literal">gradle-wrapper.properties</code> file. But if there is for example an improvement in the gradle-wrapper functionality you need to regenerate the wrapper files.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:configuration"></a>61.1. 配置</h2>
+       <h4 class="title"><a name="sec:configuration"></a>61.1.&nbsp;Configuration</h4>
+      </div>
+     </div>
+    </div>
+    <p>如果你使用<span class="command"><strong>gradlew</strong></span>运行Gradle，包装器会检查所要使用的Gradle分发包是否可用。如果不可用，它会试图下载它，可用的话它将把所有传入给<span class="command"><strong>gradlew</strong></span> 命令的参数都委托给这个分发包的<span class="command"><strong>gradle</strong></span> 命令行。 <br>If you run Gradle with <span class="command"><strong>gradlew</strong></span>, the wrapper checks if a Gradle distribution for the wrapper is available. If not it tries to download it, otherwise it delegates to the <span class="command"><strong>gradle</strong></span> command of this distribution with all the arguments passed originally to the <span class="command"><strong>gradlew</strong></span> command.</p>
+    <p> 当你配置<code class="literal">Wrapper</code>任务时，你可以指定你想要使用的 Gradle 版本。<span class="command"> <strong>gradlew</strong></span>命令将从 Gradle 仓库下载适合的分发包。或者，你可以指定Gradle分发包的下载URL。 <span class="command"><strong>gradlew</strong></span> 命令将使用此URL来下载分发包。如果你对 Gradle 版本和下载 URL都没有指定， <span class="command"> <strong>gradlew</strong></span>命令将默认下载之前生成包装器的文件的Gradle版本。 <br>When you configure the <code class="literal">Wrapper</code> task, you can specify the Gradle version you wish to use. The <span class="command"><strong>gradlew</strong></span> command will download the appropriate distribution from the Gradle repository. Alternatively, you can specify the download URL of the Gradle distribution. The <span class="command"><strong>gradlew</strong></span> command will use this URL to download the distribution. If you specify neither a Gradle version or download URL, the <span class="command"><strong>gradlew</strong></span> command will by default download whichever version of Gradle was used to generate the wrapper files.</p>
+    <p>有关如何配置包装器的详细信息，请参见<a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a>。 <br>For the details on how to configure the wrapper, see <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a></p>
+    <p>如果你不想在通过 <span class="command"><strong>gradlew</strong></span>命令构建项目时去下载它的分发包，只需要将Gradle分发包的zip文件添加到你的版本控制中你的包装器配置所指定的位置。它支持相对路径URL——你可以指定相对于<code class="literal">gradle wrapper.properties</code>文件的位置的分发文件。 <br>If you don't want any download to happen when your project is build via <span class="command"><strong>gradlew</strong></span>, simply add the Gradle distribution zip to your version control at the location specified by your wrapper configuration. A relative URL is supported - you can specify a distribution file relative to the location of <code class="literal">gradle-wrapper.properties</code> file.</p>
+    <p>如果你通过包装器构建，这台机器上已安装的任何Gradle分发包都会被忽略。 <br>If you build via the wrapper, any existing Gradle distribution installed on the machine is ignored.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:unix_file_permissions"></a>61.2.&nbsp;Unix 文件权限</h2>
+       <h4 class="title"><a name="sec:unix_file_permissions"></a>61.2.&nbsp;Unix file permissions</h4>
+      </div>
+     </div>
+    </div>
+    <p>Wrapper 任务将添加相应的文件权限，以允许执行 gradlew *NIX 命令。Subversion 会保留此文件的权限。我们并不确定其他的版本控制系统是怎么处理的。所以能让它总是可以执行的方法是执行<code class="literal">sh gradlew</code>命令。 <br>The Wrapper task adds appropriate file permissions to allow the execution for the gradlew *NIX command. Subversion preserves this file permission. We are not sure how other version control systems deal with this. What should always work is to execute <code class="literal">sh gradlew</code>.</p>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="第六十章. 初始化脚本">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="embedding.html" title="第六十二章. 嵌入 Gradle">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
