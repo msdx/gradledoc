@@ -9,8 +9,11 @@ Gradle 中文文档
 
 ---
 
-在线浏览地址:
-http://pkaq.github.io/gradledoc/docs/userguide/userguide.html
+当前版本在线浏览地址:
+http://msdx.github.io/gradledoc/userguide/userguide.html
+
+2.0版本浏览地址：
+http://gradledoc.qiniudn.com/2.0/userguide/userguide.html
 
 ---
 
