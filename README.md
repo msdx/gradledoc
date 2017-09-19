@@ -19,4 +19,3 @@ http://gradledoc.qiniudn.com/2.0/userguide/userguide.html
 
 QQ群号:109752483
 
-EMAIL:PKAQ#MSN.COM
