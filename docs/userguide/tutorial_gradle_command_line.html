@@ -1,13 +1,63 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;11.&nbsp;Using the Gradle Command-Line</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="web_project_tutorial.html" title="Chapter&nbsp;10.&nbsp;Web Application Quickstart"><link rel="next" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="web_project_tutorial.html" title="Chapter&nbsp;10.&nbsp;Web Application Quickstart">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_gradle_command_line"></a>Chapter&nbsp;11.&nbsp;Using the Gradle Command-Line</h1></div></div></div><p>This chapter introduces the basics of the Gradle command-line. You run a build using the
-        <span class="command"><strong>gradle</strong></span> command, which you have already seen in action in previous chapters.</p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1077C"></a>11.1.&nbsp;Executing multiple tasks</h2></div></div></div><p>You can execute multiple tasks in a single build by listing each of the tasks on the command-line. For example,
-            the command <strong class="userinput"><code>gradle compile test</code></strong> will execute the <code class="literal">compile</code> and
-            <code class="literal">test</code> tasks. Gradle will execute the tasks in the order that they are listed on the
-            command-line, and will also execute the dependencies for each task. Each task is executed once only,
-            regardless of how it came to be included in the build: whether it was specified on the command-line, or it a
-            dependency of another task, or both. Let's look at an example.</p><p>
-            Below four tasks are defined. Both <code class="literal">dist</code> and <code class="literal">test</code> depend on the
-            <code class="literal">compile</code> task. Running <strong class="userinput"><code>gradle dist test</code></strong> for this build script
-            results in the <code class="literal">compile</code> task being executed only once.</p><div class="figure"><a name="N1079B"></a><p class="title"><b>Figure&nbsp;11.1.&nbsp;Task dependencies</b></p><div class="figure-contents"><img src="img/commandLineTutorialTasks.png" alt="Task dependencies"></div></div><br class="figure-break"><div class="example"><a name="multipleTasksFromCommandLine"></a><p class="title"><b>Example&nbsp;11.1.&nbsp;Executing multiple tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task compile &lt;&lt; {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第十一章. 使用Gradle命令行 - Chapter&nbsp;11.&nbsp;Using the Gradle Command-Line</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="web_project_tutorial.html" title="第十章. Web 应用程序快速入门">
+  <link rel="next" href="tutorial_gradle_gui.html" title="第十二章. 使用Gradle 图形用户界面">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="web_project_tutorial.html" title="第十章. Web 应用程序快速入门">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="第十二章. 使用Gradle 图形用户界面">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_gradle_command_line"></a>第十一章. 使用Gradle命令行</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_gradle_command_line"></a>Chapter&nbsp;11.&nbsp;Using the Gradle Command-Line</h3>
+     </div>
+    </div>
+   </div>
+   <p>本章介绍了Gradle命令行的基础知识，正如你在前面章节所看到的使用<span class="command"><strong>gradle</strong></span>命令来运行构建。<br>This chapter introduces the basics of the Gradle command-line. You run a build using the <span class="command"><strong>gradle</strong></span> command, which you have already seen in action in previous chapters.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1077C"></a>11.1. 执行多个任务</h2>
+       <h4 class="title"><a name="N1077C"></a>11.1.&nbsp;Executing multiple tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>你可以通过在命令行中列出每个任务来在单个构建中执行多个任务。例如，<strong class="userinput"><code>gradle compile test</code></strong>命令将执行<code class="literal">compile</code>和<code class="literal">test</code>任务。 Gradle将按照命令行中的顺序依次执行这些任务以及每一个任务所依赖的其他任务。每个任务只会被执行一次，无论它们是如何被包含在构建中的：即无论是在命令行中指定的，还是另一个任务的依赖，抑或两者都有。来看下面的例子。<br>You can execute multiple tasks in a single build by listing each of the tasks on the command-line. For example, the command <strong class="userinput"><code>gradle compile test</code></strong> will execute the <code class="literal">compile</code> and <code class="literal">test</code> tasks. Gradle will execute the tasks in the order that they are listed on the command-line, and will also execute the dependencies for each task. Each task is executed once only, regardless of how it came to be included in the build: whether it was specified on the command-line, or it a dependency of another task, or both. Let's look at an example.</p>
+    <p> 下面定义了四个任务，其中<code class="literal">dist</code>和<code class="literal">test</code>都依赖于<code class="literal">compile</code>任务。对于这个构建脚本，运行<strong class="userinput"><code>gradle dist test</code></strong>只会使<code class="literal">compile</code>任务被执行一次。<br>Below four tasks are defined. Both <code class="literal">dist</code> and <code class="literal">test</code> depend on the <code class="literal">compile</code> task. Running <strong class="userinput"><code>gradle dist test</code></strong> for this build script results in the <code class="literal">compile</code> task being executed only once.</p>
+    <div class="figure">
+     <a name="N1079B"></a>
+     <p class="title"><b>图11.1. 任务依赖 - Figure&nbsp;11.1.&nbsp;Task dependencies</b></p>
+     <div class="figure-contents">
+      <img src="img/commandLineTutorialTasks.png" alt="任务依赖">
+     </div>
+    </div>
+    <br class="figure-break">
+    <div class="example">
+     <a name="multipleTasksFromCommandLine"></a>
+     <p class="title"><b>示例 11.1. 执行多个任务 - Example&nbsp;11.1.&nbsp;Executing multiple tasks</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task compile &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'compiling source'</span>
 }
 
@@ -21,7 +71,9 @@ task test(dependsOn: [compile, compileTest]) &lt;&lt; {
 
 task dist(dependsOn: [compile, test]) &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'building the distribution'</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle dist test</code></strong></p><pre class="screen">&gt; gradle dist test
+}</pre>
+      <p><strong class="userinput"><code>gradle dist test</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle dist test</code></strong></p>
+      <pre class="screen">&gt; gradle dist test
 :compile
 compiling source
 :compileTest
@@ -33,10 +85,28 @@ building the distribution
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"><p>
-            Because each task is executed once only, executing <strong class="userinput"><code>gradle test test</code></strong> is exactly the same
-            as executing <strong class="userinput"><code>gradle test</code></strong>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:excluding_tasks_from_the_command_line"></a>11.2.&nbsp;Excluding tasks</h2></div></div></div><p>You can exclude a task from being executed using the <code class="option">-x</code> command-line option and providing
-            the name of the task to exclude. Let's try this with the sample build file above.</p><div class="example"><a name="excludeTask"></a><p class="title"><b>Example&nbsp;11.2.&nbsp;Excluding tasks</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle dist -x test</code></strong></p><pre class="screen">&gt; gradle dist -x test
+Total time: 1 secs</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 由于每个任务只执行一次，执行<strong class="userinput"><code>gradle test test</code></strong>与执行<strong class="userinput"><code>gradle test</code></strong>的结果是完全相同的。<br>Because each task is executed once only, executing <strong class="userinput"><code>gradle test test</code></strong> is exactly the same as executing <strong class="userinput"><code>gradle test</code></strong>.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:excluding_tasks_from_the_command_line"></a>11.2. 排除任务</h2>
+       <h4 class="title"><a name="sec:excluding_tasks_from_the_command_line"></a>11.2.&nbsp;Excluding tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>你可以使用<code class="option">-x</code>命令行选项加上任务名称来排除某些会被执行的任务。让我们用上面的例子来演示一下。<br>You can exclude a task from being executed using the <code class="option">-x</code> command-line option and providing the name of the task to exclude. Let's try this with the sample build file above.</p>
+    <div class="example">
+     <a name="excludeTask"></a>
+     <p class="title"><b>示例 11.2. 排除任务 - Example&nbsp;11.2.&nbsp;Excluding tasks</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle dist -x test</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle dist -x test</code></strong></p>
+      <pre class="screen">&gt; gradle dist -x test
 :compile
 compiling source
 :dist
@@ -44,19 +114,41 @@ building the distribution
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"><p>You can see from the output of this example, that the <code class="literal">test</code> task is not executed, even
-            though it is a dependency of the <code class="literal">dist</code> task. You will also notice that the
-            <code class="literal">test</code> task's dependencies, such as <code class="literal">compileTest</code>
-            are not executed either. Those dependencies of <code class="literal">test</code> that are required by another task, such as
-            <code class="literal">compile</code>, are still executed.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:continue_build_on_failure"></a>11.3.&nbsp;Continuing the build when a failure occurs</h2></div></div></div><p>By default, Gradle will abort execution and fail the build as soon as any task fails. This allows the build to complete sooner, but hides other failures
-            that would have occurred. In order to discover as many failures as possible in a single build execution, you can use the <code class="literal">--continue</code> option.
-        </p><p>When executed with <code class="literal">--continue</code>, Gradle will execute <span class="emphasis"><em>every</em></span> task to be executed where all of the dependencies for that task completed without failure,
-            instead of stopping as soon as the first failure is encountered. Each of the encountered failures will be reported at the end of the build.
-        </p><p>If a task fails, any subsequent tasks that were depending on it will not be executed, as it is not safe to do so. For example, tests will not
-            run if there is a compilation failure in the code under test; because the test task will depend on the compilation task (either directly or indirectly).
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N107F3"></a>11.4.&nbsp;Task name abbreviation</h2></div></div></div><p>When you specify tasks on the command-line, you don't have to provide the full name of the task. You only need to provide enough of the
-            task name to uniquely identify the task. For example, in the sample build above, you can execute task
-            <code class="literal">dist</code> by running <strong class="userinput"><code>gradle d</code></strong>:</p><div class="example"><a name="abbreviateTaskName"></a><p class="title"><b>Example&nbsp;11.3.&nbsp;Abbreviated task name</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle di</code></strong></p><pre class="screen">&gt; gradle di
+Total time: 1 secs</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>你可以本例的输出中看出<code class="literal">test</code>任务并不执行，即使它被<code class="literal">dist</code>任务所依赖。你也可能同时注意到<code class="literal">test</code>任务所依赖的任务，如<code class="literal">compileTest</code>也一样没有执行。而<code class="literal">test</code>所依赖的同时也是另一个任务所需要的任务，如<code class="literal">compile</code>，则仍然执行。<br>You can see from the output of this example, that the <code class="literal">test</code> task is not executed, even though it is a dependency of the <code class="literal">dist</code> task. You will also notice that the <code class="literal">test</code> task's dependencies, such as <code class="literal">compileTest</code> are not executed either. Those dependencies of <code class="literal">test</code> that are required by another task, such as <code class="literal">compile</code>, are still executed.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:continue_build_on_failure"></a>11.3. 失败后继续构建</h2>
+       <h4 class="title"><a name="sec:continue_build_on_failure"></a>11.3.&nbsp;Continuing the build when a failure occurs</h4>
+      </div>
+     </div>
+    </div>
+    <p>默认情况下，只要有任务失败，Gradle就将中断执行让构建失败。这样做会使构建更快地结束，但也会让其他可能发生的失败不被发现。因此你可以使用<code class="literal">--continue</code>选项来在单个构建执行中发现尽可能多的失败。 <br>By default, Gradle will abort execution and fail the build as soon as any task fails. This allows the build to complete sooner, but hides other failures that would have occurred. In order to discover as many failures as possible in a single build execution, you can use the <code class="literal">--continue</code> option.</p>
+    <p>当带上<code class="literal">--continue</code>参数执行时，Gradle将执行<span class="emphasis"><em>所有</em></span>要执行的任务，即该任务的所有依赖任务都会完成执行，而不是一出现错误就停止。所有失败的信息将在构建结束时报告出来。 <br>When executed with <code class="literal">--continue</code>, Gradle will execute <span class="emphasis"><em>every</em></span> task to be executed where all of the dependencies for that task completed without failure, instead of stopping as soon as the first failure is encountered. Each of the encountered failures will be reported at the end of the build.</p>
+    <p>如果任务失败了，则依赖于它的所有后续任务将不会被执行，因为那样做是不安全的。例如，如果在测试代码中存在编译失败，测试将不会运行;因为测试任务会（直接或间接地）依赖于编译任务。 <br>If a task fails, any subsequent tasks that were depending on it will not be executed, as it is not safe to do so. For example, tests will not run if there is a compilation failure in the code under test; because the test task will depend on the compilation task (either directly or indirectly).</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N107F3"></a>11.4. 任务名缩写</h2>
+       <h4 class="title"><a name="N107F3"></a>11.4.&nbsp;Task name abbreviation</h4>
+      </div>
+     </div>
+    </div>
+    <p>在命令行中指定任务时，可以不输入任务的全名，只需要提供可以足够唯一标识任务的任务名。例如，在上面的示例构建中，你可以通过运行<strong class="userinput"><code>gradle d</code></strong>来执行<code class="literal">dist</code>任务：<br>When you specify tasks on the command-line, you don't have to provide the full name of the task. You only need to provide enough of the task name to uniquely identify the task. For example, in the sample build above, you can execute task <code class="literal">dist</code> by running <strong class="userinput"><code>gradle d</code></strong>:</p>
+    <div class="example">
+     <a name="abbreviateTaskName"></a>
+     <p class="title"><b>示例11.3. 缩写任务名称 - Example&nbsp;11.3.&nbsp;Abbreviated task name</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle di</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle di</code></strong></p>
+      <pre class="screen">&gt; gradle di
 :compile
 compiling source
 :compileTest
@@ -68,8 +160,17 @@ building the distribution
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"><p>You can also abbreviate each word in a camel case task name. For example, you can execute task <code class="literal">compileTest</code>
-            by running <strong class="userinput"><code>gradle compTest</code></strong> or even <strong class="userinput"><code>gradle cT</code></strong></p><div class="example"><a name="abbreviateCamelCaseTaskName"></a><p class="title"><b>Example&nbsp;11.4.&nbsp;Abbreviated camel case task name</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle cT</code></strong></p><pre class="screen">&gt; gradle cT
+Total time: 1 secs</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>你也可以对驼峰命名的任务名称的每一个单词进行缩写。例如，你可以通过运行<strong class="userinput"><code>gradle compTest</code></strong>或<strong class="userinput"><code>gradle cT</code></strong>执行<code class="literal">compileTest</code>任务<br>You can also abbreviate each word in a camel case task name. For example, you can execute task <code class="literal">compileTest</code> by running <strong class="userinput"><code>gradle compTest</code></strong> or even <strong class="userinput"><code>gradle cT</code></strong></p>
+    <div class="example">
+     <a name="abbreviateCamelCaseTaskName"></a>
+     <p class="title"><b>示例11.4. 缩写驼峰任务名称 - Example&nbsp;11.4.&nbsp;Abbreviated camel case task name</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle cT</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle cT</code></strong></p>
+      <pre class="screen">&gt; gradle cT
 :compile
 compiling source
 :compileTest
@@ -77,23 +178,75 @@ compiling unit tests
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"><p>You can also use these abbreviations with the <code class="option">-x</code> command-line option.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:selecting_build"></a>11.5.&nbsp;Selecting which build to execute</h2></div></div></div><p>When you run the <span class="command"><strong>gradle</strong></span> command, it looks for a build file in the current directory.
-            You can use the <code class="option">-b</code> option to select another build file.
-            If you use <code class="option">-b</code> option then <code class="filename">settings.gradle</code> file is not used. Example:
-        </p><div class="example"><a name="selectProjectUsingBuildFile"></a><p class="title"><b>Example&nbsp;11.5.&nbsp;Selecting the project using a build file</b></p><div class="example-contents"><p><code class="filename">subdir/myproject.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
+Total time: 1 secs</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>在使用<code class="option">-x</code>命令行选项时，依然可以使用这些缩写。<br>You can also use these abbreviations with the <code class="option">-x</code> command-line option.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:selecting_build"></a>11.5. 选择执行哪个构建</h2>
+       <h4 class="title"><a name="sec:selecting_build"></a>11.5.&nbsp;Selecting which build to execute</h4>
+      </div>
+     </div>
+    </div>
+    <p>当你运行<span class="command"><strong>gradle</strong></span>这个命令时，它会在当前目录中查找一个构建文件。你也可以使用<code class="option">-b</code>选项来选择另一个构建文件。如果你使用<code class="option">-b</code>选项，那么Gradle就不会去用到<code class="filename">settings.gradle</code>文件。例： <br>When you run the <span class="command"><strong>gradle</strong></span> command, it looks for a build file in the current directory. You can use the <code class="option">-b</code> option to select another build file. If you use <code class="option">-b</code> option then <code class="filename">settings.gradle</code> file is not used. Example:</p>
+    <div class="example">
+     <a name="selectProjectUsingBuildFile"></a>
+     <p class="title"><b>示例11.5. 使用构建文件选择项目 - Example&nbsp;11.5.&nbsp;Selecting the project using a build file</b></p>
+     <div class="example-contents">
+      <p><code class="filename">subdir/myproject.gradle</code></p>
+      <pre class="programlisting">task hello &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"using build file '$buildFile.name' in '$buildFile.parentFile.name'."</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle -q -b subdir/myproject.gradle hello</code></strong></p><pre class="screen">&gt; gradle -q -b subdir/myproject.gradle hello
-using build file 'myproject.gradle' in 'subdir'.</pre></div></div><br class="example-break"><p>Alternatively, you can use the <code class="option">-p</code> option to specify the project directory to use.
-        For multi-project builds you should use <code class="option">-p</code> option instead of <code class="option">-b</code> option.
-        </p><div class="example"><a name="selectProjectUsingProjectDir"></a><p class="title"><b>Example&nbsp;11.6.&nbsp;Selecting the project using project directory</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q -p subdir hello</code></strong></p><pre class="screen">&gt; gradle -q -p subdir hello
-using build file 'build.gradle' in 'subdir'.</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:obtaining_information_about_your_build"></a>11.6.&nbsp;Obtaining information about your build</h2></div></div></div><p>Gradle provides several built-in tasks which show particular details of your build. This can be
-            useful for understanding the structure and dependencies of your build, and for debugging problems.
-        </p><p>In addition to the built-in tasks shown below, you can also use the
-            <a class="link" href="project_reports_plugin.html">project report plugin</a> to add tasks to your project which will
-            generate these reports.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10864"></a>11.6.1.&nbsp;Listing projects</h3></div></div></div><p>Running <strong class="userinput"><code>gradle projects</code></strong> gives you a list of the sub-projects of the selected project,
-                displayed in a hierarchy. Here is an example:
-            </p><div class="example"><a name="projectListReport"></a><p class="title"><b>Example&nbsp;11.7.&nbsp;Obtaining information about projects</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q projects</code></strong></p><pre class="screen">&gt; gradle -q projects
+}</pre>
+      <p><strong class="userinput"><code>gradle -q -b subdir/myproject.gradle hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q -b subdir/myproject.gradle hello</code></strong></p>
+      <pre class="screen">&gt; gradle -q -b subdir/myproject.gradle hello
+using build file 'myproject.gradle' in 'subdir'.</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>或者，你也可以使用<code class="option">-p</code>选项来指定使用哪一个项目目录。对于多项目构建，你应该使用<code class="option">-p</code>而不是<code class="option">-b</code>选项。 <br>Alternatively, you can use the <code class="option">-p</code> option to specify the project directory to use. For multi-project builds you should use <code class="option">-p</code> option instead of <code class="option">-b</code> option.</p>
+    <div class="example">
+     <a name="selectProjectUsingProjectDir"></a>
+     <p class="title"><b>示例11.6. 使用项目目录选择项目 - Example&nbsp;11.6.&nbsp;Selecting the project using project directory</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle -q -p subdir hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q -p subdir hello</code></strong></p>
+      <pre class="screen">&gt; gradle -q -p subdir hello
+using build file 'build.gradle' in 'subdir'.</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:obtaining_information_about_your_build"></a>11.6. 获取构建的相关信息</h2>
+       <h4 class="title"><a name="sec:obtaining_information_about_your_build"></a>11.6.&nbsp;Obtaining information about your build</h4>
+      </div>
+     </div>
+    </div>
+    <p>Gradle提供了一些内置任务能展示构建的相关特定信息。这对于了解构建的结构和依赖以及调试问题可能很有用。 <br>Gradle provides several built-in tasks which show particular details of your build. This can be useful for understanding the structure and dependencies of your build, and for debugging problems.</p>
+    <p>除了下面所示的内置任务之外，还可以使用<a class="link" href="project_reports_plugin.html">项目报告插件</a>将一些任务添加到项目中，以生成这些报告。 <br>In addition to the built-in tasks shown below, you can also use the <a class="link" href="project_reports_plugin.html">project report plugin</a> to add tasks to your project which will generate these reports.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10864"></a>11.6.1.&nbsp;列出项目</h3>
+        <h5 class="title"><a name="N10864"></a>11.6.1.&nbsp;Listing projects</h5>
+       </div>
+      </div>
+     </div>
+     <p>运行<strong class="userinput"><code>gradle projects</code></strong>会为你按子项目的层次结构显示出项目列表，如下所示： <br>Running <strong class="userinput"><code>gradle projects</code></strong> gives you a list of the sub-projects of the selected project, displayed in a hierarchy. Here is an example:</p>
+     <div class="example">
+      <a name="projectListReport"></a>
+      <p class="title"><b>示例11.7. 获取项目的相关信息 - Example&nbsp;11.7.&nbsp;Obtaining information about projects</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle -q projects</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q projects</code></strong></p>
+       <pre class="screen">&gt; gradle -q projects
 ------------------------------------------------------------
 Root project
 ------------------------------------------------------------
@@ -103,12 +256,37 @@ Root project 'projectReports'
 \--- Project ':webapp' - The Web application implementation
 
 To see a list of the tasks of a project, run gradle &lt;project-path&gt;:tasks
-For example, try running gradle :api:tasks</pre></div></div><br class="example-break"><p>The report shows the description of each project, if specified. You can provide a description for a project
-                by setting the <code class="literal">description</code> property:
-            </p><div class="example"><a name="projectListReport"></a><p class="title"><b>Example&nbsp;11.8.&nbsp;Providing a description for a project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">description = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'The shared API for the application'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:listing_tasks"></a>11.6.2.&nbsp;Listing tasks</h3></div></div></div><p>Running <strong class="userinput"><code>gradle tasks</code></strong> gives you a list of the main tasks of the
-                selected project. This report shows the default tasks for the project, if any, and a description for
-                each task. Below is an example of this report:
-            </p><div class="example"><a name="taskListReport"></a><p class="title"><b>Example&nbsp;11.9.&nbsp;Obtaining information about tasks</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q tasks</code></strong></p><pre class="screen">&gt; gradle -q tasks
+For example, try running gradle :api:tasks</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>这个报告显示了每一个项目的描述信息（如果你有配置这个项目的描述信息的话）。你可以通过设置<code class="literal">description</code>属性来提供项目的描述信息： <br>The report shows the description of each project, if specified. You can provide a description for a project by setting the <code class="literal">description</code> property:</p>
+     <div class="example">
+      <a name="projectListReport"></a>
+      <p class="title"><b>示例11.8. 提供项目描述信息 - Example&nbsp;11.8.&nbsp;Providing a description for a project</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">description = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'The shared API for the application'</span></pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:listing_tasks"></a>11.6.2.&nbsp;列出任务</h3>
+        <h5 class="title"><a name="sec:listing_tasks"></a>11.6.2.&nbsp;Listing tasks</h5>
+       </div>
+      </div>
+     </div>
+     <p>运行<strong class="userinput"><code>gradle tasks</code></strong>会为你列出所选项目的主要任务。报告会显示项目的默认任务（如果有配置默认任务的话），以及每个任务的说明。以下是关于该报告的示例： <br>Running <strong class="userinput"><code>gradle tasks</code></strong> gives you a list of the main tasks of the selected project. This report shows the default tasks for the project, if any, and a description for each task. Below is an example of this report:</p>
+     <div class="example">
+      <a name="taskListReport"></a>
+      <p class="title"><b>示例11.9. 获取任务的相关信息 - Example&nbsp;11.9.&nbsp;Obtaining information about tasks</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle -q tasks</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q tasks</code></strong></p>
+       <pre class="screen">&gt; gradle -q tasks
 ------------------------------------------------------------
 All tasks runnable from root project
 ------------------------------------------------------------
@@ -135,16 +313,30 @@ projects - Displays the sub-projects of root project 'projectReports'.
 properties - Displays the properties of root project 'projectReports'.
 tasks - Displays the tasks runnable from root project 'projectReports' (some of the displayed tasks may belong to subprojects).
 
-To see all tasks and more detail, run with --all.</pre></div></div><br class="example-break"><p>By default, this report shows only those tasks which have been assigned to a task group. You can do this
-                by setting the <code class="literal">group</code> property for the task. You can also set the <code class="literal">description</code>
-                property, to provide a description to be included in the report.
-            </p><div class="example"><a name="taskListReport"></a><p class="title"><b>Example&nbsp;11.10.&nbsp;Changing the content of the task report</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dists {
+To see all tasks and more detail, run with --all.</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>默认情况下，此报告仅显示已分配给任务组的任务。你可以通过为任务设置<code class="literal">group</code>属性来实现它。你也可以通过设置<code class="literal">description</code>属性，来提供包含在报告中的描述。 <br>By default, this report shows only those tasks which have been assigned to a task group. You can do this by setting the <code class="literal">group</code> property for the task. You can also set the <code class="literal">description</code> property, to provide a description to be included in the report.</p>
+     <div class="example">
+      <a name="taskListReport"></a>
+      <p class="title"><b>示例11.10. 更改任务报告的内容 - Example&nbsp;11.10.&nbsp;Changing the content of the task report</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">dists {
     description = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Builds the distribution'</span>
     group = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build'</span>
-}</pre></div></div><br class="example-break"><p>You can obtain more information in the task listing using the <code class="option">--all</code> option. With
-                this option, the task report lists all tasks in the project, grouped by main task, and the dependencies
-                for each task. Here is an example:
-            </p><div class="example"><a name="taskListAllReport"></a><p class="title"><b>Example&nbsp;11.11.&nbsp;Obtaining more information about tasks</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q tasks --all</code></strong></p><pre class="screen">&gt; gradle -q tasks --all
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>当然你也可以使用<code class="option">--all</code>选项，来获取更多的任务信息。使用此选项时，任务报告将按主要任务以及每一个任务的依赖进行分组，来列出项目中的所有任务。例子如下： <br>You can obtain more information in the task listing using the <code class="option">--all</code> option. With this option, the task report lists all tasks in the project, grouped by main task, and the dependencies for each task. Here is an example:</p>
+     <div class="example">
+      <a name="taskListAllReport"></a>
+      <p class="title"><b>示例11.11. 获取任务的更多相关信息 - Example&nbsp;11.11.&nbsp;Obtaining more information about tasks</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle -q tasks --all</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q tasks --all</code></strong></p>
+       <pre class="screen">&gt; gradle -q tasks --all
 ------------------------------------------------------------
 All tasks runnable from root project
 ------------------------------------------------------------
@@ -187,10 +379,27 @@ api:properties - Displays the properties of project ':api'.
 webapp:properties - Displays the properties of project ':webapp'.
 tasks - Displays the tasks runnable from root project 'projectReports' (some of the displayed tasks may belong to subprojects).
 api:tasks - Displays the tasks runnable from project ':api'.
-webapp:tasks - Displays the tasks runnable from project ':webapp'.</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:show_task_details"></a>11.6.3.&nbsp;Show task usage details</h3></div></div></div><p>Running <strong class="userinput"><code>gradle help --task someTask</code></strong> gives you detailed information about a specific task or multiple
-                tasks matching the given task name in your multiproject build.
-                Below is an example of this detailed information:
-            </p><div class="example"><a name="taskHelp"></a><p class="title"><b>Example&nbsp;11.12.&nbsp;Obtaining detailed help for tasks</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q help --task libs</code></strong></p><pre class="screen">&gt; gradle -q help --task libs
+webapp:tasks - Displays the tasks runnable from project ':webapp'.</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:show_task_details"></a>11.6.3. 显示任务帮助信息</h3>
+        <h5 class="title"><a name="sec:show_task_details"></a>11.6.3.&nbsp;Show task usage details</h5>
+       </div>
+      </div>
+     </div>
+     <p>运行<strong class="userinput"><code>gradle help --task someTask</code></strong>可以向你提供有关指定任务或是在多项目构建中与所指定的任务名称相匹配的所有任务的详细信息。如下所示： <br>Running <strong class="userinput"><code>gradle help --task someTask</code></strong> gives you detailed information about a specific task or multiple tasks matching the given task name in your multiproject build. Below is an example of this detailed information:</p>
+     <div class="example">
+      <a name="taskHelp"></a>
+      <p class="title"><b>示例11.12. 获取任务的帮助信息 - Example&nbsp;11.12.&nbsp;Obtaining detailed help for tasks</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle -q help --task libs</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q help --task libs</code></strong></p>
+       <pre class="screen">&gt; gradle -q help --task libs
 Detailed task information for libs
 
 Paths
@@ -201,12 +410,28 @@ Type
      Task (org.gradle.api.Task)
 
 Description
-     Builds the JAR</pre></div></div><br class="example-break"><p>This information includes the full task path, the task type, possible commandline options and the description of the given task.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:listing_dependencies"></a>11.6.4.&nbsp;Listing project dependencies</h3></div></div></div><p><a name="para:commandline_dependency_report"></a>Running <strong class="userinput"><code>gradle dependencies</code></strong>
-                gives you a list of the dependencies of the selected project, broken down by configuration. For each
-                configuration, the direct and transitive dependencies of that configuration are shown in a tree. Below
-                is an example of this report:
-            </p><div class="example"><a name="dependencyListReport"></a><p class="title"><b>Example&nbsp;11.13.&nbsp;Obtaining information about dependencies</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q dependencies api:dependencies webapp:dependencies</code></strong></p><pre class="screen">&gt; gradle -q dependencies api:dependencies webapp:dependencies
+     Builds the JAR</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>该信息包括完整的任务路径，任务类型，可用的命令行选项以及任务的描述信息。 <br>This information includes the full task path, the task type, possible commandline options and the description of the given task.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:listing_dependencies"></a>11.6.4. 列出项目依赖</h3>
+        <h5 class="title"><a name="sec:listing_dependencies"></a>11.6.4.&nbsp;Listing project dependencies</h5>
+       </div>
+      </div>
+     </div>
+     <p><a name="para:commandline_dependency_report"></a>运行<strong class="userinput"><code>gradle dependencies</code></strong>会为你列出所选项目的依赖关系，这些依赖会根据配置的任务细分。对于每个配置，它的直接和传递依赖会按树型结构展示出来。如下例： <br><a name="para:commandline_dependency_report"></a>Running <strong class="userinput"><code>gradle dependencies</code></strong> gives you a list of the dependencies of the selected project, broken down by configuration. For each configuration, the direct and transitive dependencies of that configuration are shown in a tree. Below is an example of this report:</p>
+     <div class="example">
+      <a name="dependencyListReport"></a>
+      <p class="title"><b>示例11.13. 获取依赖的相关信息 - Example&nbsp;11.13.&nbsp;Obtaining information about dependencies</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle -q dependencies api:dependencies webapp:dependencies</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q dependencies api:dependencies webapp:dependencies</code></strong></p>
+       <pre class="screen">&gt; gradle -q dependencies api:dependencies webapp:dependencies
 ------------------------------------------------------------
 Root project
 ------------------------------------------------------------
@@ -234,37 +459,69 @@ compile
 \--- commons-io:commons-io:1.2
 
 testCompile
-No dependencies</pre></div></div><br class="example-break"><p>
-                Since a dependency report can get large, it can be useful to restrict the report to a particular configuration.
-                This is achieved with the optional <strong class="userinput"><code>--configuration</code></strong> parameter:
-            </p><div class="example"><a name="dependencyListReportFiltered"></a><p class="title"><b>Example&nbsp;11.14.&nbsp;Filtering dependency report by configuration</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q api:dependencies --configuration testCompile</code></strong></p><pre class="screen">&gt; gradle -q api:dependencies --configuration testCompile
+No dependencies</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 由于一份依赖报告可能会很长，因此只显示指定配置的报告会很有用，它通过可选的<strong class="userinput"><code>--configuration</code></strong>参数来实现： <br>Since a dependency report can get large, it can be useful to restrict the report to a particular configuration. This is achieved with the optional <strong class="userinput"><code>--configuration</code></strong> parameter:</p>
+     <div class="example">
+      <a name="dependencyListReportFiltered"></a>
+      <p class="title"><b>示例11.14. 按配置过滤依赖报告 - Example&nbsp;11.14.&nbsp;Filtering dependency report by configuration</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle -q api:dependencies --configuration testCompile</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q api:dependencies --configuration testCompile</code></strong></p>
+       <pre class="screen">&gt; gradle -q api:dependencies --configuration testCompile
 ------------------------------------------------------------
 Project :api - The shared API for the application
 ------------------------------------------------------------
 
 testCompile
 \--- junit:junit:4.11
-     \--- org.hamcrest:hamcrest-core:1.3</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:dependency_insight"></a>11.6.5.&nbsp;Getting the insight into a particular dependency</h3></div></div></div><p><a name="para:commandline_dependency_insight_report"></a>Running <strong class="userinput"><code>gradle dependencyInsight</code></strong>
-                gives you an insight into a particular dependency (or dependencies) that match specified input.
-                Below is an example of this report:
-            </p><div class="example"><a name="dependencyInsightReport"></a><p class="title"><b>Example&nbsp;11.15.&nbsp;Getting the insight into a particular dependency</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q webapp:dependencyInsight --dependency groovy --configuration compile</code></strong></p><pre class="screen">&gt; gradle -q webapp:dependencyInsight --dependency groovy --configuration compile
+     \--- org.hamcrest:hamcrest-core:1.3</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:dependency_insight"></a>11.6.5. 查看特定的依赖</h3>
+        <h5 class="title"><a name="sec:dependency_insight"></a>11.6.5.&nbsp;Getting the insight into a particular dependency</h5>
+       </div>
+      </div>
+     </div>
+     <p><a name="para:commandline_dependency_insight_report"></a>运行<strong class="userinput"><code>gradle dependencyInsight</code></strong>会让你深入了解与指定的输入内容相匹配的特定依赖（或多个依赖）。示例如下： <br><a name="para:commandline_dependency_insight_report"></a>Running <strong class="userinput"><code>gradle dependencyInsight</code></strong> gives you an insight into a particular dependency (or dependencies) that match specified input. Below is an example of this report:</p>
+     <div class="example">
+      <a name="dependencyInsightReport"></a>
+      <p class="title"><b>示例11.15. 查看特定的依赖 - Example&nbsp;11.15.&nbsp;Getting the insight into a particular dependency</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle -q webapp:dependencyInsight --dependency groovy --configuration compile</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q webapp:dependencyInsight --dependency groovy --configuration compile</code></strong></p>
+       <pre class="screen">&gt; gradle -q webapp:dependencyInsight --dependency groovy --configuration compile
 org.codehaus.groovy:groovy-all:2.3.3
 \--- project :api
-     \--- compile</pre></div></div><br class="example-break"><p>
-                This task is extremely useful for investigating the dependency resolution,
-                finding out where certain dependencies are coming from and why certain versions are selected.
-                For more information please see <a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html" target="_top"><code class="classname">DependencyInsightReportTask</code></a>.
-            </p><p>
-                The built-in dependencyInsight task is a part of the 'Help' tasks group.
-                The task needs to configured with the dependency and the configuration.
-                The report looks for the dependencies that match the specified dependency spec in the specified configuration.
-                If java related plugin is applied, the dependencyInsight task is pre-configured with 'compile' configuration because typically it's the compile dependencies we are interested in.
-                You should specify the dependency you are interested in via the command line '--dependency' option.
-                If you don't like the defaults you may select the configuration via '--configuration' option.
-                For more information see <a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html" target="_top"><code class="classname">DependencyInsightReportTask</code></a>.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:listing_properties"></a>11.6.6.&nbsp;Listing project properties</h3></div></div></div><p>Running <strong class="userinput"><code>gradle properties</code></strong> gives you a list of the properties of the selected
-                project. This is a snippet from the output:
-            </p><div class="example"><a name="propertyListReport"></a><p class="title"><b>Example&nbsp;11.16.&nbsp;Information about properties</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q api:properties</code></strong></p><pre class="screen">&gt; gradle -q api:properties
+     \--- compile</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 这一任务对于调查依赖解析非常有用，它可以找出某些依赖关系来自于哪，以及为什么选择这些版本。有关更多信息，请参阅<a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html" target="_top"><code class="classname">DependencyInsightReportTask</code></a>。 <br>This task is extremely useful for investigating the dependency resolution, finding out where certain dependencies are coming from and why certain versions are selected. For more information please see <a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html" target="_top"><code class="classname">DependencyInsightReportTask</code></a>.</p>
+     <p> 内置的dependencyInsight任务是“Help”任务组的一部分。该任务需要使用依赖和配置信息来配置。报告将在指定的配置中查找与指定依赖说明相匹配的依赖项。例如，如果应用了java相关的插件，那么dependencyInsight任务是通过“compile”配置进行预配置的，因为通常来说，我们感兴趣的是编译的依赖。如果你想要指定所感兴趣的依赖，可以使用命令行“--configurastion”选项。如果您不想要默认的配置，也可以通过“--configuration”选项来选择配置。更多信息请参阅<a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html" target="_top"><code class="classname">DependencyInsightReportTask</code></a>。 <br>The built-in dependencyInsight task is a part of the 'Help' tasks group. The task needs to configured with the dependency and the configuration. The report looks for the dependencies that match the specified dependency spec in the specified configuration. If java related plugin is applied, the dependencyInsight task is pre-configured with 'compile' configuration because typically it's the compile dependencies we are interested in. You should specify the dependency you are interested in via the command line '--dependency' option. If you don't like the defaults you may select the configuration via '--configuration' option. For more information see <a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.DependencyInsightReportTask.html" target="_top"><code class="classname">DependencyInsightReportTask</code></a>.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:listing_properties"></a>11.6.6. 列出项目属性</h3>
+        <h5 class="title"><a name="sec:listing_properties"></a>11.6.6.&nbsp;Listing project properties</h5>
+       </div>
+      </div>
+     </div>
+     <p>运行<strong class="userinput"><code>gradle properties</code></strong>会向你列出所选项目的属性。如下例： <br>Running <strong class="userinput"><code>gradle properties</code></strong> gives you a list of the properties of the selected project. This is a snippet from the output:</p>
+     <div class="example">
+      <a name="propertyListReport"></a>
+      <p class="title"><b>示例11.16. 获取属性的相关信息 - Example&nbsp;11.16.&nbsp;Information about properties</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle -q api:properties</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q api:properties</code></strong></p>
+       <pre class="screen">&gt; gradle -q api:properties
 ------------------------------------------------------------
 Project :api - The shared API for the application
 ------------------------------------------------------------
@@ -276,20 +533,65 @@ artifacts: org.gradle.api.internal.artifacts.dsl.DefaultArtifactHandler@12345
 asDynamicObject: org.gradle.api.internal.ExtensibleDynamicObject@12345
 baseClassLoaderScope: org.gradle.api.internal.initialization.DefaultClassLoaderScope@12345
 buildDir: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build
-buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build.gradle</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:profiling_build"></a>11.6.7.&nbsp;Profiling a build</h3></div></div></div><p>The <strong class="userinput"><code>--profile</code></strong> command line option will record some useful timing information
-            while your build is running and write a report to the <code class="filename">build/reports/profile</code> directory.
-            The report will be named using the time when the build was run.
-            </p><p>This report lists summary times and details for both the configuration phase and task execution.  The
-                times for configuration and task execution are sorted with the most expensive operations first.  The task
-                execution results also indicate if any tasks were skipped (and the reason) or if tasks that were not skipped
-                did no work.
-            </p><p>Builds which utilize a buildSrc directory will generate a second profile report for buildSrc in the
-                <code class="filename">buildSrc/build</code> directory.                
-            </p><table cellpadding="0" cellspacing="0" summary="manufactured viewport for HTML img" border="0" width="903"><tr height="477"><td><img src="img/profile.png" height="477"></td></tr></table></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:dry_run"></a>11.7.&nbsp;Dry Run</h2></div></div></div><p>Sometimes you are interested in which tasks are executed in which order for a given set of tasks specified on the
-            command line, but you don't want the tasks to be executed. You can use the <code class="option">-m</code> option for this.
-            For example <strong class="userinput"><code>gradle -m clean compile</code></strong> shows you all tasks to be executed as
-            part of the <code class="literal">clean</code> and <code class="literal">compile</code> tasks.
-            This is complementary to the <code class="option">tasks</code> task, which shows you the tasks which are available for
-            execution.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10953"></a>11.8.&nbsp;Summary</h2></div></div></div><p>In this chapter, you have seen some of the things you can do with Gradle from the command-line. You can
-            find out more about the <span class="command"><strong>gradle</strong></span> command in <a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="web_project_tutorial.html" title="Chapter&nbsp;10.&nbsp;Web Application Quickstart">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface">Next</a></div></div></div></body></html>
+buildFile: /home/user/gradle/samples/userguide/tutorial/projectReports/api/build.gradle</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:profiling_build"></a>11.6.7.&nbsp;分析构建</h3>
+        <h5 class="title"><a name="sec:profiling_build"></a>11.6.7.&nbsp;Profiling a build</h5>
+       </div>
+      </div>
+     </div>
+     <p>使用<strong class="userinput"><code>--profile</code></strong>命令行选项会在运行构建时记录一些有用的计时信息，并以运行构建时的时间命名，把报告保存到<code class="filename">build/reports/profile</code>目录。 <br>The <strong class="userinput"><code>--profile</code></strong> command line option will record some useful timing information while your build is running and write a report to the <code class="filename">build/reports/profile</code> directory. The report will be named using the time when the build was run.</p>
+     <p>该报告列出了配置阶段和任务执行的总体时间和详细信息。配置和任务执行的时间会先从大到小排序。任务执行的结果还表明是否有任务被跳过（及跳过原因），或者是否有任务什么都没做却没被跳过。 <br>This report lists summary times and details for both the configuration phase and task execution. The times for configuration and task execution are sorted with the most expensive operations first. The task execution results also indicate if any tasks were skipped (and the reason) or if tasks that were not skipped did no work.</p>
+     <p>使用buildSrc目录的构建为buildSrc在<code class="filename">buildSrc/build</code>目录里生成第二个分析报告。 <br>Builds which utilize a buildSrc directory will generate a second profile report for buildSrc in the <code class="filename">buildSrc/build</code> directory.</p>
+     <table cellpadding="0" cellspacing="0" summary="为HTML img制作的viewport" border="0" width="903">
+      <tbody>
+       <tr height="477">
+        <td><img src="img/profile.png" height="477"></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:dry_run"></a>11.7. 演练</h2>
+       <h4 class="title"><a name="sec:dry_run"></a>11.7.&nbsp;Dry Run</h4>
+      </div>
+     </div>
+    </div>
+    <p>有时候你可能想知道，以命令行指定的给定一组任务会以怎样的顺序去执行，但你不希望任务被真的执行，就可以使用<code class="option">-m</code>这个选项。例如<strong class="userinput"><code>gradle -m clean compile</code></strong>会显示所有要执行的任务，如<code class="literal">clean</code>和<code class="literal">compile</code>任务。这是对<code class="option">tasks</code>任务的补充，用于显示可以执行的任务。 <br>Sometimes you are interested in which tasks are executed in which order for a given set of tasks specified on the command line, but you don't want the tasks to be executed. You can use the <code class="option">-m</code> option for this. For example <strong class="userinput"><code>gradle -m clean compile</code></strong> shows you all tasks to be executed as part of the <code class="literal">clean</code> and <code class="literal">compile</code> tasks. This is complementary to the <code class="option">tasks</code> task, which shows you the tasks which are available for execution.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10953"></a>11.8. 总结</h2>
+       <h4 class="title"><a name="N10953"></a>11.8.&nbsp;Summary</h4>
+      </div>
+     </div>
+    </div>
+    <p>在本章中，你已经学到了许多可以从命令行做的事情。关于<span class="command"><strong>gradle这</strong></span>命令的更多信息，可以参考《<a class="xref" href="gradle_command_line.html">附录D，<i>Gradle命令行</i></a>》。<br>In this chapter, you have seen some of the things you can do with Gradle from the command-line. You can find out more about the <span class="command"><strong>gradle</strong></span> command in <a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>.</p>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="web_project_tutorial.html" title="第十章. Web 应用程序快速入门">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="第十二章. 使用Gradle 图形用户界面">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
