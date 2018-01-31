@@ -1,90 +1,222 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;13.&nbsp;Writing Build Scripts</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface"><link rel="next" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="writing_build_scripts"></a>Chapter&nbsp;13.&nbsp;Writing Build Scripts</h1></div></div></div><p>This chapter looks at some of the details of writing a build script.</p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N109CD"></a>13.1.&nbsp;The Gradle build language</h2></div></div></div><p>Gradle provides a <em class="firstterm">domain specific language</em>, or DSL, for describing builds.
-            This build language is based on Groovy, with some additions to make it easier to describe a build.
-        </p><p>
-            A build script can contain any Groovy language element.
-            <sup>[<a href="#ftn.N109D7" name="N109D7" class="footnote">5</a>]</sup>
-            Gradle assumes that each build script is encoded using UTF-8.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:project_api"></a>13.2.&nbsp;The Project API</h2></div></div></div><p>In the tutorial in <a class="xref" href="tutorial_java_projects.html">Chapter&nbsp;7, <i>Java Quickstart</i></a> we used, for example, the
-            <code class="literal">apply()</code> method. Where does this method come from? We said earlier that the build script
-            defines a project in Gradle. For each project in the build, Gradle creates an object of type
-            <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> and associates this <code class="classname">Project</code> object with
-            the build script. As the build script executes, it configures this <code class="classname">Project</code> object:
-        </p><div class="tip"><h3 class="title">Getting help writing build scripts</h3><p>Don't forget that your build script is simply Groovy code that drives the Gradle API. And the
-                <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> interface is your starting point for accessing everything
-                in the Gradle API. So, if you're wondering what 'tags' are available in your build script, you can
-                start with the documentation for the <code class="classname">Project</code> interface.
-            </p></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Any method you call in your build script, which <span class="emphasis"><em>is not defined</em></span>
-                    in the build script, is delegated to the <code class="classname">Project</code> object.
-                </p></li><li class="listitem"><p>Any property you access in your build script, which <span class="emphasis"><em>is not defined</em></span>
-                    in the build script, is delegated to the <code class="classname">Project</code> object.
-                </p></li></ul></div><p>Let's try this out and try to access the <code class="literal">name</code> property of the
-            <code class="classname">Project</code> object.
-        </p><div class="example"><a name="projectApi"></a><p class="title"><b>Example&nbsp;13.1.&nbsp;Accessing property of the Project object</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">println name
-println project.name</pre><p>Output of <strong class="userinput"><code>gradle -q check</code></strong></p><pre class="screen">&gt; gradle -q check
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第十三章. 编写构建脚本 - Chapter&nbsp;13.&nbsp;Writing Build Scripts</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="tutorial_gradle_gui.html" title="第十二章. 使用Gradle 图形用户界面">
+  <link rel="next" href="tutorial_this_and_that.html" title="第十四章. 教程 - 杂七杂八">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="第十二章. 使用Gradle 图形用户界面">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="第十四章. 教程 - 杂七杂八">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="writing_build_scripts"></a>第十三章. 编写构建脚本</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="writing_build_scripts"></a>Chapter&nbsp;13.&nbsp;Writing Build Scripts</h3>
+     </div>
+    </div>
+   </div>
+   <p>这一章着眼于编写构建脚本的一些细节。<br>This chapter looks at some of the details of writing a build script.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N109CD"></a>13.1. Gradle 构建语言</h2>
+       <h4 class="title"><a name="N109CD"></a>13.1.&nbsp;The Gradle build language</h4>
+      </div>
+     </div>
+    </div>
+    <p>Gradle 提供了一种<em class="firstterm">领域特定语言</em>，或者说是 DSL，用于描述构建。这种构建语言基于 Groovy 中，并进行了一些补充，使得更容易地描述构建。 <br>Gradle provides a <em class="firstterm">domain specific language</em>, or DSL, for describing builds. This build language is based on Groovy, with some additions to make it easier to describe a build.</p>
+    <p> 构建脚本可以包含任何Groovy语言元素。 <sup>[<a href="#ftn.N109D7" name="N109D7" class="footnote">5</a>]</sup> Gradle假定每个构建脚本都是使用UTF-8编码。 <br>A build script can contain any Groovy language element. <sup>[<a href="#ftn.N109D7" name="N109D7" class="footnote">5</a>]</sup> Gradle assumes that each build script is encoded using UTF-8.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:project_api"></a>13.2.&nbsp;Project API</h2>
+       <h4 class="title"><a name="sec:project_api"></a>13.2.&nbsp;The Project API</h4>
+      </div>
+     </div>
+    </div>
+    <p>在教程《<a class="xref" href="tutorial_java_projects.html">第七章，<i>Java快速入门</i></a>》中，我们使用了<code class="literal">apply()</code>方法。这种方法从何而来？我们以前说过，构建脚本在Gradle中定义了一个项目。对于构建中的每个项目，Gradle都会创建一个<a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a>类型的对象，并把这一<code class="classname">Project</code>对象与构建脚本相关联。当构建脚本执行时，它会配置这个<code class="classname">Project</code>对象： <br>In the tutorial in <a class="xref" href="tutorial_java_projects.html">Chapter&nbsp;7, <i>Java Quickstart</i></a> we used, for example, the <code class="literal">apply()</code> method. Where does this method come from? We said earlier that the build script defines a project in Gradle. For each project in the build, Gradle creates an object of type <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> and associates this <code class="classname">Project</code> object with the build script. As the build script executes, it configures this <code class="classname">Project</code> object:</p>
+    <div class="tip">
+     <h3 class="title">获取有关编写构建脚本的帮助</h3>
+     <p>不要忘了，你的构建脚本只是简单的可以调用Gradle API的Groovy代码。而且<a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a>界面是你访问Gradle API中的所有内容的起点。所以，如果你想知道你的构建脚本中有什么“标签（tag）”可以使用，那么可以先从文档开始<code class="classname">项目</code>接口。 <br>Don't forget that your build script is simply Groovy code that drives the Gradle API. And the <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> interface is your starting point for accessing everything in the Gradle API. So, if you're wondering what 'tags' are available in your build script, you can start with the documentation for the <code class="classname">Project</code> interface.</p>
+     <h5 class="title">Getting help writing build scripts</h5>
+    </div>
+    <div class="itemizedlist">
+     <ul class="itemizedlist">
+      <li class="listitem"><p>在构建脚本中，你所调用的任何方法，如果在构建脚本中<span class="emphasis"><em>没有定义</em></span>，那么它将被委托给<code class="classname">Project</code>对象。 </p><p>Any method you call in your build script, which <span class="emphasis"><em>is not defined</em></span> in the build script, is delegated to the <code class="classname">Project</code> object. </p></li>
+      <li class="listitem"><p>在构建脚本中，你所访问的任何一个属性，如果在构建脚本里<span class="emphasis"><em>没有定义</em></span>，它也会被委托给<code class="classname">Project</code>对象。 </p><p>Any property you access in your build script, which <span class="emphasis"><em>is not defined</em></span> in the build script, is delegated to the <code class="classname">Project</code> object. </p></li>
+     </ul>
+    </div>
+    <p>下面我们试试看访问<code class="classname">Project</code>对象的<code class="literal">name</code>属性。 <br>Let's try this out and try to access the <code class="literal">name</code> property of the <code class="classname">Project</code> object.</p>
+    <div class="example">
+     <a name="projectApi"></a>
+     <p class="title"><b>示例&nbsp;13.1.&nbsp;访问 Project 对象的属性 - Example&nbsp;13.1.&nbsp;Accessing property of the Project object</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">println name
+println project.name</pre>
+      <p><strong class="userinput"><code>gradle -q check</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q check</code></strong></p>
+      <pre class="screen">&gt; gradle -q check
 projectApi
-projectApi</pre></div></div><br class="example-break"><p>Both <code class="literal">println</code> statements print out the same property. The first uses auto-delegation to
-            the <code class="classname">Project</code> object, for properties not defined in the build script. The other
-            statement uses the <code class="literal">project</code> property available to any build script, which returns the
-            associated <code class="classname">Project</code> object. Only if you define a property or a method which has the
-            same name as a member of the <code class="classname">Project</code> object, you need to use the <code class="literal">project</code>
-            property.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10A3E"></a>13.2.1.&nbsp;Standard project properties</h3></div></div></div><p>The <code class="classname">Project</code> object provides some standard properties, which are available in
-                your build script. The following table lists a few of the commonly used ones.
-            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;13.1.&nbsp;Project Properties</b></p><div class="table-contents"><table id="N10A46"><thead><tr>
-                        <td>Name</td>
-                        <td>Type</td>
-                        <td>Default Value</td>
-                    </tr></thead><tr>
-                    <td><code class="literal">project</code></td>
-                    <td><a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a></td>
-                    <td>The <code class="classname">Project</code> instance</td>
-                </tr><tr>
-                    <td><code class="literal">name</code></td>
-                    <td><code class="classname">String</code></td>
-                    <td>The name of the project directory.</td>
-                </tr><tr>
-                    <td><code class="literal">path</code></td>
-                    <td><code class="classname">String</code></td>
-                    <td>The absolute path of the project.</td>
-                </tr><tr>
-                    <td><code class="literal">description</code></td>
-                    <td><code class="classname">String</code></td>
-                    <td>A description for the project.</td>
-                </tr><tr>
-                    <td><code class="literal">projectDir</code></td>
-                    <td><code class="classname">File</code></td>
-                    <td>The directory containing the build script.</td>
-                </tr><tr>
-                    <td><code class="literal">buildDir</code></td>
-                    <td><code class="classname">File</code></td>
-                    <td><code class="filename"><em class="replaceable"><code>projectDir</code></em>/build</code></td>
-                </tr><tr>
-                    <td><code class="literal">group</code></td>
-                    <td><code class="classname">Object</code></td>
-                    <td><code class="literal">unspecified</code></td>
-                </tr><tr>
-                    <td><code class="literal">version</code></td>
-                    <td><code class="classname">Object</code></td>
-                    <td><code class="literal">unspecified</code></td>
-                </tr><tr>
-                    <td><code class="literal">ant</code></td>
-                    <td><a class="ulink" href="../javadoc/org/gradle/api/AntBuilder.html" target="_top"><code class="classname">AntBuilder</code></a></td>
-                    <td>An <code class="classname">AntBuilder</code> instance</td>
-                </tr></table></div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10AD9"></a>13.3.&nbsp;The Script API</h2></div></div></div><p>When Gradle executes a script, it compiles the script into a class which implements <a class="ulink" href="../dsl/org.gradle.api.Script.html" target="_top"><code class="classname">Script</code></a>.
-            This means that all of the properties and methods declared by the <code class="classname">Script</code> interface
-            are available in your script.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10AE6"></a>13.4.&nbsp;Declaring variables</h2></div></div></div><p>There are two kinds of variables that can be declared in a build script: local variables and extra properties.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10AEB"></a>13.4.1.&nbsp;Local variables</h3></div></div></div><p>Local variables are declared with the <code class="literal">def</code> keyword. They are only visible in the scope where they have been declared.
-                Local variables are a feature of the underlying Groovy language.
-            </p><div class="example"><a name="localVariables"></a><p class="title"><b>Example&nbsp;13.2.&nbsp;Using local variables</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">def dest = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"dest"</span>
+projectApi</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>这两个<code class="literal">println</code>语句打印出相同的属性。在构建脚本中未定义的属性，第一次使用时会自动委派到<code class="classname">Project</code>对象。另一个语句使用了可用于任何构建脚本的<code class="literal">project</code>属性，这个属性返回关联的<code class="classname">Project</code>对象。只有当你定义的属性或方法与这个<code class="classname">Project</code>对象的成员方法或变量重名时，你才需要使用<code class="literal">project</code>属性。 <br>Both <code class="literal">println</code> statements print out the same property. The first uses auto-delegation to the <code class="classname">Project</code> object, for properties not defined in the build script. The other statement uses the <code class="literal">project</code> property available to any build script, which returns the associated <code class="classname">Project</code> object. Only if you define a property or a method which has the same name as a member of the <code class="classname">Project</code> object, you need to use the <code class="literal">project</code> property.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10A3E"></a>13.2.1. 标准project属性</h3>
+        <h5 class="title"><a name="N10A3E"></a>13.2.1.&nbsp;Standard project properties</h5>
+       </div>
+      </div>
+     </div>
+     <p><code class="classname">Project</code>对象提供了一些在构建脚本中可用的标准的属性。下表列出了几个常用的属性。 <br>The <code class="classname">Project</code> object provides some standard properties, which are available in your build script. The following table lists a few of the commonly used ones.</p>
+     <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+      <p class="title"><b>表 13.1. Project属性 - Table&nbsp;13.1.&nbsp;Project Properties</b></p>
+      <div class="table-contents">
+       <table id="N10A46">
+        <thead>
+         <tr> 
+          <td>名称<br>Name</td> 
+          <td>类型<br>Type</td> 
+          <td>默认值<br>Default Value</td> 
+         </tr>
+        </thead>
+        <tbody>
+         <tr> 
+          <td><code class="literal">project</code></td> 
+          <td><a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a></td> 
+          <td><code class="classname">Project</code>实例<br>The <code class="classname">Project</code> instance</td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">name</code></td> 
+          <td><code class="classname">String</code></td> 
+          <td>项目目录名称。<br>The name of the project directory.</td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">path</code></td> 
+          <td><code class="classname">String</code></td> 
+          <td>项目绝对路径。<br>The absolute path of the project.</td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">description</code></td> 
+          <td><code class="classname">String</code></td> 
+          <td>项目描述。<br>A description for the project.</td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">projectDir</code></td> 
+          <td><code class="classname">File</code></td> 
+          <td>包含构建脚本的目录。<br>The directory containing the build script.</td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">buildDir</code></td> 
+          <td><code class="classname">File</code></td> 
+          <td><code class="filename"><em class="replaceable"><code>projectDir</code></em>/build</code></td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">group</code></td> 
+          <td><code class="classname">Object</code></td> 
+          <td><code class="literal">未指定</code><br><code class="literal">unspecified</code></td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">version</code></td> 
+          <td><code class="classname">Object</code></td> 
+          <td><code class="literal">未指定</code><br><code class="literal">unspecified</code></td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">ant</code></td> 
+          <td><a class="ulink" href="../javadoc/org/gradle/api/AntBuilder.html" target="_top"><code class="classname">AntBuilder</code></a></td> 
+          <td><code class="classname">AntBuilder</code>实例<br>An <code class="classname">AntBuilder</code> instance</td> 
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10AD9"></a>13.3.&nbsp; Script API</h2>
+       <h4 class="title"><a name="N10AD9"></a>13.3.&nbsp;The Script API</h4>
+      </div>
+     </div>
+    </div>
+    <p>当Gradle执行脚本时，它会将脚本编译成一个实现<a class="ulink" href="../dsl/org.gradle.api.Script.html" target="_top"><code class="classname">Script</code></a>接口的类。这意味着<code class="classname">Script</code>接口声明的所有属性和方法都可以在你的脚本中使用。 <br>When Gradle executes a script, it compiles the script into a class which implements <a class="ulink" href="../dsl/org.gradle.api.Script.html" target="_top"><code class="classname">Script</code></a>. This means that all of the properties and methods declared by the <code class="classname">Script</code> interface are available in your script.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10AE6"></a>13.4. 声明变量</h2>
+       <h4 class="title"><a name="N10AE6"></a>13.4.&nbsp;Declaring variables</h4>
+      </div>
+     </div>
+    </div>
+    <p>在构建脚本中，可以声明两种变量：局部变量和额外属性。 <br>There are two kinds of variables that can be declared in a build script: local variables and extra properties.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10AEB"></a>13.4.1. 局部变量</h3>
+        <h5 class="title"><a name="N10AEB"></a>13.4.1.&nbsp;Local variables</h5>
+       </div>
+      </div>
+     </div>
+     <p>局部变量是使用<code class="literal">def</code>关键字来定义的，它们只在定义它们的范围内才可见。局部变量是Groovy语言下的一个特点。 <br>Local variables are declared with the <code class="literal">def</code> keyword. They are only visible in the scope where they have been declared. Local variables are a feature of the underlying Groovy language.</p>
+     <div class="example">
+      <a name="localVariables"></a>
+      <p class="title"><b>示例 13.2. 使用局部变量 - Example&nbsp;13.2.&nbsp;Using local variables</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">def dest = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"dest"</span>
 
 task copy(type: Copy) {
     from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"source"</span>
     into dest
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:extra_properties"></a>13.4.2.&nbsp;Extra properties</h3></div></div></div><p>All enhanced objects in Gradle's domain model can hold extra user-defined properties. This includes, but is not limited to, projects, tasks,
-                and source sets. Extra properties can be added, read and set via the owning object's <code class="literal">ext</code> property. Alternatively, an
-                <code class="literal">ext</code> block can be used to add multiple properties at once.
-            </p><div class="example"><a name="extraProperties"></a><p class="title"><b>Example&nbsp;13.3.&nbsp;Using extra properties</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"java"</span>
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:extra_properties"></a>13.4.2.&nbsp;额外属性</h3>
+        <h5 class="title"><a name="sec:extra_properties"></a>13.4.2.&nbsp;Extra properties</h5>
+       </div>
+      </div>
+     </div>
+     <p>在Gradle域模型中，所有增强的对象都可以保存用户定义的额外属性。这包括但不限于项目（projects），任务（tasks）和源码集（source sets）。额外属性可以通过所属对象的<code class="literal">ext</code>属性进行添加，读取和。此外，一个 <code class="literal">ext</code>块可以一次添加多个属性。 <br>All enhanced objects in Gradle's domain model can hold extra user-defined properties. This includes, but is not limited to, projects, tasks, and source sets. Extra properties can be added, read and set via the owning object's <code class="literal">ext</code> property. Alternatively, an <code class="literal">ext</code> block can be used to add multiple properties at once.</p>
+     <div class="example">
+      <a name="extraProperties"></a>
+      <p class="title"><b>示例13.3. 使用额外属性 - Example&nbsp;13.3.&nbsp;Using extra properties</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"java"</span>
 
 ext {
     springVersion = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"3.1.0.RELEASE"</span>
@@ -109,40 +241,116 @@ task printProperties &lt;&lt; {
     println springVersion
     println emailNotification
     sourceSets.matching { it.purpose == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"production"</span> }.each { println it.name }
-}</pre><p>Output of <strong class="userinput"><code>gradle -q printProperties</code></strong></p><pre class="screen">&gt; gradle -q printProperties
+}</pre>
+       <p><strong class="userinput"><code>gradle -q printProperties</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q printProperties</code></strong></p>
+       <pre class="screen">&gt; gradle -q printProperties
 3.1.0.RELEASE
 build@master.org
 main
-plugin</pre></div></div><br class="example-break"><p>In this example, an <code class="literal">ext</code> block adds two extra properties to the <code class="literal">project</code> object. Additionally,
-                a property named <code class="literal">purpose</code> is added to each source set by setting <code class="literal">ext.purpose</code> to
-                <code class="literal">null</code> (<code class="literal">null</code> is a permissible value). Once the properties have been added, they can be read and set like
-                predefined properties.
-            </p><p>By requiring special syntax for adding a property, Gradle can fail fast when an attempt is made to set a (predefined or extra) property
-                but the property is misspelled or does not exist.
-                Extra properties can be accessed from anywhere their owning object can be accessed, giving them a wider scope than local variables.
-                Extra properties on a project are visible from its subprojects.
-            </p><p>For further details on extra properties and their API, see <a class="ulink" href="../dsl/org.gradle.api.plugins.ExtraPropertiesExtension.html" target="_top"><code class="classname">ExtraPropertiesExtension</code></a>.</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10B36"></a>13.5.&nbsp;Some Groovy basics</h2></div></div></div><p>Groovy provides plenty of features for creating DSLs, and the Gradle build language takes advantage of these.
-            Understanding how the build language works will help you when you write your build script, and in particular,
-            when you start to write custom plugins and tasks.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B3B"></a>13.5.1.&nbsp;Groovy JDK</h3></div></div></div><p>
-                Groovy adds lots of useful methods to the standard Java classes. For example, <code class="classname">Iterable</code> gets
-                an <code class="literal">each</code> method, which iterates over the elements of the <code class="classname">Iterable</code>:
-            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.4.&nbsp;Groovy JDK methods</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Iterable gets an each() method</span>
-configurations.runtime.each { File f -&gt; println f }</pre></div></div><br class="example-break"><p>Have a look at <a class="ulink" href="http://groovy.codehaus.org/groovy-jdk/" target="_top">http://groovy.codehaus.org/groovy-jdk/</a> for more details.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B58"></a>13.5.2.&nbsp;Property accessors</h3></div></div></div><p>
-               Groovy automatically converts a property reference into a call to the appropriate getter or setter method.
-            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.5.&nbsp;Property accessors</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Using a getter method</span>
+plugin</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>在这个例子中，<code class="literal">ext</code>块将两个额外属性添加到<code class="literal">project</code>对象中。此外，通过把<code class="literal">ext.purpose</code>设置为<code class="literal">null</code>（<code class="literal">null</code>是允许的值），将<code class="literal">purpose</code>属性添加到每个源码集（source set）中。 <br>In this example, an <code class="literal">ext</code> block adds two extra properties to the <code class="literal">project</code> object. Additionally, a property named <code class="literal">purpose</code> is added to each source set by setting <code class="literal">ext.purpose</code> to <code class="literal">null</code> (<code class="literal">null</code> is a permissible value). Once the properties have been added, they can be read and set like predefined properties.</p>
+     <p>通过添加属性所要求的特殊语法，Gradle 可以在你试图设置（预定义的或额外的） 属性，但拼写错误或不存在时快速失败。额外属性在任何能够访问它们所属对象的地方都可以被访问，这使它们有着比局部变量更广的作用域。父项目上的额外属性，在子项目中也可以访问。 <br>By requiring special syntax for adding a property, Gradle can fail fast when an attempt is made to set a (predefined or extra) property but the property is misspelled or does not exist. Extra properties can be accessed from anywhere their owning object can be accessed, giving them a wider scope than local variables. Extra properties on a project are visible from its subprojects.</p>
+     <p>有关额外属性和其 API 的详细信息，请参阅<a class="ulink" href="../dsl/org.gradle.api.plugins.ExtraPropertiesExtension.html" target="_top"><code class="classname">ExtraPropertiesExtension</code></a>。<br>For further details on extra properties and their API, see <a class="ulink" href="../dsl/org.gradle.api.plugins.ExtraPropertiesExtension.html" target="_top"><code class="classname">ExtraPropertiesExtension</code></a>.</p>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10B36"></a>13.5.一些 Groovy 基础知识</h2>
+       <h4 class="title"><a name="N10B36"></a>13.5.&nbsp;Some Groovy basics</h4>
+      </div>
+     </div>
+    </div>
+    <p>Groovy提供了大量功能来创建DSL，而Gradle构建语言则利用了这些功能。了解构建语言的工作原理将有助于你编写构建脚本，特别是在开始编写自定义插件和任务的时候。 <br>Groovy provides plenty of features for creating DSLs, and the Gradle build language takes advantage of these. Understanding how the build language works will help you when you write your build script, and in particular, when you start to write custom plugins and tasks.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10B3B"></a>13.5.1.&nbsp;Groovy JDK</h3>
+        <h5 class="title"><a name="N10B3B"></a>13.5.1.&nbsp;Groovy JDK</h5>
+       </div>
+      </div>
+     </div>
+     <p> Groovy对标准的Java类添加了许多有用的方法。例如，<code class="classname">Iterable</code>新增了<code class="literal">each</code>方法，可以对<code class="classname">Iterable</code>的元素进行遍历： <br>Groovy adds lots of useful methods to the standard Java classes. For example, <code class="classname">Iterable</code> gets an <code class="literal">each</code> method, which iterates over the elements of the <code class="classname">Iterable</code>:</p>
+     <div class="example">
+      <a name="groovyBasics"></a>
+      <p class="title"><b>示例 13.4. Groovy JDK 的方法 - Example&nbsp;13.4.&nbsp;Groovy JDK methods</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Iterable gets an each() method</span>
+configurations.runtime.each { File f -&gt; println f }</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>更多详细可参阅<a class="ulink" href="http://groovy.codehaus.org/groovy-jdk/" target="_top">http://groovy.codehaus.org/groovy-jdk/</a>。<br>Have a look at <a class="ulink" href="http://groovy.codehaus.org/groovy-jdk/" target="_top">http://groovy.codehaus.org/groovy-jdk/</a> for more details.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10B58"></a>13.5.2. 属性访问器</h3>
+        <h5 class="title"><a name="N10B58"></a>13.5.2.&nbsp;Property accessors</h5>
+       </div>
+      </div>
+     </div>
+     <p> Groovy 会自动地把属性的引用转换为适当的 getter 或 setter 方法。 <br>Groovy automatically converts a property reference into a call to the appropriate getter or setter method.</p>
+     <div class="example">
+      <a name="groovyBasics"></a>
+      <p class="title"><b>示例 13.5. 属性访问器 - Example&nbsp;13.5.&nbsp;Property accessors</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Using a getter method</span>
 println project.buildDir
 println getProject().getBuildDir()
 
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Using a setter method</span>
 project.buildDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>
-getProject().setBuildDir(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>)</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B67"></a>13.5.3.&nbsp;Optional parentheses on method calls</h3></div></div></div><p>
-                Parentheses are optional for method calls.
-            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.6.&nbsp;Method call without parentheses</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">test.systemProperty <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'some.prop'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'value'</span>
-test.systemProperty(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'some.prop'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'value'</span>)</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B76"></a>13.5.4.&nbsp;List and map literals</h3></div></div></div><p>
-                Groovy provides some shortcuts for defining <code class="classname">List</code> and <code class="classname">Map</code>
-                instances.
-            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.7.&nbsp;List and map literals</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// List literal</span>
+getProject().setBuildDir(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>)</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10B67"></a>13.5.3 方法调用上的可选括号</h3>
+        <h5 class="title"><a name="N10B67"></a>13.5.3.&nbsp;Optional parentheses on method calls</h5>
+       </div>
+      </div>
+     </div>
+     <p> 调用方法时括号是可选的。 <br>Parentheses are optional for method calls.</p>
+     <div class="example">
+      <a name="groovyBasics"></a>
+      <p class="title"><b>示例 13.6. 不带括号的方法调用 - Example&nbsp;13.6.&nbsp;Method call without parentheses</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">test.systemProperty <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'some.prop'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'value'</span>
+test.systemProperty(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'some.prop'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'value'</span>)</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10B76"></a>13.5.4.&nbsp;List 和 Map </h3>
+        <h5 class="title"><a name="N10B76"></a>13.5.4.&nbsp;List and map literals</h5>
+       </div>
+      </div>
+     </div>
+     <p> Groovy 提供了一些定义<code class="classname">List</code>和<code class="classname">Map</code>实例的快捷写法。 <br>Groovy provides some shortcuts for defining <code class="classname">List</code> and <code class="classname">Map</code> instances.</p>
+     <div class="example">
+      <a name="groovyBasics"></a>
+      <p class="title"><b>示例&nbsp;13.7.&nbsp;List 和 Map - Example&nbsp;13.7.&nbsp;List and map literals</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// List literal</span>
 test.includes = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org/gradle/api/**'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org/gradle/internal/**'</span>]
 
 List&lt;String&gt; list = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> ArrayList&lt;String&gt;()
@@ -155,19 +363,78 @@ apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'
 
 Map&lt;String, String&gt; map = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> HashMap&lt;String, String&gt;()
 map.put(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'plugin'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>)
-apply(map)</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B8B"></a>13.5.5.&nbsp;Closures as the last parameter in a method</h3></div></div></div><p>The Gradle DSL uses closures in many places. You can find out more about closures <a class="ulink" href="http://groovy.codehaus.org/Closures" target="_top">here</a>.
-                When the last parameter of a method is a closure, you can place the closure after the method call:
-            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.8.&nbsp;Closure as method parameter</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
+apply(map)</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10B8B"></a>13.5.5. 作为方法最后一个参数的闭包</h3>
+        <h5 class="title"><a name="N10B8B"></a>13.5.5.&nbsp;Closures as the last parameter in a method</h5>
+       </div>
+      </div>
+     </div>
+     <p>Gradle DSL在许多地方都使用到了闭包。你可以<a class="ulink" href="http://groovy.codehaus.org/Closures" target="_top">在这里</a>查到关于闭包的资料。当方法的最后一个参数是闭包时，你可以把它放在在方法调用之后： <br>The Gradle DSL uses closures in many places. You can find out more about closures <a class="ulink" href="http://groovy.codehaus.org/Closures" target="_top">here</a>. When the last parameter of a method is a closure, you can place the closure after the method call:</p>
+     <div class="example">
+      <a name="groovyBasics"></a>
+      <p class="title"><b>示例&nbsp;13.8.&nbsp;作为方法参数的闭包 - Example&nbsp;13.8.&nbsp;Closure as method parameter</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">repositories {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"in a closure"</span>
 }
 repositories() { println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"in a closure"</span> }
-repositories({ println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"in a closure"</span> })</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10B9E"></a>13.5.6.&nbsp;Closure delegate</h3></div></div></div><p>
-                Each closure has a <code class="literal">delegate</code> object, which Groovy uses to look up variable and method
-                references which are not local variables or parameters of the closure. Gradle uses this for
-                <em class="firstterm">configuration closures</em>, where the <code class="literal">delegate</code> object is set to
-                the object to be configured.
-            </p><div class="example"><a name="groovyBasics"></a><p class="title"><b>Example&nbsp;13.9.&nbsp;Closure delegates</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">dependencies {
+repositories({ println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"in a closure"</span> })</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10B9E"></a>13.5.6.&nbsp;闭包委托（delegate）</h3>
+        <h5 class="title"><a name="N10B9E"></a>13.5.6.&nbsp;Closure delegate</h5>
+       </div>
+      </div>
+     </div>
+     <p> 每一个闭包都有一个<code class="literal">委托</code>对象，Groovy使用它来查找不是局部变量或闭包参数的变量和方法引用。 Gradle使用它来作为<em class="firstterm">配置闭包</em>，把<code class="literal">委托</code>对象设置为被配置的对象。 <br>Each closure has a <code class="literal">delegate</code> object, which Groovy uses to look up variable and method references which are not local variables or parameters of the closure. Gradle uses this for <em class="firstterm">configuration closures</em>, where the <code class="literal">delegate</code> object is set to the object to be configured.</p>
+     <div class="example">
+      <a name="groovyBasics"></a>
+      <p class="title"><b>示例&nbsp;13.9.&nbsp;闭包委托 - Example&nbsp;13.9.&nbsp;Closure delegates</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">dependencies {
     assert delegate == project.dependencies
     compile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.11'</span>)
     delegate.compile(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.11'</span>)
-}</pre></div></div><br class="example-break"></div></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N109D7" name="ftn.N109D7" class="para">5</a>] </sup>Any language element except for statement labels.</p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="Chapter&nbsp;12.&nbsp;Using the Gradle Graphical User Interface">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'">Next</a></div></div></div></body></html>
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+   </div>
+   <div class="footnotes">
+    <br>
+    <hr align="left" width="100">
+    <div class="footnote">
+     <p><sup>[<a href="#N109D7" name="ftn.N109D7" class="para">5</a>] </sup>除语句标签之外的任何语言元素。<br><sup>[<a href="#N109D7" name="ftn.N109D7" class="para">5</a>] </sup>Any language element except for statement labels.</p>
+    </div>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_gui.html" title="第十二章. 使用Gradle 图形用户界面">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="第十四章. 教程 - 杂七杂八">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
