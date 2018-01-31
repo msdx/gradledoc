@@ -1,11 +1,53 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="writing_build_scripts.html" title="Chapter&nbsp;13.&nbsp;Writing Build Scripts"><link rel="next" href="more_about_tasks.html" title="Chapter&nbsp;15.&nbsp;More about Tasks"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="writing_build_scripts.html" title="Chapter&nbsp;13.&nbsp;Writing Build Scripts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="more_about_tasks.html" title="Chapter&nbsp;15.&nbsp;More about Tasks">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_this_and_that"></a>Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'</h1></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:directory_creation"></a>14.1.&nbsp;Directory creation</h2></div></div></div><p>There is a common situation, that multiple tasks depend on the existence of a directory. Of course you can
-            deal with this by adding a
-            <code class="literal">mkdir</code>
-            to the beginning of those tasks. But this is kind of bloated. There is a better solution (works only if the
-            tasks that need the directory have a
-            <span class="emphasis"><em>dependsOn</em></span>
-            relationship):
-        </p><div class="example"><a name="makeDirectory"></a><p class="title"><b>Example&nbsp;14.1.&nbsp;Directory creation with mkdir</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">def classesDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/classes'</span>)
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第十四章. 教程 - 杂七杂八 - Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="writing_build_scripts.html" title="第十三章. 编写构建脚本">
+  <link rel="next" href="more_about_tasks.html" title="第十五章.&nbsp;任务详述">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="writing_build_scripts.html" title="第十三章. 编写构建脚本">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="more_about_tasks.html" title="第十五章.&nbsp;任务详述">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_this_and_that"></a>第十四章. 教程 - 杂七杂八</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_this_and_that"></a>Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'</h3>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:directory_creation"></a>14.1. 创建目录</h2>
+       <h4 class="title"><a name="sec:directory_creation"></a>14.1.&nbsp;Directory creation</h4>
+      </div>
+     </div>
+    </div>
+    <p>有一个常见的情况是，有多个任务依赖于某个目录的存在。当然，你可以在这些任务开始时执行<code class="literal">mkdir</code>来解决这个问题。但这是一种臃肿的解决方法。更好的解决方案是这样的（仅适用于需要某个目录的这些任务有<span class="emphasis"><em>依赖</em></span>关系的情况）： <br>There is a common situation, that multiple tasks depend on the existence of a directory. Of course you can deal with this by adding a <code class="literal">mkdir</code> to the beginning of those tasks. But this is kind of bloated. There is a better solution (works only if the tasks that need the directory have a <span class="emphasis"><em>dependsOn</em></span> relationship):</p>
+    <div class="example">
+     <a name="makeDirectory"></a>
+     <p class="title"><b>示例 14.1. 使用 mkdir 创建目录 - Example&nbsp;14.1.&nbsp;Directory creation with mkdir</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">def classesDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/classes'</span>)
 
 task resources &lt;&lt; {
     classesDir.mkdirs()
@@ -16,91 +58,187 @@ task compile(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-stri
         println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'The class directory exists. I can operate'</span>
     }
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// do something</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle -q compile</code></strong></p><pre class="screen">&gt; gradle -q compile
-The class directory exists. I can operate</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:gradle_properties_and_system_properties"></a>14.2.&nbsp;Gradle properties and system properties</h2></div></div></div><p>Gradle offers a variety of ways to add properties to your build. With the <code class="option">-D</code> command line
-            option you can pass a system property to the JVM which runs Gradle. The <code class="option">-D</code> option of the
-            <span class="command"><strong>gradle</strong></span> command has the same effect as the <code class="option">-D</code> option of the
-            <span class="command"><strong>java</strong></span> command.
-        </p><p>You can also directly add properties to your project objects using properties files. You can place a
-            <code class="filename">gradle.properties</code> file in the Gradle user home directory (defaults to
-            <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.gradle</code>) or in your project directory. For
-            multi-project builds you can place <code class="filename">gradle.properties</code> files in any subproject directory.
-            The properties of the <code class="filename">gradle.properties</code> can be accessed via the project object. The
-            properties file in the user's home directory has precedence over property files in the project directories.
-        </p><p>You can also add properties directly to your project object via the <code class="option">-P</code>
-            command line option. For more exotic use cases you can even pass properties <span class="emphasis"><em>directly</em></span>
-            to the project object via system and environment properties. For example if you run a build on a continuous
-            integration server where you have no admin rights for the <span class="emphasis"><em>machine</em></span>. Your build script
-            needs properties which values should not be seen by others. Therefore you can't use the <code class="option">-P</code>
-            option. In this case you can add an environment property in the project administration section (invisible to
-            normal users).
-            <sup>[<a href="#ftn.N10C0B" name="N10C0B" class="footnote">6</a>]</sup>
-            If the environment property follows the pattern
-            <code class="literal">ORG_GRADLE_PROJECT_<em class="replaceable"><code>propertyName</code></em>=somevalue</code>,
-            <code class="literal">propertyName</code> is added to your project object. We also support the same mechanism for
-            system properties. The only difference is the pattern, which is
-            <code class="literal">org.gradle.project.<em class="replaceable"><code>propertyName</code></em></code>.
-        </p><p>With the <code class="filename">gradle.properties</code> files you can also set system properties. If a property
-            in such a file has the prefix <code class="literal">systemProp.</code> the property and its value are added to the 
-            system properties, without the prefix.
-            In a multi project build, <code class="literal">systemProp.</code> properties set in any project except the root will be ignored.
-            That is, only <code class="literal">systemProp.</code> in the root project's <code class="filename">gradle.properties</code> file will be set as system properties.
-        </p><div class="example"><a name="properties"></a><p class="title"><b>Example&nbsp;14.2.&nbsp;Setting properties with a gradle.properties file</b></p><div class="example-contents"><p><code class="filename">gradle.properties</code></p><pre class="programlisting">gradlePropertiesProp=gradlePropertiesValue
+}</pre>
+      <p> <strong class="userinput"><code>gradle -q compile</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q compile</code></strong></p>
+      <pre class="screen">&gt; gradle -q compile
+The class directory exists. I can operate</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:gradle_properties_and_system_properties"></a>14.2. Gradle 属性和系统属性</h2>
+       <h4 class="title"><a name="sec:gradle_properties_and_system_properties"></a>14.2.&nbsp;Gradle properties and system properties</h4>
+      </div>
+     </div>
+    </div>
+    <p>Gradle提供了多种方式可以向构建添加属性。使用<code class="option">-D</code>命令行选项可以将系统属性传给运行Gradle的JVM。<span class="command"><strong>gradle</strong></span>命令的<code class="option">-D</code>选项与<span class="command"><strong>java</strong></span>命令的<code class="option">-D</code>选项具有同样的效果。 <br>Gradle offers a variety of ways to add properties to your build. With the <code class="option">-D</code> command line option you can pass a system property to the JVM which runs Gradle. The <code class="option">-D</code> option of the <span class="command"><strong>gradle</strong></span> command has the same effect as the <code class="option">-D</code> option of the <span class="command"><strong>java</strong></span> command.</p>
+    <p>你也可以使用属性文件直接向项目对象添加属性。你可以在Gradle用户主目录（默认为<code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.gradle</code>），或是项目目录中放一个<code class="filename">gradle.properties</code>文件。对于多项目构建，<code class="filename">gradle.properties</code>文件可以放在任何子项目的目录中。<code class="filename">gradle.properties</code>的属性可以通过project对象访问。用户主目录中的属性文件会比项目目录中的属性文件更先被访问到。 <br>You can also directly add properties to your project objects using properties files. You can place a <code class="filename">gradle.properties</code> file in the Gradle user home directory (defaults to <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.gradle</code>) or in your project directory. For multi-project builds you can place <code class="filename">gradle.properties</code> files in any subproject directory. The properties of the <code class="filename">gradle.properties</code> can be accessed via the project object. The properties file in the user's home directory has precedence over property files in the project directories.</p>
+    <p>您还可以通过<code class="option">-P</code>命令行选项直接添加属性到project对象。在更多的用法中，你甚至可以通过系统和环境属性把属性<span class="emphasis"><em>直接</em></span>传到project对象。例如，如果你在持续集成服务器上运行构建，但你没有这台<span class="emphasis"><em>机器</em></span>的管理员权限，而你的构建脚本需要一些属性，这些属性又不能让其他人看到。那么你就不能使用<code class="option">-P</code>选项。在这种情况下，您可以在项目管理部分（对普通用户不可见）添加一个环境属性。 <sup>[<a href="#ftn.N10C0B" name="N10C0B" class="footnote">6</a>]</sup>如果这个环境属性遵循<code class="literal">ORG_GRADLE_PROJECT_<em class="replaceable"><code>propertyName</code></em>=someValue</code>的模式， <code class="literal">propertyName</code>就会被添加到你的项目对象中。我们也支持系统属性相同的机制。唯一的区别就是模式，它是<code class="literal">org.gradle.project.<em class="replaceable"><code>propertyName</code></em></code>。 <br>You can also add properties directly to your project object via the <code class="option">-P</code> command line option. For more exotic use cases you can even pass properties <span class="emphasis"><em>directly</em></span> to the project object via system and environment properties. For example if you run a build on a continuous integration server where you have no admin rights for the <span class="emphasis"><em>machine</em></span>. Your build script needs properties which values should not be seen by others. Therefore you can't use the <code class="option">-P</code> option. In this case you can add an environment property in the project administration section (invisible to normal users). <sup>[<a href="#ftn.N10C0B" name="N10C0B" class="footnote">6</a>]</sup> If the environment property follows the pattern <code class="literal">ORG_GRADLE_PROJECT_<em class="replaceable"><code>propertyName</code></em>=somevalue</code>, <code class="literal">propertyName</code> is added to your project object. We also support the same mechanism for system properties. The only difference is the pattern, which is <code class="literal">org.gradle.project.<em class="replaceable"><code>propertyName</code></em></code>.</p>
+    <p>通过<code class="filename">gradle.properties</code>文件，你还可以设置一些系统属性。如果这类文件中的属性具有<code class="literal">systemProp.</code>前缀，该属性及其值将被添加到系统属性中，而不带此前缀。在多项目建设中，非根目录下的<code class="literal">systemProp.</code>属性会被忽略。也就是说，只有在根项目中的<code class="filename">gradle.properties</code>文件里的<code class="literal">systemProp.</code>属性才会被设置为系统属性。 <br>With the <code class="filename">gradle.properties</code> files you can also set system properties. If a property in such a file has the prefix <code class="literal">systemProp.</code> the property and its value are added to the system properties, without the prefix. In a multi project build, <code class="literal">systemProp.</code> properties set in any project except the root will be ignored. That is, only <code class="literal">systemProp.</code> in the root project's <code class="filename">gradle.properties</code> file will be set as system properties.</p>
+    <div class="example">
+     <a name="properties"></a>
+     <p class="title"><b>示例 14.2. 使用 gradle.properties 文件设置属性 - Example&nbsp;14.2.&nbsp;Setting properties with a gradle.properties file</b></p>
+     <div class="example-contents">
+      <p><code class="filename">gradle.properties</code></p>
+      <pre class="programlisting">gradlePropertiesProp=gradlePropertiesValue
 systemProjectProp=shouldBeOverWrittenBySystemProp
 envProjectProp=shouldBeOverWrittenByEnvProp
-systemProp.system=systemValue</pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">task printProps &lt;&lt; {
+systemProp.system=systemValue</pre>
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task printProps &lt;&lt; {
     println commandLineProjectProp
     println gradlePropertiesProp
     println systemProjectProp
     println envProjectProp
     println System.properties[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'system'</span>]
-}</pre><p>Output of <strong class="userinput"><code>gradle -q -PcommandLineProjectProp=commandLineProjectPropValue -Dorg.gradle.project.systemProjectProp=systemPropertyValue printProps</code></strong></p><pre class="screen">&gt; gradle -q -PcommandLineProjectProp=commandLineProjectPropValue -Dorg.gradle.project.systemProjectProp=systemPropertyValue printProps
+}</pre>
+      <p><strong class="userinput"><code>gradle -q -PcommandLineProjectProp=commandLineProjectPropValue -Dorg.gradle.project.systemProjectProp=systemPropertyValue printProps</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q -PcommandLineProjectProp=commandLineProjectPropValue -Dorg.gradle.project.systemProjectProp=systemPropertyValue printProps</code></strong></p>
+      <pre class="screen">&gt; gradle -q -PcommandLineProjectProp=commandLineProjectPropValue -Dorg.gradle.project.systemProjectProp=systemPropertyValue printProps
 commandLineProjectPropValue
 gradlePropertiesValue
 systemPropertyValue
 envPropertyValue
-systemValue</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:checking_for_project_properties"></a>14.2.1.&nbsp;Checking for project properties</h3></div></div></div><p>You can access a project property in your build script simply by using its name as you would use a
-                variable. In case this property does not exists, an exception is thrown and the build fails. If your
-                build script relies on optional properties the user might set for example in a gradle.properties file,
-                you need to check for existence before you can access them. You can do this by using the method
-                <code class="literal">hasProperty('propertyName')</code>
-                which returns
-                <code class="literal">true</code>
-                or <code class="literal">false</code>.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuring_using_external_script"></a>14.3.&nbsp;Configuring the project using an external build script</h2></div></div></div><p>You can configure the current project using an external build script. All of the Gradle build language
-            is available in the external script. You can even apply other scripts from the external script.
-        </p><div class="example"><a name="configureProjectUsingScript"></a><p class="title"><b>Example&nbsp;14.3.&nbsp;Configuring the project using an external build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply from: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'other.gradle'</span></pre><p><code class="filename">other.gradle</code></p><pre class="programlisting">println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"configuring $project"</span>
+systemValue</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sub:checking_for_project_properties"></a>14.2.1.检查项目的属性</h3>
+        <h5 class="title"><a name="sub:checking_for_project_properties"></a>14.2.1.&nbsp;Checking for project properties</h5>
+       </div>
+      </div>
+     </div>
+     <p>你可以通过属性的名称在构建脚本里访问这个属性，如同使用一个变量一样。如果这个属性不存在，那么就会抛出异常并且构建失败。如果你的构建脚本依赖于一些可选属性，而这些属性用户可能在比如gradle.properties文件中设置，你就需要在访问它们之前先检查它们是否存在。你可以通过使用 <code class="literal">hasProperty('propertyName')</code> 方法来进行检查，它会返回<code class="literal">true</code> 或 <code class="literal">false</code>。 <br>You can access a project property in your build script simply by using its name as you would use a variable. In case this property does not exists, an exception is thrown and the build fails. If your build script relies on optional properties the user might set for example in a gradle.properties file, you need to check for existence before you can access them. You can do this by using the method <code class="literal">hasProperty('propertyName')</code> which returns <code class="literal">true</code> or <code class="literal">false</code>.</p>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:configuring_using_external_script"></a>14.3. 使用外部构建脚本配置项目</h2>
+       <h4 class="title"><a name="sec:configuring_using_external_script"></a>14.3.&nbsp;Configuring the project using an external build script</h4>
+      </div>
+     </div>
+    </div>
+    <p>你可以使用外部构建脚本来配置当前项目。所有的Gradle构建语言都可以在外部脚本中使用，甚至你也可以从外部脚本应用其他脚本。 <br>You can configure the current project using an external build script. All of the Gradle build language is available in the external script. You can even apply other scripts from the external script.</p>
+    <div class="example">
+     <a name="configureProjectUsingScript"></a>
+     <p class="title"><b>示例14.3. 使用外部构建脚本配置项目 - Example&nbsp;14.3.&nbsp;Configuring the project using an external build script</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply from: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'other.gradle'</span></pre>
+      <p><code class="filename">other.gradle</code></p>
+      <pre class="programlisting">println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"configuring $project"</span>
 task hello &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello from other script'</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+}</pre>
+      <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+      <pre class="screen">&gt; gradle -q hello
 configuring root project 'configureProjectUsingScript'
-hello from other script</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuring_arbitrary_objects"></a>14.4.&nbsp;Configuring arbitrary objects</h2></div></div></div><p>You can configure arbitrary objects in the following very readable way.
-        </p><div class="example"><a name="configureObject"></a><p class="title"><b>Example&nbsp;14.4.&nbsp;Configuring arbitrary objects</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task configure &lt;&lt; {
+hello from other script</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:configuring_arbitrary_objects"></a>14.4. 配置任意对象</h2>
+       <h4 class="title"><a name="sec:configuring_arbitrary_objects"></a>14.4.&nbsp;Configuring arbitrary objects</h4>
+      </div>
+     </div>
+    </div>
+    <p>你可以使用以下非常易于理解的方式配置任意对象。 <br>You can configure arbitrary objects in the following very readable way.</p>
+    <div class="example">
+     <a name="configureObject"></a>
+     <p class="title"><b>示例 14.4. 配置任意对象 - Example&nbsp;14.4.&nbsp;Configuring arbitrary objects</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task configure &lt;&lt; {
     def pos = configure(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> java.text.FieldPosition(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">10</span>)) {
         beginIndex = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">1</span>
         endIndex = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">5</span>
     }
     println pos.beginIndex
     println pos.endIndex
-}</pre><p>Output of <strong class="userinput"><code>gradle -q configure</code></strong></p><pre class="screen">&gt; gradle -q configure
+}</pre>
+      <p><strong class="userinput"><code>gradle -q configure</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q configure</code></strong></p>
+      <pre class="screen">&gt; gradle -q configure
 1
-5</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10C8A"></a>14.5.&nbsp;Configuring arbitrary objects using an external script</h2></div></div></div><p>You can also configure arbitrary objects using an external script.
-        </p><div class="example"><a name="configureObjectUsingScript"></a><p class="title"><b>Example&nbsp;14.5.&nbsp;Configuring arbitrary objects using a script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task configure &lt;&lt; {
+5</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10C8A"></a>14.5. 使用外部脚本配置任意对象</h2>
+       <h4 class="title"><a name="N10C8A"></a>14.5.&nbsp;Configuring arbitrary objects using an external script</h4>
+      </div>
+     </div>
+    </div>
+    <p>你还可以使用外部脚本配置任意对象。 <br>You can also configure arbitrary objects using an external script.</p>
+    <div class="example">
+     <a name="configureObjectUsingScript"></a>
+     <p class="title"><b>示例14.5. 使用脚本配置任意对象 - Example&nbsp;14.5.&nbsp;Configuring arbitrary objects using a script</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task configure &lt;&lt; {
     def pos = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> java.text.FieldPosition(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">10</span>)
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Apply the script</span>
     apply from: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'other.gradle'</span>, to: pos
     println pos.beginIndex
     println pos.endIndex
-}</pre><p><code class="filename">other.gradle</code></p><pre class="programlisting"></pre><p>Output of <strong class="userinput"><code>gradle -q configure</code></strong></p><pre class="screen">&gt; gradle -q configure
+}</pre>
+      <p><code class="filename">other.gradle</code></p>
+      <pre class="programlisting"></pre>
+      <p><strong class="userinput"><code>gradle -q configure</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q configure</code></strong></p>
+      <pre class="screen">&gt; gradle -q configure
 1
-5</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:caching"></a>14.6.&nbsp;Caching</h2></div></div></div><p>To improve responsiveness Gradle caches all compiled scripts by default. This includes all build scripts,
-            initialization scripts, and other scripts. The first time you run a build for a project, Gradle creates a
-            <code class="filename">.gradle</code> directory in which it puts the compiled script. The next time you run this
-            build, Gradle uses the compiled script, if the script has not changed since it was compiled.  Otherwise the
-            script gets compiled and the new version is stored in the cache. If you run Gradle with the
-            <code class="option">--recompile-scripts</code> option, the cached script is discarded and the script is compiled and stored
-            in the cache. This way you can force Gradle to rebuild the cache.
-        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N10C0B" name="ftn.N10C0B" class="para">6</a>] </sup>
-                    <span class="emphasis"><em>Teamcity</em></span> or <span class="emphasis"><em>Bamboo</em></span> are for example CI servers which
-                    offer this functionality.
-                </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="writing_build_scripts.html" title="Chapter&nbsp;13.&nbsp;Writing Build Scripts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="more_about_tasks.html" title="Chapter&nbsp;15.&nbsp;More about Tasks">Next</a></div></div></div></body></html>
+5</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:caching"></a>14.6. 缓存</h2>
+       <h4 class="title"><a name="sec:caching"></a>14.6.&nbsp;Caching</h4>
+      </div>
+     </div>
+    </div>
+    <p>为了提高响应速度，Gradle默认情况下会缓存所有已编译的脚本，包括所有构建脚本，初始化脚本和其他脚本。当你第一次运行项目构建时，Gradle会创建一个<code class="filename">.gradle</code>目录用于存放已编译的脚本。下次运行此构建时，如果脚本上次编译之后没有更改，则Gradle将使用已编译的脚本。否则该脚本会被重新编译，并把新版本存储在缓存中。如果你使用 <code class="option">--recompile-scripts</code>选项来执行Gradle，那么会放弃所缓存的脚本，然后重新编译脚本并将其存在缓存中。通过这种方式，你就可以强制Gradle重新生成缓存。 <br>To improve responsiveness Gradle caches all compiled scripts by default. This includes all build scripts, initialization scripts, and other scripts. The first time you run a build for a project, Gradle creates a <code class="filename">.gradle</code> directory in which it puts the compiled script. The next time you run this build, Gradle uses the compiled script, if the script has not changed since it was compiled. Otherwise the script gets compiled and the new version is stored in the cache. If you run Gradle with the <code class="option">--recompile-scripts</code> option, the cached script is discarded and the script is compiled and stored in the cache. This way you can force Gradle to rebuild the cache.</p>
+   </div>
+   <div class="footnotes">
+    <br>
+    <hr align="left" width="100">
+    <div class="footnote">
+     <p><sup>[<a href="#N10C0B" name="ftn.N10C0B" class="para">6</a>]</sup> <span class="emphasis"> <em>Teamcity</em></span>或<span class="emphasis"><em>Bamboo</em></span>就是作为提供这一功能的 CI 服务器的例子。 <br><sup>[<a href="#N10C0B" name="ftn.N10C0B" class="para">6</a>] </sup> <span class="emphasis"><em>Teamcity</em></span> or <span class="emphasis"><em>Bamboo</em></span> are for example CI servers which offer this functionality.</p>
+    </div>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="writing_build_scripts.html" title="第十三章. 编写构建脚本">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="more_about_tasks.html" title="第十五章.&nbsp;任务详述">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
