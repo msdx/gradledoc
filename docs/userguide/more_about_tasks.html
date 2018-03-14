@@ -1,20 +1,71 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;15.&nbsp;More about Tasks</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'"><link rel="next" href="working_with_files.html" title="Chapter&nbsp;16.&nbsp;Working With Files"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="working_with_files.html" title="Chapter&nbsp;16.&nbsp;Working With Files">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="more_about_tasks"></a>Chapter&nbsp;15.&nbsp;More about Tasks</h1></div></div></div><p>In the introductory tutorial (<a class="xref" href="tutorial_using_tasks.html">Chapter&nbsp;6, <i>Build Script Basics</i></a>) you have learned how to
-        create simple tasks. You have also learned how to add additional behavior to these tasks later on. And you have
-        learned how to create dependencies between tasks. This was all about simple tasks. But Gradle takes the concept
-        of tasks further. Gradle supports <em class="firstterm">enhanced tasks</em>, that is, tasks which have their own
-        properties and methods. This is really different to what you are used to with Ant targets. Such enhanced tasks are
-        either provided by you or are provided by Gradle.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10CBF"></a>15.1.&nbsp;Defining tasks</h2></div></div></div><p>We have already seen how to define tasks using a keyword style in <a class="xref" href="tutorial_using_tasks.html">Chapter&nbsp;6, <i>Build Script Basics</i></a>.
-            There are a few variations on this style, which you may need to use in certain situations. For example,
-            the keyword style does not work in expressions.
-        </p><div class="example"><a name="defineAsExpression"></a><p class="title"><b>Example&nbsp;15.1.&nbsp;Defining tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task(hello) &lt;&lt; {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第十五章.&nbsp;任务详述 - Chapter&nbsp;15.&nbsp;More about Tasks</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="tutorial_this_and_that.html" title="第十四章. 教程 - 杂七杂八">
+  <link rel="next" href="working_with_files.html" title="第十六章. 使用文件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="第十四章. 教程 - 杂七杂八">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="working_with_files.html" title="第十六章. 使用文件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="more_about_tasks"></a>第十五章.&nbsp;任务详述</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="more_about_tasks"></a>Chapter&nbsp;15.&nbsp;More about Tasks</h3>
+     </div>
+    </div>
+   </div>
+   <p>在入门教程（《<a class="xref" href="tutorial_using_tasks.html">第六章，<i>构建脚本基础</i></a>》）中，你已经学会了如何创建简单的任务。之后你还学习了如何在向任务添加额外的行为。你也已经学会了如何创建任务之间的依赖。这都是简单的任务。但是Gradle将任务的概念推得更深远。 Gradle支持<em class="firstterm">增强任务</em>，也就是有自己的属性和方法的任务。这是真正的与你所使用的Ant目标（target）的不同之处。这些增强的任务可以由你或者是Gradle提供。 <br>In the introductory tutorial (<a class="xref" href="tutorial_using_tasks.html">Chapter&nbsp;6, <i>Build Script Basics</i></a>) you have learned how to create simple tasks. You have also learned how to add additional behavior to these tasks later on. And you have learned how to create dependencies between tasks. This was all about simple tasks. But Gradle takes the concept of tasks further. Gradle supports <em class="firstterm">enhanced tasks</em>, that is, tasks which have their own properties and methods. This is really different to what you are used to with Ant targets. Such enhanced tasks are either provided by you or are provided by Gradle.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10CBF"></a>15.1. 定义任务</h2>
+       <h4 class="title"><a name="N10CBF"></a>15.1.&nbsp;Defining tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>在《<a class="xref" href="tutorial_using_tasks.html">第六章，<i>构建脚本基础</i></a> 》中我们已经看到如何通过关键字这种风格来定义任务。这种风格有一些变式，可能你在一些具体的场景中会需要。例如，在表达式中不能使用这种关键字风格。 <br>We have already seen how to define tasks using a keyword style in <a class="xref" href="tutorial_using_tasks.html">Chapter&nbsp;6, <i>Build Script Basics</i></a>. There are a few variations on this style, which you may need to use in certain situations. For example, the keyword style does not work in expressions.</p>
+    <div class="example">
+     <a name="defineAsExpression"></a>
+     <p class="title"><b>示例 15.1. 定义任务 - Example&nbsp;15.1.&nbsp;Defining tasks</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task(hello) &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello"</span>
 }
 
 task(copy, type: Copy) {
     from(file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'srcDir'</span>))
     into(buildDir)
-}</pre></div></div><br class="example-break"><p>You can also use strings for the task names:</p><div class="example"><a name="defineUsingStringTaskNames"></a><p class="title"><b>Example&nbsp;15.2.&nbsp;Defining tasks - using strings for task names</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>) &lt;&lt;
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>你还可以使用字符串作为任务名称：<br>You can also use strings for the task names:</p>
+    <div class="example">
+     <a name="defineUsingStringTaskNames"></a>
+     <p class="title"><b>示例 15.2. 定义任务 —— 使用字符串作为任务名称 - Example&nbsp;15.2.&nbsp;Defining tasks - using strings for task names</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>) &lt;&lt;
 {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello"</span>
 }
@@ -22,27 +73,71 @@ task(copy, type: Copy) {
 task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'copy'</span>, type: Copy) {
     from(file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'srcDir'</span>))
     into(buildDir)
-}</pre></div></div><br class="example-break"><p>There is an alternative syntax for defining tasks, which you may prefer to use:</p><div class="example"><a name="addToTaskContainer"></a><p class="title"><b>Example&nbsp;15.3.&nbsp;Defining tasks with alternative syntax</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">tasks.create(name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>) &lt;&lt; {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>有一种用于定义任务的替代语法，你可能更希望使用：<br>There is an alternative syntax for defining tasks, which you may prefer to use:</p>
+    <div class="example">
+     <a name="addToTaskContainer"></a>
+     <p class="title"><b>示例 15.3. 使用替代语法定义任务 - Example&nbsp;15.3.&nbsp;Defining tasks with alternative syntax</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">tasks.create(name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>) &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello"</span>
 }
 
 tasks.create(name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'copy'</span>, type: Copy) {
     from(file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'srcDir'</span>))
     into(buildDir)
-}</pre></div></div><br class="example-break"><p>Here we add tasks to the <code class="literal">tasks</code> collection. Have a look at
-            <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskContainer.html" target="_top"><code class="classname">TaskContainer</code></a> for more variations of the <code class="literal">create()</code>
-            method.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10CF6"></a>15.2.&nbsp;Locating tasks</h2></div></div></div><p>You often need to locate the tasks that you have defined in the build file, for example, to configure them
-            or use them for dependencies. There are a number of ways of doing this. Firstly, each task is available as
-            a property of the project, using the task name as the property name:
-        </p><div class="example"><a name="accessAsProperty"></a><p class="title"><b>Example&nbsp;15.4.&nbsp;Accessing tasks as properties</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>在这里我们将任务添加到<code class="literal">tasks</code>集合。关于<code class="literal">create()</code>方法<a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskContainer.html" target="_top">的其他重载方法，可以看一下<code class="classname">TaskContainer</code></a>接口。<br>Here we add tasks to the <code class="literal">tasks</code> collection. Have a look at <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskContainer.html" target="_top"><code class="classname">TaskContainer</code></a> for more variations of the <code class="literal">create()</code> method.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10CF6"></a>15.2. 查找任务</h2>
+       <h4 class="title"><a name="N10CF6"></a>15.2.&nbsp;Locating tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>我们经常需要在构建文件中查找所定义的任务。例如，为了去配置它们，或是依赖它们。对这样的情况，有很多种方法可以解决。首先，每个任务都可以使用任务名称作为属性名称，当为项目的属性来使用： <br>You often need to locate the tasks that you have defined in the build file, for example, to configure them or use them for dependencies. There are a number of ways of doing this. Firstly, each task is available as a property of the project, using the task name as the property name:</p>
+    <div class="example">
+     <a name="accessAsProperty"></a>
+     <p class="title"><b>示例 15.4. 以属性方式访问任务 - Example&nbsp;15.4.&nbsp;Accessing tasks as properties</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task hello
 
 println hello.name
-println project.hello.name</pre></div></div><br class="example-break"><p>Tasks are also available through the <code class="literal">tasks</code> collection.</p><div class="example"><a name="accessFromTaskContainer"></a><p class="title"><b>Example&nbsp;15.5.&nbsp;Accessing tasks via tasks collection</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello
+println project.hello.name</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>任务也可以通过<code class="literal">tasks</code>集合来访问。<br>Tasks are also available through the <code class="literal">tasks</code> collection.</p>
+    <div class="example">
+     <a name="accessFromTaskContainer"></a>
+     <p class="title"><b>示例 15.5. 通过tasks集合访问任务 - Example&nbsp;15.5.&nbsp;Accessing tasks via tasks collection</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task hello
 
 println tasks.hello.name
-println tasks[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>].name</pre></div></div><br class="example-break"><p>You can access tasks from any project using the task's path using the <code class="literal">tasks.getByPath()</code>
-            method. You can call the <code class="literal">getByPath()</code> method with a task name, or a relative path, or an
-            absolute path.</p><div class="example"><a name="accessUsingPath"></a><p class="title"><b>Example&nbsp;15.6.&nbsp;Accessing tasks by path</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectA'</span>) {
+println tasks[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>].name</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>你可以在任何项目中使用<code class="literal">tasks.getByPath()</code>方法获取任务路径，并且通过这个路径来访问任务。你也可以用一个任务的名称，相对路径或者是绝对路径作为参数，来调用<code class="literal">getByPath()</code>方法。<br>You can access tasks from any project using the task's path using the <code class="literal">tasks.getByPath()</code> method. You can call the <code class="literal">getByPath()</code> method with a task name, or a relative path, or an absolute path.</p>
+    <div class="example">
+     <a name="accessUsingPath"></a>
+     <p class="title"><b>示例&nbsp;15.6.&nbsp;通过路径访问任务 - Example&nbsp;15.6.&nbsp;Accessing tasks by path</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectA'</span>) {
     task hello
 }
 
@@ -51,47 +146,99 @@ task hello
 println tasks.getByPath(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>).path
 println tasks.getByPath(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':hello'</span>).path
 println tasks.getByPath(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'projectA:hello'</span>).path
-println tasks.getByPath(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectA:hello'</span>).path</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+println tasks.getByPath(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectA:hello'</span>).path</pre>
+      <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+      <pre class="screen">&gt; gradle -q hello
 :hello
 :hello
 :projectA:hello
-:projectA:hello</pre></div></div><br class="example-break"><p>Have a look at <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskContainer.html" target="_top"><code class="classname">TaskContainer</code></a> for more options for locating tasks.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:configuring_tasks"></a>15.3.&nbsp;Configuring tasks</h2></div></div></div><p>As an example, let's look at the <code class="classname">Copy</code> task provided by Gradle. To create a
-            <code class="classname">Copy</code> task for your build, you can declare in your build script:
-        </p><div class="example"><a name="declareTask"></a><p class="title"><b>Example&nbsp;15.7.&nbsp;Creating a copy task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task myCopy(type: Copy)</pre></div></div><br class="example-break"><p>This creates a copy task with no default behavior.
-            The task can be configured using its API (see <a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a>).
-			The following examples show several different ways to achieve the same configuration.
-        </p><div class="example"><a name="configureUsingVar"></a><p class="title"><b>Example&nbsp;15.8.&nbsp;Configuring a task - various ways</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">Copy myCopy = task(myCopy, type: Copy)
+:projectA:hello</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>有关查找任务的更多选项，可以看一下<a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskContainer.html" target="_top"><code class="classname">TaskContainer</code></a>。<br>Have a look at <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskContainer.html" target="_top"><code class="classname">TaskContainer</code></a> for more options for locating tasks.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:configuring_tasks"></a>15.3. 配置任务</h2>
+       <h4 class="title"><a name="sec:configuring_tasks"></a>15.3.&nbsp;Configuring tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>举个例子，我们来看看Gradle提供的<code class="classname">Copy</code> 任务。如果要创建一个<code class="classname">Copy</code>任务，你可以在构建脚本中声明： <br>As an example, let's look at the <code class="classname">Copy</code> task provided by Gradle. To create a <code class="classname">Copy</code> task for your build, you can declare in your build script:</p>
+    <div class="example">
+     <a name="declareTask"></a>
+     <p class="title"><b>示例 15.7. 创建一个复制任务 - Example&nbsp;15.7.&nbsp;Creating a copy task</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task myCopy(type: Copy)</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>上面的代码创建了一个没有默认行为的复制任务，这个任务可以使用它的API（参见<a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a>）来配置。下面的示例演示了实现相同配置的几种不同的方法。 <br>This creates a copy task with no default behavior. The task can be configured using its API (see <a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a>). The following examples show several different ways to achieve the same configuration.</p>
+    <div class="example">
+     <a name="configureUsingVar"></a>
+     <p class="title"><b>示例 15.8. 配置任务——多种方式 - Example&nbsp;15.8.&nbsp;Configuring a task - various ways</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">Copy myCopy = task(myCopy, type: Copy)
 myCopy.from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'resources'</span>
 myCopy.into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>
-myCopy.include(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.txt'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.xml'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.properties'</span>)</pre></div></div><br class="example-break"><p>This is similar to the way we would normally configure objects in Java. You have to repeat the context
-            (<code class="literal">myCopy</code>) in the configuration statement every time. This is a redundancy and not very
-            nice to read.
-        </p><p>There is another way of configuring a task. It also preserves the context and it is arguably the
-            most readable. It is usually our favorite.
-        </p><div class="example"><a name="configureUsingClosure"></a><p class="title"><b>Example&nbsp;15.9.&nbsp;Configuring a task - with closure</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task myCopy(type: Copy)
+myCopy.include(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.txt'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.xml'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.properties'</span>)</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>这类似于我们通常在Java中配置对象的方式。你必须在每一次的配置语句重复上下文 （<code class="literal">myCopy</code>）。这显得很冗余也不好阅读。 <br>This is similar to the way we would normally configure objects in Java. You have to repeat the context (<code class="literal">myCopy</code>) in the configuration statement every time. This is a redundancy and not very nice to read.</p>
+    <p>还有一种配置任务的方式。它也保留了上下文，可以说是可读性最强的。它是我们通常最喜欢的方式。 <br>There is another way of configuring a task. It also preserves the context and it is arguably the most readable. It is usually our favorite.</p>
+    <div class="example">
+     <a name="configureUsingClosure"></a>
+     <p class="title"><b>示例 15.9. 配置任务——使用闭包 - Example&nbsp;15.9.&nbsp;Configuring a task - with closure</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task myCopy(type: Copy)
 
 myCopy {
    from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'resources'</span>
    into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>
    include(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.txt'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.xml'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.properties'</span>)
-}</pre></div></div><br class="example-break"><p>This works for <span class="emphasis"><em>any</em></span> task. Line 3 of the example is just a shortcut for the
-            <code class="literal">tasks.getByName()</code> method. It is important to note that if you pass a closure to the
-            <code class="literal">getByName()</code> method, this closure is applied to <span class="emphasis"><em>configure</em></span> the task, not when
-            the task executes.
-        </p><p>You can also use a configuration closure when you define a task.</p><div class="example"><a name="defineAndConfigure"></a><p class="title"><b>Example&nbsp;15.10.&nbsp;Defining a task with closure</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task copy(type: Copy) {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>这种方式适用于<span class="emphasis"><em>任何</em></span>的任务。该例子的第3行只是<code class="literal">tasks.getByName()</code>方法的快捷写法。特别要注意的是，如果你向<code class="literal">getByName()</code>方法传入一个闭包，这个闭包是在<span class="emphasis"><em>配置</em></span>这个任务的时候应用，而不是任务执行的时候。 <br>This works for <span class="emphasis"><em>any</em></span> task. Line 3 of the example is just a shortcut for the <code class="literal">tasks.getByName()</code> method. It is important to note that if you pass a closure to the <code class="literal">getByName()</code> method, this closure is applied to <span class="emphasis"><em>configure</em></span> the task, not when the task executes.</p>
+    <p>你也可以在定义任务的时候使用配置闭包。<br>You can also use a configuration closure when you define a task.</p>
+    <div class="example">
+     <a name="defineAndConfigure"></a>
+     <p class="title"><b>示例 15.10. 使用闭包定义任务 - Example&nbsp;15.10.&nbsp;Defining a task with closure</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task copy(type: Copy) {
    from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'resources'</span>
    into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>
    include(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.txt'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.xml'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.properties'</span>)
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:adding_dependencies_to_tasks"></a>15.4.&nbsp;Adding dependencies to a task</h2></div></div></div><p>There are several ways you can define the dependencies of a task. In
-            <a class="xref" href="tutorial_using_tasks.html#sec:task_dependencies">Section&nbsp;6.5, &ldquo;Task dependencies&rdquo;</a>
-            you were introduced to defining dependencies using task names. Task names can refer to tasks in the same
-            project as the task, or to tasks in other projects. To refer to a task in another project, you prefix the
-            name of the task with the path of the project it belongs to. Below is an example which adds a dependency
-            from
-            <code class="literal">projectA:taskX</code>
-            to
-            <code class="literal">projectB:taskY</code>:
-        </p><div class="example"><a name="addDependencyUsingPath"></a><p class="title"><b>Example&nbsp;15.11.&nbsp;Adding dependency on task from another project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'projectA'</span>) {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:adding_dependencies_to_tasks"></a>15.4. 向任务添加依赖</h2>
+       <h4 class="title"><a name="sec:adding_dependencies_to_tasks"></a>15.4.&nbsp;Adding dependencies to a task</h4>
+      </div>
+     </div>
+    </div>
+    <p>定义任务的依赖关系有几种方法。在《<a class="xref" href="tutorial_using_tasks.html#sec:task_dependencies">第6.5节，“任务依赖”</a>》已经向你介绍了使用任务名称来定义依赖。任务名称可以可以引用与该任务相同项目的任务，或者用于其他项目中的任务。要在另一个项目中引用任务，你需要将任务所属项目的路径作为前缀，加到它的名字中。下面的例子演示了如何添加<code class="literal">projectA:taskX</code>对<code class="literal">projectB:taskY</code>的依赖： <br>There are several ways you can define the dependencies of a task. In <a class="xref" href="tutorial_using_tasks.html#sec:task_dependencies">Section&nbsp;6.5, “Task dependencies”</a> you were introduced to defining dependencies using task names. Task names can refer to tasks in the same project as the task, or to tasks in other projects. To refer to a task in another project, you prefix the name of the task with the path of the project it belongs to. Below is an example which adds a dependency from <code class="literal">projectA:taskX</code> to <code class="literal">projectB:taskY</code>:</p>
+    <div class="example">
+     <a name="addDependencyUsingPath"></a>
+     <p class="title"><b>示例 15.11. 添加对另一个项目的任务的依赖 - Example&nbsp;15.11.&nbsp;Adding dependency on task from another project</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'projectA'</span>) {
     task taskX(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':projectB:taskY'</span>) &lt;&lt; {
         println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
     }
@@ -101,11 +248,21 @@ project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'projectB'</
     task taskY &lt;&lt; {
         println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
     }
-}</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+}</pre>
+      <p><strong class="userinput"><code>gradle -q taskX</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p>
+      <pre class="screen">&gt; gradle -q taskX
 taskY
-taskX</pre></div></div><br class="example-break"><p>Instead of using a task name, you can define a dependency using a
-            <code class="classname">Task</code> object, as shown in this example:
-        </p><div class="example"><a name="addDependencyUsingTask"></a><p class="title"><b>Example&nbsp;15.12.&nbsp;Adding dependency using task object</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+taskX</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>可以使用一个<code class="classname">Task</code>对象而不是任务名称来定义依赖，如下： <br>Instead of using a task name, you can define a dependency using a <code class="classname">Task</code> object, as shown in this example:</p>
+    <div class="example">
+     <a name="addDependencyUsingTask"></a>
+     <p class="title"><b>示例 15.12. 使用任务对象添加依赖 - Example&nbsp;15.12.&nbsp;Adding dependency using task object</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task taskX &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
 }
 
@@ -113,14 +270,21 @@ task taskY &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
 }
 
-taskX.dependsOn taskY</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+taskX.dependsOn taskY</pre>
+      <p><strong class="userinput"><code>gradle -q taskX</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p>
+      <pre class="screen">&gt; gradle -q taskX
 taskY
-taskX</pre></div></div><br class="example-break"><p>For more advanced uses, you can define a task dependency using a closure. When evaluated, the closure is
-            passed the task whose dependencies are being calculated. The closure should return a single
-            <code class="classname">Task</code> or collection of <code class="classname">Task</code> objects, which are then treated
-            as dependencies of the task. The following example adds a dependency from <code class="literal">taskX</code>
-            to all the tasks in the project whose name starts with <code class="literal">lib</code>:
-        </p><div class="example"><a name="addDependencyUsingClosure"></a><p class="title"><b>Example&nbsp;15.13.&nbsp;Adding dependency using closure</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+taskX</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>对于更高级的用法，你可以使用闭包来定义任务依赖。在Gradle评估时，这个闭包会被传入正在计算依赖的任务。这个闭包应该返回一个<code class="classname">Task</code>或<code class="classname">Task</code>对象的集合，然后返回值会被当作任务的依赖。以下示例添加了<code class="literal">taskX</code>对名称以<code class="literal">lib</code>开头的所有任务的依赖： <br>For more advanced uses, you can define a task dependency using a closure. When evaluated, the closure is passed the task whose dependencies are being calculated. The closure should return a single <code class="classname">Task</code> or collection of <code class="classname">Task</code> objects, which are then treated as dependencies of the task. The following example adds a dependency from <code class="literal">taskX</code> to all the tasks in the project whose name starts with <code class="literal">lib</code>:</p>
+    <div class="example">
+     <a name="addDependencyUsingClosure"></a>
+     <p class="title"><b>示例 15.13. 使用闭包添加依赖 - Example&nbsp;15.13.&nbsp;Adding dependency using closure</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task taskX &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
 }
 
@@ -138,45 +302,106 @@ task lib2 &lt;&lt; {
 
 task notALib &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'notALib'</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+}</pre>
+      <p><strong class="userinput"><code>gradle -q taskX</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p>
+      <pre class="screen">&gt; gradle -q taskX
 lib1
 lib2
-taskX</pre></div></div><br class="example-break"><p>For more information about task dependencies, see the <a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a> API.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:ordering_tasks"></a>15.5.&nbsp;Ordering tasks</h2></div></div></div><div class="note"><p>
-                Task ordering is an <a class="link" href="feature_lifecycle.html">incubating</a> feature. Please be aware that this feature may change in later Gradle versions.
-            </p></div><p>
-            In some cases it is useful to control the <span class="emphasis"><em>order</em></span> in which 2 tasks will execute, without introducing an explicit dependency between those tasks.
-            The primary difference between a task <span class="emphasis"><em>ordering</em></span> and a task <span class="emphasis"><em>dependency</em></span> is that an ordering rule does not influence which tasks
-            will be executed, only the order in which they will be executed.
-        </p><p>
-            Task ordering can be useful in a number of scenarios:
-        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Enforce sequential ordering of tasks: eg. 'build' never runs before 'clean'.</li><li class="listitem">Run build validations early in the build: eg. validate I have the correct credentials before starting the work for a release build.</li><li class="listitem">Get feedback faster by running quick verification tasks before long verification tasks: eg. unit tests should run before integration tests.</li><li class="listitem">A task that aggregates the results of all tasks of a particular type: eg. test report task combines the outputs of all executed test tasks.</li></ul></div><p>
-            There are two ordering rules available: "<span class="emphasis"><em>must run after</em></span>" and "<span class="emphasis"><em>should run after</em></span>".
-        </p><p>By using 'must run after" ordering rule you can specify that <code class="literal">taskB</code> must always run after <code class="literal">taskA</code>,
-            whenever both <code class="literal">taskA</code> and <code class="literal">taskB</code> are scheduled for execution. This is expressed as <code class="literal">taskB.mustRunAfter(taskA)</code>. The 'should run after' ordering rule is similar but less strict as it will be ignored in two situations. Firstly if using that rule introduces an ordering cycle. Secondly when using parallel execution and all dependencies of a task have been satisfied apart from should run after then this task will be run regardless of weather its 'should run after' dependencies have been run or not. You would use 'should run after' rule when ordering preference for faster feedback, where the ordering is helpful but not strictly required.
-        </p><p>
-            With these rules present it is still possible to execute <code class="literal">taskA</code> without <code class="literal">taskB</code> and vice-versa.
-        </p><div class="example"><a name="mustRunAfter"></a><p class="title"><b>Example&nbsp;15.14.&nbsp;Adding a 'must run after' task ordering</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+taskX</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>有关任务依赖的详细信息，请参阅<a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a>的 API。<br>For more information about task dependencies, see the <a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a> API.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:ordering_tasks"></a>15.5.&nbsp;任务排序</h2>
+       <h4 class="title"><a name="sec:ordering_tasks"></a>15.5.&nbsp;Ordering tasks</h4>
+      </div>
+     </div>
+    </div>
+    <div class="note">
+     <p> 任务排序是一个<a class="link" href="feature_lifecycle.html">孵化中</a>的功能。请注意，此功能可能会在以后的Gradle版本中有所更改。 <br>Task ordering is an <a class="link" href="feature_lifecycle.html">incubating</a> feature. Please be aware that this feature may change in later Gradle versions.</p>
+    </div>
+    <p> 在某些情况下，控制两个任务的执行<span class="emphasis"><em>顺序</em></span>，而不引入这些任务之间的依赖，是很有用的。任务<span class="emphasis"><em>排序</em></span>和任务<span class="emphasis"><em>依赖</em></span>之间的主要区别是，排序规则不会影响执行哪些任务，只会影响任务执行的顺序。 <br>In some cases it is useful to control the <span class="emphasis"><em>order</em></span> in which 2 tasks will execute, without introducing an explicit dependency between those tasks. The primary difference between a task <span class="emphasis"><em>ordering</em></span> and a task <span class="emphasis"><em>dependency</em></span> is that an ordering rule does not influence which tasks will be executed, only the order in which they will be executed.</p>
+    <p> 任务排序在许多情况下可能有用： <br>Task ordering can be useful in a number of scenarios:</p>
+    <div class="itemizedlist">
+     <ul class="itemizedlist">
+      <li class="listitem">强制任务顺序排序：如“build”永远不会在“clean”之前运行。<br>Enforce sequential ordering of tasks: eg. 'build' never runs before 'clean'.</li>
+      <li class="listitem">在构建初期运行构建验证：例如，在开始发布之前验证是否拥有正确的证书。<br>Run build validations early in the build: eg. validate I have the correct credentials before starting the work for a release build.</li>
+      <li class="listitem">在耗时较长的验证任务之前先运行较快的验证任务，可以更快地获得反馈：如，单元测试应在集成测试之前运行。<br>Get feedback faster by running quick verification tasks before long verification tasks: eg. unit tests should run before integration tests.</li>
+      <li class="listitem">聚合特定类型的所有任务的结果的任务：例如，测试报告任务结合了所有执行的测试任务的输出。<br>A task that aggregates the results of all tasks of a particular type: eg. test report task combines the outputs of all executed test tasks.</li>
+     </ul>
+    </div>
+    <p> 有两种排序规则可用：“<span class="emphasis"><em>必须在之后运行</em></span>”和“<span class="emphasis"><em>应该在之后运行</em></span>”。 <br>There are two ordering rules available: "<span class="emphasis"><em>must run after</em></span>" and "<span class="emphasis"><em>should run after</em></span>".</p>
+    <p>通过使用“必须在之后运行”的排序规则，你可以指定<code class="literal">taskB</code>必须总是运行在<code class="literal">taskA</code>之后，无论<code class="literal">taskA</code>和<code class="literal">taskB</code>这两者在什么时候调度执行。这被表示为<code class="literal">taskB.mustRunAfter(taskA)</code>。 “应该运行”的排序规则与其类似，但没有那么严格，因为它在两种情况下会被忽略：首先，如果使用该规则引入了排序循环；其次，当使用并行执行时，一个任务除了应该在之后运行这个条件之外，它的所有依赖都已经满足，那么这个任务就会运行，不管它的“应该在之后运行”的依赖关系是否已经运行或。当对任务的排序倾向于更快的反馈时，你应该使用“应该在之后运行”的规则，它对于排序很有帮助但不会严格要求。 <br>By using 'must run after" ordering rule you can specify that <code class="literal">taskB</code> must always run after <code class="literal">taskA</code>, whenever both <code class="literal">taskA</code> and <code class="literal">taskB</code> are scheduled for execution. This is expressed as <code class="literal">taskB.mustRunAfter(taskA)</code>. The 'should run after' ordering rule is similar but less strict as it will be ignored in two situations. Firstly if using that rule introduces an ordering cycle. Secondly when using parallel execution and all dependencies of a task have been satisfied apart from should run after then this task will be run regardless of weather its 'should run after' dependencies have been run or not. You would use 'should run after' rule when ordering preference for faster feedback, where the ordering is helpful but not strictly required.</p>
+    <p> 目前使用这些规则仍有可能出现<code class="literal">taskA</code>执行而<code class="literal">taskB</code> 没有执行，或者<code class="literal">taskB</code>执行而<code class="literal">taskA</code> 没有执行。 <br>With these rules present it is still possible to execute <code class="literal">taskA</code> without <code class="literal">taskB</code> and vice-versa.</p>
+    <div class="example">
+     <a name="mustRunAfter"></a>
+     <p class="title"><b>示例15.14. 添加“必须在之后运行”的任务排序 - Example&nbsp;15.14.&nbsp;Adding a 'must run after' task ordering</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task taskX &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
 }
 task taskY &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
 }
-taskY.mustRunAfter taskX</pre><p>Output of <strong class="userinput"><code>gradle -q taskY taskX</code></strong></p><pre class="screen">&gt; gradle -q taskY taskX
+taskY.mustRunAfter taskX</pre>
+      <p><strong class="userinput"><code>gradle -q taskY taskX</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q taskY taskX</code></strong></p>
+      <pre class="screen">&gt; gradle -q taskY taskX
 taskX
-taskY</pre></div></div><br class="example-break"><div class="example"><a name="shouldRunAfter"></a><p class="title"><b>Example&nbsp;15.15.&nbsp;Adding a 'should run after' task ordering</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+taskY</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <div class="example">
+     <a name="shouldRunAfter"></a>
+     <p class="title"><b>示例 15.15. 添加 “应该在之后运行”的任务排序 - Example&nbsp;15.15.&nbsp;Adding a 'should run after' task ordering</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task taskX &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
 }
 task taskY &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
 }
-taskY.shouldRunAfter taskX</pre><p>Output of <strong class="userinput"><code>gradle -q taskY taskX</code></strong></p><pre class="screen">&gt; gradle -q taskY taskX
+taskY.shouldRunAfter taskX</pre>
+      <p><strong class="userinput"><code>gradle -q taskY taskX</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q taskY taskX</code></strong></p>
+      <pre class="screen">&gt; gradle -q taskY taskX
 taskX
-taskY</pre></div></div><br class="example-break"><p>In the examples above, it is still possible to execute <code class="literal">taskY</code> without causing <code class="literal">taskX</code> to run:</p><div class="example"><a name="mustRunAfterSingleTask"></a><p class="title"><b>Example&nbsp;15.16.&nbsp;Task ordering does not imply task execution</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q taskY</code></strong></p><pre class="screen">&gt; gradle -q taskY
-taskY</pre></div></div><br class="example-break"><p>To specify a "must run after" or "should run after" ordering between 2 tasks, you use the <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:mustRunAfter(java.lang.Object[])" target="_top"><code class="classname">Task.mustRunAfter()</code></a> and <a class="ulink" href="../javadoc/org/gradle/api/Task.html#shouldRunAfter(java.lang.Object[])" target="_top"><code class="classname">Task.shouldRunAfter()</code></a> methods.
-            These method accept a task instance, a task name or any other input accepted by <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:dependsOn(java.lang.Object[])" target="_top"><code class="classname">Task.dependsOn()</code></a>.
-        </p><p>
-            Note that "<code class="literal">B.mustRunAfter(A)</code>" or "<code class="literal">B.shouldRunAfter(A)</code>" does not imply any execution dependency between the tasks:
-        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">It is possible to execute tasks <code class="literal">A</code> and <code class="literal">B</code> independently. The ordering rule only has an effect when both tasks are scheduled for execution.</li><li class="listitem">When run with <code class="literal">--continue</code>, it is possible for <code class="literal">B</code> to execute in the event that <code class="literal">A</code> fails.</li></ul></div><p>As mentioned before 'should run after' ordering rule will be ignored if it introduces an ordering cycle:</p><div class="example"><a name="shouldRunAfterWithCycle"></a><p class="title"><b>Example&nbsp;15.17.&nbsp;A 'should run after' task ordering is ignored if it introduces an ordering cycle</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+taskY</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>在上面的例子中，它仍有可能执行<code class="literal">taskY</code>而不会造成<code class="literal">taskX</code>也运行：<br>In the examples above, it is still possible to execute <code class="literal">taskY</code> without causing <code class="literal">taskX</code> to run:</p>
+    <div class="example">
+     <a name="mustRunAfterSingleTask"></a>
+     <p class="title"><b>示例 15.16. 任务排序并不意味着任务执行 - Example&nbsp;15.16.&nbsp;Task ordering does not imply task execution</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"><code>gradle -q taskY</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q taskY</code></strong></p>
+      <pre class="screen">&gt; gradle -q taskY
+taskY</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>如果想指定两个任务之间的“必须在之后运行”或“应该在之后运行”的排序，可以使用<a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:mustRunAfter(java.lang.Object[])" target="_top"><code class="classname">Task.mustRunAfter()</code></a>和<a class="ulink" href="../javadoc/org/gradle/api/Task.html#shouldRunAfter(java.lang.Object[])" target="_top"><code class="classname">Task.shouldRunAfter()</code></a>方法。这些方法接受一个任务实例、任务名称或<a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:dependsOn(java.lang.Object[])" target="_top"><code class="classname">Task.dependsOn()</code></a>所接受的任何其他输入。 <br>To specify a "must run after" or "should run after" ordering between 2 tasks, you use the <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:mustRunAfter(java.lang.Object[])" target="_top"><code class="classname">Task.mustRunAfter()</code></a> and <a class="ulink" href="../javadoc/org/gradle/api/Task.html#shouldRunAfter(java.lang.Object[])" target="_top"><code class="classname">Task.shouldRunAfter()</code></a> methods. These method accept a task instance, a task name or any other input accepted by <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:dependsOn(java.lang.Object[])" target="_top"><code class="classname">Task.dependsOn()</code></a>.</p>
+    <p> 请注意“<code class="literal">B.mustRunAfter(A)</code>”或“<code class="literal">B.shouldRunAfter(A)</code>”并不意味着这些任务之间有任何执行上的依赖关系： <br>Note that "<code class="literal">B.mustRunAfter(A)</code>" or "<code class="literal">B.shouldRunAfter(A)</code>" does not imply any execution dependency between the tasks:</p>
+    <div class="itemizedlist">
+     <ul class="itemizedlist">
+      <li class="listitem">任务<code class="literal">A</code>和<code class="literal">B</code>可以独立执行。排序规则只有在两个任务都计划执行时才有作用。<br>It is possible to execute tasks <code class="literal">A</code> and <code class="literal">B</code> independently. The ordering rule only has an effect when both tasks are scheduled for execution.</li>
+      <li class="listitem">当使用<code class="literal">--continue</code>参数运行时，可能会存在<code class="literal">A</code>执行失败后<code class="literal">B</code>执行了。<br>When run with <code class="literal">--continue</code>, it is possible for <code class="literal">B</code> to execute in the event that <code class="literal">A</code> fails.</li>
+     </ul>
+    </div>
+    <p>如前所述，如果“应该在之后运行”的排序规则引入了排序循环，那么这条规则将被忽略。<br>As mentioned before 'should run after' ordering rule will be ignored if it introduces an ordering cycle:</p>
+    <div class="example">
+     <a name="shouldRunAfterWithCycle"></a>
+     <p class="title"><b>示例 15.17. 当引入循环时，“应该在之后运行”的任务排序会被忽略 - Example&nbsp;15.17.&nbsp;A 'should run after' task ordering is ignored if it introduces an ordering cycle</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task taskX &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
 }
 task taskY &lt;&lt; {
@@ -187,45 +412,126 @@ task taskZ &lt;&lt; {
 }
 taskX.dependsOn taskY
 taskY.dependsOn taskZ
-taskZ.shouldRunAfter taskX</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+taskZ.shouldRunAfter taskX</pre>
+      <p><strong class="userinput"><code>gradle -q taskX</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p>
+      <pre class="screen">&gt; gradle -q taskX
 taskZ
 taskY
-taskX</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10E91"></a>15.6.&nbsp;Adding a description to a task</h2></div></div></div><p>You can add a description to your task. This description is for example displayed when executing
-            <strong class="userinput"><code>gradle tasks</code></strong>.
-        </p><div class="example"><a name="describeTask"></a><p class="title"><b>Example&nbsp;15.18.&nbsp;Adding a description to a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task copy(type: Copy) {
+taskX</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10E91"></a>15.6. 向任务添加描述</h2>
+       <h4 class="title"><a name="N10E91"></a>15.6.&nbsp;Adding a description to a task</h4>
+      </div>
+     </div>
+    </div>
+    <p>你可以向你的任务添加描述。例如在执行<strong class="userinput"><code>gradle tasks</code></strong>时显示该描述。 <br>You can add a description to your task. This description is for example displayed when executing <strong class="userinput"><code>gradle tasks</code></strong>.</p>
+    <div class="example">
+     <a name="describeTask"></a>
+     <p class="title"><b>示例 15.18. 向任务添加描述 - Example&nbsp;15.18.&nbsp;Adding a description to a task</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task copy(type: Copy) {
    description <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Copies the resource directory to the target directory.'</span>
    from <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'resources'</span>
    into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'target'</span>
    include(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.txt'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.xml'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'**/*.properties'</span>)
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10EA3"></a>15.7.&nbsp;Replacing tasks</h2></div></div></div><p>Sometimes you want to replace a task. For example if you want to exchange a task added by the Java plugin
-            with a custom task of a different type. You can achieve this with:
-        </p><div class="example"><a name="replaceTask"></a><p class="title"><b>Example&nbsp;15.19.&nbsp;Overwriting a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task copy(type: Copy)
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10EA3"></a>15.7. 替换任务</h2>
+       <h4 class="title"><a name="N10EA3"></a>15.7.&nbsp;Replacing tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>有时你会想要替换一个任务。例如，你想要将Java插件添加的任务替换成一个不同类型的自定义任务。你可以通过以下方式实现： <br>Sometimes you want to replace a task. For example if you want to exchange a task added by the Java plugin with a custom task of a different type. You can achieve this with:</p>
+    <div class="example">
+     <a name="replaceTask"></a>
+     <p class="title"><b>示例 15.19. 重写任务 - Example&nbsp;15.19.&nbsp;Overwriting a task</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task copy(type: Copy)
 
 task copy(overwrite: true) &lt;&lt; {
     println(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'I am the new one.'</span>)
-}</pre><p>Output of <strong class="userinput"><code>gradle -q copy</code></strong></p><pre class="screen">&gt; gradle -q copy
-I am the new one.</pre></div></div><br class="example-break"><p>Here we replace a task of type <code class="literal">Copy</code> with a simple task. When creating the simple
-            task, you have to set the <code class="literal">overwrite</code> property to true. Otherwise Gradle throws an
-            exception, saying that a task with such a name already exists.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10EC0"></a>15.8.&nbsp;Skipping tasks</h2></div></div></div><p>Gradle offers multiple ways to skip the execution of a task.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10EC5"></a>15.8.1.&nbsp;Using a predicate</h3></div></div></div><p>You can use the <code class="literal">onlyIf()</code> method to attach a predicate to a task. The task's
-                actions are only executed if the predicate evaluates to true. You implement the predicate as a closure.
-                The closure is passed the task as a parameter, and should return true if the task should execute
-                and false if the task should be skipped. The predicate is evaluated just before the task is due
-                to be executed.
-                </p><div class="example"><a name="taskOnlyIf"></a><p class="title"><b>Example&nbsp;15.20.&nbsp;Skipping a task using a predicate</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
+}</pre>
+      <p><strong class="userinput"><code>gradle -q copy</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q copy</code></strong></p>
+      <pre class="screen">&gt; gradle -q copy
+I am the new one.</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>这里我们把一个<code class="literal">Copy</code>类型的任务替换为一个简单的任务。当创建这个简单任务时，你必须把<code class="literal">overwrite</code>属性设置为true。否则，Gradle会抛出一个异常，称这个名称的任务已经存在。 <br>Here we replace a task of type <code class="literal">Copy</code> with a simple task. When creating the simple task, you have to set the <code class="literal">overwrite</code> property to true. Otherwise Gradle throws an exception, saying that a task with such a name already exists.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10EC0"></a>15.8. 跳过任务</h2>
+       <h4 class="title"><a name="N10EC0"></a>15.8.&nbsp;Skipping tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>Gradle 提供了多种方式来跳过任务的执行。<br>Gradle offers multiple ways to skip the execution of a task.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10EC5"></a>15.8.1.&nbsp;使用断言</h3>
+        <h5 class="title"><a name="N10EC5"></a>15.8.1.&nbsp;Using a predicate</h5>
+       </div>
+      </div>
+     </div>
+     <p>你可以使用<code class="literal">onlyIf()</code>方法将断言附加到任务中。只有当断言结果为true时，才会执行该任务的操作。你可以用闭包来实现断言。闭包会作为一个参数传给任务，如果任务应该执行，应该返回true，如果任务应该被跳过，则返回false。断言只会在任务执行之前才评估。 <br>You can use the <code class="literal">onlyIf()</code> method to attach a predicate to a task. The task's actions are only executed if the predicate evaluates to true. You implement the predicate as a closure. The closure is passed the task as a parameter, and should return true if the task should execute and false if the task should be skipped. The predicate is evaluated just before the task is due to be executed.</p>
+     <div class="example">
+      <a name="taskOnlyIf"></a>
+      <p class="title"><b>示例 15.20. 使用断言跳过一个任务 - Example&nbsp;15.20.&nbsp;Skipping a task using a predicate</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task hello &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello world'</span>
 }
 
-hello.onlyIf { !project.hasProperty(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'skipHello'</span>) }</pre><p>Output of <strong class="userinput"><code>gradle hello -PskipHello</code></strong></p><pre class="screen">&gt; gradle hello -PskipHello
+hello.onlyIf { !project.hasProperty(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'skipHello'</span>) }</pre>
+       <p><strong class="userinput"><code>gradle hello -PskipHello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle hello -PskipHello</code></strong></p>
+       <pre class="screen">&gt; gradle hello -PskipHello
 :hello SKIPPED
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10EDD"></a>15.8.2.&nbsp;Using StopExecutionException</h3></div></div></div><p>If the rules for skipping a task can't be expressed with predicate, you can use the
-            <a class="ulink" href="../javadoc/org/gradle/api/tasks/StopExecutionException.html" target="_top"><code class="classname">StopExecutionException</code></a>. If this exception is thrown by an action,
-            the further execution of this action as well as the execution of
-            any following action of this task is skipped. The build continues with executing the next task.
-        </p><div class="example"><a name="stopExecutionException"></a><p class="title"><b>Example&nbsp;15.21.&nbsp;Skipping tasks with StopExecutionException</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task compile &lt;&lt; {
+Total time: 1 secs</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10EDD"></a>15.8.2. 使用 StopExecutionException</h3>
+        <h5 class="title"><a name="N10EDD"></a>15.8.2.&nbsp;Using StopExecutionException</h5>
+       </div>
+      </div>
+     </div>
+     <p>如果跳过任务的规则不能用断言来表达，你可以使用<a class="ulink" href="../javadoc/org/gradle/api/tasks/StopExecutionException.html" target="_top"><code class="classname">StopExecutionException</code></a>。如果一个操作抛出此异常，则此操作的接下来的执行以及该任务的任何后续操作都会跳过。构建会继续执行下一个任务。 <br>If the rules for skipping a task can't be expressed with predicate, you can use the <a class="ulink" href="../javadoc/org/gradle/api/tasks/StopExecutionException.html" target="_top"><code class="classname">StopExecutionException</code></a>. If this exception is thrown by an action, the further execution of this action as well as the execution of any following action of this task is skipped. The build continues with executing the next task.</p>
+     <div class="example">
+      <a name="stopExecutionException"></a>
+      <p class="title"><b>示例 15.21. 使用 StopExecutionException 跳过任务 - Example&nbsp;15.21.&nbsp;Skipping tasks with StopExecutionException</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task compile &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'We are doing the compile.'</span>
 }
 
@@ -235,28 +541,72 @@ compile.doFirst {
 }
 task myTask(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'compile'</span>) &lt;&lt; {
    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'I am not affected'</span>
-}</pre><p>Output of <strong class="userinput"><code>gradle -q myTask</code></strong></p><pre class="screen">&gt; gradle -q myTask
-I am not affected</pre></div></div><br class="example-break"><p>This feature is helpful if you work with tasks provided by Gradle. It allows you to add
-            <span class="emphasis"><em>conditional</em></span> execution of the built-in actions of such a task.
-            <sup>[<a href="#ftn.N10EFC" name="N10EFC" class="footnote">7</a>]</sup>
-        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10F06"></a>15.8.3.&nbsp;Enabling and disabling tasks</h3></div></div></div><p>Every task has also an <code class="literal">enabled</code>
-            flag which defaults to <code class="literal">true</code>. Setting it to <code class="literal">false</code> prevents the
-            execution of any of the task's actions.
-        </p><div class="example"><a name="disableTask"></a><p class="title"><b>Example&nbsp;15.22.&nbsp;Enabling and disabling tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task disableMe &lt;&lt; {
+}</pre>
+       <p><strong class="userinput"><code>gradle -q myTask</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q myTask</code></strong></p>
+       <pre class="screen">&gt; gradle -q myTask
+I am not affected</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>如果你使用Gradle提供的任务，那么此功能将非常有用。它允许你向一个任务的内置操作添加执行<span class="emphasis"><em>条件</em></span>。 <sup>[<a href="#ftn.N10EFC" name="N10EFC" class="footnote">7</a>]</sup> <br>This feature is helpful if you work with tasks provided by Gradle. It allows you to add <span class="emphasis"><em>conditional</em></span> execution of the built-in actions of such a task. <sup>[<a href="#ftn.N10EFC" name="N10EFC" class="footnote">7</a>]</sup></p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10F06"></a>15.8.3. 启用和禁用任务</h3>
+        <h5 class="title"><a name="N10F06"></a>15.8.3.&nbsp;Enabling and disabling tasks</h5>
+       </div>
+      </div>
+     </div>
+     <p>每一项任务有一个默认值为<code class="literal">true</code>的<code class="literal">enabled</code>标记。将它设置为<code class="literal">false</code>，可以不让这个任务的任何操作执行。 <br>Every task has also an <code class="literal">enabled</code> flag which defaults to <code class="literal">true</code>. Setting it to <code class="literal">false</code> prevents the execution of any of the task's actions.</p>
+     <div class="example">
+      <a name="disableTask"></a>
+      <p class="title"><b>示例 15.22. 启用和禁用任务 - Example&nbsp;15.22.&nbsp;Enabling and disabling tasks</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task disableMe &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'This should not be printed if the task is disabled.'</span>
 }
-disableMe.enabled = false</pre><p>Output of <strong class="userinput"><code>gradle disableMe</code></strong></p><pre class="screen">&gt; gradle disableMe
+disableMe.enabled = false</pre>
+       <p><strong class="userinput"> <code>Gradle disableMe</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle disableMe</code></strong></p>
+       <pre class="screen">&gt; gradle disableMe
 :disableMe SKIPPED
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:up_to_date_checks"></a>15.9.&nbsp;Skipping tasks that are up-to-date</h2></div></div></div><p>If you are using one of the tasks that come with Gradle, such as a task added by the Java plugin,
-            you might have noticed that Gradle will skip tasks that are up-to-date. This behaviour is also available
-            for your tasks, not just for built-in tasks.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:task_inputs_outputs"></a>15.9.1.&nbsp;Declaring a task's inputs and outputs</h3></div></div></div><p>
-                Let's have a look at an example. Here our task generates several output files from a source XML file. Let's
-                run it a couple of times.
-            </p><div class="example"><a name="generatorTask"></a><p class="title"><b>Example&nbsp;15.23.&nbsp;A generator task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task transform {
+Total time: 1 secs</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:up_to_date_checks"></a>15.9. 跳过最新的任务</h2>
+       <h4 class="title"><a name="sec:up_to_date_checks"></a>15.9.&nbsp;Skipping tasks that are up-to-date</h4>
+      </div>
+     </div>
+    </div>
+    <p>如果你使用 Gradle 自带的任务，如 Java 插件所添加的任务的话，你可能已经注意到 Gradle 将跳过最新的任务。这种行为也可以用于你的任务，而不仅仅是内置任务 <br>If you are using one of the tasks that come with Gradle, such as a task added by the Java plugin, you might have noticed that Gradle will skip tasks that are up-to-date. This behaviour is also available for your tasks, not just for built-in tasks.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:task_inputs_outputs"></a>15.9.1. 声明一个任务的输入和输出</h3>
+        <h5 class="title"><a name="sec:task_inputs_outputs"></a>15.9.1.&nbsp;Declaring a task's inputs and outputs</h5>
+       </div>
+      </div>
+     </div>
+     <p> 我们来看一个例子。在这里，我们的任务从一个 XML 源文件生成了多个输出文件。 <br>Let's have a look at an example. Here our task generates several output files from a source XML file. Let's run it a couple of times.</p>
+     <div class="example">
+      <a name="generatorTask"></a>
+      <p class="title"><b>示例 15.23. 一个生成任务 - Example&nbsp;15.23.&nbsp;A generator task</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task transform {
     ext.srcFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'mountains.xml'</span>)
     ext.destDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(buildDir, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'generated'</span>)
     doLast {
@@ -270,19 +620,26 @@ Total time: 1 secs</pre></div></div><br class="example-break"></div></div><div c
             destFile.text = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$name -&gt; ${height}\n"</span>
         }
     }
-}</pre><p>Output of <strong class="userinput"><code>gradle transform</code></strong></p><pre class="screen">&gt; gradle transform
+}</pre>
+       <p><strong class="userinput"><code>gradle transform</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle transform</code></strong></p>
+       <pre class="screen">&gt; gradle transform
 :transform
-Transforming source file.</pre><p>Output of <strong class="userinput"><code>gradle transform</code></strong></p><pre class="screen">&gt; gradle transform
+Transforming source file.</pre>
+       <p><strong class="userinput"><code>gradle transform</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle transform</code></strong></p>
+       <pre class="screen">&gt; gradle transform
 :transform
-Transforming source file.</pre></div></div><br class="example-break"><p>Notice that Gradle executes this task a second time, and does not skip the task even though nothing has
-                changed. Our example task was defined using an action closure. Gradle has no idea what the closure does and
-                cannot automatically figure out whether the task is up-to-date or not. To use Gradle's up-to-date checking,
-                you need to declare the inputs and outputs of the task.
-            </p><p>Each task has an <code class="literal">inputs</code> and <code class="literal">outputs</code> property, which you use to
-                declare the inputs and outputs of the task. Below, we have changed our example to declare that it takes
-                the source XML file as an input and produces output to a destination directory. Let's run it a couple
-                of times.
-            </p><div class="example"><a name="incrementalTask"></a><p class="title"><b>Example&nbsp;15.24.&nbsp;Declaring the inputs and outputs of a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task transform {
+Transforming source file.</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>请注意，Gradle第二次执行此任务的时候，即使没有任何变化也不会跳过该任务。我们的示例任务是使用一个动作闭包定义的。 Gradle不知道这个闭包做了什么，不能自动判断这个任务是否是最新的。要使用Gradle的最新检查，你需要声明任务的输入和输出。 <br>Notice that Gradle executes this task a second time, and does not skip the task even though nothing has changed. Our example task was defined using an action closure. Gradle has no idea what the closure does and cannot automatically figure out whether the task is up-to-date or not. To use Gradle's up-to-date checking, you need to declare the inputs and outputs of the task.</p>
+     <p>每一个任务都有一个<code class="literal">inputs</code>和<code class="literal">outputs</code>属性，用来声明这个任务的输入和输出。下面，我们修改了我们的示例，声明它将 XML 源文件作为输入，并产生到目标目录的输出。让我们运行几次。 <br>Each task has an <code class="literal">inputs</code> and <code class="literal">outputs</code> property, which you use to declare the inputs and outputs of the task. Below, we have changed our example to declare that it takes the source XML file as an input and produces output to a destination directory. Let's run it a couple of times.</p>
+     <div class="example">
+      <a name="incrementalTask"></a>
+      <p class="title"><b>示例 15.24. 声明一个任务的输入和输出 - Example&nbsp;15.24.&nbsp;Declaring the inputs and outputs of a task</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task transform {
     ext.srcFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'mountains.xml'</span>)
     ext.destDir = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(buildDir, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'generated'</span>)
     inputs.file srcFile
@@ -298,48 +655,72 @@ Transforming source file.</pre></div></div><br class="example-break"><p>Notice t
             destFile.text = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$name -&gt; ${height}\n"</span>
         }
     }
-}</pre><p>Output of <strong class="userinput"><code>gradle transform</code></strong></p><pre class="screen">&gt; gradle transform
+}</pre>
+       <p><strong class="userinput"><code>gradle transform</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle transform</code></strong></p>
+       <pre class="screen">&gt; gradle transform
 :transform
-Transforming source file.</pre><p>Output of <strong class="userinput"><code>gradle transform</code></strong></p><pre class="screen">&gt; gradle transform
-:transform UP-TO-DATE</pre></div></div><br class="example-break"><p>Now, Gradle knows which files to check to determine whether the task is up-to-date or not.</p><p>
-                The task's <code class="literal">inputs</code> property is of type <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskInputs.html" target="_top"><code class="classname">TaskInputs</code></a>.
-                The task's <code class="literal">outputs</code> property is of type <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html" target="_top"><code class="classname">TaskOutputs</code></a>.
-            </p><p>
-                A task with no defined outputs will <span class="emphasis"><em>never</em></span> be considered up-to-date.
-                For scenarios where the outputs of a task are not files, or for more complex scenarios, the
-                <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html#upToDateWhen(groovy.lang.Closure)" target="_top"><code class="classname">TaskOutputs.upToDateWhen()</code></a> method allows you to calculate programmatically if
-                the tasks outputs should be considered up to date.
-            </p><p>
-                A task with only outputs defined will be considered up-to-date if those outputs are unchanged since the previous build.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N10F86"></a>15.9.2.&nbsp;How does it work?</h3></div></div></div><p>
-                Before a task is executed for the first time, Gradle takes a snapshot of the inputs. This snapshot contains
-                the set of input files and a hash of the contents of each file. Gradle then executes the task. If the
-                task completes successfully, Gradle takes a snapshot of the outputs. This snapshot contains the set of
-                output files and a hash of the contents of each file. Gradle persists both snapshots for next time the task
-                is executed.
-            </p><p>
-                Each time after that, before the task is executed, Gradle takes a new snapshot of the inputs and outputs.
-                If the new snapshots are the same as the previous snapshots, Gradle assumes that the outputs are up to
-                date and skips the task. If they are not the same, Gradle executes the task. Gradle persists both snapshots
-                for next time the task is executed.
-            </p><p>
-                Note that if a task has an output directory specified, any files added to that directory since the last time it was executed
-                are ignored and will NOT cause the task to be out of date. This is so unrelated tasks may share an output directory without interfering with each other.
-                If this is not the behaviour you want for some reason, consider using <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html#upToDateWhen(groovy.lang.Closure)" target="_top"><code class="classname">TaskOutputs.upToDateWhen()</code></a>
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10F94"></a>15.10.&nbsp;Task rules</h2></div></div></div><p>Sometimes you want to have a task whose behavior depends on a large or infinite number value range
-            of parameters. A very nice and expressive way to provide such tasks are task rules:
-        </p><div class="example"><a name="taskRule"></a><p class="title"><b>Example&nbsp;15.25.&nbsp;Task rule</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">tasks.addRule(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Pattern: ping&lt;ID&gt;"</span>) { String taskName -&gt;
+Transforming source file.</pre>
+       <p><strong class="userinput"><code>gradle transform</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle transform</code></strong></p>
+       <pre class="screen">&gt; gradle transform
+:transform UP-TO-DATE</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>现在，Gradle 知道要检查哪些文件，以确定任务是否为最新的。<br>Now, Gradle knows which files to check to determine whether the task is up-to-date or not.</p>
+     <p> 任务的 <code class="literal">inputs</code> 属性是 <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskInputs.html" target="_top"><code class="classname">TaskInputs</code></a>类型。任务的 <code class="literal">outputs</code> 属性是 <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html" target="_top"><code class="classname">TaskOutputs</code></a>类型。 <br>The task's <code class="literal">inputs</code> property is of type <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskInputs.html" target="_top"><code class="classname">TaskInputs</code></a>. The task's <code class="literal">outputs</code> property is of type <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html" target="_top"><code class="classname">TaskOutputs</code></a>.</p>
+     <p> 一个任务如果没有定义输出，那么它将<span class="emphasis"><em>永远不会</em></span>被当作是最新的。对于任务的输出不是文件或是更复杂的场景，<a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html#upToDateWhen(groovy.lang.Closure)" target="_top"> <code class="classname">TaskOutputs.upToDateWhen()</code></a>方法允许你以编程方式计算任务的输出是否应该被视为最新的。 <br>A task with no defined outputs will <span class="emphasis"><em>never</em></span> be considered up-to-date. For scenarios where the outputs of a task are not files, or for more complex scenarios, the <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html#upToDateWhen(groovy.lang.Closure)" target="_top"><code class="classname">TaskOutputs.upToDateWhen()</code></a> method allows you to calculate programmatically if the tasks outputs should be considered up to date.</p>
+     <p> 一个只定义了输出的任务，如果自上次构建以来它的输出没变，那么它会被视为最新的。 <br>A task with only outputs defined will be considered up-to-date if those outputs are unchanged since the previous build.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N10F86"></a>15.9.2. 它是怎么实现的？</h3>
+        <h5 class="title"><a name="N10F86"></a>15.9.2.&nbsp;How does it work?</h5>
+       </div>
+      </div>
+     </div>
+     <p> 在第一次执行任务之前，Gradle会获取输入的快照。此快照包含一组输入文件和每个文件的内容的散列。然后Gradle执行任务。如果任务成功完成，则Gradle会对输出进行快照。此快照包含一组输出文件和每个文件的内容的散列。 Gradle会保存这两个快照，用于这个任务下一次的执行。 <br>Before a task is executed for the first time, Gradle takes a snapshot of the inputs. This snapshot contains the set of input files and a hash of the contents of each file. Gradle then executes the task. If the task completes successfully, Gradle takes a snapshot of the outputs. This snapshot contains the set of output files and a hash of the contents of each file. Gradle persists both snapshots for next time the task is executed.</p>
+     <p> 在这之后每一次执行任务之前，Gradle将输入和输出进行新的快照。如果新快照与以前的快照相同，则Gradle会假定输出是最新的，并跳过任务。如果它们不一样，则Gradle会执行任务。Gradle会保存这两个快照，用于这个任务的下一次执行。 <br>Each time after that, before the task is executed, Gradle takes a new snapshot of the inputs and outputs. If the new snapshots are the same as the previous snapshots, Gradle assumes that the outputs are up to date and skips the task. If they are not the same, Gradle executes the task. Gradle persists both snapshots for next time the task is executed.</p>
+     <p> 请注意，如果一个任务有指定的输出目录，在它上一次执行之后添加到该目录的所有文件都将被忽略，并且不会使这个任务过期。这样，那些不相关的任务之间就可以共用一个输出目录，而不会产生互相干扰。如果因为一些原因你不想要这样的行为，请考虑使用<a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html#upToDateWhen(groovy.lang.Closure)" target="_top"><code class="classname">TaskOutputs.upToDateWhen()</code></a>。 <br>Note that if a task has an output directory specified, any files added to that directory since the last time it was executed are ignored and will NOT cause the task to be out of date. This is so unrelated tasks may share an output directory without interfering with each other. If this is not the behaviour you want for some reason, consider using <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskOutputs.html#upToDateWhen(groovy.lang.Closure)" target="_top"><code class="classname">TaskOutputs.upToDateWhen()</code></a></p>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10F94"></a>15.10. 任务规则</h2>
+       <h4 class="title"><a name="N10F94"></a>15.10.&nbsp;Task rules</h4>
+      </div>
+     </div>
+    </div>
+    <p>有时你想要有一个任务，它的行为依赖于一个大的或是无限的数值范围的参数。任务规则是提供这样的任务的一种很好的表达方式： <br>Sometimes you want to have a task whose behavior depends on a large or infinite number value range of parameters. A very nice and expressive way to provide such tasks are task rules:</p>
+    <div class="example">
+     <a name="taskRule"></a>
+     <p class="title"><b>示例 15.25. 任务规则 - Example&nbsp;15.25.&nbsp;Task rule</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">tasks.addRule(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Pattern: ping&lt;ID&gt;"</span>) { String taskName -&gt;
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (taskName.startsWith(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"ping"</span>)) {
         task(taskName) &lt;&lt; {
             println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Pinging: "</span> + (taskName - <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ping'</span>)
         }
     }
-}</pre><p>Output of <strong class="userinput"><code>gradle -q pingServer1</code></strong></p><pre class="screen">&gt; gradle -q pingServer1
-Pinging: Server1</pre></div></div><br class="example-break"><p>The String parameter is used as a description for the rule. This description is shown when running
-            for example <strong class="userinput"><code>gradle tasks</code></strong>.
-        </p><p>Rules not just work when calling tasks from the command line. You can also create dependsOn relations
-            on rule based tasks:
-        </p><div class="example"><a name="taskRuleDependsOn"></a><p class="title"><b>Example&nbsp;15.26.&nbsp;Dependency on rule based tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">tasks.addRule(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Pattern: ping&lt;ID&gt;"</span>) { String taskName -&gt;
+}</pre>
+      <p><strong class="userinput"><code>gradle -q task1</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q pingServer1</code></strong></p>
+      <pre class="screen">&gt; gradle -q pingServer1
+Pinging: Server1</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>这个String参数用作规则的描述，当对这个例子运行<strong class="userinput"><code>gradle tasks</code></strong>时会显示这个描述。 <br>The String parameter is used as a description for the rule. This description is shown when running for example <strong class="userinput"><code>gradle tasks</code></strong>.</p>
+    <p>规则不只是从命令行调用任务才起作用，你也可以对基于规则的任务创建依赖关系： <br>Rules not just work when calling tasks from the command line. You can also create dependsOn relations on rule based tasks:</p>
+    <div class="example">
+     <a name="taskRuleDependsOn"></a>
+     <p class="title"><b>示例 15.26. 依赖于基于规则的任务 - Example&nbsp;15.26.&nbsp;Dependency on rule based tasks</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">tasks.addRule(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Pattern: ping&lt;ID&gt;"</span>) { String taskName -&gt;
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (taskName.startsWith(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"ping"</span>)) {
         task(taskName) &lt;&lt; {
             println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Pinging: "</span> + (taskName - <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ping'</span>)
@@ -349,20 +730,55 @@ Pinging: Server1</pre></div></div><br class="example-break"><p>The String parame
 
 task groupPing {
     dependsOn pingServer1, pingServer2
-}</pre><p>Output of <strong class="userinput"><code>gradle -q groupPing</code></strong></p><pre class="screen">&gt; gradle -q groupPing
+}</pre>
+      <p><strong class="userinput"> <code>Gradle q groupPing</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q groupPing</code></strong></p>
+      <pre class="screen">&gt; gradle -q groupPing
 Pinging: Server1
-Pinging: Server2</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10FC0"></a>15.11.&nbsp;Finalizer tasks</h2></div></div></div><div class="note"><p>
-                Finalizers tasks are an <em class="firstterm">incubating</em> feature (see <a class="xref" href="feature_lifecycle.html#sec:incubating_state">Section&nbsp;C.1.2, &ldquo;Incubating&rdquo;</a>).
-            </p></div><p>Finalizer tasks are automatically added to the task graph when the finalized task is scheduled to run.</p><div class="example"><a name="taskFinalizers"></a><p class="title"><b>Example&nbsp;15.27.&nbsp;Adding a task finalizer</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+Pinging: Server2</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N10FC0"></a>15.11.&nbsp;析构器任务</h2>
+       <h4 class="title"><a name="N10FC0"></a>15.11.&nbsp;Finalizer tasks</h4>
+      </div>
+     </div>
+    </div>
+    <div class="note">
+     <p> 析构器任务是一个 <em class="firstterm">孵化中</em> 的功能 (请参阅 <a class="xref" href="feature_lifecycle.html#sec:incubating_state">&nbsp;C.1.2 节， “孵化”</a>)。 <br>Finalizers tasks are an <em class="firstterm">incubating</em> feature (see <a class="xref" href="feature_lifecycle.html#sec:incubating_state">Section&nbsp;C.1.2, “Incubating”</a>).</p>
+    </div>
+    <p>析构器任务会在最终的任务准备运行时，自动地添加到任务图中。<br>Finalizer tasks are automatically added to the task graph when the finalized task is scheduled to run.</p>
+    <div class="example">
+     <a name="taskFinalizers"></a>
+     <p class="title"><b>示例&nbsp;15.27.&nbsp;添加一个任务析构器 - Example&nbsp;15.27.&nbsp;Adding a task finalizer</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task taskX &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
 }
 task taskY &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
 }
 
-taskX.finalizedBy taskY</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+taskX.finalizedBy taskY</pre>
+      <p><strong class="userinput"><code>gradle -q taskX</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p>
+      <pre class="screen">&gt; gradle -q taskX
 taskX
-taskY</pre></div></div><br class="example-break"><p>Finalizer task will be executed even if the finalized task fails.</p><div class="example"><a name="taskFinalizersWithFailure"></a><p class="title"><b>Example&nbsp;15.28.&nbsp;Task finalizer for a failing task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX &lt;&lt; {
+taskY</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>即使最终的任务执行失败，析构器任务也会被执行。<br>Finalizer task will be executed even if the finalized task fails.</p>
+    <div class="example">
+     <a name="taskFinalizersWithFailure"></a>
+     <p class="title"><b>示例 15.28. 执行失败的任务的任务析构器 - Example&nbsp;15.28.&nbsp;Task finalizer for a failing task</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task taskX &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">throw</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> RuntimeException()
 }
@@ -370,21 +786,47 @@ task taskY &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
 }
 
-taskX.finalizedBy taskY</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
+taskX.finalizedBy taskY</pre>
+      <p><strong class="userinput"><code>gradle -q taskX</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p>
+      <pre class="screen">&gt; gradle -q taskX
 taskX
-taskY</pre></div></div><br class="example-break"><p>On the other hand, finalizer tasks are not executed if the finalized task didn't do any work, for example due to failed
-            task dependency or if it's considered up to date.</p><p>Finalizer tasks are useful in situations where build creates a resource that has to be cleaned up regardless
-            of the build failing or succeeding. An example of such resource is a web container started before an integration test task
-            and which should be always shut down, even if some of the tests fail.</p><p>To specify a finalizer task you use the <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:finalizedBy(java.lang.Object[])" target="_top"><code class="classname">Task.finalizedBy()</code></a> method.
-            This method accepts a task instance, a task name or any other input accepted by <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:dependsOn(java.lang.Object[])" target="_top"><code class="classname">Task.dependsOn()</code></a>.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:the_idea_behind_gradle_tasks"></a>15.12.&nbsp;Summary</h2></div></div></div><p>If you are coming from Ant, such an enhanced Gradle task as <span class="emphasis"><em>Copy</em></span> looks like a mixture
-            between an Ant target and an Ant task. And this is actually the case. The separation that Ant does between
-            tasks and targets is not done by Gradle. The simple Gradle tasks are like Ant's targets and the enhanced
-            Gradle tasks also include the Ant task aspects. All of Gradle's tasks share a common API and you can create
-            dependencies between them. Such a task might be nicer to configure than an Ant task.
-            It makes full use of the type system, is more expressive and easier to maintain.
-        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N10EFC" name="ftn.N10EFC" class="para">7</a>] </sup>You might be wondering why there is neither an import for the
-                    <code class="literal">StopExecutionException</code>
-                    nor do we access it via its fully qualified name. The reason is, that Gradle adds a set of default imports
-                    to your script. These imports are customizable (see <a class="xref" href="ide_support.html">Appendix&nbsp;E, <i>Existing IDE Support and how to cope without it</i></a>).
-                </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="Chapter&nbsp;14.&nbsp;Tutorial - 'This and That'">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="working_with_files.html" title="Chapter&nbsp;16.&nbsp;Working With Files">Next</a></div></div></div></body></html>
+taskY</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>另一方面，如果最终的任务什么都没执行，比如因为失败的任务依赖或如果它被认为是最新的话，析构任务不会执行。<br>On the other hand, finalizer tasks are not executed if the finalized task didn't do any work, for example due to failed task dependency or if it's considered up to date.</p>
+    <p>在不管构建是否成功都必须清理所创建的资源的情况下，析构任务很有用。这种资源的一个例子是，在集成测试任务前开始启动的Web容器，即使有些测试失败也始终应该关闭。<br>Finalizer tasks are useful in situations where build creates a resource that has to be cleaned up regardless of the build failing or succeeding. An example of such resource is a web container started before an integration test task and which should be always shut down, even if some of the tests fail.</p>
+    <p>你可以使用<a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:finalizedBy(java.lang.Object[])" target="_top"><code class="classname">Task.finalizedBy()</code></a>方法来指定一个析构器任务。这个方法接受一个任务实例，任务名称或<a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:dependsOn(java.lang.Object[])" target="_top"><code class="classname">Task.dependsOn()</code></a>所能接受的任何其他输入。 <br>To specify a finalizer task you use the <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:finalizedBy(java.lang.Object[])" target="_top"><code class="classname">Task.finalizedBy()</code></a> method. This method accepts a task instance, a task name or any other input accepted by <a class="ulink" href="../dsl/org.gradle.api.Task.html#org.gradle.api.Task:dependsOn(java.lang.Object[])" target="_top"><code class="classname">Task.dependsOn()</code></a>.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:the_idea_behind_gradle_tasks"></a>15.12. 总结</h2>
+       <h4 class="title"><a name="sec:the_idea_behind_gradle_tasks"></a>15.12.&nbsp;Summary</h4>
+      </div>
+     </div>
+    </div>
+    <p>如果你是从 Ant 转过来的，像<span class="emphasis"><em>Copy</em></span>这种增强的Gradle任务，看起来就像一个Ant目标和Ant任务之间的混合。实际上确实是这样子。Gradle 不像Ant那样对任务和目标进行分离。简单的Gradle任务就像Ant的目标，而增强的Gradle任务也包含了Ant任务方面的内容。所有的Gradle任务共享一个通用的API，你可以创建它们之间的依赖关系。这样的任务可能比Ant任务更好配置，它充分利用了类型系统，更具表现力也更易于维护。 <br>If you are coming from Ant, such an enhanced Gradle task as <span class="emphasis"><em>Copy</em></span> looks like a mixture between an Ant target and an Ant task. And this is actually the case. The separation that Ant does between tasks and targets is not done by Gradle. The simple Gradle tasks are like Ant's targets and the enhanced Gradle tasks also include the Ant task aspects. All of Gradle's tasks share a common API and you can create dependencies between them. Such a task might be nicer to configure than an Ant task. It makes full use of the type system, is more expressive and easier to maintain.</p>
+   </div>
+   <div class="footnotes">
+    <br>
+    <hr align="left" width="100">
+    <div class="footnote">
+     <p><sup>[<a href="#N10EFC" name="ftn.N10EFC" class="para">7</a>]</sup>你可能会想，为什么没有导入<code class="literal">StopExecutionException</code>，我们也没有通过其完全限定名来访问它。原因是，Gradle会向你的脚本添加一些默认的导入。这些导入是可以自定义的（参见<a class="xref" href="ide_support.html">附录E，<i>现有的IDE支持及没有支持时如何应对</i></a>）。 <br><sup>[<a href="#N10EFC" name="ftn.N10EFC" class="para">7</a>] </sup>You might be wondering why there is neither an import for the <code class="literal">StopExecutionException</code> nor do we access it via its fully qualified name. The reason is, that Gradle adds a set of default imports to your script. These imports are customizable (see <a class="xref" href="ide_support.html">Appendix&nbsp;E, <i>Existing IDE Support and how to cope without it</i></a>).</p>
+    </div>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_this_and_that.html" title="第十四章. 教程 - 杂七杂八">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="working_with_files.html" title="第十六章. 使用文件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
