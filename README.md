@@ -14,8 +14,8 @@ http://msdx.github.io/gradledoc/userguide/userguide.html
 
 目前所有已翻译的 Gradle 版本浏览地址：
 
-- 2.0： http://gradledoc.qiniudn.com/2.0/userguide/userguide.html
-- 1.12： http://gradledoc.qiniudn.com/1.12/userguide/userguide.html
+- 2.0： http://gradledoc.githang.com/2.0/userguide/userguide.html
+- 1.12： http://gradledoc.githang.com/1.12/userguide/userguide.html
 
 ---
 
