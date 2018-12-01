@@ -1,91 +1,198 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;28.&nbsp;The Jetty Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="ear_plugin.html" title="Chapter&nbsp;27.&nbsp;The Ear Plugin"><link rel="next" href="checkstyle_plugin.html" title="Chapter&nbsp;29.&nbsp;The Checkstyle Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="ear_plugin.html" title="Chapter&nbsp;27.&nbsp;The Ear Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="checkstyle_plugin.html" title="Chapter&nbsp;29.&nbsp;The Checkstyle Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="jetty_plugin"></a>Chapter&nbsp;28.&nbsp;The Jetty Plugin</h1></div></div></div><p>The Jetty plugin extends the War plugin to add tasks which allow you to deploy your web application to a
-        Jetty web container embedded in the build.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1322A"></a>28.1.&nbsp;Usage</h2></div></div></div><p>To use the Jetty plugin, include in your build script:</p><div class="example"><a name="useJettyPlugin"></a><p class="title"><b>Example&nbsp;28.1.&nbsp;Using the Jetty plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'jetty'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13239"></a>28.2.&nbsp;Tasks</h2></div></div></div><p>The Jetty plugin defines the following tasks:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;28.1.&nbsp;Jetty plugin - tasks</b></p><div class="table-contents"><table id="N1323E"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">jettyRun</code>
-                </td>
-                <td>
-                    <code class="literal">compile</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.jetty.JettyRun.html" target="_top"><code class="classname">JettyRun</code></a></td>
-                <td>Starts a Jetty instance and deploys the exploded web application to it.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">jettyRunWar</code>
-                </td>
-                <td>
-                    <code class="literal">war</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.jetty.JettyRunWar.html" target="_top"><code class="classname">JettyRunWar</code></a></td>
-                <td>Starts a Jetty instance and deploys the WAR to it.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">jettyStop</code>
-                </td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.plugins.jetty.JettyStop.html" target="_top"><code class="classname">JettyStop</code></a></td>
-                <td>Stops the Jetty instance.</td>
-            </tr></table></div></div><div class="figure"><a name="N13292"></a><p class="title"><b>Figure&nbsp;28.1.&nbsp;Jetty plugin - tasks</b></p><div class="figure-contents"><img src="img/jettyPluginTasks.png" alt="Jetty plugin - tasks"></div></div><br class="figure-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13298"></a>28.3.&nbsp;Project layout</h2></div></div></div><p>The Jetty plugin uses the same layout as the War plugin.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1329D"></a>28.4.&nbsp;Dependency management</h2></div></div></div><p>The Jetty plugin does not define any dependency configurations.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N132A2"></a>28.5.&nbsp;Convention properties</h2></div></div></div><p>The Jetty plugin defines the following convention properties:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;28.2.&nbsp;Jetty plugin - properties</b></p><div class="table-contents"><table id="N132A7"><thead><tr>
-                    <td>Property name</td>
-                    <td>Type</td>
-                    <td>Default value</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">contextPath</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td>
-                    WAR file base name
-                </td>
-                <td>
-                    The application deployment location within the Jetty container.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">httpPort</code>
-                </td>
-                <td>
-                    <code class="classname">Integer</code>
-                </td>
-                <td>
-                    <code class="literal">8080</code>
-                </td>
-                <td>
-                    The TCP port which Jetty should listen for HTTP requests on.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">stopPort</code>
-                </td>
-                <td>
-                    <code class="classname">Integer</code>
-                </td>
-                <td>
-                    <code class="literal">null</code>
-                </td>
-                <td>
-                    The TCP port which Jetty should listen for admin requests on.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">stopKey</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td>
-                    <code class="literal">null</code>
-                </td>
-                <td>
-                    The key to pass to Jetty when requesting it to stop.
-                </td>
-            </tr></table></div></div><p>These properties are provided by a <a class="ulink" href="../dsl/org.gradle.api.plugins.jetty.JettyPluginConvention.html" target="_top"><code class="classname">JettyPluginConvention</code></a>
-            convention object.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="ear_plugin.html" title="Chapter&nbsp;27.&nbsp;The Ear Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="checkstyle_plugin.html" title="Chapter&nbsp;29.&nbsp;The Checkstyle Plugin">Next</a></div></div></div></body></html>
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第二十八章. Jetty 插件 - Chapter&nbsp;28.&nbsp;The Jetty Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="ear_plugin.html" title="第二十七章. Ear 插件">
+  <link rel="next" href="checkstyle_plugin.html" title="第二十九章. Checkstyle 插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="ear_plugin.html" title="第二十七章. Ear 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="checkstyle_plugin.html" title="第二十九章. Checkstyle 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="jetty_plugin"></a>第二十八章. Jetty 插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="jetty_plugin"></a>Chapter&nbsp;28.&nbsp;The Jetty Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <p>Jetty 插件扩展自 War 插件，并添加了一些任务，这些任务可以让你在构建时部署你的 web 应用程序到一个嵌入的 Jetty web 容器中。 <br>The Jetty plugin extends the War plugin to add tasks which allow you to deploy your web application to a Jetty web container embedded in the build.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1322A"></a>28.1. 用法</h2>
+       <h4 class="title"><a name="N1322A"></a>28.1.&nbsp;Usage</h4>
+      </div>
+     </div>
+    </div>
+    <p>要使用 Jetty 的插件，请在构建脚本中包含以下内容：<br>To use the Jetty plugin, include in your build script:</p>
+    <div class="example">
+     <a name="useJettyPlugin"></a>
+     <p class="title"><b>示例 28.1. 使用 Jetty 插件 - Example&nbsp;28.1.&nbsp;Using the Jetty plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'jetty'</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13239"></a>28.2. 任务</h2>
+       <h4 class="title"><a name="N13239"></a>28.2.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>Jetty 插件定义了以下任务：<br>The Jetty plugin defines the following tasks:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 28.1. Jetty 插件——任务 - Table&nbsp;28.1.&nbsp;Jetty plugin - tasks</b></p>
+     <div class="table-contents">
+      <table id="N1323E">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">jettyRun</code> </td> 
+         <td> <code class="literal">compile</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.plugins.jetty.JettyRun.html" target="_top"><code class="classname">JettyRun</code></a></td> 
+         <td>启动 Jetty 实例并部署上 exploded web 应用程序。<br>Starts a Jetty instance and deploys the exploded web application to it.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">jettyRunWar</code> </td> 
+         <td> <code class="literal">war</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.plugins.jetty.JettyRunWar.html" target="_top"><code class="classname">JettyRunWar</code></a></td> 
+         <td>启动 Jetty 实例并部署上 WAR 包。<br>Starts a Jetty instance and deploys the WAR to it.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">jettyStop</code> </td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.plugins.jetty.JettyStop.html" target="_top"><code class="classname">JettyStop</code></a></td> 
+         <td>停止 Jetty 实例。<br>Stops the Jetty instance.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="figure">
+     <a name="N13292"></a>
+     <p class="title"><b>图 28.1. Jetty 插件——任务 - Figure&nbsp;28.1.&nbsp;Jetty plugin - tasks</b></p>
+     <div class="figure-contents">
+      <img src="img/jettyPluginTasks.png" alt="Jetty插件——任务">
+     </div>
+    </div>
+    <br class="figure-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13298"></a>28.3. 项目布局</h2>
+       <h4 class="title"><a name="N13298"></a>28.3.&nbsp;Project layout</h4>
+      </div>
+     </div>
+    </div>
+    <p>Jetty 插件使用 和 War 插件相同的布局。<br>The Jetty plugin uses the same layout as the War plugin.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1329D"></a>28.4. 依赖管理</h2>
+       <h4 class="title"><a name="N1329D"></a>28.4.&nbsp;Dependency management</h4>
+      </div>
+     </div>
+    </div>
+    <p>Jetty 插件不定义任何依赖配置。<br>The Jetty plugin does not define any dependency configurations.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N132A2"></a>28.5. 公约属性</h2>
+       <h4 class="title"><a name="N132A2"></a>28.5.&nbsp;Convention properties</h4>
+      </div>
+     </div>
+    </div>
+    <p>Jetty 插件定义了以下公约属性：<br>The Jetty plugin defines the following convention properties:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 28.2. Jetty 插件——属性 - Table&nbsp;28.2.&nbsp;Jetty plugin - properties</b></p>
+     <div class="table-contents">
+      <table id="N132A7">
+       <thead>
+        <tr> 
+         <td>属性名称<br>Property name</td> 
+         <td>类型<br>Type</td> 
+         <td>默认值<br>Default value</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">contextPath</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> WAR 文件的基本名称 <br>WAR file base name</td> 
+         <td> Jetty 容器中的应用程序部署位置。 <br>The application deployment location within the Jetty container.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">httpPort</code> </td> 
+         <td> <code class="classname">Integer</code> </td> 
+         <td> <code class="literal">8080</code> </td> 
+         <td> Jetty 应监听的 HTTP 请求的 TCP 端口。 <br>The TCP port which Jetty should listen for HTTP requests on.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">stopPort</code> </td> 
+         <td> <code class="classname">Integer</code> </td> 
+         <td> <code class="literal">null</code> </td> 
+         <td> Jetty 应监听的管理请求的 TCP 端口。 <br>The TCP port which Jetty should listen for admin requests on.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">stopKey</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="literal">null</code> </td> 
+         <td> 当请求 Jetty 停止时，传递给它的 key。 <br>The key to pass to Jetty when requesting it to stop.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p>这些属性都由一个 <a class="ulink" href="../dsl/org.gradle.api.plugins.jetty.JettyPluginConvention.html" target="_top"><code class="classname">JettyPluginConvention</code></a> 公约对象提供。<br>These properties are provided by a <a class="ulink" href="../dsl/org.gradle.api.plugins.jetty.JettyPluginConvention.html" target="_top"><code class="classname">JettyPluginConvention</code></a> convention object.</p>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="ear_plugin.html" title="第二十七章. Ear 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="checkstyle_plugin.html" title="第二十九章. Checkstyle 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
