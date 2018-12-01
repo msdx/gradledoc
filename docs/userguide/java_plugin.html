@@ -1,274 +1,341 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;23.&nbsp;The Java Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="standard_plugins.html" title="Chapter&nbsp;22.&nbsp;Standard Gradle plugins"><link rel="next" href="groovy_plugin.html" title="Chapter&nbsp;24.&nbsp;The Groovy Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="Chapter&nbsp;22.&nbsp;Standard Gradle plugins">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="groovy_plugin.html" title="Chapter&nbsp;24.&nbsp;The Groovy Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="java_plugin"></a>Chapter&nbsp;23.&nbsp;The Java Plugin</h1></div></div></div><p>The Java plugin adds Java compilation, testing and bundling capabilities to a project. It serves as the basis
-        for many of the other Gradle plugins.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11E7D"></a>23.1.&nbsp;Usage</h2></div></div></div><p>To use the Java plugin, include in your build script:</p><div class="example"><a name="useJavaPlugin"></a><p class="title"><b>Example&nbsp;23.1.&nbsp;Using the Java plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11E8C"></a>23.2.&nbsp;Source sets</h2></div></div></div><p>The Java plugin introduces the concept of a <em class="firstterm">source set</em>. A source set is simply a group of
-            source files which are compiled and executed together. These source files may include Java source files and
-            resource files. Other plugins add the ability to include Groovy and Scala source files in a source set.
-            A source set has an associated compile classpath, and runtime classpath.
-        </p><p>
-            One use for source sets is to group source files into logical groups which describe their purpose. For example,
-            you might use a source set to define an integration test suite, or you might use separate source sets to define
-            the API and implementation classes of your project.
-        </p><p>The Java plugin defines two standard source sets, called <code class="literal">main</code> and <code class="literal">test</code>.
-            The <code class="literal">main</code> source set contains your production source code, which is compiled and assembled
-            into a JAR file. The <code class="literal">test</code> source set contains your unit test source code, which is
-            compiled and executed using JUnit or TestNG.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N11EA4"></a>23.3.&nbsp;Tasks</h2></div></div></div><p>The Java plugin adds a number of tasks to your project, as shown below.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.1.&nbsp;Java plugin - tasks</b></p><div class="table-contents"><table id="N11EA9"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">compileJava</code>
-                </td>
-                <td>All tasks which produce the compile classpath. This includes the <code class="literal">jar</code> task for
-                    project dependencies included in the <code class="literal">compile</code> configuration.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a></td>
-                <td>Compiles production Java source files using javac.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">processResources</code>
-                </td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a></td>
-                <td>Copies production resources into the production classes directory.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">classes</code>
-                </td>
-                <td>
-                    <code class="literal">compileJava</code> and <code class="literal">processResources</code>.
-                    Some plugins add additional compilation tasks.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
-                <td>Assembles the production classes directory.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">compileTestJava</code>
-                </td>
-                <td>
-                    <code class="literal">compile</code>, plus all tasks which produce the test compile classpath.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a></td>
-                <td>Compiles test Java source files using javac.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">processTestResources</code>
-                </td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a></td>
-                <td>Copies test resources into the test classes directory.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">testClasses</code>
-                </td>
-                <td>
-                    <code class="literal">compileTestJava</code> and <code class="literal">processTestResources</code>.
-                    Some plugins add additional test compilation tasks.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
-                <td>Assembles the test classes directory.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">jar</code>
-                </td>
-                <td>
-                    <code class="literal">compile</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top"><code class="classname">Jar</code></a></td>
-                <td>Assembles the JAR file</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">javadoc</code>
-                </td>
-                <td><code class="literal">compile</code></td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.javadoc.Javadoc.html" target="_top"><code class="classname">Javadoc</code></a></td>
-                <td>Generates API documentation for the production Java source, using Javadoc </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">test</code>
-                </td>
-                <td>
-                    <code class="literal">compile</code>,
-                    <code class="literal">compileTest</code>,
-                    plus all tasks which produce the test runtime classpath.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a></td>
-                <td>Runs the unit tests using JUnit or TestNG.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">uploadArchives</code>
-                </td>
-                <td>
-                    The tasks which produce the artifacts in the <code class="literal">archives</code> configuration, including <code class="literal">jar</code>.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Upload.html" target="_top"><code class="classname">Upload</code></a></td>
-                <td>Uploads the artifacts in the <code class="literal">archives</code> configuration, including the JAR file.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">clean</code>
-                </td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
-                <td>Deletes the project build directory.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">clean<em class="replaceable"><code>TaskName</code></em></code>
-                </td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
-                <td>Deletes the output files produced by the specified task. For example <code class="literal">cleanJar</code>
-                    will delete the JAR file created by the <code class="literal">jar</code> task, and
-                    <code class="literal">cleanTest</code> will delete the test results created by the <code class="literal">test</code> task.
-                </td>
-            </tr></table></div></div><p>For each source set you add to the project, the Java plugin adds the following compilation tasks:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.2.&nbsp;Java plugin - source set tasks</b></p><div class="table-contents"><table id="java_source_set_tasks"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Java</code>
-                </td>
-                <td>
-                    All tasks which produce the source set's compile classpath.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a></td>
-                <td>Compiles the given source set's Java source files using javac.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">process<em class="replaceable"><code>SourceSet</code></em>Resources</code>
-                </td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a></td>
-                <td>Copies the given source set's resources into the classes directory.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>sourceSet</code></em>Classes</code>
-                </td>
-                <td>
-                    <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Java</code> and
-                    <code class="literal">process<em class="replaceable"><code>SourceSet</code></em>Resources</code>.
-                    Some plugins add additional compilation tasks for the source set.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
-                <td>Assembles the given source set's classes directory.</td>
-            </tr></table></div></div><p>The Java plugin also adds a number of tasks which form a lifecycle for the project:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.3.&nbsp;Java plugin - lifecycle tasks</b></p><div class="table-contents"><table id="N12048"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">assemble</code>
-                </td>
-                <td>
-                    All archive tasks in the project, including <code class="literal">jar</code>. Some plugins add additional
-                    archive tasks to the project.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
-                <td>Assembles all the archives in the project.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">check</code>
-                </td>
-                <td>
-                    All verification tasks in the project, including <code class="literal">test</code>. Some plugins add
-                    additional verification tasks to the project.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
-                <td>Performs all verification tasks in the project.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">build</code>
-                </td>
-                <td>
-                    <code class="literal">check</code> and <code class="literal">assemble</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
-                <td>Performs a full build of the project.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">buildNeeded</code>
-                </td>
-                <td>
-                    <code class="literal">build</code> and <code class="literal">build</code> tasks in all project lib dependencies of the
-                    <code class="literal">testRuntime</code> configuration.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
-                <td>Performs a full build of the project and all projects it depends on.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">buildDependents</code>
-                </td>
-                <td>
-                    <code class="literal">build</code> and <code class="literal">build</code> tasks in all projects with a project lib
-                    dependency on this project in a <code class="literal">testRuntime</code> configuration.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
-                <td>Performs a full build of the project and all projects which depend on it.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">build<em class="replaceable"><code>ConfigurationName</code></em></code>
-                </td>
-                <td>
-                    The tasks which produce the artifacts in configuration <em class="replaceable"><code>ConfigurationName</code></em>.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
-                <td>Assembles the artifacts in the specified configuration.
-                    The task is added by the Base plugin which is implicitly applied by the Java plugin.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">upload<em class="replaceable"><code>ConfigurationName</code></em></code>
-                </td>
-                <td>
-                    The tasks which uploads the artifacts in configuration <em class="replaceable"><code>ConfigurationName</code></em>.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Upload.html" target="_top"><code class="classname">Upload</code></a></td>
-                <td>Assembles and uploads the artifacts in the specified configuration.
-                    The task is added by the Base plugin which is implicitly applied by the Java plugin.
-                </td>
-            </tr></table></div></div><p>The following diagram shows the relationships between these tasks.</p><div class="figure"><a name="N12110"></a><p class="title"><b>Figure&nbsp;23.1.&nbsp;Java plugin - tasks</b></p><div class="figure-contents"><img src="img/javaPluginTasks.png" alt="Java plugin - tasks"></div></div><br class="figure-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12116"></a>23.4.&nbsp;Project layout</h2></div></div></div><p>The Java plugin assumes the project layout shown below. None of these directories need exist or have
-            anything in them. The Java plugin will compile whatever it finds, and handles anything which is missing.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.4.&nbsp;Java plugin - default project layout</b></p><div class="table-contents"><table id="javalayout"><thead><tr>
-                    <td>Directory</td>
-                    <td>Meaning</td>
-                </tr></thead><tr>
-        <td>
-            <code class="filename">src/main/java</code>
-        </td>
-        <td>Production Java source</td>
-    </tr><tr>
-        <td>
-            <code class="filename">src/main/resources</code>
-        </td>
-        <td>Production resources</td>
-    </tr><tr>
-        <td>
-            <code class="filename">src/test/java</code>
-        </td>
-        <td>Test Java source</td>
-    </tr><tr>
-        <td>
-            <code class="filename">src/test/resources</code>
-        </td>
-        <td>Test resources</td>
-    </tr><tr>
-        <td>
-            <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/java</code>
-        </td>
-        <td>Java source for the given source set</td>
-    </tr><tr>
-        <td>
-            <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/resources</code>
-        </td>
-        <td>Resources for the given source set</td>
-    </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N12179"></a>23.4.1.&nbsp;Changing the project layout</h3></div></div></div><p>You configure the project layout by configuring the appropriate source set. This is discussed in
-                more detail in the following sections. Here is a brief example which changes the main Java and resource
-                source directories.
-            </p><div class="example"><a name="customJavaSourceLayout"></a><p class="title"><b>Example&nbsp;23.2.&nbsp;Custom Java source layout</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceSets {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第二十三章. Java 插件 - Chapter&nbsp;23.&nbsp;The Java Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="standard_plugins.html" title="第二十二章. 标准的 Gradle 插件">
+  <link rel="next" href="groovy_plugin.html" title="第二十四章. Groovy 插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="第二十二章. 标准的 Gradle 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="groovy_plugin.html" title="第二十四章. Groovy 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="java_plugin"></a>第二十三章. Java 插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="java_plugin"></a>Chapter&nbsp;23.&nbsp;The Java Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <p>Java 插件向项目添加 Java 编译、测试和捆绑的功能。它是其他许多 Gradle 插件的基础。 <br>The Java plugin adds Java compilation, testing and bundling capabilities to a project. It serves as the basis for many of the other Gradle plugins.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N11E7D"></a>23.1. 用法</h2>
+       <h4 class="title"><a name="N11E7D"></a>23.1.&nbsp;Usage</h4>
+      </div>
+     </div>
+    </div>
+    <p>要使用 Java 插件，请在构建脚本中加入以下内容：<br>To use the Java plugin, include in your build script:</p>
+    <div class="example">
+     <a name="useJavaPlugin"></a>
+     <p class="title"><b>示例 23.1. 使用 Java 插件 - Example&nbsp;23.1.&nbsp;Using the Java plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N11E8C"></a>23.2 源集</h2>
+       <h4 class="title"><a name="N11E8C"></a>23.2.&nbsp;Source sets</h4>
+      </div>
+     </div>
+    </div>
+    <p>Java 插件引入了一个<em class="firstterm">源集</em>的概念。源集只是一组源文件，它们被一起编译和执行。这些源文件可能包含 Java 源文件和资源文件，有些其他插件可以将 Groovy 和 Scala 源文件包含在源集中。一个源集有一个相关联的编译类路径和运行时类路径。 <br>The Java plugin introduces the concept of a <em class="firstterm">source set</em>. A source set is simply a group of source files which are compiled and executed together. These source files may include Java source files and resource files. Other plugins add the ability to include Groovy and Scala source files in a source set. A source set has an associated compile classpath, and runtime classpath.</p>
+    <p> 源集的一个用途是，将源文件进行逻辑上的分组，以描述它们的目的。例如，你可以使用一个源集来定义一个集成测试套件，也可以使用单独的源集来定义项目的 API 和实现类。 <br>One use for source sets is to group source files into logical groups which describe their purpose. For example, you might use a source set to define an integration test suite, or you might use separate source sets to define the API and implementation classes of your project.</p>
+    <p>Java 插件定义了两个标准源集，分别是 <code class="literal">main</code> 和 <code class="literal">test</code>。<code class="literal">main</code> 源集包含生产源代码，将其编译并组装到 JAR 文件中。<code class="literal">test</code> 源集则包含了单元测试源代码，它们将被编译并使用 JUnit 或 TestNG 来执行。 <br>The Java plugin defines two standard source sets, called <code class="literal">main</code> and <code class="literal">test</code>. The <code class="literal">main</code> source set contains your production source code, which is compiled and assembled into a JAR file. The <code class="literal">test</code> source set contains your unit test source code, which is compiled and executed using JUnit or TestNG.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N11EA4"></a>23.3. 任务</h2>
+       <h4 class="title"><a name="N11EA4"></a>23.3.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>Java 插件向你的项目添加了大量的任务，如下所示。<br>The Java plugin adds a number of tasks to your project, as shown below.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.1. Java 插件——任务 - Table&nbsp;23.1.&nbsp;Java plugin - tasks</b></p>
+     <div class="table-contents">
+      <table id="N11EA9">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">CompileJava</code> </td> 
+         <td>所有产生编译类路径的任务，也包括了 <code class="literal">jar</code> 任务，因为项目依赖被包含在 <code class="literal">compile</code> 配置中。 <br>All tasks which produce the compile classpath. This includes the <code class="literal">jar</code> task for project dependencies included in the <code class="literal">compile</code> configuration.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a></td> 
+         <td>使用 javac 编译 Java 生产源文件。<br>Compiles production Java source files using javac.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">processResources</code> </td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a></td> 
+         <td>把生产资源文件复制到生产类目录中。<br>Copies production resources into the production classes directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">classes</code> </td> 
+         <td> <code class="literal">compileJava</code> 和 <code class="literal">processResources</code>。有些插件会添加其他的编译任务。 <br><code class="literal">compileJava</code> and <code class="literal">processResources</code>. Some plugins add additional compilation tasks.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td> 
+         <td>组装生产类目录。<br>Assembles the production classes directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">compileTestJava</code> </td> 
+         <td> <code class="literal">compile</code> 任务，以及所有能产生测试编译类路径的任务。 <br><code class="literal">compile</code>, plus all tasks which produce the test compile classpath.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a></td> 
+         <td>使用 javac 编译 Java 测试源文件。<br>Compiles test Java source files using javac.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">processTestResources</code> </td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a></td> 
+         <td>把测试资源文件拷贝到测试类目录中。<br>Copies test resources into the test classes directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">testClasses</code> </td> 
+         <td> <code class="literal">compileTestJava</code> 和 <code class="literal">processTestResources</code>。有些插件会添加其他的测试编译任务。 <br><code class="literal">compileTestJava</code> and <code class="literal">processTestResources</code>. Some plugins add additional test compilation tasks.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td> 
+         <td>组装测试类目录。<br>Assembles the test classes directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">jar</code> </td> 
+         <td> <code class="literal">compile</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Jar.html" target="_top"><code class="classname">Jar</code></a></td> 
+         <td>组装 JAR 文件<br>Assembles the JAR file</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">javadoc</code> </td> 
+         <td><code class="literal">compile</code></td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.javadoc.Javadoc.html" target="_top"><code class="classname">Javadoc</code></a></td> 
+         <td>使用 Javadoc 生成生产的 Java 源代码的API文档 <br>Generates API documentation for the production Java source, using Javadoc</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">test</code> </td> 
+         <td> <code class="literal">compile</code>， <code class="literal">compileTest</code>，以及所有产生测试运行时类路径的任务。 <br><code class="literal">compile</code>, <code class="literal">compileTest</code>, plus all tasks which produce the test runtime classpath.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a></td> 
+         <td>使用 JUnit 或 TestNG 运行单元测试。<br>Runs the unit tests using JUnit or TestNG.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">uploadArchives</code> </td> 
+         <td> 产生在 <code class="literal">archives</code> 中所配置的工件的任务，包括 <code class="literal">jar</code>。 <br>The tasks which produce the artifacts in the <code class="literal">archives</code> configuration, including <code class="literal">jar</code>.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Upload.html" target="_top"><code class="classname">Upload</code></a></td> 
+         <td>上传在 <code class="literal">archives</code> 中所配置的工件，包括 JAR 文件。<br>Uploads the artifacts in the <code class="literal">archives</code> configuration, including the JAR file.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">clean</code> </td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td> 
+         <td>删除项目的构建目录。<br>Deletes the project build directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">clean<em class="replaceable"><code>TaskName</code></em></code> </td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td> 
+         <td>删除指定任务生成的输出文件。例如 <code class="literal">cleanJar</code> 将删除由该 <code class="literal">jar</code> 任务创建的 JAR 文件，而 <code class="literal">cleanTest</code> 将删除由该 <code class="literal">test</code> 任务创建的测试结果。 <br>Deletes the output files produced by the specified task. For example <code class="literal">cleanJar</code> will delete the JAR file created by the <code class="literal">jar</code> task, and <code class="literal">cleanTest</code> will delete the test results created by the <code class="literal">test</code> task.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p>对于你添加到项目中的每一个源集，Java 插件将添加以下的编译任务：<br>For each source set you add to the project, the Java plugin adds the following compilation tasks:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.2. Java 插件——源集任务 - Table&nbsp;23.2.&nbsp;Java plugin - source set tasks</b></p>
+     <div class="table-contents">
+      <table id="java_source_set_tasks">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Java</code> </td> 
+         <td> 所有产生源集编译类路径的任务。 <br>All tasks which produce the source set's compile classpath.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a></td> 
+         <td>使用 javac 编译给定的源集中的 Java 源文件。<br>Compiles the given source set's Java source files using javac.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">process<em class="replaceable"><code>SourceSet</code></em>Resources</code> </td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a></td> 
+         <td>将给定源集的资源文件复制到类目录中。<br>Copies the given source set's resources into the classes directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal"><em class="replaceable"><code>sourceSet</code></em>Classes</code> </td> 
+         <td> <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Java</code> 和 <code class="literal">process<em class="replaceable"><code>SourceSet</code></em>Resources</code>。有些插件还为源集添加了其他的编译任务。 <br><code class="literal">compile<em class="replaceable"><code>SourceSet</code></em>Java</code> and <code class="literal">process<em class="replaceable"><code>SourceSet</code></em>Resources</code>. Some plugins add additional compilation tasks for the source set.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td> 
+         <td>组装给定源集的类目录。<br>Assembles the given source set's classes directory.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p>Java 插件还增加了大量构成项目生命周期的任务：<br>The Java plugin also adds a number of tasks which form a lifecycle for the project:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.3. Java 插件——生命周期任务 - Table&nbsp;23.3.&nbsp;Java plugin - lifecycle tasks</b></p>
+     <div class="table-contents">
+      <table id="N12048">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">assemble</code> </td> 
+         <td> 项目中的所有归档任务，包括 <code class="literal">jar</code>。有些插件会向项目添加另外的归档任务。 <br>All archive tasks in the project, including <code class="literal">jar</code>. Some plugins add additional archive tasks to the project.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td> 
+         <td>组装项目中所有的归档文件。<br>Assembles all the archives in the project.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">check</code> </td> 
+         <td> 项目中的所有验证任务，包括 <code class="literal">test</code>。有些插件会向项目添加另外的验证任务。 <br>All verification tasks in the project, including <code class="literal">test</code>. Some plugins add additional verification tasks to the project.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td> 
+         <td>执行项目中所有的验证任务。<br>Performs all verification tasks in the project.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">build</code> </td> 
+         <td> <code class="literal">check</code> 和 <code class="literal">assemble</code> <br><code class="literal">check</code> and <code class="literal">assemble</code></td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td> 
+         <td>执行完整的项目构建。<br>Performs a full build of the project.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">buildNeeded</code> </td> 
+         <td> <code class="literal">build</code> 任务，以及在 <code class="literal">testRuntime</code> 配置的所有项目库依赖项的 <code class="literal">build</code> 任务。 <br><code class="literal">build</code> and <code class="literal">build</code> tasks in all project lib dependencies of the <code class="literal">testRuntime</code> configuration.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td> 
+         <td>执行项目本身及它所依赖的其他所有项目的完整构建。<br>Performs a full build of the project and all projects it depends on.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">buildDependents</code> </td> 
+         <td> <code class="literal">build</code> 任务，以及在 <code class="literal">testRuntime</code> 配置中对此项目有库依赖的所有项目的 <code class="literal">build</code> 任务。 <br><code class="literal">build</code> and <code class="literal">build</code> tasks in all projects with a project lib dependency on this project in a <code class="literal">testRuntime</code> configuration.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td> 
+         <td>执行项目本身及依赖它的其他所有项目的完整构建。<br>Performs a full build of the project and all projects which depend on it.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">build<em class="replaceable"><code>ConfigurationName</code></em></code> </td> 
+         <td> 生成 <em class="replaceable"><code>ConfigurationName</code></em> 配置里的工件的任务。 <br>The tasks which produce the artifacts in configuration <em class="replaceable"><code>ConfigurationName</code></em>.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td> 
+         <td>组装指定配置的工件。该任务由 Base 插件添加，并由 Java 插件隐式应用。 <br>Assembles the artifacts in the specified configuration. The task is added by the Base plugin which is implicitly applied by the Java plugin.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">upload<em class="replaceable"><code>ConfigurationName</code></em></code> </td> 
+         <td> 上传 <em class="replaceable"><code>ConfigurationName</code></em> 配置中的工件的任务。 <br>The tasks which uploads the artifacts in configuration <em class="replaceable"><code>ConfigurationName</code></em>.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Upload.html" target="_top"><code class="classname">Upload</code></a></td> 
+         <td>以指定的配置组装并上传工件。该任务由 Base 插件添加，并由 Java 插件隐式应用。 <br>Assembles and uploads the artifacts in the specified configuration. The task is added by the Base plugin which is implicitly applied by the Java plugin.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p>下图显示了这些任务之间的关系。<br>The following diagram shows the relationships between these tasks.</p>
+    <div class="figure">
+     <a name="N12110"></a>
+     <p class="title"><b>图 23.1. Java 插件——任务 - Figure&nbsp;23.1.&nbsp;Java plugin - tasks</b></p>
+     <div class="figure-contents">
+      <img src="img/javaPluginTasks.png" alt="Java 插件——任务">
+     </div>
+    </div>
+    <br class="figure-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N12116"></a>23.4. 项目布局</h2>
+       <h4 class="title"><a name="N12116"></a>23.4.&nbsp;Project layout</h4>
+      </div>
+     </div>
+    </div>
+    <p>Java 插件会假定如下所示的项目布局。这些目录都不需要一定的存在在，或是里面有什么内容。 Java插件不管发现什么都将会进行编译，并处理缺失的任何内容。 <br>The Java plugin assumes the project layout shown below. None of these directories need exist or have anything in them. The Java plugin will compile whatever it finds, and handles anything which is missing.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.4. Java 插件——默认项目布局 - Table&nbsp;23.4.&nbsp;Java plugin - default project layout</b></p>
+     <div class="table-contents">
+      <table id="javalayout">
+       <thead>
+        <tr> 
+         <td>目录<br>Directory</td> 
+         <td>意义<br>Meaning</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="filename">src/main/java</code> </td> 
+         <td>Java 生产源代码<br>Production Java source</td> 
+        </tr>
+        <tr> 
+         <td> <code class="filename">src/main/resources</code> </td> 
+         <td>生产资源<br>Production resources</td> 
+        </tr>
+        <tr> 
+         <td> <code class="filename">src/test/java</code> </td> 
+         <td>Java 测试源代码<br>Test Java source</td> 
+        </tr>
+        <tr> 
+         <td> <code class="filename">src/test/resources</code> </td> 
+         <td>测试资源<br>Test resources</td> 
+        </tr>
+        <tr> 
+         <td> <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/java</code> </td> 
+         <td>给定源集的 Java 源代码<br>Java source for the given source set</td> 
+        </tr>
+        <tr> 
+         <td> <code class="filename">src/<em class="replaceable"><code>sourceSet</code></em>/resources</code> </td> 
+         <td>给定源集的资源<br>Resources for the given source set</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N12179"></a>23.4.1. 更改项目布局</h3>
+        <h5 class="title"><a name="N12179"></a>23.4.1.&nbsp;Changing the project layout</h5>
+       </div>
+      </div>
+     </div>
+     <p>你可以通过配置适当的源集来配置项目的布局，这点将在下面的章节中详细讨论。以下是一个简单的例子，展示如何改变 main Java 和资源源目录。 <br>You configure the project layout by configuring the appropriate source set. This is discussed in more detail in the following sections. Here is a brief example which changes the main Java and resource source directories.</p>
+     <div class="example">
+      <a name="customJavaSourceLayout"></a>
+      <p class="title"><b>示例 23.2. 自定义 Java 源代码布局 - Example&nbsp;23.2.&nbsp;Custom Java source layout</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">sourceSets {
     main {
         java {
             srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/java'</span>
@@ -277,308 +344,290 @@
             srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/resources'</span>
         }
     }
-}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:java_plugin_and_dependency_management"></a>23.5.&nbsp;Dependency management</h2></div></div></div><p>The Java plugin adds a number of dependency configurations to your project, as shown below. It assigns
-            those configurations to tasks such as <code class="literal">compileJava</code> and <code class="literal">test</code>.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.5.&nbsp;Java plugin - dependency configurations</b></p><div class="table-contents"><table id="tab:configurations"><thead><tr>
-                    <td>Name</td>
-                    <td>Extends</td>
-                    <td>Used by tasks</td>
-                    <td>Meaning</td>
-                </tr></thead><tr>
-                <td>compile</td>
-                <td>-</td>
-                <td>compileJava</td>
-                <td>Compile time dependencies</td>
-            </tr><tr>
-                <td>runtime</td>
-                <td>compile</td>
-                <td>-</td>
-                <td>Runtime dependencies</td>
-            </tr><tr>
-                <td>testCompile</td>
-                <td>compile</td>
-                <td>compileTestJava</td>
-                <td>Additional dependencies for compiling tests.</td>
-            </tr><tr>
-                <td>testRuntime</td>
-                <td>runtime, testCompile</td>
-                <td>test</td>
-                <td>Additional dependencies for running tests only.</td>
-            </tr><tr>
-                <td>archives</td>
-                <td>-</td>
-                <td>uploadArchives</td>
-                <td>Artifacts (e.g. jars) produced by this project.</td>
-            </tr><tr>
-                <td>default</td>
-                <td>runtime</td>
-                <td>-</td>
-                <td>The default configuration used by a project dependency on this project. Contains the artifacts and
-                    dependencies required by this project at runtime.
-                </td>
-            </tr></table></div></div><div class="figure"><a name="N121FB"></a><p class="title"><b>Figure&nbsp;23.2.&nbsp;Java plugin - dependency configurations</b></p><div class="figure-contents"><img src="img/javaPluginConfigurations.png" alt="Java plugin - dependency configurations"></div></div><br class="figure-break"><p>For each source set you add to the project, the Java plugins adds the following dependency configurations:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.6.&nbsp;Java plugin - source set dependency configurations</b></p><div class="table-contents"><table id="java_source_set_configurations"><thead><tr>
-                    <td>Name</td>
-                    <td>Extends</td>
-                    <td>Used by tasks</td>
-                    <td>Meaning</td>
-                </tr></thead><tr>
-                <td><em class="replaceable"><code>sourceSet</code></em>Compile</td>
-                <td>-</td>
-                <td>compile<em class="replaceable"><code>SourceSet</code></em>Java</td>
-                <td>Compile time dependencies for the given source set</td>
-            </tr><tr>
-                <td><em class="replaceable"><code>sourceSet</code></em>Runtime</td>
-                <td><em class="replaceable"><code>sourceSet</code></em>Compile</td>
-                <td>-</td>
-                <td>Runtime time dependencies for the given source set</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1223B"></a>23.6.&nbsp;Convention properties</h2></div></div></div><p>
-            The Java plugin adds a number of convention properties to the project, shown below. You can use these properties
-            in your build script as though they were properties of the project object (see
-            <a class="xref" href="plugins.html#sub:more_about_convention_objects">Section&nbsp;21.3, &ldquo;Conventions&rdquo;</a>).
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.7.&nbsp;Java plugin - directory properties</b></p><div class="table-contents"><table id="javaconventionDir"><thead><tr>
-                    <td>Property name</td>
-                    <td>Type</td>
-                    <td>Default value</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-        <td>
-            <code class="literal">reportsDirName</code>
-        </td>
-        <td>
-            <code class="classname">String</code>
-        </td>
-        <td>
-            <code class="filename">reports</code>
-        </td>
-        <td>
-            The name of the directory to generate reports into, relative to the build directory.
-        </td>
-    </tr><tr>
-        <td>
-            <code class="literal">reportsDir</code>
-        </td>
-        <td>
-            <code class="classname">File</code> (read-only)
-        </td>
-        <td>
-            <code class="filename"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>reportsDirName</code></em></code>
-        </td>
-        <td>
-            The directory to generate reports into.
-        </td>
-    </tr><tr>
-                <td>
-                    <code class="literal">testResultsDirName</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td>
-                    <code class="literal">test-results</code>
-                </td>
-                <td>
-                    The name of the directory to generate test result .xml files into, relative to the build directory.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">testResultsDir</code>
-                </td>
-                <td>
-                    <code class="classname">File</code> (read-only)
-                </td>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>testResultsDirName</code></em></code>
-                </td>
-                <td>
-                    The directory to generate test result .xml files into.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">testReportDirName</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td>
-                    <code class="literal">tests</code>
-                </td>
-                <td>
-                    The name of the directory to generate the test report into, relative to the reports directory.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">testReportDir</code>
-                </td>
-                <td>
-                    <code class="classname">File</code> (read-only)
-                </td>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>reportsDir</code></em>/<code class="literal">testReportDirName</code></code>
-                </td>
-                <td>
-                    The directory to generate the test report into.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">libsDirName</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td>
-                    <code class="literal">libs</code>
-                </td>
-                <td>
-                    The name of the directory to generate libraries into, relative to the build directory.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">libsDir</code>
-                </td>
-                <td>
-                    <code class="classname">File</code> (read-only)
-                </td>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>libsDirName</code></em></code>
-                </td>
-                <td>
-                    The directory to generate libraries into.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">distsDirName</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td>
-                    <code class="literal">distributions</code>
-                </td>
-                <td>
-                    The name of the directory to generate distributions into, relative to the build directory.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">distsDir</code>
-                </td>
-                <td>
-                    <code class="classname">File</code> (read-only)
-                </td>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>distsDirName</code></em></code>
-                </td>
-                <td>
-                    The directory to generate distributions into.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">docsDirName</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td>
-                    <code class="literal">docs</code>
-                </td>
-                <td>
-                    The name of the directory to generate documentation into, relative to the build directory.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">docsDir</code>
-                </td>
-                <td>
-                    <code class="classname">File</code> (read-only)
-                </td>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>docsDirName</code></em></code>
-                </td>
-                <td>
-                    The directory to generate documentation into.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">dependencyCacheDirName</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td>
-                    <code class="literal">dependency-cache</code>
-                </td>
-                <td>
-                    The name of the directory to use to cache source dependency information, relative to the build directory.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">dependencyCacheDir</code>
-                </td>
-                <td>
-                    <code class="classname">File</code> (read-only)
-                </td>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>dependencyCacheDirName</code></em></code>
-                </td>
-                <td>
-                    The directory to use to cache source dependency information.
-                </td>
-            </tr></table></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.8.&nbsp;Java plugin - other properties</b></p><div class="table-contents"><table id="javaconventionNonDir"><thead><tr>
-                    <td>Property name</td>
-                    <td>Type</td>
-                    <td>Default value</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">sourceSets</code>
-                </td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/tasks/SourceSetContainer.html" target="_top"><code class="classname">SourceSetContainer</code></a> (read-only)</td>
-                <td>Not null</td>
-                <td>Contains the project's source sets.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">sourceCompatibility</code>
-                </td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/JavaVersion.html" target="_top"><code class="classname">JavaVersion</code></a>. Can also set using a String or a Number, e.g.
-                    <code class="literal">'1.5'</code> or <code class="literal">1.5</code>.
-                </td>
-                <td>Value of the current used JVM</td>
-                <td>Java version compatibility to use when compiling Java source.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">targetCompatibility</code>
-                </td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/JavaVersion.html" target="_top"><code class="classname">JavaVersion</code></a>. Can also set using a String or Number, e.g.
-                    <code class="literal">'1.5'</code> or <code class="literal">1.5</code>.
-                </td>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>sourceCompatibility</code></em></code>
-                </td>
-                <td>Java version to generate classes for.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">archivesBaseName</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td><code class="literal"><em class="replaceable"><code>projectName</code></em></code></td>
-                <td>The basename to use for archives, such as JAR or ZIP files.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">manifest</code>
-                </td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/java/archives/Manifest.html" target="_top"><code class="classname">Manifest</code></a></td>
-                <td>an empty manifest</td>
-                <td>The manifest to include in all JAR files.</td>
-            </tr></table></div></div><p>
-            These properties are provided by convention objects of type <a class="ulink" href="../dsl/org.gradle.api.plugins.JavaPluginConvention.html" target="_top"><code class="classname">JavaPluginConvention</code></a>,
-            and <a class="ulink" href="../dsl/org.gradle.api.plugins.BasePluginConvention.html" target="_top"><code class="classname">BasePluginConvention</code></a>.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:source_sets"></a>23.7.&nbsp;Working with source sets</h2></div></div></div><p>You can access the source sets of a project using the <code class="literal">sourceSets</code> property. This
-            is a container for the project's source sets, of type <a class="ulink" href="../javadoc/org/gradle/api/tasks/SourceSetContainer.html" target="_top"><code class="classname">SourceSetContainer</code></a>.
-            There is also a <code class="literal">sourceSets { }</code> script block, which you can pass a closure to configure the
-            source set container. The source set container works pretty much the same way as other containers, such
-            as <code class="literal">tasks</code>.
-        </p><div class="example"><a name="defineSourceSet"></a><p class="title"><b>Example&nbsp;23.3.&nbsp;Accessing a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Various ways to access the main source set</span>
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:java_plugin_and_dependency_management"></a>23.5. 依赖管理</h2>
+       <h4 class="title"><a name="sec:java_plugin_and_dependency_management"></a>23.5.&nbsp;Dependency management</h4>
+      </div>
+     </div>
+    </div>
+    <p>Java 插件向项目添加了一些依赖配置，如下表所示。它将这些配置指定一些任务，如 <code class="literal">compileJava</code> 和 <code class="literal">test</code>。 <br>The Java plugin adds a number of dependency configurations to your project, as shown below. It assigns those configurations to tasks such as <code class="literal">compileJava</code> and <code class="literal">test</code>.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表23.5. Java插件 ​​- 依赖配置 - Table&nbsp;23.5.&nbsp;Java plugin - dependency configurations</b></p>
+     <div class="table-contents">
+      <table id="tab:configurations">
+       <thead>
+        <tr> 
+         <td>名称<br>Name</td> 
+         <td>继承自<br>Extends</td> 
+         <td>在哪些任务中使用<br>Used by tasks</td> 
+         <td>意义<br>Meaning</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td>compile</td> 
+         <td>-</td> 
+         <td>CompileJava</td> 
+         <td>编译时依赖<br>Compile time dependencies</td> 
+        </tr>
+        <tr> 
+         <td>runtime</td> 
+         <td>compile</td> 
+         <td>-</td> 
+         <td>运行时依赖<br>Runtime dependencies</td> 
+        </tr>
+        <tr> 
+         <td>testCompile</td> 
+         <td>compile</td> 
+         <td>compileTestJava</td> 
+         <td>用于编译测试代码的其他依赖<br>Additional dependencies for compiling tests.</td> 
+        </tr>
+        <tr> 
+         <td>testRuntime</td> 
+         <td>runtime, testCompile</td> 
+         <td>test</td> 
+         <td>只用于运行测试的其他依赖<br>Additional dependencies for running tests only.</td> 
+        </tr>
+        <tr> 
+         <td>archives</td> 
+         <td>-</td> 
+         <td>uploadArchives</td> 
+         <td>由本项目产生的工件（如 jar 包）。<br>Artifacts (e.g. jars) produced by this project.</td> 
+        </tr>
+        <tr> 
+         <td>default</td> 
+         <td>runtime</td> 
+         <td>-</td> 
+         <td>依赖于本项目的另一个项目所使用的默认配置。包含此项目运行时所需的工件和依赖。 <br>The default configuration used by a project dependency on this project. Contains the artifacts and dependencies required by this project at runtime.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="figure">
+     <a name="N121FB"></a>
+     <p class="title"><b>图 23.2. Java 插件——依赖配置 - Figure&nbsp;23.2.&nbsp;Java plugin - dependency configurations</b></p>
+     <div class="figure-contents">
+      <img src="img/javaPluginConfigurations.png" alt="Java 插件——依赖配置">
+     </div>
+    </div>
+    <br class="figure-break">
+    <p>对于你添加到项目中的每个源集，Java 插件都会添加以下的依赖配置：<br>For each source set you add to the project, the Java plugins adds the following dependency configurations:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.6. Java 插件——源集依赖配置 - Table&nbsp;23.6.&nbsp;Java plugin - source set dependency configurations</b></p>
+     <div class="table-contents">
+      <table id="java_source_set_configurations">
+       <thead>
+        <tr> 
+         <td>名称<br>Name</td> 
+         <td>继承自<br>Extends</td> 
+         <td>在哪些任务中使用<br>Used by tasks</td> 
+         <td>意义<br>Meaning</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td><em class="replaceable"><code>sourceSet</code></em>Compile</td> 
+         <td>-</td> 
+         <td>compile<em class="replaceable"><code>SourceSet</code></em>Java</td> 
+         <td>给定源集的编译时依赖<br>Compile time dependencies for the given source set</td> 
+        </tr>
+        <tr> 
+         <td><em class="replaceable"><code>sourceSet</code></em>Runtime</td> 
+         <td><em class="replaceable"><code>sourceSet</code></em>Compile</td> 
+         <td>-</td> 
+         <td>给定源集的运行时依赖<br>Runtime time dependencies for the given source set</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1223B"></a>23.6. 约定属性</h2>
+       <h4 class="title"><a name="N1223B"></a>23.6.&nbsp;Convention properties</h4>
+      </div>
+     </div>
+    </div>
+    <p> Java 插件向项目添加了许多约定属性，如下表所示。你可以在构建脚本中使用这些属性，就像它们是 project 对象里的属性一样（见《<a class="xref" href="plugins.html#sub:more_about_convention_objects">第 21.3 节，“约定”</a>》）。 <br>The Java plugin adds a number of convention properties to the project, shown below. You can use these properties in your build script as though they were properties of the project object (see <a class="xref" href="plugins.html#sub:more_about_convention_objects">Section&nbsp;21.3, “Conventions”</a>).</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.7. Java 插件——目录属性 - Table&nbsp;23.7.&nbsp;Java plugin - directory properties</b></p>
+     <div class="table-contents">
+      <table id="javaconventionDir">
+       <thead>
+        <tr> 
+         <td>属性名称<br>Property name</td> 
+         <td>类型<br>Type</td> 
+         <td>默认值<br>Default value</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">reportsDirName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="filename">reports</code> </td> 
+         <td> 相对于构建目录，生成报告的目录的名称。 <br>The name of the directory to generate reports into, relative to the build directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">reportsDir</code> </td> 
+         <td> <code class="classname">File</code> （只读） <br><code class="classname">File</code> (read-only)</td> 
+         <td> <code class="filename"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>reportsDirName</code></em></code> </td> 
+         <td> 要生成报告的目录。 <br>The directory to generate reports into.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">testResultsDirName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="literal">test-results</code> </td> 
+         <td> 相对于构建目录，生成测试结果.xml 文件的目录名称。 <br>The name of the directory to generate test result .xml files into, relative to the build directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">testResultsDir</code> </td> 
+         <td> <code class="classname">File</code> （只读） <br><code class="classname">File</code> (read-only)</td> 
+         <td> <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>testResultsDirName</code></em></code> </td> 
+         <td> 生成测试结果.xml 文件的目录。 <br>The directory to generate test result .xml files into.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">testReportDirName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="literal">tests</code> </td> 
+         <td> 相对于报告目录，生成测试报告的目录的名称。 <br>The name of the directory to generate the test report into, relative to the reports directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">testReportDir</code> </td> 
+         <td> <code class="classname">File</code> （只读） <br><code class="classname">File</code> (read-only)</td> 
+         <td> <code class="literal"><em class="replaceable"><code>reportsDir</code></em>/<code class="literal">testReportDirName</code></code> </td> 
+         <td> 生成测试报告的目录。 <br>The directory to generate the test report into.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">libsDirName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="literal">libs</code> </td> 
+         <td> 相对于构建目录，生成库的目录的名称。 <br>The name of the directory to generate libraries into, relative to the build directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">libsDir</code> </td> 
+         <td> <code class="classname">File</code> （只读） <br><code class="classname">File</code> (read-only)</td> 
+         <td> <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>libsDirName</code></em></code> </td> 
+         <td> 要生成库的目录。 <br>The directory to generate libraries into.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">distsDirName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="literal">distributions</code> </td> 
+         <td> 相对于构建目录的目录名称，该目录用于生成分发的文件。 <br>The name of the directory to generate distributions into, relative to the build directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">distsDir</code> </td> 
+         <td> <code class="classname">File</code> （只读） <br><code class="classname">File</code> (read-only)</td> 
+         <td> <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>distsDirName</code></em></code> </td> 
+         <td> 生成分发文件的目录。 <br>The directory to generate distributions into.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">docsDirName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="literal">docs</code> </td> 
+         <td> 相对于构建目录的目录名称，该目录用于生成文档。 <br>The name of the directory to generate documentation into, relative to the build directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">docsDir</code> </td> 
+         <td> <code class="classname">File</code> （只读） <br><code class="classname">File</code> (read-only)</td> 
+         <td> <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>docsDirName</code></em></code> </td> 
+         <td> 用于生成文档的目录。 <br>The directory to generate documentation into.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">dependencyCacheDirName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="literal">dependency-cache</code> </td> 
+         <td> 相对于构建目录的目录名称，该目录用于缓存源代码的依赖信息。 <br>The name of the directory to use to cache source dependency information, relative to the build directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">dependencyCacheDir</code> </td> 
+         <td> <code class="classname">File</code> （只读） <br><code class="classname">File</code> (read-only)</td> 
+         <td> <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>dependencyCacheDirName</code></em></code> </td> 
+         <td> 用于缓存源代码的依赖信息的目录。 <br>The directory to use to cache source dependency information.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.8. Java 插件——其他属性 - Table&nbsp;23.8.&nbsp;Java plugin - other properties</b></p>
+     <div class="table-contents">
+      <table id="javaconventionNonDir">
+       <thead>
+        <tr> 
+         <td>属性名称<br>Property name</td> 
+         <td>类型<br>Type</td> 
+         <td>默认值<br>Default value</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">sourceSets</code> </td> 
+         <td><a class="ulink" href="../javadoc/org/gradle/api/tasks/SourceSetContainer.html" target="_top"><code class="classname">SourceSetContainer</code></a> （只读）<br><a class="ulink" href="../javadoc/org/gradle/api/tasks/SourceSetContainer.html" target="_top"><code class="classname">SourceSetContainer</code></a> (read-only)</td> 
+         <td>不为 null<br>Not null</td> 
+         <td>包含项目的源集。<br>Contains the project's source sets.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">sourceCompatibility</code> </td> 
+         <td><a class="ulink" href="../javadoc/org/gradle/api/JavaVersion.html" target="_top"><code class="classname">JavaVersion</code></a>。也可以使用字符串或数字来设置，如 <code class="literal">'1.5'</code> 或 <code class="literal">1.5</code>。 <br><a class="ulink" href="../javadoc/org/gradle/api/JavaVersion.html" target="_top"><code class="classname">JavaVersion</code></a>. Can also set using a String or a Number, e.g. <code class="literal">'1.5'</code> or <code class="literal">1.5</code>.</td> 
+         <td>当前所使用的 JVM 的值<br>Value of the current used JVM</td> 
+         <td>当编译 Java 源代码时所使用的 Java 版本兼容性。<br>Java version compatibility to use when compiling Java source.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">targetCompatibility</code> </td> 
+         <td><a class="ulink" href="../javadoc/org/gradle/api/JavaVersion.html" target="_top"><code class="classname">JavaVersion</code></a>。也可以使用字符串或数字来设置，如 <code class="literal">'1.5'</code> 或 <code class="literal">1.5</code>。 <br><a class="ulink" href="../javadoc/org/gradle/api/JavaVersion.html" target="_top"><code class="classname">JavaVersion</code></a>. Can also set using a String or Number, e.g. <code class="literal">'1.5'</code> or <code class="literal">1.5</code>.</td> 
+         <td> <code class="literal"><em class="replaceable"><code>sourceCompatibility</code></em></code> </td> 
+         <td>要生成的类的 Java 版本。<br>Java version to generate classes for.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">archivesBaseName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td><code class="literal"><em class="replaceable"><code>projectName</code></em></code></td> 
+         <td>像 JAR 或 ZIP 文件这样的工件的基本名称。<br>The basename to use for archives, such as JAR or ZIP files.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">manifest</code> </td> 
+         <td><a class="ulink" href="../javadoc/org/gradle/api/java/archives/Manifest.html" target="_top"><code class="classname">Manifest</code></a></td> 
+         <td>一个空的清单<br>an empty manifest</td> 
+         <td>包含在所有 JAR 文件中的清单。<br>The manifest to include in all JAR files.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p> 这些属性由 <a class="ulink" href="../dsl/org.gradle.api.plugins.JavaPluginConvention.html" target="_top"><code class="classname">JavaPluginConvention</code></a> 和<a class="ulink" href="../dsl/org.gradle.api.plugins.BasePluginConvention.html" target="_top"><code class="classname">BasePluginConvention</code></a> 这些类型的约定对象提供。 <br>These properties are provided by convention objects of type <a class="ulink" href="../dsl/org.gradle.api.plugins.JavaPluginConvention.html" target="_top"><code class="classname">JavaPluginConvention</code></a>, and <a class="ulink" href="../dsl/org.gradle.api.plugins.BasePluginConvention.html" target="_top"><code class="classname">BasePluginConvention</code></a>.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:source_sets"></a>23.7.&nbsp;使用源集</h2>
+       <h4 class="title"><a name="sec:source_sets"></a>23.7.&nbsp;Working with source sets</h4>
+      </div>
+     </div>
+    </div>
+    <p>你可以使用 <code class="literal">sourceSets</code> 属性访问项目的源集。这是项目源集的容器，它的类型是 <a class="ulink" href="../javadoc/org/gradle/api/tasks/SourceSetContainer.html" target="_top"><code class="classname">SourceSetContainer</code></a>。除此之外，还有一个 <code class="literal">sourceSets{}</code> 脚本块，可以传入一个闭包来配置源集容器。源集容器的使用方式与其他的容器几乎一样，例如 <code class="literal">tasks</code>。 <br>You can access the source sets of a project using the <code class="literal">sourceSets</code> property. This is a container for the project's source sets, of type <a class="ulink" href="../javadoc/org/gradle/api/tasks/SourceSetContainer.html" target="_top"><code class="classname">SourceSetContainer</code></a>. There is also a <code class="literal">sourceSets { }</code> script block, which you can pass a closure to configure the source set container. The source set container works pretty much the same way as other containers, such as <code class="literal">tasks</code>.</p>
+    <div class="example">
+     <a name="defineSourceSet"></a>
+     <p class="title"><b>示例 23.3. 访问源集 - Example&nbsp;23.3.&nbsp;Accessing a source set</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Various ways to access the main source set</span>
 println sourceSets.main.output.classesDir
 println sourceSets[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'main'</span>].output.classesDir
 sourceSets {
@@ -593,9 +642,17 @@ sourceSets {
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Iterate over the source sets</span>
 sourceSets.all {
     println name
-}</pre></div></div><br class="example-break"><p>To configure an existing source set, you simply use one of the above access methods to set the
-            properties of the source set. The properties are described below. Here is an example which configures the
-            main Java and resources directories:</p><div class="example"><a name="configureSourceSet"></a><p class="title"><b>Example&nbsp;23.4.&nbsp;Configuring the source directories of a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceSets {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>要配置一个现有的源集，你只需要使用上面的其中一种访问方法来设置源集的属性。这些属性将在下文中进行介绍。以下是配置main 的 Java 和资源目录的示例：<br>To configure an existing source set, you simply use one of the above access methods to set the properties of the source set. The properties are described below. Here is an example which configures the main Java and resources directories:</p>
+    <div class="example">
+     <a name="configureSourceSet"></a>
+     <p class="title"><b>示例 23.4. 配置源集的源代码目录 - Example&nbsp;23.4.&nbsp;Configuring the source directories of a source set</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">sourceSets {
     main {
         java {
             srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/java'</span>
@@ -604,354 +661,449 @@ sourceSets.all {
             srcDir <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/resources'</span>
         }
     }
-}</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N12479"></a>23.7.1.&nbsp;Source set properties</h3></div></div></div><p>The following table lists some of the important properties of a source set.
-                You can find more details in the API documentation for <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a>.
-            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.9.&nbsp;Java plugin - source set properties</b></p><div class="table-contents"><table id="N12483"><thead><tr>
-                        <td>Property name</td>
-                        <td>Type</td>
-                        <td>Default value</td>
-                        <td>Description</td>
-                    </tr></thead><tr>
-                    <td>
-                        <code class="literal">name</code>
-                    </td>
-                    <td>
-                        <code class="classname">String</code> (read-only)
-                    </td>
-                    <td>
-                        Not null
-                    </td>
-                    <td>
-                        The name of the source set, used to identify it.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">output</code>
-                    </td>
-                    <td>
-                        <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSetOutput.html" target="_top"><code class="classname">SourceSetOutput</code></a> (read-only)
-                    </td>
-                    <td>
-                        Not null
-                    </td>
-                    <td>
-                        The output files of the source set, containing its compiled classes and resources.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">output.classesDir</code>
-                    </td>
-                    <td>
-                        <code class="classname">File</code>
-                    </td>
-                    <td>
-                        <code class="literal"><em class="replaceable"><code>buildDir</code></em>/classes/<em class="replaceable"><code>name</code></em></code>
-                    </td>
-                    <td>
-                        The directory to generate the classes of this source set into.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">output.resourcesDir</code>
-                    </td>
-                    <td>
-                        <code class="classname">File</code>
-                    </td>
-                    <td>
-                        <code class="literal"><em class="replaceable"><code>buildDir</code></em>/resources/<em class="replaceable"><code>name</code></em></code>
-                    </td>
-                    <td>
-                        The directory to generate the resources of this source set into.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">compileClasspath</code>
-                    </td>
-                    <td>
-                        <a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a>
-                    </td>
-                    <td>
-                        <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em></code> configuration.
-                    </td>
-                    <td>
-                        The classpath to use when compiling the source files of this source set.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">runtimeClasspath</code>
-                    </td>
-                    <td>
-                        <a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a>
-                    </td>
-                    <td>
-                        <code class="literal">output</code> + <code class="literal">runtime<em class="replaceable"><code>SourceSet</code></em></code> configuration.
-                    </td>
-                    <td>
-                        The classpath to use when executing the classes of this source set.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">java</code>
-                    </td>
-                    <td>
-                        <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
-                    </td>
-                    <td>
-                        Not null
-                    </td>
-                    <td>
-                        The Java source files of this source set. Contains only <code class="filename">.java</code> files
-                        found in the Java source directories, and excludes all other files.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">java.srcDirs</code>
-                    </td>
-                    <td>
-                        <code class="classname">Set&lt;File&gt;</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.
-                    </td>
-                    <td>
-                        <code class="literal">[<em class="replaceable"><code>projectDir</code></em>/src/<em class="replaceable"><code>name</code></em>/java]</code>
-                    </td>
-                    <td>
-                        The source directories containing the Java source files of this source set.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">resources</code>
-                    </td>
-                    <td>
-                        <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
-                    </td>
-                    <td>
-                        Not null
-                    </td>
-                    <td>
-                        The resources of this source set. Contains only resources, and excludes any
-                        <code class="filename">.java</code> files found in the resource source directories. Other plugins,
-                        such as the Groovy plugin, exclude additional types of files from this collection.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">resources.srcDirs</code>
-                    </td>
-                    <td>
-                        <code class="classname">Set&lt;File&gt;</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.
-                    </td>
-                    <td>
-                        <code class="literal">[<em class="replaceable"><code>projectDir</code></em>/src/<em class="replaceable"><code>name</code></em>/resources]</code>
-                    </td>
-                    <td>
-                        The source directories containing the resources of this source set.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">allJava</code>
-                    </td>
-                    <td>
-                        <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
-                    </td>
-                    <td>
-                        <code class="literal">java</code>
-                    </td>
-                    <td>
-                        All <code class="filename">.java</code> files of this source set. Some plugins, such as the Groovy plugin,
-                        add additional Java source files to this collection.
-                    </td>
-                </tr><tr>
-                    <td>
-                        <code class="literal">allSource</code>
-                    </td>
-                    <td>
-                        <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)
-                    </td>
-                    <td>
-                        <code class="literal">resources + java</code>
-                    </td>
-                    <td>
-                        All source files of this source set. This include all resource files and all Java source files.
-                        Some plugins, such as the Groovy plugin, add additional source files to this collection.
-                    </td>
-                </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N125D5"></a>23.7.2.&nbsp;Defining new source sets</h3></div></div></div><p>To define a new source set, you simply reference it in the <code class="literal">sourceSets { }</code> block. Here's an example:
-            </p><div class="example"><a name="defineSourceSet"></a><p class="title"><b>Example&nbsp;23.5.&nbsp;Defining a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceSets {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N12479"></a>23.7.1. 源集属性</h3>
+        <h5 class="title"><a name="N12479"></a>23.7.1.&nbsp;Source set properties</h5>
+       </div>
+      </div>
+     </div>
+     <p>下表列出了一些重要的源集属性。你可以在 API 文档中找到更多有关 <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a> 的详细信息。 <br>The following table lists some of the important properties of a source set. You can find more details in the API documentation for <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a>.</p>
+     <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+      <p class="title"><b>表 23.9. Java 插件——源集属性 - Table&nbsp;23.9.&nbsp;Java plugin - source set properties</b></p>
+      <div class="table-contents">
+       <table id="N12483">
+        <thead>
+         <tr> 
+          <td>属性名称<br>Property name</td> 
+          <td>类型<br>Type</td> 
+          <td>默认值<br>Default value</td> 
+          <td>描述<br>Description</td> 
+         </tr>
+        </thead>
+        <tbody>
+         <tr> 
+          <td> <code class="literal">name</code> </td> 
+          <td> <code class="classname">String</code> （只读） <br><code class="classname">String</code> (read-only)</td> 
+          <td> 不为 null <br>Not null</td> 
+          <td> 用来确定一个源集的源集名称。 <br>The name of the source set, used to identify it.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">output</code> </td> 
+          <td> <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSetOutput.html" target="_top"><code class="classname">SourceSetOutput</code></a> （只读） <br><a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSetOutput.html" target="_top"><code class="classname">SourceSetOutput</code></a> (read-only)</td> 
+          <td> 不为 null <br>Not null</td> 
+          <td> 源集的输出文件，包含其编译过的类和资源。 <br>The output files of the source set, containing its compiled classes and resources.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">output.classesDir</code> </td> 
+          <td> <code class="classname">File</code> </td> 
+          <td> <code class="literal"><em class="replaceable"><code>buildDir</code></em>/classes/<em class="replaceable"><code>name</code></em></code> </td> 
+          <td> 生成该源集的类的目录。 <br>The directory to generate the classes of this source set into.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">output.resourcesDir</code> </td> 
+          <td> <code class="classname">File</code> </td> 
+          <td> <code class="literal"><em class="replaceable"><code>buildDir</code></em>/resources/<em class="replaceable"><code>name</code></em></code> </td> 
+          <td> 生成该源集的资源的目录。 <br>The directory to generate the resources of this source set into.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">compileClasspath</code> </td> 
+          <td> <a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a> </td> 
+          <td> <code class="literal">compile<em class="replaceable"><code>SourceSet</code></em></code> 配置。 <br><code class="literal">compile<em class="replaceable"><code>SourceSet</code></em></code> configuration.</td> 
+          <td> 编译该源集的源文件时使用的类路径。 <br>The classpath to use when compiling the source files of this source set.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">runtimeClasspath</code> </td> 
+          <td> <a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a> </td> 
+          <td> <code class="literal">output</code> + <code class="literal">runtime<em class="replaceable"><code>SourceSet</code></em></code> 配置。 <br><code class="literal">output</code> + <code class="literal">runtime<em class="replaceable"><code>SourceSet</code></em></code> configuration.</td> 
+          <td> 执行此源集的类时使用的类路径。 <br>The classpath to use when executing the classes of this source set.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">java</code> </td> 
+          <td> <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> （只读） <br><a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)</td> 
+          <td> 不为 null <br>Not null</td> 
+          <td> 此源集的 Java 源文件。仅包含 Java 源目录中找到的 <code class="filename">.java</code> 文件，并排除所有其他文件。 <br>The Java source files of this source set. Contains only <code class="filename">.java</code> files found in the Java source directories, and excludes all other files.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">java.srcDirs</code> </td> 
+          <td> <code class="classname">Set&lt;File&gt;</code>。可以使用《<a class="xref" href="working_with_files.html#sec:specifying_multiple_files">第 16.5 节，“指定一组输入文件”</a>》中所讲到的任何一种方法来设置。 <br><code class="classname">Set&lt;File&gt;</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, “Specifying a set of input files”</a>.</td> 
+          <td> <code class="literal">[<em class="replaceable"><code>projectDir</code></em>/src/<em class="replaceable"><code>name</code></em>/java]</code> </td> 
+          <td> 该源目录包含了此源集的所有 Java 源文件。 <br>The source directories containing the Java source files of this source set.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">resources</code> </td> 
+          <td> <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> （只读） <br><a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)</td> 
+          <td> 不为 null <br>Not null</td> 
+          <td> 此源集的资源。仅包含资源，并且排除在资源源目录中找到的所有 <code class="filename">.java</code> 文件。其他插件（如 Groovy 插件）会从此集合中排除其他类型的文件。 <br>The resources of this source set. Contains only resources, and excludes any <code class="filename">.java</code> files found in the resource source directories. Other plugins, such as the Groovy plugin, exclude additional types of files from this collection.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">resources.srcDirs</code> </td> 
+          <td> <code class="classname">Set&lt;File&gt;</code>。可以使用《<a class="xref" href="working_with_files.html#sec:specifying_multiple_files">第 16.5 节，“指定一组输入文件”</a>》中所讲到的任何一种方法来设置。 <br><code class="classname">Set&lt;File&gt;</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, “Specifying a set of input files”</a>.</td> 
+          <td> <code class="literal">[<em class="replaceable"><code>projectDir</code></em>/src/<em class="replaceable"><code>name</code></em>/resources]</code> </td> 
+          <td> 包含此源集资源的源目录。 <br>The source directories containing the resources of this source set.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">allJava</code> </td> 
+          <td> <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> （只读） <br><a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)</td> 
+          <td> <code class="literal">java</code> </td> 
+          <td> 该源集的所有 <code class="filename">.java</code> 文件。有些插件，如Groovy 插件，会将其他 Java 源文件添加到此集合中。 <br>All <code class="filename">.java</code> files of this source set. Some plugins, such as the Groovy plugin, add additional Java source files to this collection.</td> 
+         </tr>
+         <tr> 
+          <td> <code class="literal">allSource</code> </td> 
+          <td> <a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> （只读） <br><a class="ulink" href="../javadoc/org/gradle/api/file/SourceDirectorySet.html" target="_top"><code class="classname">SourceDirectorySet</code></a> (read-only)</td> 
+          <td> <code class="literal">resources + java</code> </td> 
+          <td> 该源集的所有源文件，包括所有资源文件和 Java 源文件。有些插件（如 Groovy 插件）会将其他源文件添加到此集合中。 <br>All source files of this source set. This include all resource files and all Java source files. Some plugins, such as the Groovy plugin, add additional source files to this collection.</td> 
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N125D5"></a>23.7.2. 定义新的源集</h3>
+        <h5 class="title"><a name="N125D5"></a>23.7.2.&nbsp;Defining new source sets</h5>
+       </div>
+      </div>
+     </div>
+     <p>要定义一个新的源集，你只需在 <code class="literal">sourceSets {}</code> 块引用它。示例如下： <br>To define a new source set, you simply reference it in the <code class="literal">sourceSets { }</code> block. Here's an example:</p>
+     <div class="example">
+      <a name="defineSourceSet"></a>
+      <p class="title"><b>示例 23.5. 定义一个源集 - Example&nbsp;23.5.&nbsp;Defining a source set</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">sourceSets {
     intTest
-}</pre></div></div><br class="example-break"><p>
-                When you define a new source set, the Java plugin adds some dependency configurations for the
-                source set, as shown in <a class="xref" href="java_plugin.html#java_source_set_configurations" title="Table&nbsp;23.6.&nbsp;Java plugin - source set dependency configurations">Table&nbsp;23.6, &ldquo;Java plugin - source set dependency configurations&rdquo;</a>. You can use these configurations to
-                define the compile and runtime dependencies of the source set.
-            </p><div class="example"><a name="sourceSetDependencies"></a><p class="title"><b>Example&nbsp;23.6.&nbsp;Defining source set dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sourceSets {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 当你定义一个新的源集时，Java 插件会为该源集添加一些依赖配置，如<a class="xref" href="java_plugin.html#java_source_set_configurations" title="表 23.6. Java 插件——源集依赖配置">表 23.6，“Java 插件——源集依赖性配置”</a>所示。你可以使用这些配置来定义源集的编译和运行时依赖。 <br>When you define a new source set, the Java plugin adds some dependency configurations for the source set, as shown in <a class="xref" href="java_plugin.html#java_source_set_configurations" title="Table&nbsp;23.6.&nbsp;Java plugin - source set dependency configurations">Table&nbsp;23.6, “Java plugin - source set dependency configurations”</a>. You can use these configurations to define the compile and runtime dependencies of the source set.</p>
+     <div class="example">
+      <a name="sourceSetDependencies"></a>
+      <p class="title"><b>示例 23.6. 定义源集依赖 - Example&nbsp;23.6.&nbsp;Defining source set dependencies</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">sourceSets {
     intTest
 }
 
 dependencies {
     intTestCompile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.11'</span>
     intTestRuntime <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.ow2.asm:asm-all:4.0'</span>
-}</pre></div></div><br class="example-break"><p>
-                The Java plugin also adds a number of tasks which assemble the classes for the
-                source set, as shown in <a class="xref" href="java_plugin.html#java_source_set_tasks" title="Table&nbsp;23.2.&nbsp;Java plugin - source set tasks">Table&nbsp;23.2, &ldquo;Java plugin - source set tasks&rdquo;</a>. For example, for a source set called
-                <code class="literal">intTest</code>, you can run <strong class="userinput"><code>gradle intTestClasses</code></strong> to compile the
-                int test classes.
-            </p><div class="example"><a name="compileSourceSet"></a><p class="title"><b>Example&nbsp;23.7.&nbsp;Compiling a source set</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle intTestClasses</code></strong></p><pre class="screen">&gt; gradle intTestClasses
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> Java 插件还添加了大量的任务用于组装源集的类，如<a class="xref" href="java_plugin.html#java_source_set_tasks" title="表 23.2. Java 插件——源集任务">表 23.2，“Java 插件——源集任务”</a>所示。例如，对于一个名为 <code class="literal">intTest</code> 的源集，你可以通过运行<strong class="userinput"><code>gradle intTestClasses</code></strong>来编译 int 测试类。 <br>The Java plugin also adds a number of tasks which assemble the classes for the source set, as shown in <a class="xref" href="java_plugin.html#java_source_set_tasks" title="Table&nbsp;23.2.&nbsp;Java plugin - source set tasks">Table&nbsp;23.2, “Java plugin - source set tasks”</a>. For example, for a source set called <code class="literal">intTest</code>, you can run <strong class="userinput"><code>gradle intTestClasses</code></strong> to compile the int test classes.</p>
+     <div class="example">
+      <a name="compileSourceSet"></a>
+      <p class="title"><b>示例 23.7. 编译源集 - Example&nbsp;23.7.&nbsp;Compiling a source set</b></p>
+      <div class="example-contents">
+       <p><strong class="userinput"><code>gradle intTestClasses</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle intTestClasses</code></strong></p>
+       <pre class="screen">&gt; gradle intTestClasses
 :compileIntTestJava
 :processIntTestResources
 :intTestClasses
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1260B"></a>23.7.3.&nbsp;Some source set examples</h3></div></div></div><p>Adding a JAR containing the classes of a source set:</p><div class="example"><a name="configureSourceSet"></a><p class="title"><b>Example&nbsp;23.8.&nbsp;Assembling a JAR for a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task intTestJar(type: Jar) {
+Total time: 1 secs</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N1260B"></a>23.7.3. 一些源集的范例</h3>
+        <h5 class="title"><a name="N1260B"></a>23.7.3.&nbsp;Some source set examples</h5>
+       </div>
+      </div>
+     </div>
+     <p>添加一个包含源集的类的 JAR 包<br>Adding a JAR containing the classes of a source set:</p>
+     <div class="example">
+      <a name="configureSourceSet"></a>
+      <p class="title"><b>示例 23.8. 为一个源集组装一个 JAR 文件 - Example&nbsp;23.8.&nbsp;Assembling a JAR for a source set</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task intTestJar(type: Jar) {
     from sourceSets.intTest.output
-}</pre></div></div><br class="example-break"><p>Generating Javadoc for a source set:</p><div class="example"><a name="configureSourceSet"></a><p class="title"><b>Example&nbsp;23.9.&nbsp;Generating the Javadoc for a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task intTestJavadoc(type: Javadoc) {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>为一个源集生成 Javadoc：<br>Generating Javadoc for a source set:</p>
+     <div class="example">
+      <a name="configureSourceSet"></a>
+      <p class="title"><b>示例 23.9. 为一个源集生成 Javadoc： - Example&nbsp;23.9.&nbsp;Generating the Javadoc for a source set</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task intTestJavadoc(type: Javadoc) {
     source sourceSets.intTest.allJava
-}</pre></div></div><br class="example-break"><p>Adding a test suite to run the tests in a source set:</p><div class="example"><a name="configureSourceSet"></a><p class="title"><b>Example&nbsp;23.10.&nbsp;Running tests in a source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task intTest(type: Test) {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>添加测试套件以运行源集里的测试<br>Adding a test suite to run the tests in a source set:</p>
+     <div class="example">
+      <a name="configureSourceSet"></a>
+      <p class="title"><b>示例 23.10. 运行源集里的测试 - Example&nbsp;23.10.&nbsp;Running tests in a source set</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task intTest(type: Test) {
     testClassesDir = sourceSets.intTest.output.classesDir
     classpath = sourceSets.intTest.runtimeClasspath
-}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:javadoc"></a>23.8.&nbsp;Javadoc</h2></div></div></div><p>The <code class="literal">javadoc</code> task is an instance of <a class="ulink" href="../dsl/org.gradle.api.tasks.javadoc.Javadoc.html" target="_top"><code class="classname">Javadoc</code></a>.
-            It supports the core javadoc options and the options of the standard doclet described in the
-            <a class="ulink" href="http://download.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#referenceguide" target="_top">reference documentation</a>
-            of the Javadoc executable.
-            For a complete list of supported Javadoc options consult the API documentation of the following classes:
-            <a class="ulink" href="../javadoc/org/gradle/external/javadoc/CoreJavadocOptions.html" target="_top"><code class="classname">CoreJavadocOptions</code></a> and <a class="ulink" href="../javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html" target="_top"><code class="classname">StandardJavadocDocletOptions</code></a>.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.10.&nbsp;Java plugin - Javadoc properties</b></p><div class="table-contents"><table id="N1264E"><thead><tr>
-                    <td>Task Property</td>
-                    <td>Type</td>
-                    <td>Default Value</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">classpath</code>
-                </td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td>
-                <td><code class="literal">sourceSets.main.output + sourceSets.main.compileClasspath</code></td>
-            </tr><tr>
-                <td><code class="literal">source</code></td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.</td>
-                <td><code class="literal">sourceSets.main.allJava</code></td>
-            </tr><tr>
-                <td>
-                    <code class="literal">destinationDir</code>
-                </td>
-                <td><code class="classname">File</code></td>
-                <td><code class="filename"><em class="replaceable"><code>docsDir</code></em>/javadoc</code></td>
-            </tr><tr>
-                <td>
-                    <code class="literal">title</code>
-                </td>
-                <td><code class="classname">String</code></td>
-                <td>The name and version of the project</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:clean"></a>23.9.&nbsp;Clean</h2></div></div></div><p>The <code class="literal">clean</code> task is an instance of <a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a>. It
-            simply removes the directory denoted by its <code class="literal">dir</code>
-            property.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.11.&nbsp;Java plugin - Clean properties</b></p><div class="table-contents"><table id="N126B5"><thead><tr>
-                    <td>Task Property</td>
-                    <td>Type</td>
-                    <td>Default Value</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">dir</code>
-                </td>
-                <td><code class="classname">File</code></td>
-                <td><code class="filename"><em class="replaceable"><code>buildDir</code></em></code></td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:resources"></a>23.10.&nbsp;Resources</h2></div></div></div><p>The Java plugin uses the <a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a> task for resource handling. It adds an
-            instance for each source set in the project. You can find out more about the copy task in
-            <a class="xref" href="working_with_files.html#sec:copying_files">Section&nbsp;16.6, &ldquo;Copying files&rdquo;</a>.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.12.&nbsp;Java plugin - ProcessResources properties</b></p><div class="table-contents"><table id="N126E3"><thead><tr>
-                    <td>Task Property</td>
-                    <td>Type</td>
-                    <td>Default Value</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">srcDirs</code>
-                </td>
-                <td><code class="classname">Object</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.</td>
-                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.resources</code></td>
-            </tr><tr>
-                <td>
-                    <code class="literal">destinationDir</code>
-                </td>
-                <td><code class="classname">File</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:locating_files">Section&nbsp;16.1, &ldquo;Locating files&rdquo;</a>.</td>
-                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.output.resourcesDir</code></td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:compile"></a>23.11.&nbsp;CompileJava</h2></div></div></div><p>The Java plugin adds a <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a> instance for each
-            source set in the project. Some of the most common configuration options are shown below.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.13.&nbsp;Java plugin - Compile properties</b></p><div class="table-contents"><table id="N12729"><thead><tr>
-                    <td>Task Property</td>
-                    <td>Type</td>
-                    <td>Default Value</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">classpath</code>
-                </td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td>
-                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.compileClasspath</code></td>
-            </tr><tr>
-                <td>
-                    <code class="literal">source</code>
-                </td>
-                <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, &ldquo;Specifying a set of input files&rdquo;</a>.</td>
-                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.java</code></td>
-            </tr><tr>
-                <td>
-                    <code class="literal">destinationDir</code>
-                </td>
-                <td><code class="classname">File</code>.</td>
-                <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.output.classesDir</code></td>
-            </tr></table></div></div><p>By default, the Java compiler runs in the Gradle process. Setting <code class="literal">options.fork</code> to <code class="literal">true</code>
-            causes compilation to occur in a separate process. In the case of the Ant javac task, this means that a new process will be
-            forked for each compile task, which can slow down compilation. Conversely, Gradle's direct compiler integration (see above) will
-            reuse the same compiler process as much as possible. In both cases, all fork options specified
-            with <code class="literal">options.forkOptions</code> will be honored.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:java_test"></a>23.12.&nbsp;Test</h2></div></div></div><p>The <code class="literal">test</code> task is an instance of <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a>.
-            It automatically detects and executes all unit tests in the <code class="literal">test</code> source set.
-            It also generates a report once test execution is complete. JUnit and TestNG are both supported.
-            Have a look at <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> for the complete API.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N12798"></a>23.12.1.&nbsp;Test execution</h3></div></div></div><p>Tests are executed in a separate JVM, isolated from the main build process. The <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> task's
-                API allows you some control over how this happens.
-            </p><p>There are a number of properties which control how the test process is launched. This includes
-                things such as system properties, JVM arguments, and the Java executable to use.
-            </p><p>You can specify whether or not to execute your tests in parallel. Gradle provides parallel test execution
-                by running multiple test processes concurrently. Each test process executes only a single test at a time, so you
-                generally don't need to do anything special to your tests to take advantage of this.
-                The <code class="literal">maxParallelForks</code> property specifies the maximum number of test processes to run
-                at any given time. The default is 1, that is, do not execute the tests in parallel.
-            </p><p>The test process sets the <code class="literal">org.gradle.test.worker</code> system property to a unique
-                identifier for that test process, which you can use, for example, in files names or other
-                resource identifiers.
-            </p><p>You can specify that test processes should be restarted after it has executed a certain number of
-                test classes. This can be a useful alternative to giving your test process a very large
-                heap.
-                The <code class="literal">forkEvery</code> property specifies the
-                maximum number of test classes to execute in a test process. The default is to execute an unlimited number
-                of tests in each test process.</p><p>The task has an <code class="literal">ignoreFailures</code> property to control the behavior when tests fail.
-                Test always executes every test that it detects. It stops the build afterwards if <code class="literal">ignoreFailures</code>
-                is false and there are failing tests. The default value of <code class="literal">ignoreFailures</code> is false.
-            </p><p>The <code class="literal">testLogging</code> property allows to configure which test events are going to be logged and at
-                which detail level. By default, a concise message will be logged for every failed test. See
-                <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.logging.TestLoggingContainer.html" target="_top"><code class="classname">TestLoggingContainer</code></a> for how to tune test logging to your
-                preferences.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N127C8"></a>23.12.2.&nbsp;Debugging</h3></div></div></div><p>
-                The test task provides a <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html#org.gradle.api.tasks.testing.Test:debug" target="_top"><code class="classname">Test.getDebug()</code></a> property that can be set to launch to make the JVM wait for a
-                debugger to attach to port 5005 before proceeding with test execution.
-            </p><p>
-                This can also be enabled at invocation time via the <strong class="userinput"><code>--debug-jvm</code></strong> task option.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="test_filtering"></a>23.12.3.&nbsp;Test filtering</h3></div></div></div><p>Starting with Gradle 1.10, it is possible to include only specific tests, based on the test name pattern.
-                Filtering is a different mechanism than test class inclusion / exclusion that will be described in the next few paragraphs
-                (<code class="literal">-Dtest.single</code>, <code class="literal">test.include</code> and friends).
-                The latter is based on files, e.g. the physical location of the test implementation class.
-                File-level test selection does not support many interesting scenarios that are possible with test-level filtering.
-                Some of them Gradle handles now and some will be satisfied in the future releases:
-                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Filtering at the level of specific test methods; executing a single test method</li><li class="listitem">Filtering based on custom annotations (future)</li><li class="listitem">Filtering based on test hierarchy; executing all tests that extend ceratain base class (future)</li><li class="listitem">Filtering based on some custom runtime rule, e.g. particular value of a system property or some static state (future)</li></ul></div><p>
-            </p><p>
-                Test filtering feature has following characteristic:
-                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Fully qualified class name or fully qualified method name is supported,
-                        e.g. "org.gradle.SomeTest", "org.gradle.SomeTest.someMethod"</li><li class="listitem">Wildcard '*' is supported for matching any characters</li><li class="listitem">Command line option "--tests" is provided to conveniently set the test filter.
-                        Especially useful for the classic 'single test method execution' use case.
-                        When the command line option is used, the inclusion filters declared in the build script are ignored.
-                    </li><li class="listitem">Gradle tries best to filter the tests given limitations of particular test framework API.
-                        Some advanced, synthetic tests may not be fully compatible with filtering.
-                        However, vast majority of tests and use cases should be handled neatly.
-                    </li><li class="listitem">Test filtering supersedes the file-based test selection. The latter may be completely replaced in future.
-                        We will grow the the test filtering api and add more kinds of filters.
-                    </li></ul></div><p>
-            </p><p>
-                </p><div class="example"><a name="testfiltering"></a><p class="title"><b>Example&nbsp;23.11.&nbsp;Filtering tests in the build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">test {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:javadoc"></a>23.8. Javadoc</h2>
+       <h4 class="title"><a name="sec:javadoc"></a>23.8.&nbsp;Javadoc</h4>
+      </div>
+     </div>
+    </div>
+    <p><code class="literal">Javadoc</code> 任务是 <a class="ulink" href="../dsl/org.gradle.api.tasks.javadoc.Javadoc.html" target="_top"><code class="classname">Javadoc</code></a> 的一个实例。它支持核心 javadoc 的参数选项，以及在 Javadoc 可执行文件的<a class="ulink" href="http://download.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#referenceguide" target="_top">参考文档</a>中描述的标准 doclet 参数选项。对于所支持的 Javadoc 参数选项的完整列表，请参考下面的类的 API 文档： <a class="ulink" href="../javadoc/org/gradle/external/javadoc/CoreJavadocOptions.html" target="_top"> <code class="classname">CoreJavadocOptions</code></a> 和 <a class="ulink" href="../javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html" target="_top"><code class="classname">StandardJavadocDocletOptions</code></a>。 <br>The <code class="literal">javadoc</code> task is an instance of <a class="ulink" href="../dsl/org.gradle.api.tasks.javadoc.Javadoc.html" target="_top"><code class="classname">Javadoc</code></a>. It supports the core javadoc options and the options of the standard doclet described in the <a class="ulink" href="http://download.oracle.com/javase/1.5.0/docs/tooldocs/windows/javadoc.html#referenceguide" target="_top">reference documentation</a> of the Javadoc executable. For a complete list of supported Javadoc options consult the API documentation of the following classes: <a class="ulink" href="../javadoc/org/gradle/external/javadoc/CoreJavadocOptions.html" target="_top"><code class="classname">CoreJavadocOptions</code></a> and <a class="ulink" href="../javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html" target="_top"><code class="classname">StandardJavadocDocletOptions</code></a>.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.10. Java 插件—— Javadoc 属性 - Table&nbsp;23.10.&nbsp;Java plugin - Javadoc properties</b></p>
+     <div class="table-contents">
+      <table id="N1264E">
+       <thead>
+        <tr> 
+         <td>任务属性<br>Task Property</td> 
+         <td>类型<br>Type</td> 
+         <td>默认值<br>Default Value</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">classpath</code> </td> 
+         <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td> 
+         <td><code class="literal">sourceSets.main.output + sourceSets.main.compileClasspath</code></td> 
+        </tr>
+        <tr> 
+         <td><code class="literal">source</code></td> 
+         <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a>。可以使用《<a class="xref" href="working_with_files.html#sec:specifying_multiple_files">第 16.5 节，“指定一组输入文件”</a>》中所讲到的任何一种方法来设置。<br><a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, “Specifying a set of input files”</a>.</td> 
+         <td><code class="literal">sourceSets.main.allJava</code></td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">destinationDir</code> </td> 
+         <td><code class="classname">File</code></td> 
+         <td><code class="filename"><em class="replaceable"><code>docsDir</code></em>/javadoc</code></td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">title</code> </td> 
+         <td><code class="classname">String</code></td> 
+         <td>项目的名称和版本<br>The name and version of the project</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:clean"></a>23.9.&nbsp;Clean</h2>
+       <h4 class="title"><a name="sec:clean"></a>23.9.&nbsp;Clean</h4>
+      </div>
+     </div>
+    </div>
+    <p><code class="literal">clean</code> 任务是 <a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a> 的一个实例。它只是删除由 <code class="literal">dir</code> 属性表示的目录。 <br>The <code class="literal">clean</code> task is an instance of <a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a>. It simply removes the directory denoted by its <code class="literal">dir</code> property.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.11. Java 插件—— Clean 属性 - Table&nbsp;23.11.&nbsp;Java plugin - Clean properties</b></p>
+     <div class="table-contents">
+      <table id="N126B5">
+       <thead>
+        <tr> 
+         <td>任务属性<br>Task Property</td> 
+         <td>类型<br>Type</td> 
+         <td>默认值<br>Default Value</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">dir</code> </td> 
+         <td><code class="classname">File</code></td> 
+         <td><code class="filename"><em class="replaceable"><code>buildDir</code></em></code></td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:resources"></a>23.10.&nbsp;Resources</h2>
+       <h4 class="title"><a name="sec:resources"></a>23.10.&nbsp;Resources</h4>
+      </div>
+     </div>
+    </div>
+    <p>Java 插件使用 <a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a> 任务进行资源的处理，它为项目中的每个源集添加一个实例。你可以在《<a class="xref" href="working_with_files.html#sec:copying_files">第 16.6 节，“复制文件”</a>》找到更多关于复制任务的信息。 <br>The Java plugin uses the <a class="ulink" href="../dsl/org.gradle.api.tasks.Copy.html" target="_top"><code class="classname">Copy</code></a> task for resource handling. It adds an instance for each source set in the project. You can find out more about the copy task in <a class="xref" href="working_with_files.html#sec:copying_files">Section&nbsp;16.6, “Copying files”</a>.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.12. Java 插件—— ProcessResources 属性 - Table&nbsp;23.12.&nbsp;Java plugin - ProcessResources properties</b></p>
+     <div class="table-contents">
+      <table id="N126E3">
+       <thead>
+        <tr> 
+         <td>任务属性<br>Task Property</td> 
+         <td>类型<br>Type</td> 
+         <td>默认值<br>Default Value</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">srcDirs</code> </td> 
+         <td><code class="classname">Object</code>。可以使用《<a class="xref" href="working_with_files.html#sec:specifying_multiple_files">第 16.5 节，“指定一组输入文件”</a>》中所讲到的任何一种方法来设置。<br><code class="classname">Object</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, “Specifying a set of input files”</a>.</td> 
+         <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.resources</code></td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">destinationDir</code> </td> 
+         <td><code class="classname">File</code>。可以使用《<a class="xref" href="working_with_files.html#sec:locating_files">第 16.1 节，“查找文件”</a>》中所述的任何设置。<br><code class="classname">File</code>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:locating_files">Section&nbsp;16.1, “Locating files”</a>.</td> 
+         <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.output.resourcesDir</code></td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:compile"></a>23.11.&nbsp;CompileJava</h2>
+       <h4 class="title"><a name="sec:compile"></a>23.11.&nbsp;CompileJava</h4>
+      </div>
+     </div>
+    </div>
+    <p>Java 插件为项目里的每一个源集添加一个 <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a> 实例。一些最常见的配置选项如下所示。 <br>The Java plugin adds a <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a> instance for each source set in the project. Some of the most common configuration options are shown below.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 23.13. Java 插件—— Compile 属性 - Table&nbsp;23.13.&nbsp;Java plugin - Compile properties</b></p>
+     <div class="table-contents">
+      <table id="N12729">
+       <thead>
+        <tr> 
+         <td>任务属性<br>Task Property</td> 
+         <td>类型<br>Type</td> 
+         <td>默认值<br>Default Value</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">classpath</code> </td> 
+         <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td> 
+         <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.compileClasspath</code></td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">source</code> </td> 
+         <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a>。可以使用《<a class="xref" href="working_with_files.html#sec:specifying_multiple_files">第 16.5 节，“指定一组输入文件”</a>》中所讲到的任何一种方法来设置。<br><a class="ulink" href="../javadoc/org/gradle/api/file/FileTree.html" target="_top"><code class="classname">FileTree</code></a>. Can set using anything described in <a class="xref" href="working_with_files.html#sec:specifying_multiple_files">Section&nbsp;16.5, “Specifying a set of input files”</a>.</td> 
+         <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.java</code></td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">destinationDir</code> </td> 
+         <td><code class="classname">File</code>.</td> 
+         <td><code class="literal"><em class="replaceable"><code>sourceSet</code></em>.output.classesDir</code></td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p>默认情况下，Java 编译器在 Gradle 进程中运行。将 <code class="literal">options.fork</code> 设置为 <code class="literal">true</code> 将使得在一个单独的进程中进行编译。在Ant javac 任务的情况中，意味着每个编译任务都会 fork 一个新进程，这样就会使编译变慢。相反，Gradle 的直接编译器集成（见上文）将尽可能地重用相同的编译器进程。在这两种情况下，使用 <code class="literal">options.forkOptions</code> 指定的所有 fork 选项都将得到重视。 <br>By default, the Java compiler runs in the Gradle process. Setting <code class="literal">options.fork</code> to <code class="literal">true</code> causes compilation to occur in a separate process. In the case of the Ant javac task, this means that a new process will be forked for each compile task, which can slow down compilation. Conversely, Gradle's direct compiler integration (see above) will reuse the same compiler process as much as possible. In both cases, all fork options specified with <code class="literal">options.forkOptions</code> will be honored.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:java_test"></a>23.12.&nbsp;Test</h2>
+       <h4 class="title"><a name="sec:java_test"></a>23.12.&nbsp;Test</h4>
+      </div>
+     </div>
+    </div>
+    <p><code class="literal">test</code> 任务是 <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> 的一个实例。它会自动检测并执行 <code class="literal">test</code> 源集中的所有单元测试。测试执行完成后，它还会生成一个报告。它同时支持 JUnit 和 TestNG，可以看一看 <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">test</code></a> 的完整 API。 <br>The <code class="literal">test</code> task is an instance of <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a>. It automatically detects and executes all unit tests in the <code class="literal">test</code> source set. It also generates a report once test execution is complete. JUnit and TestNG are both supported. Have a look at <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> for the complete API.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N12798"></a>23.12.1. 测试执行</h3>
+        <h5 class="title"><a name="N12798"></a>23.12.1.&nbsp;Test execution</h5>
+       </div>
+      </div>
+     </div>
+     <p>测试在单独的 JVM 进程中执行，与主构建进程隔离。<a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> 任务的 API 允许你对这种情况进行一些控制。 <br>Tests are executed in a separate JVM, isolated from the main build process. The <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> task's API allows you some control over how this happens.</p>
+     <p>有很多属性可以控制测试进程的启动，包括系统属性、JVM 参数以及要使用的Java 可执行文件。 <br>There are a number of properties which control how the test process is launched. This includes things such as system properties, JVM arguments, and the Java executable to use.</p>
+     <p>你可以指定是否要并行执行测试。Gradle 通过同时运行多个测试进程来提供并行测试的执行。每个测试进程一次只执行一个测试，所以通常不需要为测试做任何特殊的配置就可以利用这一点。<code class="literal">maxParallelForks</code> 属性指定了在给定的任何时间可以运行的最大测试进程数。默认值为1，即不并行执行测试。 <br>You can specify whether or not to execute your tests in parallel. Gradle provides parallel test execution by running multiple test processes concurrently. Each test process executes only a single test at a time, so you generally don't need to do anything special to your tests to take advantage of this. The <code class="literal">maxParallelForks</code> property specifies the maximum number of test processes to run at any given time. The default is 1, that is, do not execute the tests in parallel.</p>
+     <p>测试进程程会将 <code class="literal">org.gradle.test.worker</code> 系统属性设置为该测试进程的一个唯一标识符，这个标识符可以用于文件名称或其他资源标识符。 <br>The test process sets the <code class="literal">org.gradle.test.worker</code> system property to a unique identifier for that test process, which you can use, for example, in files names or other resource identifiers.</p>
+     <p>你可以指定在执行了一定数量的测试类之后，重新启动测试进程。这是一个很有用的替代方案，可以让你的测试进程有非常大的堆内存。<code class="literal">forkEvery</code> 属性指定了要在测试进程中执行的最大测试类的数量。默认是在每个测试进程中执行的测试数量不限。<br>You can specify that test processes should be restarted after it has executed a certain number of test classes. This can be a useful alternative to giving your test process a very large heap. The <code class="literal">forkEvery</code> property specifies the maximum number of test classes to execute in a test process. The default is to execute an unlimited number of tests in each test process.</p>
+     <p>该任务有一个 <code class="literal">ignoreFailures</code> 属性，用于控制测试失败时的行为。测试任务始终执行它检测到的每个测试，如果 <code class="literal">ignoreFailures</code> 值为 false，并且有测试不通过，那它就会停止继续构建。<code class="literal">ignoreFailures</code> 的默认值为 false。 <br>The task has an <code class="literal">ignoreFailures</code> property to control the behavior when tests fail. Test always executes every test that it detects. It stops the build afterwards if <code class="literal">ignoreFailures</code> is false and there are failing tests. The default value of <code class="literal">ignoreFailures</code> is false.</p>
+     <p><code class="literal">testLogging</code> 属性可以配置哪些测试事件需要记录，并且使用什么样的日志级别。默认情况下，对于每个失败的测试都只会打印一个简洁的消息。请参阅 <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.logging.TestLoggingContainer.html" target="_top"><code class="classname">TestLoggingContainer</code></a>，查看如何把测试日志调整为你的偏好设置。 <br>The <code class="literal">testLogging</code> property allows to configure which test events are going to be logged and at which detail level. By default, a concise message will be logged for every failed test. See <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.logging.TestLoggingContainer.html" target="_top"><code class="classname">TestLoggingContainer</code></a> for how to tune test logging to your preferences.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N127C8"></a>23.12.2.&nbsp;调试</h3>
+        <h5 class="title"><a name="N127C8"></a>23.12.2.&nbsp;Debugging</h5>
+       </div>
+      </div>
+     </div>
+     <p> test 任务提供了一个 <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html#org.gradle.api.tasks.testing.Test:debug" target="_top"><code class="classname">Test.getDebug()</code></a> 属性，可以设置为启动，使 JVM 在执行测试之前等待调试器连接到它的 5005 端口上。 <br>The test task provides a <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html#org.gradle.api.tasks.testing.Test:debug" target="_top"><code class="classname">Test.getDebug()</code></a> property that can be set to launch to make the JVM wait for a debugger to attach to port 5005 before proceeding with test execution.</p>
+     <p> 这也可以在调用时通过 <strong class="userinput"><code>--debug-vm</code></strong> 任务选项进行启用。 <br>This can also be enabled at invocation time via the <strong class="userinput"><code>--debug-jvm</code></strong> task option.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="test_filtering"></a>23.12.3. 测试过滤</h3>
+        <h5 class="title"><a name="test_filtering"></a>23.12.3.&nbsp;Test filtering</h5>
+       </div>
+      </div>
+     </div>
+     <p>从 Gradle 1.10 开始，可以基于测试名称模式，只包含特定测试。过滤是与测试类包含或排除所不同的一种机制，接下来的段落中将会对其详细介绍（<code class="literal">-Dtest.single</code>， <code class="literal">test.include</code> 和其他相关的）。后者基于文件，例如测试实现类的物理位置。文件级测试选择不支持的许多有趣的场景，都可以用测试级过滤来实现。其中一些 Gradle 现在就可以处理，而有一些将在未来的版本中得到实现： <br>Starting with Gradle 1.10, it is possible to include only specific tests, based on the test name pattern. Filtering is a different mechanism than test class inclusion / exclusion that will be described in the next few paragraphs (<code class="literal">-Dtest.single</code>, <code class="literal">test.include</code> and friends). The latter is based on files, e.g. the physical location of the test implementation class. File-level test selection does not support many interesting scenarios that are possible with test-level filtering. Some of them Gradle handles now and some will be satisfied in the future releases:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem">在指定的测试方法级别上过滤；执行单个测试方法<br>Filtering at the level of specific test methods; executing a single test method</li>
+       <li class="listitem">基于自定义注解进行过滤（以后实现）<br>Filtering based on custom annotations (future)</li>
+       <li class="listitem">基于测试层次结构进行过滤；执行所有继承了某一基类的测试（以后实现）<br>Filtering based on test hierarchy; executing all tests that extend ceratain base class (future)</li>
+       <li class="listitem">基于一些自定义的运行时规则进行过滤，例如某个系统属性或一些静态的特定值（以后实现）<br>Filtering based on some custom runtime rule, e.g. particular value of a system property or some static state (future)</li>
+      </ul>
+     </div>
+     <p> </p>
+     <p> 测试过滤功能具有以下的特征： <br>Test filtering feature has following characteristic:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem">支持完整的限定类名称或完整的限定方法名称，例如“org.gradle.SomeTest”、“org.gradle.SomeTest.someMethod”<br>Fully qualified class name or fully qualified method name is supported, e.g. "org.gradle.SomeTest", "org.gradle.SomeTest.someMethod"</li>
+       <li class="listitem">通配符 “*” 支持匹配任何字符<br>Wildcard '*' is supported for matching any characters</li>
+       <li class="listitem">提供了“--tests”命令行选项，以方便设置测试过滤器。特别适用于传统的“单一测试方法执行”用例。当使用该命令行选项时，构建脚本中声明的包含过滤器将被忽略。 <br>Command line option "--tests" is provided to conveniently set the test filter. Especially useful for the classic 'single test method execution' use case. When the command line option is used, the inclusion filters declared in the build script are ignored.</li>
+       <li class="listitem">鉴于特定测试框架 API 的限制，Gradle 会尽最大努力过滤测试。一些高级的、综合的测试可能不完全符合过滤条件。但是，绝大多数测试和用例都应该能被较好地处理。 <br>Gradle tries best to filter the tests given limitations of particular test framework API. Some advanced, synthetic tests may not be fully compatible with filtering. However, vast majority of tests and use cases should be handled neatly.</li>
+       <li class="listitem">测试过滤取代了基于文件的测试选择。后者可能会在将来被完全取代。我们将会增加测试过滤 API 并添加更多类型的过滤器。 <br>Test filtering supersedes the file-based test selection. The latter may be completely replaced in future. We will grow the the test filtering api and add more kinds of filters.</li>
+      </ul>
+     </div>
+     <p> </p>
+     <p> </p>
+     <div class="example">
+      <a name="testfiltering"></a>
+      <p class="title"><b>示例 23.11. 在构建脚本中过滤测试 - Example&nbsp;23.11.&nbsp;Filtering tests in the build script</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">test {
     filter {
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//include specific method in any of the tests</span>
         includeTestsMatching <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"*UiCheck"</span>
@@ -962,64 +1114,136 @@ Total time: 1 secs</pre></div></div><br class="example-break"></div><div class="
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//include all integration tests</span>
         includeTestsMatching <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"*IntegTest"</span>
     }
-}</pre></div></div><p><br class="example-break">
-                For more details and examples please see the <a class="ulink" href="../javadoc/org/gradle/api/tasks/testing/TestFilter.html" target="_top"><code class="classname">TestFilter</code></a> reference.
-            </p><p>
-                Some examples of using the command line option:
-
-                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><code class="literal">gradle test --tests org.gradle.SomeTest.someSpecificFeature</code></p></li><li class="listitem"><p><code class="literal">gradle test --tests *SomeTest.someSpecificFeature</code></p></li><li class="listitem"><p><code class="literal">gradle test --tests *SomeSpecificTest</code></p></li><li class="listitem"><p><code class="literal">gradle test --tests all.in.specific.package*</code></p></li><li class="listitem"><p><code class="literal">gradle test --tests *IntegTest</code></p></li><li class="listitem"><p><code class="literal">gradle test --tests *IntegTest*ui*</code></p></li><li class="listitem"><p><code class="literal">gradle someTestTask --tests *UiTest someOtherTestTask --tests *WebTest*ui</code></p></li></ul></div><p>
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1282D"></a>23.12.4.&nbsp;Single test execution via System Properties</h3></div></div></div><div class="note">This mechanism has been superseded by 'Test Filtering', described above.</div><p>Setting a system property of <em class="replaceable"><code>taskName.single</code></em> = <em class="replaceable"><code>testNamePattern</code></em>
-                  will only execute tests that match the specified <em class="replaceable"><code>testNamePattern</code></em>.
-                  The <em class="replaceable"><code>taskName</code></em> can be a full multi-project path like ":sub1:sub2:test"
-                  or just the task name.  The <em class="replaceable"><code>testNamePattern</code></em> will be used to form an include
-                  pattern of "**/testNamePattern*.class".
-                  If no tests with this pattern can be found an exception is thrown. This is to shield you from false security.
-                  If tests of more than one subproject are executed, the pattern is applied to each subproject. An exception
-                  is thrown if no tests can be found for a particular subproject. In such a case you can use the path notation of the
-                  pattern, so that the pattern is applied only to the test task of a specific subproject. Alternatively you can specify the fully
-                  qualified task name to be executed. You can also specify multiple patterns. Examples:
-                  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><code class="literal">gradle -Dtest.single=ThisUniquelyNamedTest test</code></p></li><li class="listitem"><p><code class="literal">gradle -Dtest.single=a/b/ test</code></p></li><li class="listitem"><p><code class="literal">gradle -DintegTest.single=*IntegrationTest integTest</code></p></li><li class="listitem"><p><code class="literal">gradle -Dtest.single=:proj1:test:Customer build</code></p></li><li class="listitem"><p><code class="literal">gradle -DintegTest.single=c/d/ :proj1:integTest</code></p></li></ul></div><p>
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N12859"></a>23.12.5.&nbsp;Test detection</h3></div></div></div><p>The <code class="literal">Test</code> task detects which classes are test classes by inspecting the compiled test classes.
-                By default it scans all <code class="filename">.class</code> files. You can set custom includes / excludes, only those
-                classes will be scanned. Depending on the test framework used (JUnit / TestNG) the test class detection
-                uses different criteria.
-            </p><p>
-                When using JUnit, we scan for both JUnit 3 and 4 test classes. If any of the following criteria match, the
-                class is considered to be a JUnit test class:
-                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Class or a super class extends <code class="classname">TestCase</code> or <code class="classname">GroovyTestCase</code></p></li><li class="listitem"><p>Class or a super class is annotated with <code class="classname">@RunWith</code></p></li><li class="listitem"><p>Class or a super class contain a method annotated with <code class="classname">@Test</code></p></li></ul></div><p>
-            </p><p>
-                When using TestNG, we scan for methods annotated with <code class="classname">@Test</code>.
-            </p><p>
-                Note that abstract classes are not executed. Gradle also scan up the inheritance tree into jar files
-                on the test classpath.
-            </p><p>
-                In case you don't want to use the test class detection, you can disable it by setting
-                <code class="literal">scanForTestClasses</code> to false. This will make the test task only use the includes /
-                excludes to find test classes.
-
-                If <code class="literal">scanForTestClasses</code> is disabled and no include or exclude patterns are specified, the
-                respective defaults are used. For include this is <code class="literal">"**/*Tests.class", "**/*Test.class"</code>
-                and the for exclude it is <code class="literal">"**/Abstract*.class"</code>.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="test_grouping"></a>23.12.6.&nbsp;Test grouping</h3></div></div></div><p>JUnit and TestNG allows sophisticated groupings of test methods. </p><p>For grouping JUnit test classes and methods JUnit 4.8 introduces the concept of categories.
-                <sup>[<a href="#ftn.N12897" name="N12897" class="footnote">9</a>]</sup>
-                The <code class="literal">test</code> task allows the specification of the JUnit categories you want to include and exclude.
-            </p><div class="example"><a name="junitcategories"></a><p class="title"><b>Example&nbsp;23.12.&nbsp;JUnit Categories</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">test {
+}</pre>
+      </div>
+     </div>
+     <p><br class="example-break"> 有关更多的详细信息和示例，请参阅 <a class="ulink" href="../javadoc/org/gradle/api/tasks/testing/TestFilter.html" target="_top"><code class="classname">TestFilter</code></a> 的文档。 <br><br class="example-break"> For more details and examples please see the <a class="ulink" href="../javadoc/org/gradle/api/tasks/testing/TestFilter.html" target="_top"><code class="classname">TestFilter</code></a> reference.</p>
+     <p> 使用命令行选项的一些示例： <br>Some examples of using the command line option:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem"><p><code class="literal">gradle test --tests org.gradle.SomeTest.someSpecificFeature</code></p></li>
+       <li class="listitem"><p><code class="literal">gradle test --tests *SomeTest.someSpecificFeature</code></p></li>
+       <li class="listitem"><p><code class="literal">gradle test --tests *SomeSpecificTest</code></p></li>
+       <li class="listitem"><p><code class="literal">gradle test --tests all.in.specific.package*</code></p></li>
+       <li class="listitem"><p><code class="literal">gradle test --tests *IntegTest</code></p></li>
+       <li class="listitem"><p><code class="literal">gradle test --tests *IntegTest*ui*</code></p></li>
+       <li class="listitem"><p><code class="literal">gradle someTestTask --tests *UiTest someOtherTestTask --tests *WebTest*ui</code></p></li>
+      </ul>
+     </div>
+     <p> </p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N1282D"></a>23.12.4. 通过系统属性执行单个测试</h3>
+        <h5 class="title"><a name="N1282D"></a>23.12.4.&nbsp;Single test execution via System Properties</h5>
+       </div>
+      </div>
+     </div>
+     <div class="note">
+      如上所述，这种机制已经被“测试过滤”所取代。
+     </div>
+     <p>设置一个 <em class="replaceable"><code>taskName.single</code></em> = <em class="replaceable"><code>testNamePattern</code></em> 的系统属性将会只执行匹配指定的 <em class="replaceable"><code>testNamePattern</code></em> 的测试。该 <em class="replaceable"><code>taskName</code></em> 可以是完整的多项目路径，如“:sub1:sub2:test”，或者仅是一个任务名称。该 <em class="replaceable"><code>testNamePattern</code></em> 将被用于形成“**/testNamePattern*.class”的包含模式。如果找不到这种模式的测试，那么将会抛出一个异常。这是为了避免你误认为测试通过。如果执行多个子项目的测试，则该模式将应用于每个子项目。如果找不到特定子项目的测试，则会引发异常。在这种情况下，你可以使用模式的路径标记法，以便模式仅应用于特定子项目的测试任务。或者你可以指定要执行的任务的完整限定名称。你还可以指定多个模式。示例： <br>Setting a system property of <em class="replaceable"><code>taskName.single</code></em> = <em class="replaceable"><code>testNamePattern</code></em> will only execute tests that match the specified <em class="replaceable"><code>testNamePattern</code></em>. The <em class="replaceable"><code>taskName</code></em> can be a full multi-project path like ":sub1:sub2:test" or just the task name. The <em class="replaceable"><code>testNamePattern</code></em> will be used to form an include pattern of "**/testNamePattern*.class". If no tests with this pattern can be found an exception is thrown. This is to shield you from false security. If tests of more than one subproject are executed, the pattern is applied to each subproject. An exception is thrown if no tests can be found for a particular subproject. In such a case you can use the path notation of the pattern, so that the pattern is applied only to the test task of a specific subproject. Alternatively you can specify the fully qualified task name to be executed. You can also specify multiple patterns. Examples:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem"><p><code class="literal">gradle -Dtest.single=ThisUniquelyNamedTest test</code></p></li>
+       <li class="listitem"><p><code class="literal">gradle -Dtest.single=a/b/ test</code></p></li>
+       <li class="listitem"><p><code class="literal">gradle -DintegTest.single=*IntegrationTest integTest</code></p></li>
+       <li class="listitem"><p><code class="literal">gradle -Dtest.single=:proj1:test:Customer build</code></p></li>
+       <li class="listitem"><p><code class="literal">gradle -DintegTest.single=c/d/ :proj1:integTest</code></p></li>
+      </ul>
+     </div>
+     <p> </p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N12859"></a>23.12.5. 测试检测</h3>
+        <h5 class="title"><a name="N12859"></a>23.12.5.&nbsp;Test detection</h5>
+       </div>
+      </div>
+     </div>
+     <p><code class="literal">Test</code> 任务通过检查编译的测试类来检测哪些类是测试类。默认情况下，它会扫描所有 <code class="filename">.class</code> 文件。你可以设置自定义包含或排除哪些类，只有这些类才会被扫描。根据所使用的测试框架（JUnit 或 TestNG），会使用不同的标准进行测试类的检测。 <br>The <code class="literal">Test</code> task detects which classes are test classes by inspecting the compiled test classes. By default it scans all <code class="filename">.class</code> files. You can set custom includes / excludes, only those classes will be scanned. Depending on the test framework used (JUnit / TestNG) the test class detection uses different criteria.</p>
+     <p> 当使用 JUnit 时，我们扫描 JUnit 3 和 4 的测试类。如果符合以下任何标准，则该类将被视为 JUnit 测试类： <br>When using JUnit, we scan for both JUnit 3 and 4 test classes. If any of the following criteria match, the class is considered to be a JUnit test class:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem"><p>类或超类继承自 <code class="classname">TestCase</code> 或 <code class="classname">GroovyTestCase</code></p><p>Class or a super class extends <code class="classname">TestCase</code> or <code class="classname">GroovyTestCase</code></p></li>
+       <li class="listitem"><p>类或超类使用了 <code class="classname">@RunWith</code> 注解</p><p>Class or a super class is annotated with <code class="classname">@RunWith</code></p></li>
+       <li class="listitem"><p>类或超类含有一个带 <code class="classname">@Test</code> 注解的方法</p><p>Class or a super class contain a method annotated with <code class="classname">@Test</code></p></li>
+      </ul>
+     </div>
+     <p> </p>
+     <p> 当使用 TestNG 时，我们扫描带有 <code class="classname">@Test</code> 注解的方法。 <br>When using TestNG, we scan for methods annotated with <code class="classname">@Test</code>.</p>
+     <p> 请注意，抽象类不会被执行。 Gradle 还将扫描测试类路径中的 jar 文件的继承树。 <br>Note that abstract classes are not executed. Gradle also scan up the inheritance tree into jar files on the test classpath.</p>
+     <p> 如果您不想使用测试类检测，则可以通过设置 <code class="literal">scanForTestClasses</code> 为 false 来禁用它。这将使测试任务仅使用包含或排除来查找测试类。如果 <code class="literal">scanForTestClasses</code> 被禁用，并且没有指定包含或排除模式，则使用相应的默认值。对于包含的默认值是 <code class="literal">“**/*Tests.class”，“**/*Test.class”</code>，而排除的默认值是 <code class="literal">“**/Abstract*.class”</code>。 <br>In case you don't want to use the test class detection, you can disable it by setting <code class="literal">scanForTestClasses</code> to false. This will make the test task only use the includes / excludes to find test classes. If <code class="literal">scanForTestClasses</code> is disabled and no include or exclude patterns are specified, the respective defaults are used. For include this is <code class="literal">"**/*Tests.class", "**/*Test.class"</code> and the for exclude it is <code class="literal">"**/Abstract*.class"</code>.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="test_grouping"></a>23.12.6. 测试分组</h3>
+        <h5 class="title"><a name="test_grouping"></a>23.12.6.&nbsp;Test grouping</h5>
+       </div>
+      </div>
+     </div>
+     <p>JUnit 和 TestNG 支持复杂的测试方法分组。 <br>JUnit and TestNG allows sophisticated groupings of test methods.</p>
+     <p>为对 JUnit 的测试类和方法进行分组，JUnit 4.8 引入了类别的概念。 <sup>[<a href="#ftn.N12897" name="N12897" class="footnote">9</a>]</sup><code class="literal">test</code> 任务允许指定要包含和排除的 JUnit 类别。 <br>For grouping JUnit test classes and methods JUnit 4.8 introduces the concept of categories. <sup>[<a href="#ftn.N12897" name="N12897" class="footnote">9</a>]</sup> The <code class="literal">test</code> task allows the specification of the JUnit categories you want to include and exclude.</p>
+     <div class="example">
+      <a name="junitcategories"></a>
+      <p class="title"><b>示例 23.12. JUnit 类别 - Example&nbsp;23.12.&nbsp;JUnit Categories</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">test {
     useJUnit {
         includeCategories <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.junit.CategoryA'</span>
         excludeCategories <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.junit.CategoryB'</span>
     }
-}</pre></div></div><br class="example-break"><p>The TestNG framework has a quite similar concept. In TestNG you can specify different test groups.
-                <sup>[<a href="#ftn.N128AD" name="N128AD" class="footnote">10</a>]</sup> The test groups that should be included or excluded from the test execution can be configured in the test task. </p><div class="example"><a name="testnggrouping"></a><p class="title"><b>Example&nbsp;23.13.&nbsp;Grouping TestNG tests</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">test {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>TestNG 框架则有一个非常相似的概念。在 TestNG 中，你可以指定不同的测试组。 <sup>[<a href="#ftn.N128AD" name="N128AD" class="footnote">10</a>]</sup>你可以在测试任务中配置应该包含在测试执行中或从测试执行中排除的测试组。 <br>The TestNG framework has a quite similar concept. In TestNG you can specify different test groups. <sup>[<a href="#ftn.N128AD" name="N128AD" class="footnote">10</a>]</sup> The test groups that should be included or excluded from the test execution can be configured in the test task.</p>
+     <div class="example">
+      <a name="testnggrouping"></a>
+      <p class="title"><b>示例 23.13. 对 TestNG 测试分组 - Example&nbsp;23.13.&nbsp;Grouping TestNG tests</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">test {
     useTestNG {
         excludeGroups <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'integrationTests'</span>
         includeGroups <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'unitTests'</span>
     }
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="test_reporting"></a>23.12.7.&nbsp;Test reporting</h3></div></div></div><p>The <code class="literal">Test</code> task generates the following results by default.</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>An HTML test report.</p></li><li class="listitem"><p>The results in an XML format that is compatible with the Ant JUnit report task. This format is supported by many
-                    other tools, such as CI servers.</p></li><li class="listitem"><p>Results in an efficient binary format. The task generates the other results from these binary results.</p></li></ul></div><p>There is also a stand-alone <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.TestReport.html" target="_top"><code class="classname">TestReport</code></a> task type which can generate the HTML test
-                report from the binary results generated by one or more <code class="classname">Test</code> task instances. To use this task type, you need
-                to define a <code class="literal">destinationDir</code> and the test results to include in the report. Here is a sample which generates a
-                combined report for the unit tests from subprojects:
-            </p><div class="example"><a name="subProjectsTestReport"></a><p class="title"><b>Example&nbsp;23.14.&nbsp;Creating a unit test report for subprojects</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">subprojects {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="test_reporting"></a>23.12.7. 测试报告</h3>
+        <h5 class="title"><a name="test_reporting"></a>23.12.7.&nbsp;Test reporting</h5>
+       </div>
+      </div>
+     </div>
+     <p><code class="literal">test</code> 任务默认情况下会生成以下结果。<br>The <code class="literal">Test</code> task generates the following results by default.</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem"><p>一个 HTML 测试报告。</p><p>An HTML test report.</p></li>
+       <li class="listitem"><p>与 Ant Junit report 任务兼容的 XML 格式的结果。许多工具都支持这一格式，比如 CI 服务器。</p><p>The results in an XML format that is compatible with the Ant JUnit report task. This format is supported by many other tools, such as CI servers.</p></li>
+       <li class="listitem"><p>有效的二进制格式的结果。该任务从这些二进制结果生成其他结果。</p><p>Results in an efficient binary format. The task generates the other results from these binary results.</p></li>
+      </ul>
+     </div>
+     <p>还有一个独立的 <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.TestReport.html" target="_top"><code class="classname">TestReport</code></a> 任务类型，它可以从一个或多个 <code class="classname">Test</code> 任务实例生成的二进制结果中生成 HTML 测试报告。要使用此任务类型，你需要定义一个 <code class="literal">destinationDir</code> 以及要包含在报告的测试结果。下面是一个从子项目的单元测试中生成一个组合报告的示例： <br>There is also a stand-alone <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.TestReport.html" target="_top"><code class="classname">TestReport</code></a> task type which can generate the HTML test report from the binary results generated by one or more <code class="classname">Test</code> task instances. To use this task type, you need to define a <code class="literal">destinationDir</code> and the test results to include in the report. Here is a sample which generates a combined report for the unit tests from subprojects:</p>
+     <div class="example">
+      <a name="subProjectsTestReport"></a>
+      <p class="title"><b>示例 23.14. 为多个子项目创建一个单元测试报告 - Example&nbsp;23.14.&nbsp;Creating a unit test report for subprojects</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">subprojects {
     apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
 
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Disable the test report for the individual test task</span>
@@ -1032,69 +1256,133 @@ task testReport(type: TestReport) {
     destinationDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/reports/allTests"</span>)
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Include the results from the `test` task in all subprojects</span>
     reportOn subprojects*.test
-}</pre></div></div><br class="example-break"><p>You should note that the <code class="literal">TestReport</code> type combines the results from multiple test
-                tasks and needs to aggregate the results of individual test classes. This means that if a given test class is executed by
-                multiple test tasks, then the test report will include executions of that class, but it can be hard to distinguish individual
-                executions of that class and their output.
-            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="testNgParameterizedReporting"></a>23.12.7.1.&nbsp;TestNG parameterized methods and reporting</h4></div></div></div><p>
-                    TestNG supports <a class="ulink" href="http://testng.org/doc/documentation-main.html#parameters" target="_top">parameterizing test methods</a>,
-                    allowing a particular test method to be executed multiple times with different inputs. Gradle includes the parameter values
-                    in its reporting of the test method execution.
-                </p><p>
-                    Given a parameterized test method named <code class="literal">aParameterizedTestMethod</code> that takes two parameters, it will be reported with the name:
-                    <code class="literal">aParameterizedTestMethod(toStringValueOfParam1, toStringValueOfParam2)</code>. This makes identifying the parameter values for a
-                    particular iteration easy.
-                </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N128FF"></a>23.12.8.&nbsp;Convention values</h3></div></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;23.14.&nbsp;Java plugin - test properties</b></p><div class="table-contents"><table id="N12902"><thead><tr>
-                        <td>Task Property</td>
-                        <td>Type</td>
-                        <td>Default Value</td>
-                    </tr></thead><tr>
-                    <td><code class="literal">testClassesDir</code></td>
-                    <td><code class="classname">File</code></td>
-                    <td><code class="literal">sourceSets.test.output.classesDir</code></td>
-                </tr><tr>
-                    <td><code class="literal">classpath</code></td>
-                    <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td>
-                    <td><code class="literal">sourceSets.test.runtimeClasspath</code></td>
-                </tr><tr>
-                    <td><code class="literal">testResultsDir</code></td>
-                    <td><code class="classname">File</code></td>
-                    <td><code class="literal">testResultsDir</code></td>
-                </tr><tr>
-                    <td><code class="literal">testReportDir</code></td>
-                    <td><code class="classname">File</code></td>
-                    <td><code class="literal">testReportDir</code></td>
-                </tr><tr>
-                    <td><code class="literal">testSrcDirs</code></td>
-                    <td><code class="classname">List&lt;File&gt;</code></td>
-                    <td><code class="literal">sourceSets.test.java.srcDirs</code></td>
-                </tr></table></div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N12959"></a>23.13.&nbsp;Jar</h2></div></div></div><p>The <code class="literal">jar</code> task creates a JAR file containing the class files and resources of the
-            project. The JAR file is declared as an artifact in the <code class="literal">archives</code> dependency
-            configuration. This means that the JAR is available in the classpath of a dependent project. If you upload
-            your project into a repository, this JAR is declared as part of the dependency descriptor. You can learn
-            more about how to work with archives in <a class="xref" href="working_with_files.html#sec:archives">Section&nbsp;16.8, &ldquo;Creating archives&rdquo;</a> and artifact configurations in
-            <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:manifest"></a>23.13.1.&nbsp;Manifest</h3></div></div></div><p>Each jar or war object has a <code class="literal">manifest</code>
-                property with a separate instance of <a class="ulink" href="../javadoc/org/gradle/api/java/archives/Manifest.html" target="_top"><code class="classname">Manifest</code></a>.
-                When the archive is generated, a corresponding <code class="literal">MANIFEST.MF</code> file is written into the
-                archive.
-            </p><div class="example"><a name="manifest"></a><p class="title"><b>Example&nbsp;23.15.&nbsp;Customization of MANIFEST.MF</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">jar {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>你应该注意的是，<code class="literal">TestReport</code> 类型结合了多个测试任务的结果，并需要汇总各个测试类的结果。这意味着如果给定的测试类由多个测试任务执行，那么测试报告将包括该类的执行结果，但很难区分这个类的单独执行和它们的输出。 <br>You should note that the <code class="literal">TestReport</code> type combines the results from multiple test tasks and needs to aggregate the results of individual test classes. This means that if a given test class is executed by multiple test tasks, then the test report will include executions of that class, but it can be hard to distinguish individual executions of that class and their output.</p>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="testNgParameterizedReporting"></a>23.12.7.1. TestNG 参数化方法和报告</h4>
+         <h6 class="title"><a name="testNgParameterizedReporting"></a>23.12.7.1.&nbsp;TestNG parameterized methods and reporting</h6>
+        </div>
+       </div>
+      </div>
+      <p> TestNG 支持<a class="ulink" href="http://testng.org/doc/documentation-main.html#parameters" target="_top">参数化测试方法</a>，允许使用不同的输入多次执行特定的测试方法。 Gradle 会在这个测试方法执行的报告中包含参数值。 <br>TestNG supports <a class="ulink" href="http://testng.org/doc/documentation-main.html#parameters" target="_top">parameterizing test methods</a>, allowing a particular test method to be executed multiple times with different inputs. Gradle includes the parameter values in its reporting of the test method execution.</p>
+      <p> 给定一个带有两个参数，名为 <code class="literal">aParameterizedTestMethod</code> 的参数化测试方法，它将使用这个名称进行报告 ：<code class="literal">aParameterizedTestMethod(toStringValueOfParam1, toStringValueOfParam2)</code>。这使得在特定的迭代中，很容易识别参数值。 <br>Given a parameterized test method named <code class="literal">aParameterizedTestMethod</code> that takes two parameters, it will be reported with the name: <code class="literal">aParameterizedTestMethod(toStringValueOfParam1, toStringValueOfParam2)</code>. This makes identifying the parameter values for a particular iteration easy.</p>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N128FF"></a>23.12.8. 约定值</h3>
+        <h5 class="title"><a name="N128FF"></a>23.12.8.&nbsp;Convention values</h5>
+       </div>
+      </div>
+     </div>
+     <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+      <p class="title"><b>表 23.14. Java 插件——测试属性 - Table&nbsp;23.14.&nbsp;Java plugin - test properties</b></p>
+      <div class="table-contents">
+       <table id="N12902">
+        <thead>
+         <tr> 
+          <td>任务属性<br>Task Property</td> 
+          <td>类型<br>Type</td> 
+          <td>默认值<br>Default Value</td> 
+         </tr>
+        </thead>
+        <tbody>
+         <tr> 
+          <td><code class="literal">testClassesDir</code></td> 
+          <td><code class="classname">File</code></td> 
+          <td><code class="literal">sourceSets.test.output.classesDir</code></td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">classpath</code></td> 
+          <td><a class="ulink" href="../javadoc/org/gradle/api/file/FileCollection.html" target="_top"><code class="classname">FileCollection</code></a></td> 
+          <td><code class="literal">sourceSets.test.runtimeClasspath</code></td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">testResultsDir</code></td> 
+          <td><code class="classname">File</code></td> 
+          <td><code class="literal">testResultsDir</code></td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">testReportDir</code></td> 
+          <td><code class="classname">File</code></td> 
+          <td><code class="literal">testReportDir</code></td> 
+         </tr>
+         <tr> 
+          <td><code class="literal">testSrcDirs</code></td> 
+          <td><code class="classname">List&lt;File&gt;</code></td> 
+          <td><code class="literal">sourceSets.test.java.srcDirs</code></td> 
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N12959"></a>23.13.&nbsp;Jar</h2>
+       <h4 class="title"><a name="N12959"></a>23.13.&nbsp;Jar</h4>
+      </div>
+     </div>
+    </div>
+    <p><code class="literal">jar</code> 任务创建一个包含项目的类文件和资源的 JAR 文件。 JAR文件被声明为在 <code class="literal">archives</code> 依赖配置中的一个构件。这意味着这个 JAR 文件在依赖它的项目的类路径中可用。如果将项目上传到仓库中，则这个 JAR 文件会被声明为依赖描述符的一部分。关于如何处理档案，可以在《<a class="xref" href="working_with_files.html#sec:archives">第 16.8 节，“创建档案”</a>》中了解，而构件配置则可参考《<a class="xref" href="artifact_management.html">第五十一章，<i>发布构件</i></a>》。 <br>The <code class="literal">jar</code> task creates a JAR file containing the class files and resources of the project. The JAR file is declared as an artifact in the <code class="literal">archives</code> dependency configuration. This means that the JAR is available in the classpath of a dependent project. If you upload your project into a repository, this JAR is declared as part of the dependency descriptor. You can learn more about how to work with archives in <a class="xref" href="working_with_files.html#sec:archives">Section&nbsp;16.8, “Creating archives”</a> and artifact configurations in <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sub:manifest"></a>23.13.1.&nbsp;Manifest</h3>
+        <h5 class="title"><a name="sub:manifest"></a>23.13.1.&nbsp;Manifest</h5>
+       </div>
+      </div>
+     </div>
+     <p>每个 jar 或 war 对象都有一个 <code class="literal">manifest</code> 属性，它是一个单独的 <a class="ulink" href="../javadoc/org/gradle/api/java/archives/Manifest.html" target="_top"><code class="classname">Manifest</code></a> 属性。当生成档案时，相应的 <code class="literal">MANIFEST.MF</code> 文件会被写入存档。 <br>Each jar or war object has a <code class="literal">manifest</code> property with a separate instance of <a class="ulink" href="../javadoc/org/gradle/api/java/archives/Manifest.html" target="_top"><code class="classname">Manifest</code></a>. When the archive is generated, a corresponding <code class="literal">MANIFEST.MF</code> file is written into the archive.</p>
+     <div class="example">
+      <a name="manifest"></a>
+      <p class="title"><b>示例 7.5. 自定义的 MANIFEST.MF - Example&nbsp;23.15.&nbsp;Customization of MANIFEST.MF</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">jar {
     manifest {
         attributes(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Implementation-Title"</span>: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Gradle"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Implementation-Version"</span>: version)
     }
-}</pre></div></div><br class="example-break"><p>You can create stand alone instances of a <code class="classname">Manifest</code>. You can use that for example,
-                to share manifest information between jars.
-            </p><div class="example"><a name="manifest"></a><p class="title"><b>Example&nbsp;23.16.&nbsp;Creating a manifest object.</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">ext.sharedManifest = manifest {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>你可以创建一个独立的 <code class="classname">Manifest</code> 实例。例如，可以用它来在 jar 之间共享清单信息。 <br>You can create stand alone instances of a <code class="classname">Manifest</code>. You can use that for example, to share manifest information between jars.</p>
+     <div class="example">
+      <a name="manifest"></a>
+      <p class="title"><b>示例 23.16. 创建一个清单对象。 - Example&nbsp;23.16.&nbsp;Creating a manifest object.</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">ext.sharedManifest = manifest {
     attributes(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Implementation-Title"</span>: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Gradle"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Implementation-Version"</span>: version)
 }
 task fooJar(type: Jar) {
     manifest = project.manifest {
         from sharedManifest
     }
-}</pre></div></div><br class="example-break"><p>You can merge other manifests into any <code class="classname">Manifest</code>
-                object. The other manifests might
-                be either described by a file path or, like in the example above, by a reference to another <code class="classname">Manifest</code> object.
-            </p><div class="example"><a name="manifest"></a><p class="title"><b>Example&nbsp;23.17.&nbsp;Separate MANIFEST.MF for a particular archive</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task barJar(type: Jar) {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>你可以把其他清单合并到任意的一个 <code class="classname">Manifest</code> 对象。其他清单可以用文件路径来描述，或者像上面的例子那样，通过引用另一个 <code class="classname">Manifest</code> 对象来描述。 <br>You can merge other manifests into any <code class="classname">Manifest</code> object. The other manifests might be either described by a file path or, like in the example above, by a reference to another <code class="classname">Manifest</code> object.</p>
+     <div class="example">
+      <a name="manifest"></a>
+      <p class="title"><b>示例 23.17. 指定档案的单独 MANIFEST.MF - Example&nbsp;23.17.&nbsp;Separate MANIFEST.MF for a particular archive</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task barJar(type: Jar) {
     manifest {
         attributes key1: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'value1'</span>
         from sharedManifest, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/config/basemanifest.txt'</span>
@@ -1109,15 +1397,55 @@ task fooJar(type: Jar) {
             }
         }
     }
-}</pre></div></div><br class="example-break"><p>Manifest are merged in the order they are declared by the <code class="literal">from</code> statement. If
-            the based manifest and the merged manifest both define values for the same key, the merged manifest wins by default.
-            You can fully customize the merge behavior by adding <code class="literal">eachEntry</code> actions in which
-                you have access to a <a class="ulink" href="../javadoc/org/gradle/api/java/archives/ManifestMergeDetails.html" target="_top"><code class="classname">ManifestMergeDetails</code></a> instance for each entry
-                of the resulting manifest. The merge is not immediately triggered by the from statement. It is done lazily,
-                either when generating the jar, or by calling <code class="literal">writeTo</code> or <code class="literal">effectiveManifest</code></p><p>You can easily write a manifest to disk.
-            </p><div class="example"><a name="manifest"></a><p class="title"><b>Example&nbsp;23.18.&nbsp;Separate MANIFEST.MF for a particular archive</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">jar.manifest.writeTo(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/mymanifest.mf"</span>)</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="sec:upload"></a>23.14.&nbsp;Uploading</h2></div></div></div><p>How to upload your archives is described in <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>.
-        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N12897" name="ftn.N12897" class="para">9</a>] </sup>The JUnit wiki contains a detailed description on how to work with JUnit categories:
-                        <a class="ulink" href="https://github.com/junit-team/junit/wiki/Categories" target="_top">https://github.com/junit-team/junit/wiki/Categories</a>.
-                    </p></div><div class="footnote"><p><sup>[<a href="#N128AD" name="ftn.N128AD" class="para">10</a>] </sup>The TestNG documentation contains more details about test groups:
-                        <a class="ulink" href="http://testng.org/doc/documentation-main.html#test-groups" target="_top">http://testng.org/doc/documentation-main.html#test-groups</a>.
-                    </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="Chapter&nbsp;22.&nbsp;Standard Gradle plugins">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="groovy_plugin.html" title="Chapter&nbsp;24.&nbsp;The Groovy Plugin">Next</a></div></div></div></body></html>
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>Manifest 会根据在 <code class="literal">from</code> 语句中所声明的顺序进行合并。如果基本的清单和合并清单都定义了同一个键的值，那么默认情况下会采用要合并的清单的值。你可以通过添加 <code class="literal">eachEntry</code> 来完全自定义结果清单的每一个实体的合并行为，它让你可以访问 <a class="ulink" href="../javadoc/org/gradle/api/java/archives/ManifestMergeDetails.html" target="_top"><code class="classname">ManifestMergeDetails</code></a> 实例。合并不会立即由 from 语句触发。它是惰性执行的，在生成 jar 或者是通过调用 <code class="literal">writeTo</code> 或 <code class="literal">effectiveManifest</code> 的时候完成。<br>Manifest are merged in the order they are declared by the <code class="literal">from</code> statement. If the based manifest and the merged manifest both define values for the same key, the merged manifest wins by default. You can fully customize the merge behavior by adding <code class="literal">eachEntry</code> actions in which you have access to a <a class="ulink" href="../javadoc/org/gradle/api/java/archives/ManifestMergeDetails.html" target="_top"><code class="classname">ManifestMergeDetails</code></a> instance for each entry of the resulting manifest. The merge is not immediately triggered by the from statement. It is done lazily, either when generating the jar, or by calling <code class="literal">writeTo</code> or <code class="literal">effectiveManifest</code></p>
+     <p>你可以很轻松地把一个清单写入磁盘。 <br>You can easily write a manifest to disk.</p>
+     <div class="example">
+      <a name="manifest"></a>
+      <p class="title"><b>示例 23.18. 指定档案的单独 MANIFEST.MF - Example&nbsp;23.18.&nbsp;Separate MANIFEST.MF for a particular archive</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">jar.manifest.writeTo(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/mymanifest.mf"</span>)</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="sec:upload"></a>23.14. 上传</h2>
+       <h4 class="title"><a name="sec:upload"></a>23.14.&nbsp;Uploading</h4>
+      </div>
+     </div>
+    </div>
+    <p>关于如何上传档案，将在《<a class="xref" href="artifact_management.html">第五十一章，<i>发布构件</i></a>》中描述。 <br>How to upload your archives is described in <a class="xref" href="artifact_management.html">Chapter&nbsp;51, <i>Publishing artifacts</i></a>.</p>
+   </div>
+   <div class="footnotes">
+    <br>
+    <hr align="left" width="100">
+    <div class="footnote">
+     <p><sup>[<a href="#N12897" name="ftn.N12897" class="para">9</a>] </sup>JUnit wiki 包含了有关如何使用 JUnit 类别的详细说明： <a class="ulink" href="https://github.com/junit-team/junit/wiki/Categories" target="_top">https://github.com/junit-team/junit/wiki/Categories</a>。 <br><sup>[<a href="#N12897" name="ftn.N12897" class="para">9</a>] </sup>The JUnit wiki contains a detailed description on how to work with JUnit categories: <a class="ulink" href="https://github.com/junit-team/junit/wiki/Categories" target="_top">https://github.com/junit-team/junit/wiki/Categories</a>.</p>
+    </div>
+    <div class="footnote">
+     <p><sup>[<a href="#N128AD" name="ftn.N128AD" class="para">10</a>] </sup>TestNG 文档包含了有关测试组的更多详细信息：<a class="ulink" href="http://testng.org/doc/documentation-main.html#test-groups" target="_top">http://testng.org/doc/documentation-main.html#test-groups</a>。 <br><sup>[<a href="#N128AD" name="ftn.N128AD" class="para">10</a>] </sup>The TestNG documentation contains more details about test groups: <a class="ulink" href="http://testng.org/doc/documentation-main.html#test-groups" target="_top">http://testng.org/doc/documentation-main.html#test-groups</a>.</p>
+    </div>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="第二十二章. 标准的 Gradle 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="groovy_plugin.html" title="第二十四章. Groovy 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
