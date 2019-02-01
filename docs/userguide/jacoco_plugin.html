@@ -1,114 +1,237 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;34.&nbsp;The JaCoCo Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="pmd_plugin.html" title="Chapter&nbsp;33.&nbsp;The PMD Plugin"><link rel="next" href="sonar_plugin.html" title="Chapter&nbsp;35.&nbsp;The Sonar Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pmd_plugin.html" title="Chapter&nbsp;33.&nbsp;The PMD Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="sonar_plugin.html" title="Chapter&nbsp;35.&nbsp;The Sonar Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="jacoco_plugin"></a>Chapter&nbsp;34.&nbsp;The JaCoCo Plugin</h1></div></div></div><div class="note"><p>
-            The JaCoCo plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.
-        </p></div><p>The JaCoCo plugin provides code coverage metrics for Java code via integration with <a class="ulink" href="http://www.eclemma.org/jacoco/" target="_top">JaCoCo</a>.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N136F6"></a>34.1.&nbsp;Getting Started</h2></div></div></div><p>To get started, apply the JaCoCo plugin to the project you want to calculate code coverage for.</p><div class="example"><a name="applyJacoco"></a><p class="title"><b>Example&nbsp;34.1.&nbsp;Applying the JaCoCo plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"jacoco"</span></pre></div></div><br class="example-break"><p>
-            If the Java plugin is also applied to your project, a new task named
-            <code class="literal">jacocoTestReport</code>
-            is created that depends on the
-            <code class="literal">test</code>
-            task.
-            The report is available at
-            <code class="filename"><em class="replaceable"><code>$buildDir</code></em>/reports/jacoco/test</code>. By default, a HTML report is generated.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13712"></a>34.2.&nbsp;Configuring the JaCoCo Plugin</h2></div></div></div><p>
-            The JaCoCo plugin adds a project extension named <code class="literal">jacoco</code> of type <a class="ulink" href="../dsl/org.gradle.testing.jacoco.plugins.JacocoPluginExtension.html" target="_top"><code class="classname">JacocoPluginExtension</code></a>,
-            which allows configuring defaults for JaCoCo usage in your build.
-        </p><div class="example"><a name="configJacoco"></a><p class="title"><b>Example&nbsp;34.2.&nbsp;Configuring JaCoCo plugin settings</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">jacoco {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第三十四章. JaCoCo 插件 - Chapter&nbsp;34.&nbsp;The JaCoCo Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="pmd_plugin.html" title="第三十三章. PMD 插件">
+  <link rel="next" href="sonar_plugin.html" title="第三十五章. Sonar 插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="pmd_plugin.html" title="第三十三章. PMD 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="sonar_plugin.html" title="第三十五章. Sonar 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="jacoco_plugin"></a>第三十四章. JaCoCo 插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="jacoco_plugin"></a>Chapter&nbsp;34.&nbsp;The JaCoCo Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <div class="note">
+    <p> JaCoCo 目前是一个<a class="link" href="feature_lifecycle.html">试验性</a>插件。注意，在以后的 Gradle 版本中，其 DSL 和其他配置可能会有变化。 <br>The JaCoCo plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.</p>
+   </div>
+   <p>JaCoCo 插件通过集成 <a class="ulink" href="http://www.eclemma.org/jacoco/" target="_top">JaCoCo</a> 为 Java 代码提供了代码覆盖率指标。 <br>The JaCoCo plugin provides code coverage metrics for Java code via integration with <a class="ulink" href="http://www.eclemma.org/jacoco/" target="_top">JaCoCo</a>.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N136F6"></a>34.1. 入门</h2>
+       <h4 class="title"><a name="N136F6"></a>34.1.&nbsp;Getting Started</h4>
+      </div>
+     </div>
+    </div>
+    <p>首先，请将 JaCoCo 插件应用于你想要计算代码覆盖率的项目中。<br>To get started, apply the JaCoCo plugin to the project you want to calculate code coverage for.</p>
+    <div class="example">
+     <a name="applyJacoco"></a>
+     <p class="title"><b>示例 34.1. 应用 JaCoCo 插件 - Example&nbsp;34.1.&nbsp;Applying the JaCoCo plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"jacoco"</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 如果你的项目同时也应用了 Java 插件，那么会创建一个名为 <code class="literal">jacocoTestReport</code> 的新任务，并且这个新任务依赖于 <code class="literal">test</code> 任务。该报告可以在 <code class="filename"><em class="replaceable"><code>$buildDir</code></em>/report/jacoco/test</code> 中看到。默认情况下，会生成一个 HTML 报告。 <br>If the Java plugin is also applied to your project, a new task named <code class="literal">jacocoTestReport</code> is created that depends on the <code class="literal">test</code> task. The report is available at <code class="filename"><em class="replaceable"><code>$buildDir</code></em>/reports/jacoco/test</code>. By default, a HTML report is generated.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13712"></a>34.2. 配置 JaCoCo 插件</h2>
+       <h4 class="title"><a name="N13712"></a>34.2.&nbsp;Configuring the JaCoCo Plugin</h4>
+      </div>
+     </div>
+    </div>
+    <p> JaCoCo 插件添加一个类型为 <a class="ulink" href="../dsl/org.gradle.testing.jacoco.plugins.JacocoPluginExtension.html" target="_top"><code class="classname">JacocoPluginExtension</code></a>，名为<code class="literal">jacoco</code> 的 project 扩展，这个扩展允许在你的构建中配置 JaCoCo 所使用的默认值。 <br>The JaCoCo plugin adds a project extension named <code class="literal">jacoco</code> of type <a class="ulink" href="../dsl/org.gradle.testing.jacoco.plugins.JacocoPluginExtension.html" target="_top"><code class="classname">JacocoPluginExtension</code></a>, which allows configuring defaults for JaCoCo usage in your build.</p>
+    <div class="example">
+     <a name="configJacoco"></a>
+     <p class="title"><b>示例 34.2. 配置 JaCoCo 插件设置 - Example&nbsp;34.2.&nbsp;Configuring JaCoCo plugin settings</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">jacoco {
     toolVersion = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"0.6.2.201302030002"</span>
     reportsDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/customJacocoReportDir"</span>)
-}</pre></div></div><br class="example-break"><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;34.1.&nbsp;Gradle defaults for JaCoCo properties</b></p><div class="table-contents"><table id="N13729"><thead><tr>
-                    <td>Property</td>
-                    <td>Gradle default</td>
-                </tr></thead><tr>
-                <td>reportsDir</td>
-                <td>"<em class="replaceable"><code>$buildDir</code></em>/reports/jacoco"
-                </td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13740"></a>34.3.&nbsp;JaCoCo Report configuration</h2></div></div></div><p>The
-            <a class="ulink" href="../dsl/org.gradle.testing.jacoco.tasks.JacocoReport.html" target="_top"><code class="classname">JacocoReport</code></a>
-            task can be used to generate code coverage reports in different formats.
-            It implements the standard Gradle type <a class="ulink" href="../dsl/org.gradle.api.reporting.Reporting.html" target="_top"><code class="classname">Reporting</code></a> and exposes a report container of
-            type <a class="ulink" href="../javadoc/org/gradle/testing/jacoco/tasks/JacocoReportsContainer.html" target="_top"><code class="classname">JacocoReportsContainer</code></a>.
-        </p><div class="example"><a name="configJacocoReport"></a><p class="title"><b>Example&nbsp;34.3.&nbsp;Configuring test task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">jacocoTestReport {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 34.1. JaCoCo 属性的 Gradle 默认值 - Table&nbsp;34.1.&nbsp;Gradle defaults for JaCoCo properties</b></p>
+     <div class="table-contents">
+      <table id="N13729">
+       <thead>
+        <tr> 
+         <td>属性<br>Property</td> 
+         <td>Gradle 默认值<br>Gradle default</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td>reportsDir</td> 
+         <td>"<em class="replaceable"><code>$buildDir</code></em>/reports/jacoco" </td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13740"></a>34.3. JaCoCo 报告配置</h2>
+       <h4 class="title"><a name="N13740"></a>34.3.&nbsp;JaCoCo Report configuration</h4>
+      </div>
+     </div>
+    </div>
+    <p><a class="ulink" href="../dsl/org.gradle.testing.jacoco.tasks.JacocoReport.html" target="_top"><code class="classname">JacocoReport</code></a> 任务可以生成不同格式的代码覆盖率报告。它实现了标准的 Gradle 类型 <a class="ulink" href="../dsl/org.gradle.api.reporting.Reporting.html" target="_top"><code class="classname">Reporting</code></a>，并向外暴露了一个 <a class="ulink" href="../javadoc/org/gradle/testing/jacoco/tasks/JacocoReportsContainer.html" target="_top"><code class="classname">JacocoReportsContainer</code></a> 类型的报告容器。 <br>The <a class="ulink" href="../dsl/org.gradle.testing.jacoco.tasks.JacocoReport.html" target="_top"><code class="classname">JacocoReport</code></a> task can be used to generate code coverage reports in different formats. It implements the standard Gradle type <a class="ulink" href="../dsl/org.gradle.api.reporting.Reporting.html" target="_top"><code class="classname">Reporting</code></a> and exposes a report container of type <a class="ulink" href="../javadoc/org/gradle/testing/jacoco/tasks/JacocoReportsContainer.html" target="_top"><code class="classname">JacocoReportsContainer</code></a>.</p>
+    <div class="example">
+     <a name="configJacocoReport"></a>
+     <p class="title"><b>示例 34.3. 配置测试任务 - Example&nbsp;34.3.&nbsp;Configuring test task</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">jacocoTestReport {
     reports {
         xml.enabled false
         csv.enabled false
         html.destination <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${buildDir}/jacocoHtml"</span>
     }
-}</pre></div></div><br class="example-break"><table cellpadding="0" cellspacing="0" summary="manufactured viewport for HTML img" border="0" width="903"><tr height="277"><td><img src="img/jacocoHtmlReport.png" height="277"></td></tr></table></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13763"></a>34.4.&nbsp;JaCoCo specific task configuration</h2></div></div></div><p>The JaCoCo plugin adds a
-            <a class="ulink" href="../dsl/org.gradle.testing.jacoco.plugins.JacocoTaskExtension.html" target="_top"><code class="classname">JacocoTaskExtension</code></a>
-            extension to all tasks of type
-            <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a>.
-            This extension allows the configuration of the JaCoCo specific properties of the test task.
-        </p><div class="example"><a name="jacocotesttast"></a><p class="title"><b>Example&nbsp;34.4.&nbsp;Configuring test task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">test {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <table cellpadding="0" cellspacing="0" summary="为HTML img制作的viewport" border="0" width="903">
+     <tbody>
+      <tr height="277">
+       <td><img src="img/jacocoHtmlReport.png" height="277"></td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13763"></a>34.4. JaCoCo 的特定任务配置</h2>
+       <h4 class="title"><a name="N13763"></a>34.4.&nbsp;JaCoCo specific task configuration</h4>
+      </div>
+     </div>
+    </div>
+    <p>JaCoCo 插件添加了一个 <a class="ulink" href="../dsl/org.gradle.testing.jacoco.plugins.JacocoTaskExtension.html" target="_top"><code class="classname">JacocoTaskExtension</code></a> 扩展到所有 <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> 类型的任务中。这一扩展允许配置测试任务中的一些特定的 JaCoCo 属性。 <br>The JaCoCo plugin adds a <a class="ulink" href="../dsl/org.gradle.testing.jacoco.plugins.JacocoTaskExtension.html" target="_top"><code class="classname">JacocoTaskExtension</code></a> extension to all tasks of type <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a>. This extension allows the configuration of the JaCoCo specific properties of the test task.</p>
+    <div class="example">
+     <a name="jacocotesttast"></a>
+     <p class="title"><b>示例 34.3. 配置测试任务 - Example&nbsp;34.4.&nbsp;Configuring test task</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">test {
     jacoco {
         append = false
         destinationFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/jacoco/jacocoTest.exec"</span>)
         classDumpFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/jacoco/classpathdumps"</span>)
     }
-}</pre></div></div><br class="example-break"><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;34.2.&nbsp;Default values of the JaCoCo Task extension</b></p><div class="table-contents"><table id="N1377C"><thead><tr>
-                    <td>Property</td>
-                    <td>Gradle default</td>
-                </tr></thead><tr>
-                <td>enabled</td>
-                <td>true</td>
-            </tr><tr>
-                <td>destPath</td>
-                <td><em class="replaceable"><code>$buildDir</code></em>/jacoco
-                </td>
-            </tr><tr>
-                <td>append</td>
-                <td>true</td>
-            </tr><tr>
-                <td>includes</td>
-                <td>[]</td>
-            </tr><tr>
-                <td>excludes</td>
-                <td>[]</td>
-            </tr><tr>
-                <td>excludeClassLoaders</td>
-                <td>[]</td>
-            </tr><tr>
-                <td>sessionId</td>
-                <td>
-                    <code class="literal">auto-generated</code>
-                </td>
-            </tr><tr>
-                <td>dumpOnExit</td>
-                <td>
-                    <code class="literal">true</code>
-                </td>
-            </tr><tr>
-                <td>output</td>
-                <td>
-                    <code class="literal">Output.FILE</code>
-                </td>
-            </tr><tr>
-                <td>address</td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-            </tr><tr>
-                <td>port</td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-            </tr><tr>
-                <td>classDumpPath</td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-            </tr><tr>
-                <td>jmx</td>
-                <td>
-                    <code class="literal">false</code>
-                </td>
-            </tr></table></div></div><p>While all tasks of type
-            <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a>
-            are automatically enhanced to provide coverage information when the <code class="literal">java</code> plugin has been applied,
-            any task that implements <a class="ulink" href="../javadoc/org/gradle/process/JavaForkOptions.html" target="_top"><code class="classname">JavaForkOptions</code></a> can be enhanced by the JaCoCo plugin.
-            That is, any task that forks Java processes can be used to generate coverage information.
-        </p><p>
-            For example you can configure your build to generate code coverage using the <code class="literal">application</code> plugin.
-        </p><div class="example"><a name="jacoco-application-setup"></a><p class="title"><b>Example&nbsp;34.5.&nbsp;Using application plugin to generate code coverage data</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"application"</span>
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 34.2. JaCoCo 任务扩展的默认值 - Table&nbsp;34.2.&nbsp;Default values of the JaCoCo Task extension</b></p>
+     <div class="table-contents">
+      <table id="N1377C">
+       <thead>
+        <tr> 
+         <td>属性<br>Property</td> 
+         <td>Gradle 默认值<br>Gradle default</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td>enabled</td> 
+         <td>true</td> 
+        </tr>
+        <tr> 
+         <td>destPath</td> 
+         <td><em class="replaceable"><code>$buildDir</code></em>/jacoco </td> 
+        </tr>
+        <tr> 
+         <td>append</td> 
+         <td>true</td> 
+        </tr>
+        <tr> 
+         <td>includes</td> 
+         <td>[]</td> 
+        </tr>
+        <tr> 
+         <td>excludes</td> 
+         <td>[]</td> 
+        </tr>
+        <tr> 
+         <td>excludeClassLoaders</td> 
+         <td>[]</td> 
+        </tr>
+        <tr> 
+         <td>sessionId</td> 
+         <td> <code class="literal">auto-generated</code> </td> 
+        </tr>
+        <tr> 
+         <td>dumpOnExit</td> 
+         <td> <code class="literal">true</code> </td> 
+        </tr>
+        <tr> 
+         <td>output</td> 
+         <td> <code class="literal">Output.FILE</code> </td> 
+        </tr>
+        <tr> 
+         <td>address</td> 
+         <td> <code class="literal">-</code> </td> 
+        </tr>
+        <tr> 
+         <td>port</td> 
+         <td> <code class="literal">-</code> </td> 
+        </tr>
+        <tr> 
+         <td>classDumpPath</td> 
+         <td> <code class="literal">-</code> </td> 
+        </tr>
+        <tr> 
+         <td>jmx</td> 
+         <td> <code class="literal">false</code> </td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p>虽然所有 <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> 类型的任务会在应用 <code class="literal">java</code> 插件时自动增强以提供覆盖率信息，但是任何实现了 <a class="ulink" href="../javadoc/org/gradle/process/JavaForkOptions.html" target="_top"><code class="classname">JavaForkOptions</code></a> 的任务都可以通过 JaCoCo 插件得到增强。也就是说，任何 fork Java 进程的任务都可生成覆盖信息。 <br>While all tasks of type <a class="ulink" href="../dsl/org.gradle.api.tasks.testing.Test.html" target="_top"><code class="classname">Test</code></a> are automatically enhanced to provide coverage information when the <code class="literal">java</code> plugin has been applied, any task that implements <a class="ulink" href="../javadoc/org/gradle/process/JavaForkOptions.html" target="_top"><code class="classname">JavaForkOptions</code></a> can be enhanced by the JaCoCo plugin. That is, any task that forks Java processes can be used to generate coverage information.</p>
+    <p> 例如，你可以配置你的构建使用 <code class="literal">application</code> 插件来生成代码覆盖率。 <br>For example you can configure your build to generate code coverage using the <code class="literal">application</code> plugin.</p>
+    <div class="example">
+     <a name="jacoco-application-setup"></a>
+     <p class="title"><b>示例 34.5. 使用 application 插件来生成代码覆盖率数据 - Example&nbsp;34.5.&nbsp;Using application plugin to generate code coverage data</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"application"</span>
 apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"jacoco"</span>
 
 mainClassName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.MyMain"</span>
@@ -120,41 +243,107 @@ jacoco {
 task applicationCodeCoverageReport(type:JacocoReport){
     executionData run
     sourceSets sourceSets.main
-}</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/testing/jacoco/application</code> which is in both the binary and source distributions of Gradle.</p></div></div></div><br class="example-break"><div class="example"><a name="jacoco-application-output"></a><p class="title"><b>Example&nbsp;34.6.&nbsp;Coverage reports generated by applicationCodeCoverageReport</b></p><div class="example-contents"><p>Build layout</p><pre class="programlisting">application/
+}</pre>
+      <div class="exampleLocation">
+       <p><span class="emphasis"><em>注：</em> </span>此示例中的代码可以在 Gradle 的二进制分发包及源代码分发包中的 <code class="filename">samples/testing/jacoco/application</code> 中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/testing/jacoco/application</code> which is in both the binary and source distributions of Gradle.</p>
+      </div>
+     </div>
+    </div>
+    <br class="example-break">
+    <div class="example">
+     <a name="jacoco-application-output"></a>
+     <p class="title"><b>示例 34.6. 由 applicationCodeCoverageReport 生成的覆盖率报告 - Example&nbsp;34.6.&nbsp;Coverage reports generated by applicationCodeCoverageReport</b></p>
+     <div class="example-contents">
+      <p>构建布局<br>Build layout</p>
+      <pre class="programlisting">application/
   build/
     jacoco/
       run.exec
     reports/jacoco/applicationCodeCoverageReport/html/
-      index.html</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13836"></a>34.5.&nbsp;Tasks</h2></div></div></div><p>For projects that also apply the Java Plugin, The JaCoCo plugin automatically adds the following tasks:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;34.3.&nbsp;JaCoCo plugin - tasks</b></p><div class="table-contents"><table id="N1383B"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">jacocoTestReport</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.testing.jacoco.tasks.JacocoReport.html" target="_top"><code class="classname">JacocoReport</code></a>
-                </td>
-                <td>Generates code coverage report for the test task.</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N13863"></a>34.6.&nbsp;Dependency management</h2></div></div></div><p>The JaCoCo plugin adds the following dependency configurations:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;34.4.&nbsp;JaCoCo plugin - dependency configurations</b></p><div class="table-contents"><table id="N13868"><thead><tr>
-                    <td>Name</td>
-                    <td>Meaning</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="filename">jacocoAnt</code>
-                </td>
-                <td>The JaCoCo Ant library used for running the
-                    <code class="literal">JacocoReport</code>
-                    and
-                    <code class="literal">JacocoMerge</code>
-                    tasks.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="filename">jacocoAgent</code>
-                </td>
-                <td>The JaCoCo agent library used for instrumenting the code under test.</td>
-            </tr></table></div></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pmd_plugin.html" title="Chapter&nbsp;33.&nbsp;The PMD Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="sonar_plugin.html" title="Chapter&nbsp;35.&nbsp;The Sonar Plugin">Next</a></div></div></div></body></html>
+      index.html</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13836"></a>34.5. 任务</h2>
+       <h4 class="title"><a name="N13836"></a>34.5.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>对于同时也应用了 Java 插件的项目，JaCoCo 插件会自动添加以下任务：<br>For projects that also apply the Java Plugin, The JaCoCo plugin automatically adds the following tasks:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 34.3. JaCoCo 插件——任务 - Table&nbsp;34.3.&nbsp;JaCoCo plugin - tasks</b></p>
+     <div class="table-contents">
+      <table id="N1383B">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">jacocoTestReport</code> </td> 
+         <td>-</td> 
+         <td> <a class="ulink" href="../dsl/org.gradle.testing.jacoco.tasks.JacocoReport.html" target="_top"><code class="classname">JacocoReport</code></a> </td> 
+         <td>为测试任务生成代码覆盖率报告。<br>Generates code coverage report for the test task.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N13863"></a>34.6. 依赖管理</h2>
+       <h4 class="title"><a name="N13863"></a>34.6.&nbsp;Dependency management</h4>
+      </div>
+     </div>
+    </div>
+    <p>JaCoCo 插件添加了以下依赖配置：<br>The JaCoCo plugin adds the following dependency configurations:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表34.4. JaCoCo 插件——依赖配置 - Table&nbsp;34.4.&nbsp;JaCoCo plugin - dependency configurations</b></p>
+     <div class="table-contents">
+      <table id="N13868">
+       <thead>
+        <tr> 
+         <td>名称<br>Name</td> 
+         <td>意义<br>Meaning</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="filename">jacocoAnt</code> </td> 
+         <td>用于运行 <code class="literal">JacocoReport</code> 和 <code class="literal">JacocoMerge</code> 任务的 JaCoCo Ant 库。 <br>The JaCoCo Ant library used for running the <code class="literal">JacocoReport</code> and <code class="literal">JacocoMerge</code> tasks.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="filename">jacocoAgent</code> </td> 
+         <td>用于检测位于 test 下的代码的 JaCoCo 客户端库。<br>The JaCoCo agent library used for instrumenting the code under test.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="pmd_plugin.html" title="第三十三章. PMD 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="sonar_plugin.html" title="第三十五章. Sonar 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
