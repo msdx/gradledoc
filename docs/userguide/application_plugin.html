@@ -1,77 +1,166 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;45.&nbsp;The Application Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="distribution_plugin.html" title="Chapter&nbsp;44.&nbsp;The Distribution Plugin"><link rel="next" href="javaLibraryDistribution_plugin.html" title="Chapter&nbsp;46.&nbsp;The Java Library Distribution Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="distribution_plugin.html" title="Chapter&nbsp;44.&nbsp;The Distribution Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="javaLibraryDistribution_plugin.html" title="Chapter&nbsp;46.&nbsp;The Java Library Distribution Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="application_plugin"></a>Chapter&nbsp;45.&nbsp;The Application Plugin</h1></div></div></div><p>The Gradle application plugin extends the language plugins with common application related tasks.
-	It allows running and bundling applications for the jvm.
-	</p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N147B2"></a>45.1.&nbsp;Usage</h2></div></div></div><p>To use the application plugin, include in your build script:</p><div class="example"><a name="useApplicationPlugin"></a><p class="title"><b>Example&nbsp;45.1.&nbsp;Using the application plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin:<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'application'</span></pre></div></div><br class="example-break"><p>To define the main-class for the application you have to set the <code class="literal">mainClassName</code> property as shown below</p><div class="example"><a name="useApplicationPlugin"></a><p class="title"><b>Example&nbsp;45.2.&nbsp;Configure the application main class</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">mainClassName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.sample.Main"</span></pre></div></div><br class="example-break"><p>Then, you can run the application by running <strong class="userinput"><code>gradle run</code></strong>. Gradle will take care of building the application classes,
-            along with their runtime dependencies, and starting the application with the correct classpath.
-            You can launch the application in debug mode with <strong class="userinput"><code>gradle run --debug-jvm</code></strong> (see <a class="ulink" href="../javadoc/org/gradle/api/tasks/JavaExec.html#setDebug(boolean)" target="_top"><code class="classname">JavaExec.setDebug()</code></a>).
-        </p><p>The plugin can also build a distribution for your application. The distribution will package up the runtime dependencies of the application
-            along with some OS specific start scripts. All files stored in <code class="filename">src/dist</code> will be added to the root of the
-            distribution. You can run <strong class="userinput"><code>gradle installApp</code></strong> to create an image of the application in
-            <code class="filename">build/install/<em class="replaceable"><code>projectName</code></em></code>. You can run <strong class="userinput"><code>gradle distZip</code></strong> to create a
-            ZIP containing the distribution.
-        </p><p>
-            If your Java application requires a specific set of JVM settings or system properties, you can configure the <code class="literal">applicationDefaultJvmArgs</code> property.
-            These JVM arguments are applied to the <code class="literal">run</code> task and also considered in the generated start scripts of your distribution.
-        </p><div class="example"><a name="configureApplicationDefaultJvmArgs"></a><p class="title"><b>Example&nbsp;45.3.&nbsp;Configure default JVM settings</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">applicationDefaultJvmArgs = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"-Dgreeting.language=en"</span>]</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N147FF"></a>45.2.&nbsp;Tasks</h2></div></div></div><p>The Application plugin adds the following tasks to the project.</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;45.1.&nbsp;Application plugin - tasks</b></p><div class="table-contents"><table id="N14804"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">run</code>
-                </td>
-                <td>
-                    <code class="literal">classes</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.JavaExec.html" target="_top"><code class="classname">JavaExec</code></a></td>
-                <td>Starts the application.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">startScripts</code>
-                </td>
-                <td>
-                    <code class="literal">jar</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.application.CreateStartScripts.html" target="_top"><code class="classname">CreateStartScripts</code></a></td>
-                <td>Creates OS specific scripts to run the project as a JVM application.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">installApp</code>
-                </td>
-                <td>
-                    <code class="literal">jar</code>, <code class="literal">startScripts</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Sync.html" target="_top"><code class="classname">Sync</code></a></td>
-                <td>Installs the application into a specified directory.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">distZip</code>
-                </td>
-                <td>
-                    <code class="literal">jar</code>, <code class="literal">startScripts</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a></td>
-                <td>Creates a full distribution ZIP archive including runtime libraries and OS specific scripts.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">distTar</code>
-                </td>
-                <td>
-                    <code class="literal">jar</code>, <code class="literal">startScripts</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a></td>
-                <td>Creates a full distribution TAR archive including runtime libraries and OS specific scripts.</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N14892"></a>45.3.&nbsp;Convention properties</h2></div></div></div><p>The application plugin adds some properties to the project, which you can use to configure its behaviour. See <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a>.
-            </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="application_distribution_resources"></a>45.4.&nbsp;Including other resources in the distribution</h2></div></div></div><p>
-                One of the convention properties added by the plugin is <code class="literal">applicationDistribution</code> which is a <a class="ulink" href="../javadoc/org/gradle/api/file/CopySpec.html" target="_top"><code class="classname">CopySpec</code></a>.
-                This specification is used by the <code class="literal">installApp</code> and <code class="literal">distZip</code> tasks as the specification of what is to be 
-                include in the distribution. Above copying the starting scripts to the <code class="filename">bin</code> dir and necessary jars to <code class="filename">lib</code> 
-                in the distribution, all of the files from the <code class="filename">src/dist</code> directory are also copied. To include any static files in the 
-                distribution, simply arrange them in the <code class="filename">src/dist</code> directory.
-            </p><p>
-                If your project generates files to be included in the distribution, e.g. documentation, you can add these files to the distribution by adding to the 
-                <code class="literal">applicationDistribution</code> copy spec.
-            </p><div class="example"><a name="includeTaskOutputInApplicationDistribution"></a><p class="title"><b>Example&nbsp;45.4.&nbsp;Include output from other tasks in the application distribution</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task createDocs {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第四十五章. 应用程序插件 - Chapter&nbsp;45.&nbsp;The Application Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="distribution_plugin.html" title="第四十四章. 分发插件">
+  <link rel="next" href="javaLibraryDistribution_plugin.html" title="第46章. Java 库发布插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="distribution_plugin.html" title="第四十四章. 分发插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="javaLibraryDistribution_plugin.html" title="第46章. Java 库发布插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="application_plugin"></a>第四十五章. 应用程序插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="application_plugin"></a>Chapter&nbsp;45.&nbsp;The Application Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <p>Gradle应用程序插件扩展了语言插件的一些常见应用程序相关的任务。它允许为jvm运行和捆绑应用程序。 <br>The Gradle application plugin extends the language plugins with common application related tasks. It allows running and bundling applications for the jvm.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N147B2"></a>45.1. 用法</h2>
+       <h4 class="title"><a name="N147B2"></a>45.1.&nbsp;Usage</h4>
+      </div>
+     </div>
+    </div>
+    <p>要使用这个应用程序插件，请在构建脚本中包含：<br>To use the application plugin, include in your build script:</p>
+    <div class="example">
+     <a name="useApplicationPlugin"></a>
+     <p class="title"><b>示例 45.1. 使用应用程序插件 - Example&nbsp;45.1.&nbsp;Using the application plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin:<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'application'</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>要定义应用程序的主类，你必须设置<code class="literal">mainClassName</code>属性，如下所示<br>To define the main-class for the application you have to set the <code class="literal">mainClassName</code> property as shown below</p>
+    <div class="example">
+     <a name="useApplicationPlugin"></a>
+     <p class="title"><b>示例 45.2. 配置应用程序的主类 - Example&nbsp;45.2.&nbsp;Configure the application main class</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">mainClassName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.sample.Main"</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>然后，你可以通过运行 <strong class="userinput"><code>gradle run</code></strong>来运行这个应用程序。 Gradle将负责构建应用程序类及其运行时依赖，并使用正确的类路径来启动应用程序。 你可以使用 <strong class="userinput"><code>gradle run --debug-jvm</code></strong> 来以调试方式启动应用程序（请参阅 <a class="ulink" href="../javadoc/org/gradle/api/tasks/JavaExec.html#setDebug(boolean)" target="_top"><code class="classname">JavaExec.setDebug()</code></a>）。 <br>Then, you can run the application by running <strong class="userinput"><code>gradle run</code></strong>. Gradle will take care of building the application classes, along with their runtime dependencies, and starting the application with the correct classpath. You can launch the application in debug mode with <strong class="userinput"><code>gradle run --debug-jvm</code></strong> (see <a class="ulink" href="../javadoc/org/gradle/api/tasks/JavaExec.html#setDebug(boolean)" target="_top"><code class="classname">JavaExec.setDebug()</code></a>).</p>
+    <p>该插件还可以为你的应用程序构建分发。 分发将会把这个应用程序的运行时依赖和一些操作系统特定的启动脚本打包在一起。 所有存储在 <code class="filename">src/dist</code> 中的文件都将添加到分发的根目录中。你可以运行 <strong class="userinput"><code>gradle installApp</code></strong> 以在 <code class="filename">build/install/<em class="replaceable"><code>projectName</code></em></code>中创建应用程序的镜像。你可以运行 <strong class="userinput"><code>gradle distZip</code></strong> 来创建一个包含分发的ZIP。 <br>The plugin can also build a distribution for your application. The distribution will package up the runtime dependencies of the application along with some OS specific start scripts. All files stored in <code class="filename">src/dist</code> will be added to the root of the distribution. You can run <strong class="userinput"><code>gradle installApp</code></strong> to create an image of the application in <code class="filename">build/install/<em class="replaceable"><code>projectName</code></em></code>. You can run <strong class="userinput"><code>gradle distZip</code></strong> to create a ZIP containing the distribution.</p>
+    <p> 如果你的 Java 应用程序需要一组特定的 JVM 设置或系统属性，你可以配置<code class="literal">applicationDefaultJvmArgs</code> 属性。这些 JVM 参数会被应用于 <code class="literal">run</code> 任务，并且在你的分发生成的启动脚本也会考虑到它。 <br>If your Java application requires a specific set of JVM settings or system properties, you can configure the <code class="literal">applicationDefaultJvmArgs</code> property. These JVM arguments are applied to the <code class="literal">run</code> task and also considered in the generated start scripts of your distribution.</p>
+    <div class="example">
+     <a name="configureApplicationDefaultJvmArgs"></a>
+     <p class="title"><b>示例 45.3. 配置默认 JVM 设置 - Example&nbsp;45.3.&nbsp;Configure default JVM settings</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">applicationDefaultJvmArgs = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"-Dgreeting.language=en"</span>]</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N147FF"></a>45.2. 任务</h2>
+       <h4 class="title"><a name="N147FF"></a>45.2.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>应用程序插件向项目添加了以下任务。<br>The Application plugin adds the following tasks to the project.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 45.1. 应用程序插件——任务 - Table&nbsp;45.1.&nbsp;Application plugin - tasks</b></p>
+     <div class="table-contents">
+      <table id="N14804">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">run</code> </td> 
+         <td> <code class="literal">classes</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.JavaExec.html" target="_top"><code class="classname">JavaExec</code></a></td> 
+         <td>启动应用程序。<br>Starts the application.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">startScripts</code> </td> 
+         <td> <code class="literal">jar</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.application.CreateStartScripts.html" target="_top"><code class="classname">CreateStartScripts</code></a></td> 
+         <td>创建操作系统特定的脚本以作为 JVM 应用程序运行项目。<br>Creates OS specific scripts to run the project as a JVM application.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">installApp</code> </td> 
+         <td> <code class="literal">jar</code>, <code class="literal">startScripts</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Sync.html" target="_top"><code class="classname">Sync</code></a></td> 
+         <td>将应用程序安装到指定的目录。<br>Installs the application into a specified directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">distZip</code> </td> 
+         <td> <code class="literal">jar</code>, <code class="literal">startScripts</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a></td> 
+         <td>创建包含运行时库和操作系统特定的脚本的完整分发 ZIP 归档。<br>Creates a full distribution ZIP archive including runtime libraries and OS specific scripts.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">distTar</code> </td> 
+         <td> <code class="literal">jar</code>, <code class="literal">startScripts</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a></td> 
+         <td>创建包含运行时库和操作系统特定的脚本的完整分发 TAR 归档。<br>Creates a full distribution TAR archive including runtime libraries and OS specific scripts.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N14892"></a>45.3. 约定属性</h2>
+       <h4 class="title"><a name="N14892"></a>45.3.&nbsp;Convention properties</h4>
+      </div>
+     </div>
+    </div>
+    <p>应用程序插件向项目添加了一些属性，以用于配置其行为。请参阅<a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> 。 <br>The application plugin adds some properties to the project, which you can use to configure its behaviour. See <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a>.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="application_distribution_resources"></a>45.4. 在分发中包含其他资源</h2>
+       <h4 class="title"><a name="application_distribution_resources"></a>45.4.&nbsp;Including other resources in the distribution</h4>
+      </div>
+     </div>
+    </div>
+    <p> <code class="literal">applicationDistribution</code>是插件添加的约定属性之一，它是一个 <a class="ulink" href="../javadoc/org/gradle/api/file/CopySpec.html" target="_top"><code class="classname">CopySpec</code></a>。这个副本规范在 <code class="literal">installApp</code> 和 <code class="literal">distZip</code> 任务中会用到，作为要包含在分发中的内容的描述。在分发中，以上将启动脚本复制到 <code class="filename">bin</code> 目录和 <code class="filename">lib</code> 的必要jar中，也会复制 <code class="filename">src/dist</code> 目录中的所有文件。如果要在分发中包含任何的静态文件，只需要把它们放在 <code class="filename">src/dist</code> 目录中。 <br>One of the convention properties added by the plugin is <code class="literal">applicationDistribution</code> which is a <a class="ulink" href="../javadoc/org/gradle/api/file/CopySpec.html" target="_top"><code class="classname">CopySpec</code></a>. This specification is used by the <code class="literal">installApp</code> and <code class="literal">distZip</code> tasks as the specification of what is to be include in the distribution. Above copying the starting scripts to the <code class="filename">bin</code> dir and necessary jars to <code class="filename">lib</code> in the distribution, all of the files from the <code class="filename">src/dist</code> directory are also copied. To include any static files in the distribution, simply arrange them in the <code class="filename">src/dist</code> directory.</p>
+    <p> 如果你的项目生成要在分发中的文件，比如文档，你可以通过把它们添加到<code class="literal">applicationDistribution</code>副本规范来将这些文件添加到分发中。 <br>If your project generates files to be included in the distribution, e.g. documentation, you can add these files to the distribution by adding to the <code class="literal">applicationDistribution</code> copy spec.</p>
+    <div class="example">
+     <a name="includeTaskOutputInApplicationDistribution"></a>
+     <p class="title"><b>示例 45.4. 在应用程序的分发中包含其他任务的输出 - Example&nbsp;45.4.&nbsp;Include output from other tasks in the application distribution</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task createDocs {
     def docs = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/docs"</span>)
     outputs.dir docs
     doLast {
@@ -82,10 +171,17 @@
 
 applicationDistribution.from(createDocs) {
     into <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"docs"</span>
-}</pre></div></div><br class="example-break"><p>
-                By specifying that the distribution should include the task's output files (see <a class="xref" href="more_about_tasks.html#sec:task_inputs_outputs">Section&nbsp;15.9.1, &ldquo;Declaring a task's inputs and outputs&rdquo;</a>), Gradle knows 
-                that the task that produces the files must be invoked before the distribution can be assembled and will take care of this for you.
-            </p><div class="example"><a name="dependentTaskForApplicationDistributionOutput"></a><p class="title"><b>Example&nbsp;45.5.&nbsp;Automatically creating files for distribution</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle distZip</code></strong></p><pre class="screen">&gt; gradle distZip
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 通过指定分布应包含的任务的输出文件（见<a class="xref" href="more_about_tasks.html#sec:task_inputs_outputs">第15.9.1节，《声明任务的输入和输出》</a>），Gradle 将知道在组装分发前必须调用哪些生产文件的任务，并且会为你处理好。 <br>By specifying that the distribution should include the task's output files (see <a class="xref" href="more_about_tasks.html#sec:task_inputs_outputs">Section&nbsp;15.9.1, “Declaring a task's inputs and outputs”</a>), Gradle knows that the task that produces the files must be invoked before the distribution can be assembled and will take care of this for you.</p>
+    <div class="example">
+     <a name="dependentTaskForApplicationDistributionOutput"></a>
+     <p class="title"><b>示例 45.5. 自动创建要分发的文件 - Example&nbsp;45.5.&nbsp;Automatically creating files for distribution</b></p>
+     <div class="example-contents">
+      <p><strong class="userinput"> <code>gradle distZip</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle distZip</code></strong></p>
+      <pre class="screen">&gt; gradle distZip
 :createDocs
 :compileJava
 :processResources UP-TO-DATE
@@ -96,4 +192,22 @@ applicationDistribution.from(createDocs) {
 
 BUILD SUCCESSFUL
 
-Total time: 1 secs</pre></div></div><br class="example-break"></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="distribution_plugin.html" title="Chapter&nbsp;44.&nbsp;The Distribution Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="javaLibraryDistribution_plugin.html" title="Chapter&nbsp;46.&nbsp;The Java Library Distribution Plugin">Next</a></div></div></div></body></html>
+Total time: 1 secs</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="distribution_plugin.html" title="第四十四章. 分发插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="javaLibraryDistribution_plugin.html" title="第46章. Java 库发布插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
