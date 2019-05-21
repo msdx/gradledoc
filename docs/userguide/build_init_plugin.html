@@ -1,113 +1,228 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;47.&nbsp;Build Init Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="javaLibraryDistribution_plugin.html" title="Chapter&nbsp;46.&nbsp;The Java Library Distribution Plugin"><link rel="next" href="wrapper_plugin.html" title="Chapter&nbsp;48.&nbsp;Wrapper Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="javaLibraryDistribution_plugin.html" title="Chapter&nbsp;46.&nbsp;The Java Library Distribution Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="wrapper_plugin.html" title="Chapter&nbsp;48.&nbsp;Wrapper Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="build_init_plugin"></a>Chapter&nbsp;47.&nbsp;Build Init Plugin</h1></div></div></div><div class="note"><p>
-            The Build Init plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.
-        </p></div><p>
-        The Gradle Build Init plugin can be used to bootstrap the process of creating a new Gradle build. It supports creating brand new projects of different types
-        as well as converting existing builds (e.g. An Apache Maven build) to be Gradle builds.
-    </p><p>
-        Gradle plugins typically need to be
-        <em class="firstterm">applied</em>
-        to a project before they can be used (see <a class="xref" href="plugins.html#sec:using_plugins">Section&nbsp;21.1, &ldquo;Applying plugins&rdquo;</a>).
-        The Build Init plugin is an automatically applied plugin, which means you do not need to apply it explicitly.
-        To use the plugin, simply execute the task named
-        <code class="literal">init</code>
-        where you would like to create the Gradle build.
-        There is no need to create a &ldquo;stub&rdquo;
-        <code class="literal">build.gradle</code>
-        file in order to apply the plugin.
-    </p><p>
-        It also leverages the
-        <code class="literal">wrapper</code>
-        task from the Wrapper plugin (see <a class="xref" href="wrapper_plugin.html">Chapter&nbsp;48, <i>Wrapper Plugin</i></a>),
-        which means that the Gradle Wrapper will also be installed into the project.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N14979"></a>47.1.&nbsp;Tasks</h2></div></div></div><p>The plugin adds the following tasks to the project:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;47.1.&nbsp;Build Init plugin - tasks</b></p><div class="table-contents"><table id="N1497E"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">init</code>
-                </td>
-                <td>
-                    <code class="literal">wrapper</code>
-                </td>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.buildinit.tasks.InitBuild.html" target="_top"><code class="classname">InitBuild</code></a>
-                </td>
-                <td>Generates a Gradle project.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">wrapper</code>
-                </td>
-                <td>-</td>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a>
-                </td>
-                <td>Generates Gradle wrapper files.
-                </td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N149BF"></a>47.2.&nbsp;What to set up</h2></div></div></div><p>The
-            <code class="literal">init</code>
-            supports different build setup <em class="firstterm">types</em>. The type is specified by supplying a
-            <code class="literal">--type</code>
-            argument value. For example, to create a Java library project simply execute:
-            <code class="literal">gradle init --type java-library</code>.
-        </p><p>
-            If a
-            <code class="literal">--type</code>
-            parameter is not supplied, Gradle will attempt to infer the type from the environment. For example, it will
-            infer a type value of "<code class="literal">pom</code>" if it finds a
-            <code class="literal">pom.xml</code>
-            to convert to a Gradle build.
-        </p><p>
-            If the type could not be inferred, the type "<code class="literal">basic</code>" will be used.
-        </p><p>All build setup types include the setup of the Gradle Wrapper.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N149E2"></a>47.3.&nbsp;Build init types</h2></div></div></div><div class="note">
-            As this plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>, only 3 build init types are currently supported.
-            More types will be added in future Gradle releases.
-        </div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N149EB"></a>47.3.1.&nbsp;"<code class="literal">pom</code>" (Maven conversion)
-            </h3></div></div></div><p>
-                The "<code class="literal">pom</code>" type can be used to convert an Apache Maven build to a Gradle build.
-                This works by converting the POM to one or more Gradle files.
-                It is only able to be used if there is a valid "<code class="literal">pom.xml</code>"
-                file in the directory that the
-                <code class="literal">init</code>
-                task is invoked in. This type will be automatically inferred if such a file exists.
-            </p><p>
-                The Maven conversion implementation was inspired by the
-                <a class="ulink" href="https://github.com/jbaruch/maven2gradle" target="_top">maven2gradle tool</a>
-                that was originally developed by Gradle community members.
-            </p><p>
-                The conversion process has the following features:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Uses effective POM and effective settings (support for POM inheritance, dependency management, properties)</li><li class="listitem">Supports both single module and multimodule projects</li><li class="listitem">Supports custom module names (that differ from directory names)</li><li class="listitem">Generates general metadata - id, description and version</li><li class="listitem">Applies maven, java and war plugins (as needed)</li><li class="listitem">Supports packaging war projects as jars if needed</li><li class="listitem">Generates dependencies (both external and inter-module)</li><li class="listitem">Generates download repositories (inc. local Maven repository)</li><li class="listitem">Adjusts java compiler settings</li><li class="listitem">Supports packaging of sources and tests</li><li class="listitem">Supports TestNG runner</li><li class="listitem">Generates global exclusions from Maven enforcer plugin settings</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N14A1D"></a>47.3.2.&nbsp;"<code class="literal">java-library</code>"
-            </h3></div></div></div><p>
-                The "<code class="literal">java-library</code>" build init type is not inferable. It must be explicitly specified.
-            </p><p>
-                It has the following features:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Uses the "<code class="literal">java</code>" plugin
-                </li><li class="listitem">Uses the "
-                    <code class="literal">mavenCentral()</code>
-                    dependency repository
-                </li><li class="listitem">Uses <a class="ulink" href="http://junit.org" target="_top">JUnit</a>
-                 for testing</li><li class="listitem">Has directories in the conventional locations for source code</li><li class="listitem">Contains a sample class and unit test, if there are no existing source or test files</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N14A3F"></a>47.3.3.&nbsp;"<code class="literal">scala-library</code>"
-            </h3></div></div></div><p>
-                The "<code class="literal">scala-library</code>" build init type is not inferable. It must be explicitly specified.
-            </p><p>
-                It has the following features:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Uses the "<code class="literal">scala</code>" plugin
-                </li><li class="listitem">Uses the "
-                    <code class="literal">mavenCentral()</code>
-                    dependency repository
-                </li><li class="listitem">Uses Scala 2.10</li><li class="listitem">Uses <a class="ulink" href="http://www.scalatest.org" target="_top">ScalaTest</a> is used for testing</li><li class="listitem">Has directories in the conventional locations for source code</li><li class="listitem">Contains a sample scala class and an according ScalaTest test suite, if there are no existing source or test files</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N14A63"></a>47.3.4.&nbsp;"<code class="literal">groovy-library</code>"
-            </h3></div></div></div><p>
-                The "<code class="literal">groovy-library</code>" build init type is not inferable. It must be explicitly specified.
-            </p><p>
-                It has the following features:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Uses the "<code class="literal">groovy</code>" plugin
-                </li><li class="listitem">Uses the "
-                    <code class="literal">mavenCentral()</code>
-                    dependency repository
-                </li><li class="listitem">Uses Groovy 2.x </li><li class="listitem">Uses <a class="ulink" href="http://code.google.com/p/spock/" target="_top">Spock testing framework</a> for testing</li><li class="listitem">Has directories in the conventional locations for source code</li><li class="listitem">Contains a sample groovy class and an according Spock specification, if there are no existing source or test files</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N14A87"></a>47.3.5.&nbsp;"basic"</h3></div></div></div><p>
-                The "<code class="literal">basic</code>" build init type is useful for creating a fresh new Gradle project.
-                It creates a sample
-                <code class="literal">build.gradle</code>
-                file, with comments and links to help get started.
-            </p><p>This type is used when no type was explicitly specified, and no type could be inferred.</p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="javaLibraryDistribution_plugin.html" title="Chapter&nbsp;46.&nbsp;The Java Library Distribution Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="wrapper_plugin.html" title="Chapter&nbsp;48.&nbsp;Wrapper Plugin">Next</a></div></div></div></body></html>
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第四十七章.&nbsp;构建初始化插件 - Chapter&nbsp;47.&nbsp;Build Init Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="javaLibraryDistribution_plugin.html" title="第46章. Java 库发布插件">
+  <link rel="next" href="wrapper_plugin.html" title="第四十八章.&nbsp;包装器插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="javaLibraryDistribution_plugin.html" title="第46章. Java 库发布插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="wrapper_plugin.html" title="第四十八章.&nbsp;包装器插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="build_init_plugin"></a>第四十七章.&nbsp;构建初始化插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="build_init_plugin"></a>Chapter&nbsp;47.&nbsp;Build Init Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <div class="note">
+    <p> 构建初始化插件目前是一个<a class="link" href="feature_lifecycle.html">试验性</a>插件。注意，在以后的 Gradle 版本中，其 DSL 和其他配置可能会有变化。 <br>The Build Init plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.</p>
+   </div>
+   <p> Gradle 构建初始化插件可以用于引导创建一个新的 Gradle 构建的过程。它支持创建不同类型的全新项目，以及将现有的构建（如 Apache Maven 构建）转换成 Gradle 构建。 <br>The Gradle Build Init plugin can be used to bootstrap the process of creating a new Gradle build. It supports creating brand new projects of different types as well as converting existing builds (e.g. An Apache Maven build) to be Gradle builds.</p>
+   <p> 通常情况下，Gradle插件需要在 <em class="firstterm">应用</em> 在项目之后才能使用（请参阅 <a class="xref" href="plugins.html#sec:using_plugins">第 21.1节， 《应用插件》</a>）。构建初始化插件是一个自动应用的插件，这意味着你不需要显式地应用该插件。 要使用这个插件，只需要在你想要创建Gradle构建的地方执行 <code class="literal">init</code> 任务。 在这里，你不需要创建一个“存根” <code class="literal">build.gradle</code> 文件来应用这个插件。 <br>Gradle plugins typically need to be <em class="firstterm">applied</em> to a project before they can be used (see <a class="xref" href="plugins.html#sec:using_plugins">Section&nbsp;21.1, “Applying plugins”</a>). The Build Init plugin is an automatically applied plugin, which means you do not need to apply it explicitly. To use the plugin, simply execute the task named <code class="literal">init</code> where you would like to create the Gradle build. There is no need to create a “stub” <code class="literal">build.gradle</code> file in order to apply the plugin.</p>
+   <p> 它还利用了 Wrapper 插件中的 <code class="literal">wrapper</code> 任务（见<a class="xref" href="wrapper_plugin.html">第 48章，《<i>Wrapper 插件</i></a>》），这意味着 Gradle Wrapper 也将被安装到该项目。 <br>It also leverages the <code class="literal">wrapper</code> task from the Wrapper plugin (see <a class="xref" href="wrapper_plugin.html">Chapter&nbsp;48, <i>Wrapper Plugin</i></a>), which means that the Gradle Wrapper will also be installed into the project.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N14979"></a>47.1. 任务</h2>
+       <h4 class="title"><a name="N14979"></a>47.1.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>该插件向项目中添加以下任务：<br>The plugin adds the following tasks to the project:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 47.1. 构建初始化插件——任务 - Table&nbsp;47.1.&nbsp;Build Init plugin - tasks</b></p>
+     <div class="table-contents">
+      <table id="N1497E">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">init</code> </td> 
+         <td> <code class="literal">wrapper</code> </td> 
+         <td> <a class="ulink" href="../dsl/org.gradle.buildinit.tasks.InitBuild.html" target="_top"><code class="classname">InitBuild</code></a> </td> 
+         <td>生成一个 Gradle 项目。<br>Generates a Gradle project.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">wrapper</code> </td> 
+         <td>-</td> 
+         <td> <a class="ulink" href="../dsl/org.gradle.api.tasks.wrapper.Wrapper.html" target="_top"><code class="classname">Wrapper</code></a> </td> 
+         <td>生成 Gradle wrapper 文件。 <br>Generates Gradle wrapper files.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N149BF"></a>47.2. 如何设置</h2>
+       <h4 class="title"><a name="N149BF"></a>47.2.&nbsp;What to set up</h4>
+      </div>
+     </div>
+    </div>
+    <p><code class="literal">init</code> 支持不同的构建设置 <em class="firstterm">类型</em>。类型通过提供 <code class="literal">--type</code> 参数值来指定。例如，要创建Java库项目，只需执行：<code class="literal">gradle init --type java-library</code>。 <br>The <code class="literal">init</code> supports different build setup <em class="firstterm">types</em>. The type is specified by supplying a <code class="literal">--type</code> argument value. For example, to create a Java library project simply execute: <code class="literal">gradle init --type java-library</code>.</p>
+    <p> 如果没有提供 <code class="literal">--type</code> 参数，Gradle将尝试从环境中推断类型。例如，如果它发现 <code class="literal">pom.xml</code>，那么它将推断出一个“<code class="literal">pom</code>”的类型值，来转换为Gradle构建。 <br>If a <code class="literal">--type</code> parameter is not supplied, Gradle will attempt to infer the type from the environment. For example, it will infer a type value of "<code class="literal">pom</code>" if it finds a <code class="literal">pom.xml</code> to convert to a Gradle build.</p>
+    <p> 如果类型无法推断，将使用“<code class="literal">basic</code>”类型。 <br>If the type could not be inferred, the type "<code class="literal">basic</code>" will be used.</p>
+    <p>所有构建设置类型都包括 Gradle Wrapper 的设置。<br>All build setup types include the setup of the Gradle Wrapper.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N149E2"></a>47.3. 构建初始化类型</h2>
+       <h4 class="title"><a name="N149E2"></a>47.3.&nbsp;Build init types</h4>
+      </div>
+     </div>
+    </div>
+    <div class="note">
+      由于此插件当前是 
+     <a class="link" href="feature_lifecycle.html">实验性</a>阶段，因此目前仅支持3种构建初始化类型。 在未来的Gradle发行版中，将会添加更多的类型。 
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N149EB"></a>47.3.1.&nbsp;“<code class="literal">pom</code>”（Maven 转换） </h3>
+        <h5 class="title"><a name="N149EB"></a>47.3.1.&nbsp;"<code class="literal">pom</code>" (Maven conversion)</h5>
+       </div>
+      </div>
+     </div>
+     <p> “<code class="literal">pom</code>”类型可以被用于把一个 Apache Maven 构建转换为一个 Gradle 构建。这是通过将POM转换为一个或多个Gradle文件。它仅用于当调用 <code class="literal">init</code> 任务的目录有一个有效的“<code class="literal">pom.xml</code>”文件的时候。如果存在一个这样的文件，那么将会自动推断类型。 <br>The "<code class="literal">pom</code>" type can be used to convert an Apache Maven build to a Gradle build. This works by converting the POM to one or more Gradle files. It is only able to be used if there is a valid "<code class="literal">pom.xml</code>" file in the directory that the <code class="literal">init</code> task is invoked in. This type will be automatically inferred if such a file exists.</p>
+     <p> Maven 转换实现受 Gradle 社区成员最初开发的<a class="ulink" href="https://github.com/jbaruch/maven2gradle" target="_top">maven2gradle tool</a>启发。 <br>The Maven conversion implementation was inspired by the <a class="ulink" href="https://github.com/jbaruch/maven2gradle" target="_top">maven2gradle tool</a> that was originally developed by Gradle community members.</p>
+     <p> 该转换过程具有以下功能： <br>The conversion process has the following features:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem">使用有效的 POM 和有效设置（支持 POM 继承、 依赖管理、 属性）<br>Uses effective POM and effective settings (support for POM inheritance, dependency management, properties)</li>
+       <li class="listitem">支持单个模块和多模块项目<br>Supports both single module and multimodule projects</li>
+       <li class="listitem">支持自定义模块名称 （与目录名不同）<br>Supports custom module names (that differ from directory names)</li>
+       <li class="listitem">生成通用元数据——id，description 和 version<br>Generates general metadata - id, description and version</li>
+       <li class="listitem">应用maven，java 和 war 插件（根据需要）<br>Applies maven, java and war plugins (as needed)</li>
+       <li class="listitem">支持把 war 项目打包为 jar（如果需要）<br>Supports packaging war projects as jars if needed</li>
+       <li class="listitem">生成依赖（包括外部的和模块间的）<br>Generates dependencies (both external and inter-module)</li>
+       <li class="listitem">生成下载仓库（包括本地Maven仓库）<br>Generates download repositories (inc. local Maven repository)</li>
+       <li class="listitem">调整 java 编译器设置<br>Adjusts java compiler settings</li>
+       <li class="listitem">支持源代码和测试代码的打包<br>Supports packaging of sources and tests</li>
+       <li class="listitem">支持 TestNG 运行器<br>Supports TestNG runner</li>
+       <li class="listitem">从 Maven enforcer 插件设置生成全局的 exclusions<br>Generates global exclusions from Maven enforcer plugin settings</li>
+      </ul>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N14A1D"></a>47.3.2.&nbsp;“<code class="literal">java-library</code>” </h3>
+        <h5 class="title"><a name="N14A1D"></a>47.3.2.&nbsp;"<code class="literal">java-library</code>"</h5>
+       </div>
+      </div>
+     </div>
+     <p> “<code class="literal">java-library</code>”构建初始化类型不是可推断的，它必须显式指定。 <br>The "<code class="literal">java-library</code>" build init type is not inferable. It must be explicitly specified.</p>
+     <p> 它具有以下功能： <br>It has the following features:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem">使用“<code class="literal">java</code>”插件 <br>Uses the "<code class="literal">java</code>" plugin</li>
+       <li class="listitem">使用“<code class="literal">mavenCentral()</code>”依赖仓库 <br>Uses the " <code class="literal">mavenCentral()</code> dependency repository</li>
+       <li class="listitem">使用<a class="ulink" href="http://junit.org" target="_top">JUnit</a>进行测试<br>Uses <a class="ulink" href="http://junit.org" target="_top">JUnit</a> for testing</li>
+       <li class="listitem">在源代码中的约定位置有目录<br>Has directories in the conventional locations for source code</li>
+       <li class="listitem">如果没有源文件或测试文件，会包含一个示例类和单元测试<br>Contains a sample class and unit test, if there are no existing source or test files</li>
+      </ul>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N14A3F"></a>47.3.3.&nbsp;“<code class="literal">scala-library</code>” </h3>
+        <h5 class="title"><a name="N14A3F"></a>47.3.3.&nbsp;"<code class="literal">scala-library</code>"</h5>
+       </div>
+      </div>
+     </div>
+     <p> “<code class="literal">scala-library</code>”构建初始化类型不是可推断的，它必须显式指定。 <br>The "<code class="literal">scala-library</code>" build init type is not inferable. It must be explicitly specified.</p>
+     <p> 它具有以下功能： <br>It has the following features:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem">使用“<code class="literal">scala</code>”插件 <br>Uses the "<code class="literal">scala</code>" plugin</li>
+       <li class="listitem">使用“<code class="literal">mavenCentral()</code>”依赖仓库 <br>Uses the " <code class="literal">mavenCentral()</code> dependency repository</li>
+       <li class="listitem">使用 Scala 2.10<br>Uses Scala 2.10</li>
+       <li class="listitem">使用<a class="ulink" href="http://www.scalatest.org" target="_top">ScalaTest</a>进行测试<br>Uses <a class="ulink" href="http://www.scalatest.org" target="_top">ScalaTest</a> is used for testing</li>
+       <li class="listitem">在源代码中的约定位置有目录<br>Has directories in the conventional locations for source code</li>
+       <li class="listitem">如果不存在源文件或测试文件，会包含一个示例 scala 类和一个相应的 ScalaTest 测试套件<br>Contains a sample scala class and an according ScalaTest test suite, if there are no existing source or test files</li>
+      </ul>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N14A63"></a>47.3.4.&nbsp;“<code class="literal">groovy-library</code>” </h3>
+        <h5 class="title"><a name="N14A63"></a>47.3.4.&nbsp;"<code class="literal">groovy-library</code>"</h5>
+       </div>
+      </div>
+     </div>
+     <p> “<code class="literal">groovy-library</code>”构建初始化类型不是可推断的，它必须显式指定。 <br>The "<code class="literal">groovy-library</code>" build init type is not inferable. It must be explicitly specified.</p>
+     <p> 它具有以下功能： <br>It has the following features:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem">使用“<code class="literal">groovy</code>”插件 <br>Uses the "<code class="literal">groovy</code>" plugin</li>
+       <li class="listitem">使用“<code class="literal">mavenCentral()</code>”依赖仓库 <br>Uses the " <code class="literal">mavenCentral()</code> dependency repository</li>
+       <li class="listitem">使用 Groovy 2.x <br>Uses Groovy 2.x</li>
+       <li class="listitem">使用 <a class="ulink" href="http://code.google.com/p/spock/" target="_top">Spock testing framework</a> 进行测试<br>Uses <a class="ulink" href="http://code.google.com/p/spock/" target="_top">Spock testing framework</a> for testing</li>
+       <li class="listitem">在源代码中的约定位置有目录<br>Has directories in the conventional locations for source code</li>
+       <li class="listitem">如果不存在源文件或测试文件，会包含一个示例 groovy 类和一个相应的 Spock 规范<br>Contains a sample groovy class and an according Spock specification, if there are no existing source or test files</li>
+      </ul>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N14A87"></a>47.3.5.&nbsp;“basic”</h3>
+        <h5 class="title"><a name="N14A87"></a>47.3.5.&nbsp;"basic"</h5>
+       </div>
+      </div>
+     </div>
+     <p> “<code class="literal">basic</code>”构建初始化类型对于创建新的Gradle项目很有用。它会创建一个样本 <code class="literal">build.gradle</code> 文件，带有注释和链接以帮助入门。 <br>The "<code class="literal">basic</code>" build init type is useful for creating a fresh new Gradle project. It creates a sample <code class="literal">build.gradle</code> file, with comments and links to help get started.</p>
+     <p>当未显式指定类型，并且无法推断出类型时，会使用该类型。<br>This type is used when no type was explicitly specified, and no type could be inferred.</p>
+    </div>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="javaLibraryDistribution_plugin.html" title="第46章. Java 库发布插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="wrapper_plugin.html" title="第四十八章.&nbsp;包装器插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
