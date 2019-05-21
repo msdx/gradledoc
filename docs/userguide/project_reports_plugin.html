@@ -1,121 +1,201 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;41.&nbsp;The Project Report Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="antlr_plugin.html" title="Chapter&nbsp;40.&nbsp;The ANTLR Plugin"><link rel="next" href="announce_plugin.html" title="Chapter&nbsp;42.&nbsp;The Announce Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="antlr_plugin.html" title="Chapter&nbsp;40.&nbsp;The ANTLR Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="announce_plugin.html" title="Chapter&nbsp;42.&nbsp;The Announce Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="project_reports_plugin"></a>Chapter&nbsp;41.&nbsp;The Project Report Plugin</h1></div></div></div><p>The Project report plugin adds some tasks to your project which generate reports containing useful
-        information about your build. Those tasks generate exactly the same content as the command line reports triggered
-        by <strong class="userinput"><code>gradle tasks</code></strong>, <strong class="userinput"><code>gradle dependencies</code></strong> and
-        <strong class="userinput"><code>gradle properties</code></strong> (see <a class="xref" href="tutorial_gradle_command_line.html#sec:obtaining_information_about_your_build">Section&nbsp;11.6, &ldquo;Obtaining information about your build&rdquo;</a>).
-        In contrast to the command line reports, the report plugin generates the reports into a file. There is also an
-        aggregating task that depends on all report tasks added by the plugin.
-    </p><p>
-        We plan to add much more to the existing reports and create additional ones in future releases of Gradle.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N14432"></a>41.1.&nbsp;Usage</h2></div></div></div><p>To use the Project report plugin, include in your build script:</p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project-report'</span></pre></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1443A"></a>41.2.&nbsp;Tasks</h2></div></div></div><p>The project report plugin defines the following tasks:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;41.1.&nbsp;Project report plugin - tasks</b></p><div class="table-contents"><table id="N1443F"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">dependencyReport</code>
-                </td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.DependencyReportTask.html" target="_top"><code class="classname">DependencyReportTask</code></a></td>
-                <td>Generates the project dependency report.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">htmlDependencyReport</code>
-                </td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.reporting.dependencies.HtmlDependencyReportTask.html" target="_top"><code class="classname">HtmlDependencyReportTask</code></a></td>
-                <td>Generates an HTML dependency and dependency insight report for the project or a set of projects.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">propertyReport</code>
-                </td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.PropertyReportTask.html" target="_top"><code class="classname">PropertyReportTask</code></a></td>
-                <td>Generates the project property report.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">taskReport</code>
-                </td>
-                <td>-</td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.TaskReportTask.html" target="_top"><code class="classname">TaskReportTask</code></a></td>
-                <td>Generates the project task report.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">projectReport</code>
-                </td>
-                <td>
-                    <code class="literal">dependencyReport</code>, <code class="literal">propertyReport</code>, <code class="literal">taskReport</code>, <code class="literal">htmlDependencyReport</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td>
-                <td>Generates all project reports.</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N144C1"></a>41.3.&nbsp;Project layout</h2></div></div></div><p>The project report plugin does not require any particular project layout.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N144C6"></a>41.4.&nbsp;Dependency management</h2></div></div></div><p>The project report plugin does not define any dependency configurations.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N144CB"></a>41.5.&nbsp;Convention properties</h2></div></div></div><p>The project report defines the following convention properties:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;41.2.&nbsp;Project report plugin - convention properties</b></p><div class="table-contents"><table id="N144D0"><thead><tr>
-                    <td>Property name</td>
-                    <td>Type</td>
-                    <td>Default value</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-        <td>
-            <code class="literal">reportsDirName</code>
-        </td>
-        <td>
-            <code class="classname">String</code>
-        </td>
-        <td>
-            <code class="filename">reports</code>
-        </td>
-        <td>
-            The name of the directory to generate reports into, relative to the build directory.
-        </td>
-    </tr><tr>
-        <td>
-            <code class="literal">reportsDir</code>
-        </td>
-        <td>
-            <code class="classname">File</code> (read-only)
-        </td>
-        <td>
-            <code class="filename"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>reportsDirName</code></em></code>
-        </td>
-        <td>
-            The directory to generate reports into.
-        </td>
-    </tr><tr>
-                <td>
-                    <code class="literal">projects</code>
-                </td>
-                <td>
-                    <code class="classname">Set&lt;Project&gt;</code>
-                </td>
-                <td>
-                    <code class="literal">A one element set with the project the plugin was applied to.</code>
-                </td>
-                <td>
-                    The projects to generate the reports for.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">projectReportDirName</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td>
-                    <code class="literal">project</code>
-                </td>
-                <td>
-                    The name of the directory to generate the project report into, relative to the reports directory.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">projectReportDir</code>
-                </td>
-                <td>
-                    <code class="classname">File</code> (read-only)
-                </td>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>reportsDir</code></em>/<em class="replaceable"><code>projectReportDirName</code></em></code>
-                </td>
-                <td>
-                    The directory to generate the project report into.
-                </td>
-            </tr></table></div></div><p>These convention properties are provided by a convention object of type <a class="ulink" href="../dsl/org.gradle.api.plugins.ProjectReportsPluginConvention.html" target="_top"><code class="classname">ProjectReportsPluginConvention</code></a>.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="antlr_plugin.html" title="Chapter&nbsp;40.&nbsp;The ANTLR Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="announce_plugin.html" title="Chapter&nbsp;42.&nbsp;The Announce Plugin">Next</a></div></div></div></body></html>
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第四十一章. 项目报告插件 - Chapter&nbsp;41.&nbsp;The Project Report Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="antlr_plugin.html" title="第四十章. ANTLR 插件">
+  <link rel="next" href="announce_plugin.html" title="第四十二章. 公告插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="antlr_plugin.html" title="第四十章. ANTLR 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="announce_plugin.html" title="第四十二章. 公告插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="project_reports_plugin"></a>第四十一章. 项目报告插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="project_reports_plugin"></a>Chapter&nbsp;41.&nbsp;The Project Report Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <p>项目报告插件向项目添加了一些任务，用于生成包含有关构建的有用信息的报告。这些任务生成的内容，与由<strong class="userinput"><code>gradle tasks</code></strong>， <strong class="userinput"><code>gradle dependencies</code></strong>和<strong class="userinput"><code>gradle properties</code></strong> 触发的命令行报告完全相同（见<a class="xref" href="tutorial_gradle_command_line.html#sec:obtaining_information_about_your_build">第11.6节，《获取有关构建的信息》</a>）。与命令行报告相比，报告插件会将报告生成到文件中。这里还有一个聚合任务，它依赖于该插件添加的所有报告任务。 <br>The Project report plugin adds some tasks to your project which generate reports containing useful information about your build. Those tasks generate exactly the same content as the command line reports triggered by <strong class="userinput"><code>gradle tasks</code></strong>, <strong class="userinput"><code>gradle dependencies</code></strong> and <strong class="userinput"><code>gradle properties</code></strong> (see <a class="xref" href="tutorial_gradle_command_line.html#sec:obtaining_information_about_your_build">Section&nbsp;11.6, “Obtaining information about your build”</a>). In contrast to the command line reports, the report plugin generates the reports into a file. There is also an aggregating task that depends on all report tasks added by the plugin.</p>
+   <p> 我们计划在未来发布的版本中，向现有的报告添加更多的内容，并创建其他报告。 <br>We plan to add much more to the existing reports and create additional ones in future releases of Gradle.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N14432"></a>41.1. 用法</h2>
+       <h4 class="title"><a name="N14432"></a>41.1.&nbsp;Usage</h4>
+      </div>
+     </div>
+    </div>
+    <p>要使用项目报告插件，请在构建脚本中包含：<br>To use the Project report plugin, include in your build script:</p>
+    <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'project-report'</span></pre>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1443A"></a>41.2. 任务</h2>
+       <h4 class="title"><a name="N1443A"></a>41.2.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>项目报告插件定义了以下任务：<br>The project report plugin defines the following tasks:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 41.1. 项目报告插件——任务 - Table&nbsp;41.1.&nbsp;Project report plugin - tasks</b></p>
+     <div class="table-contents">
+      <table id="N1443F">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">dependencyReport</code> </td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.DependencyReportTask.html" target="_top"><code class="classname">DependencyReportTask</code></a></td> 
+         <td>生成项目依赖项报告。<br>Generates the project dependency report.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">htmlDependencyReport</code> </td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.reporting.dependencies.HtmlDependencyReportTask.html" target="_top"><code class="classname">HtmlDependencyReportTask</code></a></td> 
+         <td>为项目或项目集生成 HTML 依赖和依赖洞察报告。<br>Generates an HTML dependency and dependency insight report for the project or a set of projects.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">propertyReport</code> </td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.PropertyReportTask.html" target="_top"><code class="classname">PropertyReportTask</code></a></td> 
+         <td>生成项目属性报告。<br>Generates the project property report.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">taskReport</code> </td> 
+         <td>-</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.TaskReportTask.html" target="_top"><code class="classname">TaskReportTask</code></a></td> 
+         <td>生成项目任务报告。<br>Generates the project task report.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">projectReport</code> </td> 
+         <td> <code class="literal">dependencyReport</code>, <code class="literal">propertyReport</code>, <code class="literal">taskReport</code>, <code class="literal">htmlDependencyReport</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.Task.html" target="_top"><code class="classname">Task</code></a></td> 
+         <td>生成所有项目报告。<br>Generates all project reports.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N144C1"></a>41.3. 项目布局</h2>
+       <h4 class="title"><a name="N144C1"></a>41.3.&nbsp;Project layout</h4>
+      </div>
+     </div>
+    </div>
+    <p>项目报告插件不需要任何特定的项目布局。<br>The project report plugin does not require any particular project layout.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N144C6"></a>41.4. 依赖管理</h2>
+       <h4 class="title"><a name="N144C6"></a>41.4.&nbsp;Dependency management</h4>
+      </div>
+     </div>
+    </div>
+    <p>项目报告插件没有定义任何的依赖配置。<br>The project report plugin does not define any dependency configurations.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N144CB"></a>41.5. 约定属性</h2>
+       <h4 class="title"><a name="N144CB"></a>41.5.&nbsp;Convention properties</h4>
+      </div>
+     </div>
+    </div>
+    <p>项目报告定义了以下约定属性：<br>The project report defines the following convention properties:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 41.2. 项目报告插件——约定属性 - Table&nbsp;41.2.&nbsp;Project report plugin - convention properties</b></p>
+     <div class="table-contents">
+      <table id="N144D0">
+       <thead>
+        <tr> 
+         <td>属性名称<br>Property name</td> 
+         <td>类型<br>Type</td> 
+         <td>默认值<br>Default value</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">reportsDirName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="filename">reports</code> </td> 
+         <td> 相对于构建目录，生成报告的目录的名称。 <br>The name of the directory to generate reports into, relative to the build directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">reportsDir</code> </td> 
+         <td> <code class="classname">File</code> （只读） <br><code class="classname">File</code> (read-only)</td> 
+         <td> <code class="filename"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>reportsDirName</code></em></code> </td> 
+         <td> 要生成报告的目录。 <br>The directory to generate reports into.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">projects</code> </td> 
+         <td> <code class="classname">Set&lt;Project&gt;</code> </td> 
+         <td> <code class="literal">一个单元素的集合，元素为应用了该插件的项目。</code> <br><code class="literal">A one element set with the project the plugin was applied to.</code></td> 
+         <td> 要生成报告的所有项目。 <br>The projects to generate the reports for.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">projectReportDirName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="literal">project</code> </td> 
+         <td> 生成项目报告的目录名称，它是相对于报告目录的相对路径。 <br>The name of the directory to generate the project report into, relative to the reports directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">projectReportDir</code> </td> 
+         <td> <code class="classname">File</code> （只读） <br><code class="classname">File</code> (read-only)</td> 
+         <td> <code class="literal"><em class="replaceable"><code>reportsDir</code></em>/<em class="replaceable"><code>projectReportDirName</code></em></code> </td> 
+         <td> 生成项目报告的目录。 <br>The directory to generate the project report into.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p>这些约定属性由一个<a class="ulink" href="../dsl/org.gradle.api.plugins.ProjectReportsPluginConvention.html" target="_top"><code class="classname">ProjectReportsPluginConvention</code></a> 类型的约定对象提供。<br>These convention properties are provided by a convention object of type <a class="ulink" href="../dsl/org.gradle.api.plugins.ProjectReportsPluginConvention.html" target="_top"><code class="classname">ProjectReportsPluginConvention</code></a>.</p>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="antlr_plugin.html" title="第四十章. ANTLR 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="announce_plugin.html" title="第四十二章. 公告插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
