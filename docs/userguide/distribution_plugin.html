@@ -1,123 +1,187 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;44.&nbsp;The Distribution Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="build_announcements_plugin.html" title="Chapter&nbsp;43.&nbsp;The Build Announcements Plugin"><link rel="next" href="application_plugin.html" title="Chapter&nbsp;45.&nbsp;The Application Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="build_announcements_plugin.html" title="Chapter&nbsp;43.&nbsp;The Build Announcements Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="application_plugin.html" title="Chapter&nbsp;45.&nbsp;The Application Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="distribution_plugin"></a>Chapter&nbsp;44.&nbsp;The Distribution Plugin</h1></div></div></div><div class="note"><p>
-            The distribution plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.
-        </p></div><p>
-        The distribution plugin facilitates building archives that serve as distributions of the project.
-        Distribution archives typically contain then executable application and other supporting files, such as documentation.
-	</p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N14652"></a>44.1.&nbsp;Usage</h2></div></div></div><p>To use the distribution plugin, include in your build script:</p><div class="example"><a name="useDistributionPlugin"></a><p class="title"><b>Example&nbsp;44.1.&nbsp;Using the distribution plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'distribution'</span></pre></div></div><br class="example-break"><p>
-            The plugin adds an extension named "<code class="literal">distributions</code>" of type <a class="ulink" href="../dsl/org.gradle.api.distribution.DistributionContainer.html" target="_top"><code class="classname">DistributionContainer</code></a> to the project.
-            It also creates a single distribution in the distributions container extension named "<code class="literal">main</code>".
-            If your build only produces one distribution you only need to configure this distribution (or use the defaults).
-        </p><p>
-            You can run "<strong class="userinput"><code>gradle distZip</code></strong>" to package the main distribution as a ZIP, or "<strong class="userinput"><code>gradle distTar</code></strong>" to create
-            a GZip compressed TAR file.
-            The files will be created at "<code class="literal"><em class="replaceable"><code>$buildDir</code></em>/distributions/<em class="replaceable"><code>$project.name</code></em>-<em class="replaceable"><code>$project.version</code></em>.<em class="replaceable"><code>&laquo;ext&raquo;</code></em></code>".
-        </p><p>
-            You can run "<strong class="userinput"><code>gradle installDist</code></strong>" to assembles the distribution content, uncompressed, into "<code class="literal"><em class="replaceable"><code>$buildDir</code></em>/install/<em class="replaceable"><code>main</code></em></code>".
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1468F"></a>44.2.&nbsp;Tasks</h2></div></div></div><p>The Distribution plugin adds the following tasks to the project:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;44.1.&nbsp;Distribution plugin - tasks</b></p><div class="table-contents"><table id="N14694"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">distZip</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a>
-                </td>
-                <td>
-                    Creates a ZIP archive of the distribution contents
-                </td>
-            </tr><tr>
-                <td>
-                   <code class="literal">distTar</code>
-                </td>
-                <td>
-                   <code class="literal">-</code>
-                </td>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a>
-                </td>
-                <td>
-                    Creates a ZIP archive of the distribution contents
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">installDist</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.api.tasks.Sync.html" target="_top"><code class="classname">Sync</code></a>
-                </td>
-                <td>
-                    Assembles the distribution content and installs it on the current machine
-                </td>
-            </tr></table></div></div><p>For each extra distribution set you add to the project, the distribution plugin adds the following tasks:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;44.2.&nbsp;Multiple distributions - tasks</b></p><div class="table-contents"><table id="N146F3"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>${distribution.name}</code></em>DistZip</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a>
-                </td>
-                <td>
-                    Creates a ZIP archive of the distribution contents
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>${distribution.name}</code></em>DistTar</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a>
-                </td>
-                <td>
-                    Creates a TAR archive of the distribution contents
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">install<em class="replaceable"><code>${distribution.name.capitalize()}</code></em>Dist</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.api.tasks.Sync.html" target="_top"><code class="classname">Sync</code></a>
-                </td>
-                <td>
-                    Assembles the distribution content and installs it on the current machine
-                </td>
-            </tr></table></div></div><div class="example"><a name="multipleDistribution"></a><p class="title"><b>Example&nbsp;44.2.&nbsp;Adding extra distributions</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'distribution'</span>
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第四十四章. 分发插件 - Chapter&nbsp;44.&nbsp;The Distribution Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="build_announcements_plugin.html" title="第四十三章. 构建公告插件">
+  <link rel="next" href="application_plugin.html" title="第四十五章. 应用程序插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="build_announcements_plugin.html" title="第四十三章. 构建公告插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="application_plugin.html" title="第四十五章. 应用程序插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="distribution_plugin"></a>第四十四章. 分发插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="distribution_plugin"></a>Chapter&nbsp;44.&nbsp;The Distribution Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <div class="note">
+    <p> 分发插件目前是一个<a class="link" href="feature_lifecycle.html">试验性</a>插件。注意，在以后的 Gradle 版本中，其 DSL 和其他配置可能会有变化。 <br>The distribution plugin is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.</p>
+   </div>
+   <p> 分发插件有助于构建用作项目分发的档案。分发档案通常包含可执行程序和其他支持文件，比如文档。 <br>The distribution plugin facilitates building archives that serve as distributions of the project. Distribution archives typically contain then executable application and other supporting files, such as documentation.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N14652"></a>44.1. 用法</h2>
+       <h4 class="title"><a name="N14652"></a>44.1.&nbsp;Usage</h4>
+      </div>
+     </div>
+    </div>
+    <p>要使用分发插件，请在构建脚本中包含：<br>To use the distribution plugin, include in your build script:</p>
+    <div class="example">
+     <a name="useDistributionPlugin"></a>
+     <p class="title"><b>示例 44.1. 使用分发插件 - Example&nbsp;44.1.&nbsp;Using the distribution plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'distribution'</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 本插件向项目添加了一个名为“<code class="literal">distributions</code>”的<a class="ulink" href="../dsl/org.gradle.api.distribution.DistributionContainer.html" target="_top"><code class="classname">DistributionContainer</code></a>类型的扩展。它还在分发容器扩展中创建了一个名为“<code class="literal">main</code>”的单个distribution。如果您的构建只生成一个分发，则你只需要配置这一个distribution（或使用默认值）。 <br>The plugin adds an extension named "<code class="literal">distributions</code>" of type <a class="ulink" href="../dsl/org.gradle.api.distribution.DistributionContainer.html" target="_top"><code class="classname">DistributionContainer</code></a> to the project. It also creates a single distribution in the distributions container extension named "<code class="literal">main</code>". If your build only produces one distribution you only need to configure this distribution (or use the defaults).</p>
+    <p> 你可以运行“<strong class="userinput"><code>gradle distZip</code></strong>”把 main distribution 打包为 ZIP，或者是运行“<strong class="userinput"><code>gradle distTar</code></strong>”来创建一个 GZip 压缩的 TAR 文件。这些文件将会创建在“<code class="literal"><em class="replaceable"><code>$buildDir</code></em>/distributions/<em class="replaceable"><code>$project.name</code></em>-<em class="replaceable"><code>$project.version</code></em>.<em class="replaceable"><code>«ext»</code></em></code>”。 <br>You can run "<strong class="userinput"><code>gradle distZip</code></strong>" to package the main distribution as a ZIP, or "<strong class="userinput"><code>gradle distTar</code></strong>" to create a GZip compressed TAR file. The files will be created at "<code class="literal"><em class="replaceable"><code>$buildDir</code></em>/distributions/<em class="replaceable"><code>$project.name</code></em>-<em class="replaceable"><code>$project.version</code></em>.<em class="replaceable"><code>«ext»</code></em></code>".</p>
+    <p> 你可以运行“<strong class="userinput"><code>gradle installDist</code></strong>”将未经压缩的分发内容组装到“<code class="literal"><em class="replaceable"><code>$buildDir</code></em>/install/<em class="replaceable"><code>main</code></em></code>”。 <br>You can run "<strong class="userinput"><code>gradle installDist</code></strong>" to assembles the distribution content, uncompressed, into "<code class="literal"><em class="replaceable"><code>$buildDir</code></em>/install/<em class="replaceable"><code>main</code></em></code>".</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1468F"></a>44.2. 任务</h2>
+       <h4 class="title"><a name="N1468F"></a>44.2.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>分发插件将以下以下任务添加到项目中：<br>The Distribution plugin adds the following tasks to the project:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 44.1. 分发插件——任务 - Table&nbsp;44.1.&nbsp;Distribution plugin - tasks</b></p>
+     <div class="table-contents">
+      <table id="N14694">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">distZip</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td> <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a> </td> 
+         <td> 创建分发内容的 ZIP 存档 <br>Creates a ZIP archive of the distribution contents</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">distTar</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td> <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a> </td> 
+         <td> 创建分发内容的 ZIP 存档 <br>Creates a ZIP archive of the distribution contents</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">installDist</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td> <a class="ulink" href="../dsl/org.gradle.api.tasks.Sync.html" target="_top"><code class="classname">Sync</code></a> </td> 
+         <td> 组装分发内容，并将其安装在当前计算机上 <br>Assembles the distribution content and installs it on the current machine</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p>对于你向项目中添加的每一个额外的分发集，分发插件都会添加以下任务：<br>For each extra distribution set you add to the project, the distribution plugin adds the following tasks:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 44.2. 多分发——任务 - Table&nbsp;44.2.&nbsp;Multiple distributions - tasks</b></p>
+     <div class="table-contents">
+      <table id="N146F3">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal"><em class="replaceable"><code>${distribution.name}</code></em>DistZip</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td> <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Zip.html" target="_top"><code class="classname">Zip</code></a> </td> 
+         <td> 创建分发内容的 ZIP 存档 <br>Creates a ZIP archive of the distribution contents</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal"><em class="replaceable"><code>${distribution.name}</code></em>DistTar</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td> <a class="ulink" href="../dsl/org.gradle.api.tasks.bundling.Tar.html" target="_top"><code class="classname">Tar</code></a> </td> 
+         <td> 创建分发内容的 TAR 文件 <br>Creates a TAR archive of the distribution contents</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">install<em class="replaceable"><code>${distribution.name.capitalize()}</code></em>Dist</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td> <a class="ulink" href="../dsl/org.gradle.api.tasks.Sync.html" target="_top"><code class="classname">Sync</code></a> </td> 
+         <td> 组装分发内容，并将其安装在当前计算机上 <br>Assembles the distribution content and installs it on the current machine</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="example">
+     <a name="multipleDistribution"></a>
+     <p class="title"><b>示例 44.2. 添加额外的分发 - Example&nbsp;44.2.&nbsp;Adding extra distributions</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'distribution'</span>
 
 version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.2'</span>
 distributions {
     custom {}
-}</pre></div></div><br class="example-break"><p>
-            This will add following tasks to the project:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">customDistZip</li><li class="listitem">customDistTar</li><li class="listitem">installCustomDist</li></ul></div><p>
-        </p><p>
-            Given that the project name is "<code class="literal">myproject</code>" and version "<code class="literal">1.2</code>", running "<strong class="userinput"><code>gradle customDistZip</code></strong>" will produce a
-            ZIP file named "<code class="literal">myproject-custom-1.2.zip</code>".
-        </p><p>
-            Running "<strong class="userinput"><code>gradle installCustomDist</code></strong>" will install the distribution contents into "<code class="literal"><em class="replaceable"><code>$buildDir</code></em>/install/custom</code>".
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N14783"></a>44.3.&nbsp;Distribution contents</h2></div></div></div><p>
-            All of the files in the "<code class="literal">src/<em class="replaceable"><code>$distribution.name</code></em>/dist</code>" directory will automatically be included in the distribution.
-            You can add additional files by configuring the <a class="ulink" href="../javadoc/org/gradle/api/distribution/Distribution.html" target="_top"><code class="classname">Distribution</code></a> object that is part of the container.
-        </p><div class="example"><a name="configureDistribution"></a><p class="title"><b>Example&nbsp;44.3.&nbsp;Configuring the main distribution</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'distribution'</span>
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 这将向项目添加以下任务： <br>This will add following tasks to the project:</p>
+    <div class="itemizedlist">
+     <ul class="itemizedlist">
+      <li class="listitem">customDistZip</li>
+      <li class="listitem">customDistTar</li>
+      <li class="listitem">installCustomDist</li>
+     </ul>
+    </div>
+    <p> </p>
+    <p> 鉴于项目的名称是“<code class="literal">myproject</code>”，版本为“<code class="literal">1.2</code>”，运行“<strong class="userinput"><code>gradle customDistZip</code></strong>”将会产生一个名为“<code class="literal">myproject-custom-1.2.zip</code>”的 ZIP 文件。 <br>Given that the project name is "<code class="literal">myproject</code>" and version "<code class="literal">1.2</code>", running "<strong class="userinput"><code>gradle customDistZip</code></strong>" will produce a ZIP file named "<code class="literal">myproject-custom-1.2.zip</code>".</p>
+    <p> 运行“<strong class="userinput"><code>gradle installCustomDist</code></strong>”将会把分发内容安装到“<code class="literal"><em class="replaceable"><code>$buildDir</code></em>/install/custom</code>”。 <br>Running "<strong class="userinput"><code>gradle installCustomDist</code></strong>" will install the distribution contents into "<code class="literal"><em class="replaceable"><code>$buildDir</code></em>/install/custom</code>".</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N14783"></a>44.3. 分发内容</h2>
+       <h4 class="title"><a name="N14783"></a>44.3.&nbsp;Distribution contents</h4>
+      </div>
+     </div>
+    </div>
+    <p> “<code class="literal">src/<em class="replaceable"><code>$distribution.name</code></em>/dist</code>”目录中的所有文件都会被自动包含在分发中。你可以通过配置作为容器中的一部分的<a class="ulink" href="../javadoc/org/gradle/api/distribution/Distribution.html" target="_top"><code class="classname">Distribution</code></a>对象来添加其他文件。 <br>All of the files in the "<code class="literal">src/<em class="replaceable"><code>$distribution.name</code></em>/dist</code>" directory will automatically be included in the distribution. You can add additional files by configuring the <a class="ulink" href="../javadoc/org/gradle/api/distribution/Distribution.html" target="_top"><code class="classname">Distribution</code></a> object that is part of the container.</p>
+    <div class="example">
+     <a name="configureDistribution"></a>
+     <p class="title"><b>示例 44.3. 配置 main distribution - Example&nbsp;44.3.&nbsp;Configuring the main distribution</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'distribution'</span>
 
 distributions {
     main {
@@ -126,9 +190,24 @@ distributions {
             from { <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/readme'</span> }
         }
     }
-}</pre></div></div><br class="example-break"><p>
-            In the example above, the content of the "<code class="literal">src/readme</code>" directory will be included in the distribution
-            (along with the files in the "<code class="literal">src/dist/main</code>" directory which are added by default).
-        </p><p>
-            The "<code class="literal">baseName</code>" property has also been changed. This will cause the distribution archives to be created with a different name.
-        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="build_announcements_plugin.html" title="Chapter&nbsp;43.&nbsp;The Build Announcements Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="application_plugin.html" title="Chapter&nbsp;45.&nbsp;The Application Plugin">Next</a></div></div></div></body></html>
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 在上面的示例中，“<code class="literal">src/readme</code>”目录的内容将被包含进 distribution（与默认添加的“<code class="literal">src/dist/main</code>”目录中的文件一起）。 <br>In the example above, the content of the "<code class="literal">src/readme</code>" directory will be included in the distribution (along with the files in the "<code class="literal">src/dist/main</code>" directory which are added by default).</p>
+    <p> “<code class="literal">baseName</code>”属性也被修改了。这将导致分发的存档以不同的名字创建。 <br>The "<code class="literal">baseName</code>" property has also been changed. This will cause the distribution archives to be created with a different name.</p>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="build_announcements_plugin.html" title="第四十三章. 构建公告插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="application_plugin.html" title="第四十五章. 应用程序插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
