@@ -1,191 +1,405 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;39.&nbsp;The IDEA Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="eclipse_plugin.html" title="Chapter&nbsp;38.&nbsp;The Eclipse Plugin"><link rel="next" href="antlr_plugin.html" title="Chapter&nbsp;40.&nbsp;The ANTLR Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="eclipse_plugin.html" title="Chapter&nbsp;38.&nbsp;The Eclipse Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="antlr_plugin.html" title="Chapter&nbsp;40.&nbsp;The ANTLR Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="idea_plugin"></a>Chapter&nbsp;39.&nbsp;The IDEA Plugin</h1></div></div></div><p>The IDEA plugin generates files that are used by <a class="ulink" href="http://www.jetbrains.com/idea/" target="_top">IntelliJ IDEA</a>, thus
-        making it possible to open the project from IDEA (<span class="guimenuitem">File</span> - <span class="guimenuitem">Open Project</span>).
-        Both external dependencies (including associated source and javadoc files) and project dependencies are considered.</p><p>What exactly the IDEA plugin generates depends on which other plugins are used:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;39.1.&nbsp;IDEA plugin behavior</b></p><div class="table-contents"><table id="N1407D"><thead><tr>
-                <td>Plugin</td><td>Description</td>
-            </tr></thead><tr>
-            <td>None</td><td>Generates an IDEA module file. Also generates an IDEA project and workspace file if the project
-            is the root project.</td>
-        </tr><tr>
-            <td>
-                <a class="link" href="java_plugin.html">Java</a>
-            </td>
-            <td>Adds Java configuration to the module and project files.</td>
-        </tr></table></div></div><p>One focus of the IDEA plugin is to be open to customization. The plugin provides a standardized set of hooks
-        for adding and removing content from the generated files.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1409D"></a>39.1.&nbsp;Usage</h2></div></div></div><p>To use the IDEA plugin, include this in your build script:</p><div class="example"><a name="useIdeaPlugin"></a><p class="title"><b>Example&nbsp;39.1.&nbsp;Using the IDEA plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'idea'</span></pre></div></div><br class="example-break"><p>The IDEA plugin adds a number of tasks to your project. The main tasks that you will use
-            are the <code class="literal">idea</code> and <code class="literal">cleanIdea</code> tasks.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N140B4"></a>39.2.&nbsp;Tasks</h2></div></div></div><p>The IDEA plugin adds the tasks shown below to a project.
-            Notice that <code class="literal">clean</code> does not depend on <code class="literal">cleanIdeaWorkspace</code>.
-            It's because workspace contains a lot of user specific temporary data and typically it is not desirable to manipulate it outside IDEA.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;39.2.&nbsp;IDEA plugin - Tasks</b></p><div class="table-contents"><table id="ideatasks"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">idea</code>
-                </td>
-                <td><code class="literal">ideaProject</code>, <code class="literal">ideaModule</code>, <code class="literal">ideaWorkspace</code></td>
-                <td><code class="literal">-</code></td>
-                <td>Generates all IDEA configuration files</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">cleanIdea</code>
-                </td>
-                <td>
-                    <code class="literal">cleanIdeaProject</code>, <code class="literal">cleanIdeaModule</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
-                <td>Removes all IDEA configuration files</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">cleanIdeaProject</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
-                <td>Removes the IDEA project file</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">cleanIdeaModule</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
-                <td>Removes the IDEA module file</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">cleanIdeaWorkspace</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td>
-                <td>Removes the IDEA workspace file</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">ideaProject</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.GenerateIdeaProject.html" target="_top"><code class="classname">GenerateIdeaProject</code></a></td>
-                <td>Generates the <code class="literal">.ipr</code> file. This task is only added to the root project.</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">ideaModule</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.GenerateIdeaModule.html" target="_top"><code class="classname">GenerateIdeaModule</code></a></td>
-                <td>Generates the <code class="literal">.iml</code> file</td>
-            </tr><tr>
-                <td>
-                    <code class="literal">ideaWorkspace</code>
-                </td>
-                <td>
-                    <code class="literal">-</code>
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.GenerateIdeaWorkspace.html" target="_top"><code class="classname">GenerateIdeaWorkspace</code></a></td>
-                <td>Generates the <code class="literal">.iws</code> file. This task is only added to the root project.</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N14198"></a>39.3.&nbsp;Configuration</h2></div></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;39.3.&nbsp;Configuration of the idea plugin</b></p><div class="table-contents"><table id="idea-configuration"><thead><tr>
-                    <td>Model</td>
-                    <td>Reference name</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaModel.html" target="_top"><code class="classname">IdeaModel</code></a>
-                </td>
-                <td><code class="literal">idea</code></td>
-                <td>Top level element that enables configuration of the idea plugin in a DSL-friendly fashion</td>
-            </tr><tr>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaProject.html" target="_top"><code class="classname">IdeaProject</code></a>
-                </td>
-                <td><code class="literal">idea.project</code></td>
-                <td>Allows configuring project information</td>
-            </tr><tr>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaModule.html" target="_top"><code class="classname">IdeaModule</code></a>
-                </td>
-                <td><code class="literal">idea.module</code></td>
-                <td>Allows configuring module information</td>
-            </tr><tr>
-                <td>
-                    <a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaWorkspace.html" target="_top"><code class="classname">IdeaWorkspace</code></a>
-                </td>
-                <td><code class="literal">idea.workspace</code></td>
-                <td>Allows configuring the workspace XML</td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N141EF"></a>39.4.&nbsp;Customizing the generated files</h2></div></div></div><p>IDEA plugin provides hooks and behavior for customizing the generated content.
-            The workspace file can effectively only be manipulated via the <code class="code">withXml</code> hook
-            because its corresponding domain object is essentially empty.</p><p>The tasks recognize existing IDEA files, and merge them with the generated content.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N141F9"></a>39.4.1.&nbsp;Merging</h3></div></div></div><p>Sections of existing IDEA files that are also the target of generated content will be amended or overwritten,
-                depending on the particular section. The remaining sections will be left as-is.</p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec:complete-overwrite"></a>39.4.1.1.&nbsp;Disabling merging with a complete overwrite</h4></div></div></div><p>To completely overwrite existing IDEA files, execute a clean task together with its corresponding generation task,
-                    for example <strong class="userinput"><code>gradle cleanIdea idea</code></strong> (in that order). If you want to make this
-                    the default behavior, add <code class="code">tasks.idea.dependsOn(cleanIdea)</code> to your build script. This makes it
-                    unnecessary to execute the clean task explicitly.
-                </p><p>Complete overwrite works equally well for individual files, for example by executing <strong class="userinput"><code>gradle cleanIdeaModule ideaModule</code></strong>.</p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1420F"></a>39.4.2.&nbsp;Hooking into the generation lifecycle</h3></div></div></div><p>The plugin provides objects modeling the sections of the metadata files
-                that are generated by Gradle. The generation lifecycle is as follows:
-                </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">The file is read; or a default version provided by Gradle is used if it does not exist</li><li class="listitem">The <code class="code">beforeMerged</code> hook is executed with a domain object representing the existing file</li><li class="listitem">The existing content is merged with the configuration inferred from the Gradle build or defined explicitly in the eclipse DSL</li><li class="listitem">The <code class="code">whenMerged</code> hook is executed with a domain object representing contents of the file to be persisted</li><li class="listitem">The <code class="code">withXml</code> hook is executed with a raw representation of the XML that will be persisted</li><li class="listitem">The final XML is persisted</li></ol></div><p>
-                The following table lists the domain object used for each of the model types:
-            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;39.4.&nbsp;Idea plugin hooks</b></p><div class="table-contents"><table id="idea-hooks"><thead><tr>
-                        <td>Model</td>
-                        <td><code class="literal">beforeMerged { arg -&gt; }</code> argument type</td>
-                        <td><code class="literal">whenMerged { arg -&gt; }</code> argument type</td>
-                        <td><code class="literal">withXml { arg -&gt; }</code> argument type</td>
-                    </tr></thead><tr>
-                    <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaProject.html" target="_top"><code class="classname">IdeaProject</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Project.html" target="_top"><code class="classname">Project</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Project.html" target="_top"><code class="classname">Project</code></a></td>
-                    <td><a class="ulink" href="../javadoc/org/gradle/api/XmlProvider.html" target="_top"><code class="classname">XmlProvider</code></a></td>
-                </tr><tr>
-                    <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaModule.html" target="_top"><code class="classname">IdeaModule</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Module.html" target="_top"><code class="classname">Module</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Module.html" target="_top"><code class="classname">Module</code></a></td>
-                    <td><a class="ulink" href="../javadoc/org/gradle/api/XmlProvider.html" target="_top"><code class="classname">XmlProvider</code></a></td>
-                </tr><tr>
-                    <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaWorkspace.html" target="_top"><code class="classname">IdeaWorkspace</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Workspace.html" target="_top"><code class="classname">Workspace</code></a></td>
-                    <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Workspace.html" target="_top"><code class="classname">Workspace</code></a></td>
-                    <td><a class="ulink" href="../javadoc/org/gradle/api/XmlProvider.html" target="_top"><code class="classname">XmlProvider</code></a></td>
-                </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sec:partial-overwrite"></a>39.4.2.1.&nbsp;Partial overwrite of existing content</h4></div></div></div><p>A <a class="link" href="eclipse_plugin.html#sec:complete-overwrite">complete overwrite</a> causes all existing content to be discarded,
-                    thereby losing any changes made directly in the IDE. The <code class="code">beforeMerged</code> hook makes it possible
-                    to overwrite just certain parts of the existing content. The following example removes all existing dependencies
-                    from the <code class="literal">Module</code> domain object:
-                    </p><div class="example"><a name="partialOverwrites"></a><p class="title"><b>Example&nbsp;39.2.&nbsp;Partial Overwrite for Module</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">idea.module.iml {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第三十九章.&nbsp;IDEA 插件 - Chapter&nbsp;39.&nbsp;The IDEA Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="eclipse_plugin.html" title="第三十八章. Eclipse 插件">
+  <link rel="next" href="antlr_plugin.html" title="第四十章. ANTLR 插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="eclipse_plugin.html" title="第三十八章. Eclipse 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="antlr_plugin.html" title="第四十章. ANTLR 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="idea_plugin"></a>第三十九章.&nbsp;IDEA 插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="idea_plugin"></a>Chapter&nbsp;39.&nbsp;The IDEA Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <p>IDEA 插件生成 <a class="ulink" href="http://www.jetbrains.com/idea/" target="_top">IntelliJ IDEA</a> 使用的文件，从而可以让项目从 IDEA 中打开（<span class="guimenuitem">File</span> - <span class="guimenuitem">Open Project</span>）。它同时考虑到了外部依赖（包括关联的源代码和 javadoc 文件）及项目依赖。<br>The IDEA plugin generates files that are used by <a class="ulink" href="http://www.jetbrains.com/idea/" target="_top">IntelliJ IDEA</a>, thus making it possible to open the project from IDEA (<span class="guimenuitem">File</span> - <span class="guimenuitem">Open Project</span>). Both external dependencies (including associated source and javadoc files) and project dependencies are considered.</p>
+   <p>IDEA 插件生成的内容具体取决于使用了哪些其他插件：<br>What exactly the IDEA plugin generates depends on which other plugins are used:</p>
+   <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+    <p class="title"><b>表 39.1. IDEA 插件行为 - Table&nbsp;39.1.&nbsp;IDEA plugin behavior</b></p>
+    <div class="table-contents">
+     <table id="N1407D">
+      <thead>
+       <tr> 
+        <td>插件<br>Plugin</td>
+        <td>描述<br>Description</td> 
+       </tr>
+      </thead>
+      <tbody>
+       <tr> 
+        <td>None</td>
+        <td>生成一个 IDEA 模块文件。如果该项目是根项目，还会生成一个 IDEA 项目和工作区文件。<br>Generates an IDEA module file. Also generates an IDEA project and workspace file if the project is the root project.</td> 
+       </tr>
+       <tr> 
+        <td> <a class="link" href="java_plugin.html">Java</a> </td> 
+        <td>将 Java 配置添加到模块和项目文件中。<br>Adds Java configuration to the module and project files.</td> 
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+   <p>IDEA 插件的一个重点是开放定制。该插件提供了一组标准化的钩子，用于添加和删除生成的文件中的内容。 <br>One focus of the IDEA plugin is to be open to customization. The plugin provides a standardized set of hooks for adding and removing content from the generated files.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1409D"></a>39.1. 用法</h2>
+       <h4 class="title"><a name="N1409D"></a>39.1.&nbsp;Usage</h4>
+      </div>
+     </div>
+    </div>
+    <p>要使用 IDEA 插件，请在构建脚本中包含以下语句：<br>To use the IDEA plugin, include this in your build script:</p>
+    <div class="example">
+     <a name="useIdeaPlugin"></a>
+     <p class="title"><b>示例 39.1. 使用 IDEA 插件 - Example&nbsp;39.1.&nbsp;Using the IDEA plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'idea'</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>IDEA 插件向的项目添加了许多任务。你将使用的主要任务是 <code class="literal">idea</code> 和 <code class="literal">cleanIdea</code>。 <br>The IDEA plugin adds a number of tasks to your project. The main tasks that you will use are the <code class="literal">idea</code> and <code class="literal">cleanIdea</code> tasks.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N140B4"></a>39.2. 任务</h2>
+       <h4 class="title"><a name="N140B4"></a>39.2.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>IDEA 插件向一个项目添加如下所示的任务。请注意，<code class="literal">clean</code> 并不依赖于 <code class="literal">cleanIdeaWorkspace</code>。这是因为工作空间包含许多用户特定的临时数据，并且通常不希望在 IDEA 之外操作它。 <br>The IDEA plugin adds the tasks shown below to a project. Notice that <code class="literal">clean</code> does not depend on <code class="literal">cleanIdeaWorkspace</code>. It's because workspace contains a lot of user specific temporary data and typically it is not desirable to manipulate it outside IDEA.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 39.2. IDEA 插件——任务 - Table&nbsp;39.2.&nbsp;IDEA plugin - Tasks</b></p>
+     <div class="table-contents">
+      <table id="ideatasks">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">idea</code> </td> 
+         <td><code class="literal">ideaProject</code>, <code class="literal">ideaModule</code>, <code class="literal">ideaWorkspace</code></td> 
+         <td><code class="literal">-</code></td> 
+         <td>生成所有的 IDEA 配置文件<br>Generates all IDEA configuration files</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">cleanIdea</code> </td> 
+         <td> <code class="literal">cleanIdeaProject</code>, <code class="literal">cleanIdeaModule</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td> 
+         <td>删除所有的 IDEA 配置文件<br>Removes all IDEA configuration files</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">cleanIdeaProject</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td> 
+         <td>删除 IDEA 项目文件<br>Removes the IDEA project file</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">cleanIdeaModule</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td> 
+         <td>删除 IDEA 模块文件<br>Removes the IDEA module file</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">cleanIdeaWorkspace</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Delete.html" target="_top"><code class="classname">Delete</code></a></td> 
+         <td>删除 IDEA 工作区文件<br>Removes the IDEA workspace file</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">ideaProject</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.GenerateIdeaProject.html" target="_top"><code class="classname">GenerateIdeaProject</code></a></td> 
+         <td>生成 <code class="literal">.ipr</code> 文件。此任务仅添加到根项目。<br>Generates the <code class="literal">.ipr</code> file. This task is only added to the root project.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">ideaModule</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.GenerateIdeaModule.html" target="_top"><code class="classname">GenerateIdeaModule</code></a></td> 
+         <td>生成 <code class="literal">.iml</code> 文件<br>Generates the <code class="literal">.iml</code> file</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">ideaWorkspace</code> </td> 
+         <td> <code class="literal">-</code> </td> 
+         <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.GenerateIdeaWorkspace.html" target="_top"><code class="classname">GenerateIdeaWorkspace</code></a></td> 
+         <td>生成 <code class="literal">.iws</code> 文件。此任务仅添加到根项目。<br>Generates the <code class="literal">.iws</code> file. This task is only added to the root project.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N14198"></a>39.3. 配置</h2>
+       <h4 class="title"><a name="N14198"></a>39.3.&nbsp;Configuration</h4>
+      </div>
+     </div>
+    </div>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 39.3. idea 插件的配置 - Table&nbsp;39.3.&nbsp;Configuration of the idea plugin</b></p>
+     <div class="table-contents">
+      <table id="idea-configuration">
+       <thead>
+        <tr> 
+         <td>模型<br>Model</td> 
+         <td>引用名称<br>Reference name</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaModel.html" target="_top"><code class="classname">IdeaModel</code></a> </td> 
+         <td><code class="literal">idea</code></td> 
+         <td>顶级元素，支持以 DSL 友好的方式配置 idea 插件<br>Top level element that enables configuration of the idea plugin in a DSL-friendly fashion</td> 
+        </tr>
+        <tr> 
+         <td> <a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaProject.html" target="_top"><code class="classname">IdeaProject</code></a> </td> 
+         <td><code class="literal">idea.project</code></td> 
+         <td>允许配置项目信息<br>Allows configuring project information</td> 
+        </tr>
+        <tr> 
+         <td> <a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaModule.html" target="_top"><code class="classname">IdeaModule</code></a> </td> 
+         <td><code class="literal">idea.module</code></td> 
+         <td>允许配置模块信息<br>Allows configuring module information</td> 
+        </tr>
+        <tr> 
+         <td> <a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaWorkspace.html" target="_top"><code class="classname">IdeaWorkspace</code></a> </td> 
+         <td><code class="literal">idea.workspace</code></td> 
+         <td>允许配置工作区 XML<br>Allows configuring the workspace XML</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N141EF"></a>39.4. 自定义生成的文件</h2>
+       <h4 class="title"><a name="N141EF"></a>39.4.&nbsp;Customizing the generated files</h4>
+      </div>
+     </div>
+    </div>
+    <p>IDEA插件提供了一些钩子和行为，用于自定义生成的内容。工作区文件可以有效地只通过<code class="code">withXml</code>钩子来操作，因为它对应的域对象本质上是空的。<br>IDEA plugin provides hooks and behavior for customizing the generated content. The workspace file can effectively only be manipulated via the <code class="code">withXml</code> hook because its corresponding domain object is essentially empty.</p>
+    <p>该任务会识别现有的IDEA文件，并将它们与生成的内容进行合并。<br>The tasks recognize existing IDEA files, and merge them with the generated content.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N141F9"></a>39.4.1. 合并</h3>
+        <h5 class="title"><a name="N141F9"></a>39.4.1.&nbsp;Merging</h5>
+       </div>
+      </div>
+     </div>
+     <p>已存在的IDEA文件的部分，也是生成的目标内容，将会被修改或覆盖，具体取决于特定的部分。其余部分将保持原样。<br>Sections of existing IDEA files that are also the target of generated content will be amended or overwritten, depending on the particular section. The remaining sections will be left as-is.</p>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="sec:complete-overwrite"></a>39.4.1.1. 使用完全覆盖禁用合并</h4>
+         <h6 class="title"><a name="sec:complete-overwrite"></a>39.4.1.1.&nbsp;Disabling merging with a complete overwrite</h6>
+        </div>
+       </div>
+      </div>
+      <p>要完全覆盖现有IDEA文件，请执行clean任务及其相应的生成任务，例如<strong class="userinput"><code>gradle cleanIdea idea</code></strong>（按此顺序）。如果要让它成为默认行为，请添加 <code class="code">tasks.idea.dependsOn(cleanIdea)</code> 到构建脚本中。这样我们就不用显式执行清理任务了。 <br>To completely overwrite existing IDEA files, execute a clean task together with its corresponding generation task, for example <strong class="userinput"><code>gradle cleanIdea idea</code></strong> (in that order). If you want to make this the default behavior, add <code class="code">tasks.idea.dependsOn(cleanIdea)</code> to your build script. This makes it unnecessary to execute the clean task explicitly.</p>
+      <p>完全覆盖同样可以用于个人文件，例如通过执行<strong class="userinput"><code>gradle cleanIdeaModule ideaModule</code></strong>。<br>Complete overwrite works equally well for individual files, for example by executing <strong class="userinput"><code>gradle cleanIdeaModule ideaModule</code></strong>.</p>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N1420F"></a>39.4.2.&nbsp;Hooking 到生成的生命周期中</h3>
+        <h5 class="title"><a name="N1420F"></a>39.4.2.&nbsp;Hooking into the generation lifecycle</h5>
+       </div>
+      </div>
+     </div>
+     <p>该插件提供了一些对象，对由Gradle生成的元数据文件部分进行建模。生成的生命周期如下： <br>The plugin provides objects modeling the sections of the metadata files that are generated by Gradle. The generation lifecycle is as follows:</p>
+     <div class="orderedlist">
+      <ol class="orderedlist" type="1">
+       <li class="listitem">读取文件；如果它不存在，则使用由 Gradle 提供的默认版本</li>
+       <li class="listitem"><code class="code">beforeMerged</code>的钩子会使用一个表示现有文件的域对象执行</li>
+       <li class="listitem">从 Gradle 构建推断出来或在 eclipse DSL 中显示定义的配置会与现有的内容合并在一起</li>
+       <li class="listitem"><code class="code">whenMerged</code>的钩子会使用一个表示持久化的域对象执行</li>
+       <li class="listitem"><code class="code">withXml</code>的钩子会使用一个表示将被持久化的XML的 raw 执行</li>
+       <li class="listitem">最终的 XML 被持久化</li>
+      </ol>
+     </div>
+     <p> 下表列出了用于每种模型类型的域对象： <br>The following table lists the domain object used for each of the model types:</p>
+     <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+      <p class="title"><b>表 39.4. Idea 插件钩子 - Table&nbsp;39.4.&nbsp;Idea plugin hooks</b></p>
+      <div class="table-contents">
+       <table id="idea-hooks">
+        <thead>
+         <tr> 
+          <td>模型<br>Model</td> 
+          <td><code class="literal">beforeMerged { arg -&gt; }</code> 参数类型<br><code class="literal">beforeMerged { arg -&gt; }</code> argument type</td> 
+          <td><code class="literal">whenMerged { arg -&gt; }</code> 参数类型<br><code class="literal">whenMerged { arg -&gt; }</code> argument type</td> 
+          <td><code class="literal">withXml { arg -&gt; }</code> 参数类型<br><code class="literal">withXml { arg -&gt; }</code> argument type</td> 
+         </tr>
+        </thead>
+        <tbody>
+         <tr> 
+          <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaProject.html" target="_top"><code class="classname">IdeaProject</code></a></td> 
+          <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Project.html" target="_top"><code class="classname">Project</code></a></td> 
+          <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Project.html" target="_top"><code class="classname">Project</code></a></td> 
+          <td><a class="ulink" href="../javadoc/org/gradle/api/XmlProvider.html" target="_top"><code class="classname">XmlProvider</code></a></td> 
+         </tr>
+         <tr> 
+          <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaModule.html" target="_top"><code class="classname">IdeaModule</code></a></td> 
+          <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Module.html" target="_top"><code class="classname">Module</code></a></td> 
+          <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Module.html" target="_top"><code class="classname">Module</code></a></td> 
+          <td><a class="ulink" href="../javadoc/org/gradle/api/XmlProvider.html" target="_top"><code class="classname">XmlProvider</code></a></td> 
+         </tr>
+         <tr> 
+          <td><a class="ulink" href="../dsl/org.gradle.plugins.ide.idea.model.IdeaWorkspace.html" target="_top"><code class="classname">IdeaWorkspace</code></a></td> 
+          <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Workspace.html" target="_top"><code class="classname">Workspace</code></a></td> 
+          <td><a class="ulink" href="../groovydoc/org/gradle/plugins/ide/idea/model/Workspace.html" target="_top"><code class="classname">Workspace</code></a></td> 
+          <td><a class="ulink" href="../javadoc/org/gradle/api/XmlProvider.html" target="_top"><code class="classname">XmlProvider</code></a></td> 
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="sec:partial-overwrite"></a>39.4.2.1. 部分覆盖现有内容</h4>
+         <h6 class="title"><a name="sec:partial-overwrite"></a>39.4.2.1.&nbsp;Partial overwrite of existing content</h6>
+        </div>
+       </div>
+      </div>
+      <p><a class="link" href="eclipse_plugin.html#sec:complete-overwrite">完全覆盖</a>会导致现有的所有内容被丢弃，从而丢失直接在 IDE 中进行的任何更改。<code class="code">beforeMerged</code> 钩子使得可以只覆盖现有内容的某些部分。以下示例为从 <code class="literal">Module</code> 域对象中删除现有的所有依赖： <br>A <a class="link" href="eclipse_plugin.html#sec:complete-overwrite">complete overwrite</a> causes all existing content to be discarded, thereby losing any changes made directly in the IDE. The <code class="code">beforeMerged</code> hook makes it possible to overwrite just certain parts of the existing content. The following example removes all existing dependencies from the <code class="literal">Module</code> domain object:</p>
+      <div class="example">
+       <a name="partialOverwrites"></a>
+       <p class="title"><b>示例 39.2. 部分覆盖模块 - Example&nbsp;39.2.&nbsp;Partial Overwrite for Module</b></p>
+       <div class="example-contents">
+        <p><code class="filename">build.gradle</code></p>
+        <pre class="programlisting">idea.module.iml {
     beforeMerged { module -&gt;
         module.dependencies.clear()
     }
-}</pre></div></div><p><br class="example-break">
-                    The resulting module file will only contain Gradle-generated dependency entries, but
-                    not any other dependency entries that may have been present in the original file. (In the case of dependency entries,
-                    this is also the default behavior.) Other sections of the module file will be either left as-is or merged.
-                    The same could be done for the module paths in the project file:
-                    </p><div class="example"><a name="partialOverwritesProject"></a><p class="title"><b>Example&nbsp;39.3.&nbsp;Partial Overwrite for Project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">idea.project.ipr {
+}</pre>
+       </div>
+      </div>
+      <p><br class="example-break"> 生成的模块文件将仅包含Gradle生成的依赖项，但不包含原始文件中可能存在的任何其他依赖项。（对于依赖项，这也是默认行为。）模块文件的其他部分将保持原样或合并。对项目文件中的模块路径也可以这样做： <br><br class="example-break"> The resulting module file will only contain Gradle-generated dependency entries, but not any other dependency entries that may have been present in the original file. (In the case of dependency entries, this is also the default behavior.) Other sections of the module file will be either left as-is or merged. The same could be done for the module paths in the project file:</p>
+      <div class="example">
+       <a name="partialOverwritesProject"></a>
+       <p class="title"><b>示例 39.3. 项目的部分覆盖 - Example&nbsp;39.3.&nbsp;Partial Overwrite for Project</b></p>
+       <div class="example-contents">
+        <p><code class="filename">build.gradle</code></p>
+        <pre class="programlisting">idea.project.ipr {
     beforeMerged { project -&gt;
         project.modulePaths.clear()
     }
-}</pre></div></div><p><br class="example-break">
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N142B8"></a>39.4.2.2.&nbsp;Modifying the fully populated domain objects</h4></div></div></div><p>The <code class="code">whenMerged</code> hook allows to manipulate the fully populated domain objects. Often this is the
-                    preferred way to customize IDEA files. Here is how you would export all the dependencies of an IDEA module:
-                    </p><div class="example"><a name="exportDependencies"></a><p class="title"><b>Example&nbsp;39.4.&nbsp;Export Dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">idea.module.iml {
+}</pre>
+       </div>
+      </div>
+      <p><br class="example-break"> </p>
+     </div>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="N142B8"></a>39.4.2.2. 修改完全填充的域对象</h4>
+         <h6 class="title"><a name="N142B8"></a>39.4.2.2.&nbsp;Modifying the fully populated domain objects</h6>
+        </div>
+       </div>
+      </div>
+      <p><code class="code">whenMerged</code> 钩子允许操作完全填充的域对象。通常，这是自定义IDEA文件的首选方法。下面的例子展示了如何导出一个IDEA模块的所有依赖： <br>The <code class="code">whenMerged</code> hook allows to manipulate the fully populated domain objects. Often this is the preferred way to customize IDEA files. Here is how you would export all the dependencies of an IDEA module:</p>
+      <div class="example">
+       <a name="exportDependencies"></a>
+       <p class="title"><b>示例 39.4. 导出依赖 - Example&nbsp;39.4.&nbsp;Export Dependencies</b></p>
+       <div class="example-contents">
+        <p><code class="filename">build.gradle</code></p>
+        <pre class="programlisting">idea.module.iml {
     whenMerged { module -&gt;
         module.dependencies*.exported = true
     }
-}</pre></div></div><p><br class="example-break">
-                    
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="N142CB"></a>39.4.2.3.&nbsp;Modifying the XML representation</h4></div></div></div><p>The <code class="code">withXml</code>hook allows to manipulate the in-memory XML representation just before the file gets written to disk.
-                    Although Groovy's XML support makes up for a lot, this approach is less convenient than manipulating the domain objects.
-                    In return, you get total control over the generated file, including sections not modeled by the domain objects.
-                    </p><div class="example"><a name="projectWithXml"></a><p class="title"><b>Example&nbsp;39.5.&nbsp;Customizing the XML</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">idea.project.ipr {
+}</pre>
+       </div>
+      </div>
+      <p><br class="example-break"> </p>
+     </div>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="N142CB"></a>39.4.2.3. 修改 XML 的表示形式</h4>
+         <h6 class="title"><a name="N142CB"></a>39.4.2.3.&nbsp;Modifying the XML representation</h6>
+        </div>
+       </div>
+      </div>
+      <p><code class="code">withXml</code>钩子允许在文件写入磁盘之前操作内存中的 XML 表示形式。尽管 Groovy 的 XML 支持对其帮助很大，但这种方法比起操作域对象依然很不方便。作为回报，你可以对生成的文件进行完全的控制，包括未由域对象建模的部分。 <br>The <code class="code">withXml</code>hook allows to manipulate the in-memory XML representation just before the file gets written to disk. Although Groovy's XML support makes up for a lot, this approach is less convenient than manipulating the domain objects. In return, you get total control over the generated file, including sections not modeled by the domain objects.</p>
+      <div class="example">
+       <a name="projectWithXml"></a>
+       <p class="title"><b>示例 39.5. 自定义 XML - Example&nbsp;39.5.&nbsp;Customizing the XML</b></p>
+       <div class="example-contents">
+        <p><code class="filename">build.gradle</code></p>
+        <pre class="programlisting">idea.project.ipr {
     withXml { provider -&gt;
         provider.node.component.find { it.<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@name</span> == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'VcsDirectoryMappings'</span> }.mapping.<span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@vcs</span> = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Git'</span>
     }
-}</pre></div></div><p><br class="example-break">
-                </p></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N142DE"></a>39.5.&nbsp;Further things to consider</h2></div></div></div><p>The paths of the dependencies in the generated IDEA files are absolute. If you manually define a path variable
-            pointing to the Gradle dependency cache, IDEA will automatically replace the absolute dependency paths with
-            this path variable. If you use such a path variable, you need to configure this path variable via <code class="literal">idea.pathVariables</code>,
-            so that it can do a proper merge without creating duplicates.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="eclipse_plugin.html" title="Chapter&nbsp;38.&nbsp;The Eclipse Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="antlr_plugin.html" title="Chapter&nbsp;40.&nbsp;The ANTLR Plugin">Next</a></div></div></div></body></html>
+}</pre>
+       </div>
+      </div>
+      <p><br class="example-break"> </p>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N142DE"></a>39.5. 还需要考虑的事情</h2>
+       <h4 class="title"><a name="N142DE"></a>39.5.&nbsp;Further things to consider</h4>
+      </div>
+     </div>
+    </div>
+    <p>生成的IDEA文件中的依赖项的路径是绝对路径。如果手动定义指向Gradle依赖缓存的路径变量，IDEA将自动使用此路径变量替换绝对依赖路径。如果你使用这样的路径变量，你需要通过<code class="literal">idea.pathVariables</code>配置此路径变量，这样它就可以进行正确的合并而不重复创建。<br>The paths of the dependencies in the generated IDEA files are absolute. If you manually define a path variable pointing to the Gradle dependency cache, IDEA will automatically replace the absolute dependency paths with this path variable. If you use such a path variable, you need to configure this path variable via <code class="literal">idea.pathVariables</code>, so that it can do a proper merge without creating duplicates.</p>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="eclipse_plugin.html" title="第三十八章. Eclipse 插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="antlr_plugin.html" title="第四十章. ANTLR 插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
