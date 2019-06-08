@@ -1,67 +1,169 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;52.&nbsp;The Maven Plugin</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="artifact_management.html" title="Chapter&nbsp;51.&nbsp;Publishing artifacts"><link rel="next" href="signing_plugin.html" title="Chapter&nbsp;53.&nbsp;The Signing Plugin"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="artifact_management.html" title="Chapter&nbsp;51.&nbsp;Publishing artifacts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="signing_plugin.html" title="Chapter&nbsp;53.&nbsp;The Signing Plugin">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="maven_plugin"></a>Chapter&nbsp;52.&nbsp;The Maven Plugin</h1></div></div></div><div class="note"><p>This chapter is a work in progress</p></div><p>The Maven plugin adds support for deploying artifacts to Maven repositories.</p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1547F"></a>52.1.&nbsp;Usage</h2></div></div></div><p>To use the Maven plugin, include in your build script:</p><div class="example"><a name="useMavenPlugin"></a><p class="title"><b>Example&nbsp;52.1.&nbsp;Using the Maven plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'maven'</span></pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1548E"></a>52.2.&nbsp;Tasks</h2></div></div></div><p>The Maven plugin defines the following tasks:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;52.1.&nbsp;Maven plugin - tasks</b></p><div class="table-contents"><table id="N15493"><thead><tr>
-                    <td>Task name</td>
-                    <td>Depends on</td>
-                    <td>Type</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">install</code>
-                </td>
-                <td>
-                    All tasks that build the associated archives.
-                </td>
-                <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Upload.html" target="_top"><code class="classname">Upload</code></a></td>
-                <td>Installs the associated artifacts to the local Maven cache, including Maven metadata generation.
-                By default the install task is associated with the <code class="literal">archives</code> configuration. This
-                configuration has by default only the default jar as an element. To learn more about installing to the
-                local repository, see: <a class="xref" href="maven_plugin.html#sub:installing_to_the_local_repository">Section&nbsp;52.6.3, &ldquo;Installing to the local repository&rdquo;</a></td>
-            </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N154BE"></a>52.3.&nbsp;Dependency management</h2></div></div></div><p>The Maven plugin does not define any dependency configurations.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N154C3"></a>52.4.&nbsp;Convention properties</h2></div></div></div><p>The Maven plugin defines the following convention properties:</p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;52.2.&nbsp;Maven plugin - properties</b></p><div class="table-contents"><table id="N154C8"><thead><tr>
-                    <td>Property name</td>
-                    <td>Type</td>
-                    <td>Default value</td>
-                    <td>Description</td>
-                </tr></thead><tr>
-                <td>
-                    <code class="literal">pomDirName</code>
-                </td>
-                <td>
-                    <code class="classname">String</code>
-                </td>
-                <td>
-                    <code class="literal">poms</code>
-                </td>
-                <td>
-                    The path of the directory to write the generated POMs, relative to the build directory.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">pomDir</code>
-                </td>
-                <td>
-                    <code class="classname">File (read-only)</code>
-                </td>
-                <td>
-                    <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>pomDirName</code></em></code>
-                </td>
-                <td>
-                    The directory where the generated POMs are written to.
-                </td>
-            </tr><tr>
-                <td>
-                    <code class="literal">conf2ScopeMappings</code>
-                </td>
-                <td>
-                    <code class="classname"><a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/Conf2ScopeMappingContainer.html" target="_top"><code class="classname">Conf2ScopeMappingContainer</code></a></code>
-                </td>
-                <td>
-                    <code class="literal">n/a</code>
-                </td>
-                <td>
-                    Instructions for mapping Gradle configurations to Maven scopes. See <a class="xref" href="maven_plugin.html#sub:dependency_mapping">Section&nbsp;52.6.4.2, &ldquo;Dependency mapping&rdquo;</a>.
-                </td>
-            </tr></table></div></div><p>These properties are provided by a <a class="ulink" href="../dsl/org.gradle.api.plugins.MavenPluginConvention.html" target="_top"><code class="classname">MavenPluginConvention</code></a>
-            convention object.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N15530"></a>52.5.&nbsp;Convention methods</h2></div></div></div><p>The maven plugin provides a factory method for creating a POM. This is useful if you need a POM
-        without the context of uploading to a Maven repo.</p><div class="example"><a name="newPom"></a><p class="title"><b>Example&nbsp;52.2.&nbsp;Creating a stand alone pom.</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task writeNewPom &lt;&lt; {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第五十二章. Maven 插件 - Chapter&nbsp;52.&nbsp;The Maven Plugin</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="artifact_management.html" title="第五十一章. 发布工件">
+  <link rel="next" href="signing_plugin.html" title="第五十三章. 签名插件">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="artifact_management.html" title="第五十一章. 发布工件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="signing_plugin.html" title="第五十三章. 签名插件">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="maven_plugin"></a>第五十二章. Maven 插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="maven_plugin"></a>Chapter&nbsp;52.&nbsp;The Maven Plugin</h3>
+     </div>
+    </div>
+   </div>
+   <div class="note">
+    <p>本章还在完善中。<br>This chapter is a work in progress</p>
+   </div>
+   <p>Maven 插件添加了将项目部署到 Maven 仓库的支持。<br>The Maven plugin adds support for deploying artifacts to Maven repositories.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1547F"></a>52.1. 用法</h2>
+       <h4 class="title"><a name="N1547F"></a>52.1.&nbsp;Usage</h4>
+      </div>
+     </div>
+    </div>
+    <p>要使用 Maven 插件，请在构建脚本中包含：<br>To use the Maven plugin, include in your build script:</p>
+    <div class="example">
+     <a name="useMavenPlugin"></a>
+     <p class="title"><b>示例 52.1. 使用 Maven 插件 - Example&nbsp;52.1.&nbsp;Using the Maven plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'maven'</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1548E"></a>52.2. 任务</h2>
+       <h4 class="title"><a name="N1548E"></a>52.2.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p>Maven 插件定义了以下任务：<br>The Maven plugin defines the following tasks:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 52.1. Maven 插件——任务 - Table&nbsp;52.1.&nbsp;Maven plugin - tasks</b></p>
+     <div class="table-contents">
+      <table id="N15493">
+       <thead>
+        <tr> 
+         <td>任务名称<br>Task name</td> 
+         <td>依赖于<br>Depends on</td> 
+         <td>类型<br>Type</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">install</code> </td> 
+         <td> 所有构建关联归档的任务。 <br>All tasks that build the associated archives.</td> 
+         <td><a class="ulink" href="../dsl/org.gradle.api.tasks.Upload.html" target="_top"><code class="classname">Upload</code></a></td> 
+         <td>将相关的工件安装到本地的 Maven 缓存，包括Maven 元数据的生成。默认情况下，安装任务是与 <code class="literal">archives</code> 配置相关联的。这个配置在默认情况下只将默认的 jar 作为元素。要了解有关安装到本地仓库的更多信息，请参阅：<a class="xref" href="maven_plugin.html#sub:installing_to_the_local_repository">第 52.6.3 节，《安装到本地存储库》</a><br>Installs the associated artifacts to the local Maven cache, including Maven metadata generation. By default the install task is associated with the <code class="literal">archives</code> configuration. This configuration has by default only the default jar as an element. To learn more about installing to the local repository, see: <a class="xref" href="maven_plugin.html#sub:installing_to_the_local_repository">Section&nbsp;52.6.3, “Installing to the local repository”</a></td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N154BE"></a>52.3. 依赖管理</h2>
+       <h4 class="title"><a name="N154BE"></a>52.3.&nbsp;Dependency management</h4>
+      </div>
+     </div>
+    </div>
+    <p>Maven 插件没有定义任何依赖配置。<br>The Maven plugin does not define any dependency configurations.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N154C3"></a>52.4. 约定属性</h2>
+       <h4 class="title"><a name="N154C3"></a>52.4.&nbsp;Convention properties</h4>
+      </div>
+     </div>
+    </div>
+    <p>Maven 插件定义了下列约定属性：<br>The Maven plugin defines the following convention properties:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <p class="title"><b>表 52.2. Maven 插件——属性 - Table&nbsp;52.2.&nbsp;Maven plugin - properties</b></p>
+     <div class="table-contents">
+      <table id="N154C8">
+       <thead>
+        <tr> 
+         <td>属性名称<br>Property name</td> 
+         <td>类型<br>Type</td> 
+         <td>默认值<br>Default value</td> 
+         <td>描述<br>Description</td> 
+        </tr>
+       </thead>
+       <tbody>
+        <tr> 
+         <td> <code class="literal">pomDirName</code> </td> 
+         <td> <code class="classname">String</code> </td> 
+         <td> <code class="literal">poms</code> </td> 
+         <td> 用于写入生成的 POM 的文件夹路径，相对于构建目录。 <br>The path of the directory to write the generated POMs, relative to the build directory.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">pomDir</code> </td> 
+         <td> <code class="classname">文件(只读)</code> <br><code class="classname">File (read-only)</code></td> 
+         <td> <code class="literal"><em class="replaceable"><code>buildDir</code></em>/<em class="replaceable"><code>pomDirName</code></em></code> </td> 
+         <td> 生成的 POM 的写入目录。 <br>The directory where the generated POMs are written to.</td> 
+        </tr>
+        <tr> 
+         <td> <code class="literal">conf2ScopeMappings</code> </td> 
+         <td> <code class="classname"><a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/Conf2ScopeMappingContainer.html" target="_top"><code class="classname">Conf2ScopeMappingContainer</code></a></code> </td> 
+         <td> <code class="literal">n/a</code> </td> 
+         <td> 将 Gradle 配置映射到 Maven 作用域的说明。见<a class="xref" href="maven_plugin.html#sub:dependency_mapping">第 52.6.4.2 节，《依赖映射》</a>。 <br>Instructions for mapping Gradle configurations to Maven scopes. See <a class="xref" href="maven_plugin.html#sub:dependency_mapping">Section&nbsp;52.6.4.2, “Dependency mapping”</a>.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p>这些属性由一个<a class="ulink" href="../dsl/org.gradle.api.plugins.MavenPluginConvention.html" target="_top"><code class="classname">MavenPluginConvention</code></a> 约定对象提供。<br>These properties are provided by a <a class="ulink" href="../dsl/org.gradle.api.plugins.MavenPluginConvention.html" target="_top"><code class="classname">MavenPluginConvention</code></a> convention object.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N15530"></a>52.5.&nbsp;约定方法</h2>
+       <h4 class="title"><a name="N15530"></a>52.5.&nbsp;Convention methods</h4>
+      </div>
+     </div>
+    </div>
+    <p>Maven 插件提供了用于创建 POM 的工厂方法，如果你在不上传到 Maven 仓库的情况下需要 POM 文件，这个工厂方法将非常有用。<br>The maven plugin provides a factory method for creating a POM. This is useful if you need a POM without the context of uploading to a Maven repo.</p>
+    <div class="example">
+     <a name="newPom"></a>
+     <p class="title"><b>示例 52.2. 创建一个单独的 pom。 - Example&nbsp;52.2.&nbsp;Creating a stand alone pom.</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">task writeNewPom &lt;&lt; {
     pom {
         project {
             inceptionYear <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'2008'</span>
@@ -74,16 +176,49 @@
             }
         }
     }.writeTo(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/newpom.xml"</span>)
-}</pre></div></div><br class="example-break"><p>Amongst other things, Gradle supports the same builder syntax as polyglot Maven. To learn more about the Gradle Maven POM object, see
-            <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenPom.html" target="_top"><code class="classname">MavenPom</code></a>. See also: <a class="ulink" href="../dsl/org.gradle.api.plugins.MavenPluginConvention.html" target="_top"><code class="classname">MavenPluginConvention</code></a>
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="uploading_to_maven_repositories"></a>52.6.&nbsp;Interacting with Maven repositories</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:introduction"></a>52.6.1.&nbsp;Introduction</h3></div></div></div><p>With Gradle you can deploy to remote Maven repositories or install to your local Maven repository. This
-                includes all Maven metadata manipulation and works also for Maven snapshots. In fact, Gradle's deployment is
-                100 percent Maven compatible as we use the native Maven Ant tasks under the hood.
-            </p><p>Deploying to a Maven repository is only half the fun if you don't have a POM. Fortunately Gradle can
-                generate this POM for you using the dependency information it has.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:deploying_to_a_maven_repository"></a>52.6.2.&nbsp;Deploying to a Maven repository</h3></div></div></div><p>Let's assume your project produces just the default jar file. Now you want to deploy this jar file to
-                a remote Maven repository.
-            </p><div class="example"><a name="uploadFile"></a><p class="title"><b>Example&nbsp;52.3.&nbsp;Upload of file to remote Maven repository</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'maven'</span>
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p>在其他方面，Gradle 支持和 polyglot Maven 相同的生成器语法。要了解有关 Gradle Maven POM 对象的更多信息，请参阅<a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenPom.html" target="_top"><code class="classname">MavenPom</code></a>。另请参见：<a class="ulink" href="../dsl/org.gradle.api.plugins.MavenPluginConvention.html" target="_top"><code class="classname">MavenPluginConvention</code></a> <br>Amongst other things, Gradle supports the same builder syntax as polyglot Maven. To learn more about the Gradle Maven POM object, see <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenPom.html" target="_top"><code class="classname">MavenPom</code></a>. See also: <a class="ulink" href="../dsl/org.gradle.api.plugins.MavenPluginConvention.html" target="_top"><code class="classname">MavenPluginConvention</code></a></p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="uploading_to_maven_repositories"></a>52.6. 与 Maven 仓库的交互</h2>
+       <h4 class="title"><a name="uploading_to_maven_repositories"></a>52.6.&nbsp;Interacting with Maven repositories</h4>
+      </div>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:introduction"></a>52.6.1. 导言</h3>
+        <h5 class="title"><a name="sec:introduction"></a>52.6.1.&nbsp;Introduction</h5>
+       </div>
+      </div>
+     </div>
+     <p>通过 Gradle，你可以部署到远程 Maven 仓库或是安装到本地 Maven 仓库。这包括所有 Maven 元数据的操作，并且 Maven 快照也可以用。实际上，Gradle 的部署是 100% 兼容 Maven 的，因为我们在本质上使用的是原生 Maven Ant 任务。 <br>With Gradle you can deploy to remote Maven repositories or install to your local Maven repository. This includes all Maven metadata manipulation and works also for Maven snapshots. In fact, Gradle's deployment is 100 percent Maven compatible as we use the native Maven Ant tasks under the hood.</p>
+     <p>如果你没有 POM，部署到 Maven 仓库只有一半的乐趣。幸运的是 Gradle 可以使用它的依赖信息为你生成这个 POM。 <br>Deploying to a Maven repository is only half the fun if you don't have a POM. Fortunately Gradle can generate this POM for you using the dependency information it has.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:deploying_to_a_maven_repository"></a>52.6.2. 部署到 Maven 仓库</h3>
+        <h5 class="title"><a name="sec:deploying_to_a_maven_repository"></a>52.6.2.&nbsp;Deploying to a Maven repository</h5>
+       </div>
+      </div>
+     </div>
+     <p>让我们假设你的项目只生成默认的 jar 文件，现在你想将这个 jar 文件部署到远程 Maven 仓库。 <br>Let's assume your project produces just the default jar file. Now you want to deploy this jar file to a remote Maven repository.</p>
+     <div class="example">
+      <a name="uploadFile"></a>
+      <p class="title"><b>示例 52.3. 上传文件到远程 Maven 仓库 - Example&nbsp;52.3.&nbsp;Upload of file to remote Maven repository</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'maven'</span>
 
 uploadArchives {
     repositories {
@@ -91,16 +226,18 @@ uploadArchives {
             repository(url: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"file://localhost/tmp/myRepo/"</span>)
         }
     }
-}</pre></div></div><br class="example-break"><p>That is all. Calling the
-                <code class="literal">uploadArchives</code>
-                task will generate the POM and deploys the artifact and the POM to the specified repository.
-            </p><p>There is some more work to do if you need support for other protocols than <code class="literal">file</code>. In
-                this case the native Maven code we delegate to needs additional libraries. Which libraries depend on the
-                protocol you need. The available protocols and the corresponding libraries are listed in <a class="xref" href="maven_plugin.html#wagonLibs" title="Table&nbsp;52.3.&nbsp;Protocol jars for Maven deployment">Table&nbsp;52.3, &ldquo;Protocol jars for Maven deployment&rdquo;</a> (those libraries have again transitive dependencies which have transitive
-                dependencies).
-                <sup>[<a href="#ftn.N15574" name="N15574" class="footnote">19</a>]</sup>
-                For example to use the ssh protocol you can do:
-            </p><div class="example"><a name="uploadWithSsh"></a><p class="title"><b>Example&nbsp;52.4.&nbsp;Upload of file via SSH</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>调用 <code class="literal">uploadArchives</code> 任务将生成 POM，并将工件和 POM 部署到指定的仓库。 <br>That is all. Calling the <code class="literal">uploadArchives</code> task will generate the POM and deploys the artifact and the POM to the specified repository.</p>
+     <p>如果你需要对 <code class="literal">file</code> 以外的其他协议支持，那么还要再做一些事情。在这种情况下，我们委派的本地 Maven 代码需要其他的库。具体是哪些库，则取决于你需要的协议。<a class="xref" href="maven_plugin.html#wagonLibs" title="表 52.3. Maven 部署的协议 jar">表 52.3，“用于Maven部署的协议 jar”</a> 中列出了可用的协议和相应的库（这些库有传递依赖，而这些依赖也有其自己的传递依赖）。 <sup>[<a href="#ftn.N15574" name="N15574" class="footnote">19</a>]</sup> 例如，要使用 SSH 协议，你可以执行以下操作： <br>There is some more work to do if you need support for other protocols than <code class="literal">file</code>. In this case the native Maven code we delegate to needs additional libraries. Which libraries depend on the protocol you need. The available protocols and the corresponding libraries are listed in <a class="xref" href="maven_plugin.html#wagonLibs" title="Table&nbsp;52.3.&nbsp;Protocol jars for Maven deployment">Table&nbsp;52.3, “Protocol jars for Maven deployment”</a> (those libraries have again transitive dependencies which have transitive dependencies). <sup>[<a href="#ftn.N15574" name="N15574" class="footnote">19</a>]</sup> For example to use the ssh protocol you can do:</p>
+     <div class="example">
+      <a name="uploadWithSsh"></a>
+      <p class="title"><b>示例 52.4. 通过 SSH 上传文件 - Example&nbsp;52.4.&nbsp;Upload of file via SSH</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">configurations {
     deployerJars
 }
 
@@ -119,125 +256,158 @@ uploadArchives {
             authentication(userName: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"me"</span>, password: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"myPassword"</span>)
         }
     }
-}</pre></div></div><br class="example-break"><p>There are many configuration options for the Maven deployer. The configuration is done via a Groovy builder.
-                All the elements of this tree are Java beans. To configure the simple attributes you pass a map to the bean
-                elements. To add another bean elements to its parent, you use a closure. In the example above <span class="emphasis"><em>repository</em></span>
-                and <span class="emphasis"><em>authentication</em></span> are such bean elements. <a class="xref" href="maven_plugin.html#deployerConfig" title="Table&nbsp;52.4.&nbsp;Configuration elements of the MavenDeployer">Table&nbsp;52.4, &ldquo;Configuration elements of the MavenDeployer&rdquo;</a>
-                lists the available bean elements and a link to the javadoc of the corresponding class. In the javadoc you
-                can see the possible attributes you can set for a particular element.
-            </p><p>In Maven you can define repositories and optionally snapshot repositories. If no snapshot repository
-                is defined, releases and snapshots are both deployed to the
-                <code class="literal">repository</code>
-                element. Otherwise snapshots are deployed to the
-                <code class="literal">snapshotRepository</code>
-                element.
-            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;52.3.&nbsp;Protocol jars for Maven deployment</b></p><div class="table-contents"><table id="wagonLibs"><thead><tr>
-                        <td>Protocol</td>
-                        <td>Library</td>
-                    </tr></thead><tr>
-                    <td>http</td>
-                    <td>org.apache.maven.wagon:wagon-http:2.2</td>
-                </tr><tr>
-                    <td>ssh</td>
-                    <td>org.apache.maven.wagon:wagon-ssh:2.2</td>
-                </tr><tr>
-                    <td>ssh-external</td>
-                    <td>org.apache.maven.wagon:wagon-ssh-external:2.2</td>
-                </tr><tr>
-                    <td>ftp</td>
-                    <td>org.apache.maven.wagon:wagon-ftp:2.2</td>
-                </tr><tr>
-                    <td>webdav</td>
-                    <td>org.apache.maven.wagon:wagon-webdav:1.0-beta-2</td>
-                </tr><tr>
-                    <td>file</td>
-                    <td>-</td>
-                </tr></table></div></div><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;52.4.&nbsp;Configuration elements of the MavenDeployer</b></p><div class="table-contents"><table id="deployerConfig"><thead><tr>
-                        <td>Element</td>
-                        <td>Javadoc</td>
-                    </tr></thead><tr>
-                    <td>root</td>
-                    <td>
-                        <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenDeployer.html" target="_top"><code class="classname">MavenDeployer</code></a>
-                    </td>
-                </tr><tr>
-                    <td>repository</td>
-                    <td>
-                        <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/RemoteRepository.html" target="_top">
-                            org.apache.maven.artifact.ant.RemoteRepository
-                        </a>
-                    </td>
-                </tr><tr>
-                    <td>authentication</td>
-                    <td>
-                        <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/Authentication.html" target="_top">
-                            org.apache.maven.artifact.ant.Authentication
-                        </a>
-                    </td>
-                </tr><tr>
-                    <td>releases</td>
-                    <td>
-                        <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/RepositoryPolicy.html" target="_top">
-                            org.apache.maven.artifact.ant.RepositoryPolicy
-                        </a>
-                    </td>
-                </tr><tr>
-                    <td>snapshots</td>
-                    <td>
-                        <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/RepositoryPolicy.html" target="_top">
-                            org.apache.maven.artifact.ant.RepositoryPolicy
-                        </a>
-                    </td>
-                </tr><tr>
-                    <td>proxy</td>
-                    <td>
-                        <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/Proxy.html" target="_top">
-                            org.apache.maven.artifact.ant.Proxy
-                        </a>
-                    </td>
-                </tr><tr>
-                    <td>snapshotRepository</td>
-                    <td>
-                        <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/RemoteRepository.html" target="_top">
-                            org.apache.maven.artifact.ant.RemoteRepository
-                        </a>
-                    </td>
-                </tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sub:installing_to_the_local_repository"></a>52.6.3.&nbsp;Installing to the local repository</h3></div></div></div><p>The Maven plugin adds an <code class="literal">install</code> task to your project. This task depends on all the archives
-                task of the <code class="literal">archives</code> configuration. It installs those archives to your local Maven repository.
-                If the default location for the local repository is redefined in a Maven <code class="literal">settings.xml</code>, this is
-                considered by this task.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="sec:maven_pom_generation"></a>52.6.4.&nbsp;Maven POM generation</h3></div></div></div><p>When deploying an artifact to a Maven repository, Gradle automatically generates a POM for it. The
-                <code class="literal">groupId</code>, <code class="literal">artifactId</code>, <code class="literal">version</code> and <code class="literal">packaging</code>
-                elements used for the POM default to the values shown in the table below. The <code class="literal">dependency</code>
-                elements are created from the project's dependency declarations.
-            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><p class="title"><b>Table&nbsp;52.5.&nbsp;Default Values for Maven POM generation</b></p><div class="table-contents"><table id="N15658"><thead><tr>
-                        <td>Maven Element</td>
-                        <td>Default Value</td>
-                    </tr></thead><tr>
-                    <td>groupId</td>
-                    <td>project.group</td>
-                </tr><tr>
-                    <td>artifactId</td>
-                    <td>uploadTask.repositories.mavenDeployer.pom.artifactId (if set) or archiveTask.baseName.</td>
-                </tr><tr>
-                    <td>version</td>
-                    <td>project.version</td>
-                </tr><tr>
-                    <td>packaging</td>
-                    <td>archiveTask.extension</td>
-                </tr></table></div></div><p>
-                Here, <code class="literal">uploadTask</code> and <code class="literal">archiveTask</code> refer to the tasks used for uploading and generating the archive,
-                respectively (for example <code class="literal">uploadArchives</code> and <code class="literal">jar</code>). <code class="literal">archiveTask.baseName</code> defaults
-                to <code class="literal">project.archivesBaseName</code> which in turn defaults to <code class="literal">project.name</code>.
-            </p><div class="note"><p>
-                    When you set <code class="literal">archiveTask.baseName</code> to a value other than the default, make sure to set
-                    <code class="literal">uploadTask.repositories.mavenDeployer.pom.artifactId</code> to the same value. Otherwise, the project at hand may
-                    be referenced with the wrong artifact ID from generated POMs for other projects in the same build.
-                </p></div><p>
-                Generated POMs can be found in <code class="literal">&lt;buildDir&gt;/poms</code>. They can be further customized via the
-                <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenPom.html" target="_top"><code class="classname">MavenPom</code></a> API. For example, you might want the artifact deployed
-                to the Maven repository to have a different version or name than the artifact generated by Gradle. To customize these you can do:
-            </p><div class="example"><a name="customizePom"></a><p class="title"><b>Example&nbsp;52.5.&nbsp;Customization of pom</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">uploadArchives {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>Maven 部署器有许多配置选项，配置通过 Groovy 构建器完成。配置树的所有元素都是 Java bean。你可以传一个 map 到 bean 元素来配置简单的属性。如果要将其他 bean 元素添加到其 parent，可以使用闭包。在上面的示例中，<span class="emphasis"><em>repository</em></span> 和 <span class="emphasis"><em>authentication</em></span> 都是这样的 bean 元素。<a class="xref" href="maven_plugin.html#deployerConfig" title="表 52.4. MavenDeployer 的配置元素">表 52.4，“MavenDeployer的配置元素”</a> 列出了可用的 bean 元素以及对应类的 javadoc 链接。在 javadoc 中，你可以查看能够为特定元素设置的属性。 <br>There are many configuration options for the Maven deployer. The configuration is done via a Groovy builder. All the elements of this tree are Java beans. To configure the simple attributes you pass a map to the bean elements. To add another bean elements to its parent, you use a closure. In the example above <span class="emphasis"><em>repository</em></span> and <span class="emphasis"><em>authentication</em></span> are such bean elements. <a class="xref" href="maven_plugin.html#deployerConfig" title="Table&nbsp;52.4.&nbsp;Configuration elements of the MavenDeployer">Table&nbsp;52.4, “Configuration elements of the MavenDeployer”</a> lists the available bean elements and a link to the javadoc of the corresponding class. In the javadoc you can see the possible attributes you can set for a particular element.</p>
+     <p>在 Maven 中，你可以定义普通仓库和可选的快照仓库。如果没有定义快照仓库，那么发行版和快照都会部署到 <code class="literal">repository</code> 元素中。否则，快照将部署到 <code class="literal">snapshotRepository</code> 元素。 <br>In Maven you can define repositories and optionally snapshot repositories. If no snapshot repository is defined, releases and snapshots are both deployed to the <code class="literal">repository</code> element. Otherwise snapshots are deployed to the <code class="literal">snapshotRepository</code> element.</p>
+     <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+      <p class="title"><b>表 52.3. Maven 部署的协议 jar - Table&nbsp;52.3.&nbsp;Protocol jars for Maven deployment</b></p>
+      <div class="table-contents">
+       <table id="wagonLibs">
+        <thead>
+         <tr> 
+          <td>协议<br>Protocol</td> 
+          <td>库<br>Library</td> 
+         </tr>
+        </thead>
+        <tbody>
+         <tr> 
+          <td>http</td> 
+          <td>org.apache.maven.wagon:wagon-http:2.2</td> 
+         </tr>
+         <tr> 
+          <td>ssh</td> 
+          <td>org.apache.maven.wagon:wagon-ssh:2.2</td> 
+         </tr>
+         <tr> 
+          <td>ssh-external</td> 
+          <td>org.apache.maven.wagon:wagon-ssh-external:2.2</td> 
+         </tr>
+         <tr> 
+          <td>ftp</td> 
+          <td>org.apache.maven.wagon:wagon-ftp:2.2</td> 
+         </tr>
+         <tr> 
+          <td>webdav</td> 
+          <td>org.apache.maven.wagon:wagon-webdav:1.0-beta-2</td> 
+         </tr>
+         <tr> 
+          <td>file</td> 
+          <td>-</td> 
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+     <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+      <p class="title"><b>表 52.4. MavenDeployer 的配置元素 - Table&nbsp;52.4.&nbsp;Configuration elements of the MavenDeployer</b></p>
+      <div class="table-contents">
+       <table id="deployerConfig">
+        <thead>
+         <tr> 
+          <td>元素<br>Element</td> 
+          <td>Javadoc</td> 
+         </tr>
+        </thead>
+        <tbody>
+         <tr> 
+          <td>root</td> 
+          <td> <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenDeployer.html" target="_top"><code class="classname">MavenDeployer</code></a> </td> 
+         </tr>
+         <tr> 
+          <td>repository</td> 
+          <td> <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/RemoteRepository.html" target="_top"> org.apache.maven.artifact.ant.RemoteRepository </a> </td> 
+         </tr>
+         <tr> 
+          <td>authentication</td> 
+          <td> <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/Authentication.html" target="_top"> org.apache.maven.artifact.ant.Authentication </a> </td> 
+         </tr>
+         <tr> 
+          <td>releases</td> 
+          <td> <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/RepositoryPolicy.html" target="_top"> org.apache.maven.artifact.ant.RepositoryPolicy </a> </td> 
+         </tr>
+         <tr> 
+          <td>snapshots</td> 
+          <td> <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/RepositoryPolicy.html" target="_top"> org.apache.maven.artifact.ant.RepositoryPolicy </a> </td> 
+         </tr>
+         <tr> 
+          <td>proxy</td> 
+          <td> <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/Proxy.html" target="_top"> org.apache.maven.artifact.ant.Proxy </a> </td> 
+         </tr>
+         <tr> 
+          <td>snapshotRepository</td> 
+          <td> <a class="ulink" href="http://maven.apache.org/ant-tasks/apidocs/org/apache/maven/artifact/ant/RemoteRepository.html" target="_top"> org.apache.maven.artifact.ant.RemoteRepository </a> </td> 
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sub:installing_to_the_local_repository"></a>52.6.3. 安装到本地仓库</h3>
+        <h5 class="title"><a name="sub:installing_to_the_local_repository"></a>52.6.3.&nbsp;Installing to the local repository</h5>
+       </div>
+      </div>
+     </div>
+     <p>Maven 插件向项目添加 <code class="literal">install</code> 任务。这个任务依赖于 <code class="literal">archives</code> 配置的所有归档任务。它将这些归档安装到本地 Maven 仓库中。Maven <code class="literal">settings.xml</code> 中是否重新定义了本地仓库的默认位置，该任务也会考虑到。 <br>The Maven plugin adds an <code class="literal">install</code> task to your project. This task depends on all the archives task of the <code class="literal">archives</code> configuration. It installs those archives to your local Maven repository. If the default location for the local repository is redefined in a Maven <code class="literal">settings.xml</code>, this is considered by this task.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="sec:maven_pom_generation"></a>52.6.4.&nbsp;Maven POM 生成</h3>
+        <h5 class="title"><a name="sec:maven_pom_generation"></a>52.6.4.&nbsp;Maven POM generation</h5>
+       </div>
+      </div>
+     </div>
+     <p>当部署一个工件到 Maven 仓库时，Gradle 会自动为它生成一个 POM。下表展示了用于 POM 的 <code class="literal">groupId</code>、<code class="literal">artifactId</code>、 <code class="literal">version</code> 和 <code class="literal">package</code> 元素的默认值。<code class="literal">dependency</code> 元素则是根据项目的依赖声明来创建的。 <br>When deploying an artifact to a Maven repository, Gradle automatically generates a POM for it. The <code class="literal">groupId</code>, <code class="literal">artifactId</code>, <code class="literal">version</code> and <code class="literal">packaging</code> elements used for the POM default to the values shown in the table below. The <code class="literal">dependency</code> elements are created from the project's dependency declarations.</p>
+     <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+      <p class="title"><b>表 52.5. Maven POM 生成的默认值 - Table&nbsp;52.5.&nbsp;Default Values for Maven POM generation</b></p>
+      <div class="table-contents">
+       <table id="N15658">
+        <thead>
+         <tr> 
+          <td>Maven 元素<br>Maven Element</td> 
+          <td>默认值<br>Default Value</td> 
+         </tr>
+        </thead>
+        <tbody>
+         <tr> 
+          <td>groupId</td> 
+          <td>project.group</td> 
+         </tr>
+         <tr> 
+          <td>artifactId</td> 
+          <td>uploadTask.repositories.mavenDeployer.pom.artifactId (if set) or archiveTask.baseName.</td> 
+         </tr>
+         <tr> 
+          <td>version</td> 
+          <td>project.version</td> 
+         </tr>
+         <tr> 
+          <td>packaging</td> 
+          <td>archiveTask.extension</td> 
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+     <p> 在这里，<code class="literal">uploadTask</code> 和 <code class="literal">archiveTask</code> 分别指的是用于上传和生成归档的任务（例如，<code class="literal">uploadArchives</code> 和 <code class="literal">jar</code>）。<code class="literal">archiveTask.baseName</code> 默认为 <code class="literal">project.archivesBaseName</code> ，后者默认为 <code class="literal">project.name</code>。 <br>Here, <code class="literal">uploadTask</code> and <code class="literal">archiveTask</code> refer to the tasks used for uploading and generating the archive, respectively (for example <code class="literal">uploadArchives</code> and <code class="literal">jar</code>). <code class="literal">archiveTask.baseName</code> defaults to <code class="literal">project.archivesBaseName</code> which in turn defaults to <code class="literal">project.name</code>.</p>
+     <div class="note">
+      <p> 当你把 <code class="literal">archiveTask.baseName</code> 设置为非默认值时，请确保将 <code class="literal">uploadTask.repositories.mavenDeployer.pom.artifactId</code> 设置为相同的值。否则在同一个构建中，其他项目引用到的这个项目所生成的 POM 的 artifact ID 可能会有误。 <br>When you set <code class="literal">archiveTask.baseName</code> to a value other than the default, make sure to set <code class="literal">uploadTask.repositories.mavenDeployer.pom.artifactId</code> to the same value. Otherwise, the project at hand may be referenced with the wrong artifact ID from generated POMs for other projects in the same build.</p>
+     </div>
+     <p> 生成的 POM 可以在 <code class="literal">&lt;buildDir&gt;/poms</code> 中找到。它们可以通过 <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenPom.html" target="_top"><code class="classname">MavenPom</code></a> API 进一步自定义。比如，你可能希望部署到 Maven 仓库的工件版本或名称与 Gradle 生成的工件不同。要自定义这些内容，你可以这样做： <br>Generated POMs can be found in <code class="literal">&lt;buildDir&gt;/poms</code>. They can be further customized via the <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenPom.html" target="_top"><code class="classname">MavenPom</code></a> API. For example, you might want the artifact deployed to the Maven repository to have a different version or name than the artifact generated by Gradle. To customize these you can do:</p>
+     <div class="example">
+      <a name="customizePom"></a>
+      <p class="title"><b>示例 52.5. pom 的定制 - Example&nbsp;52.5.&nbsp;Customization of pom</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"file://localhost/tmp/myRepo/"</span>)
@@ -245,9 +415,17 @@ uploadArchives {
             pom.artifactId = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'myMavenName'</span>
         }
     }
-}</pre></div></div><br class="example-break"><p>To add additional content to the POM, the <code class="literal">pom.project</code> builder can be used. With this builder,
-                any element listed in the <a class="ulink" href="http://maven.apache.org/pom.html" target="_top">Maven POM reference</a> can be added.
-            </p><div class="example"><a name="pomBuilder"></a><p class="title"><b>Example&nbsp;52.6.&nbsp;Builder style customization of pom</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">uploadArchives {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>如果要将其他内容添加到 POM，可以用 <code class="literal">pom.project</code> 构建器。通过这个构建器，<a class="ulink" href="http://maven.apache.org/pom.html" target="_top">Maven POM 参考</a> 中所列出的任何元素都可以被添加进来。 <br>To add additional content to the POM, the <code class="literal">pom.project</code> builder can be used. With this builder, any element listed in the <a class="ulink" href="http://maven.apache.org/pom.html" target="_top">Maven POM reference</a> can be added.</p>
+     <div class="example">
+      <a name="pomBuilder"></a>
+      <p class="title"><b>示例 52.6. pom 的构建器样式自定义 - Example&nbsp;52.6.&nbsp;Builder style customization of pom</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"file://localhost/tmp/myRepo/"</span>)
@@ -262,26 +440,57 @@ uploadArchives {
             }
         }
     }
-}</pre></div></div><br class="example-break"><p>Note: <code class="literal">groupId</code>, <code class="literal">artifactId</code>, <code class="literal">version</code>, and <code class="literal">packaging</code>
-                should always be set directly on the <code class="literal">pom</code> object.
-            </p><div class="example"><a name="pomBuilder"></a><p class="title"><b>Example&nbsp;52.7.&nbsp;Modifying auto-generated content</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">def installer = install.repositories.mavenInstaller
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>注：<code class="literal">groupId</code>、<code class="literal">artifactId</code>、<code class="literal">version</code> 和 <code class="literal">packaging</code> 应该始终在 <code class="literal">pom</code> 对象上直接设置。 <br>Note: <code class="literal">groupId</code>, <code class="literal">artifactId</code>, <code class="literal">version</code>, and <code class="literal">packaging</code> should always be set directly on the <code class="literal">pom</code> object.</p>
+     <div class="example">
+      <a name="pomBuilder"></a>
+      <p class="title"><b>示例 52.7. 修改自动生成的内容 - Example&nbsp;52.7.&nbsp;Modifying auto-generated content</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">def installer = install.repositories.mavenInstaller
 def deployer = uploadArchives.repositories.mavenDeployer
 
 [installer, deployer]*.pom*.whenConfigured {pom -&gt;
     pom.dependencies.find {dep -&gt; dep.groupId == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'group3'</span> &amp;&amp; dep.artifactId == <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'runtime'</span> }.optional = true
-}</pre></div></div><br class="example-break"><p>If you have more than one artifact to publish, things work a little bit differently. See<a class="xref" href="maven_plugin.html#sub:multiple_artifacts_per_project">Section&nbsp;52.6.4.1, &ldquo;Multiple artifacts per project&rdquo;</a>.
-            </p><p>To customize the settings for the Maven installer (see<a class="xref" href="maven_plugin.html#sub:installing_to_the_local_repository">Section&nbsp;52.6.3, &ldquo;Installing to the local repository&rdquo;</a>), you can do:
-            </p><div class="example"><a name="customizeInstaller"></a><p class="title"><b>Example&nbsp;52.8.&nbsp;Customization of Maven installer</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">install {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p>如果要发布多个工件，那么要做的事情会有些不同。请参阅<a class="xref" href="maven_plugin.html#sub:multiple_artifacts_per_project">第 52.6.4.1 节，“每个项目多个工件”</a>。 <br>If you have more than one artifact to publish, things work a little bit differently. See<a class="xref" href="maven_plugin.html#sub:multiple_artifacts_per_project">Section&nbsp;52.6.4.1, “Multiple artifacts per project”</a>.</p>
+     <p>要自定义 Maven 安装器（见<a class="xref" href="maven_plugin.html#sub:installing_to_the_local_repository">第 52.6.3 节，“安装到本地仓库”</a>)的设置，你可以： <br>To customize the settings for the Maven installer (see<a class="xref" href="maven_plugin.html#sub:installing_to_the_local_repository">Section&nbsp;52.6.3, “Installing to the local repository”</a>), you can do:</p>
+     <div class="example">
+      <a name="customizeInstaller"></a>
+      <p class="title"><b>示例 52.8. Maven 安装器的自定义 - Example&nbsp;52.8.&nbsp;Customization of Maven installer</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">install {
     repositories.mavenInstaller {
         pom.version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0Maven'</span>
         pom.artifactId = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'myName'</span>
     }
-}</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sub:multiple_artifacts_per_project"></a>52.6.4.1.&nbsp;Multiple artifacts per project</h4></div></div></div><p>Maven can only deal with one artifact per project. This is reflected in the structure of the
-                    Maven POM. We think there are many situations where it makes sense to have more than one artifact per
-                    project. In such a case you need to generate multiple POMs. In such a case you have to explicitly declare each artifact
-                    you want to publish to a Maven repository. The <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenDeployer.html" target="_top"><code class="classname">MavenDeployer</code></a> and the MavenInstaller
-                    both provide an API for this:
-                </p><div class="example"><a name="multiplePoms"></a><p class="title"><b>Example&nbsp;52.9.&nbsp;Generation of multiple poms</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">uploadArchives {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="sub:multiple_artifacts_per_project"></a>52.6.4.1. 每个项目多个构件</h4>
+         <h6 class="title"><a name="sub:multiple_artifacts_per_project"></a>52.6.4.1.&nbsp;Multiple artifacts per project</h6>
+        </div>
+       </div>
+      </div>
+      <p>Maven 对每个项目只能处理一个工件，这反映在 Maven POM 的结构中。我们认为，在许多情况下，每个项目有一个以上的工件是有意义的。在这种情况下，你需要生成多个 POM。在这种情况下，你必须显式声明要发布到 Maven 仓库的每个工件。<a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenDeployer.html" target="_top"><code class="classname">MavenDeployer</code></a> 和 MavenInstaller 都为此提供了 API： <br>Maven can only deal with one artifact per project. This is reflected in the structure of the Maven POM. We think there are many situations where it makes sense to have more than one artifact per project. In such a case you need to generate multiple POMs. In such a case you have to explicitly declare each artifact you want to publish to a Maven repository. The <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/MavenDeployer.html" target="_top"><code class="classname">MavenDeployer</code></a> and the MavenInstaller both provide an API for this:</p>
+      <div class="example">
+       <a name="multiplePoms"></a>
+       <p class="title"><b>示例 52.9. 多个 pom 的生成 - Example&nbsp;52.9.&nbsp;Generation of multiple poms</b></p>
+       <div class="example-contents">
+        <p><code class="filename">build.gradle</code></p>
+        <pre class="programlisting">uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"file://localhost/tmp/myRepo/"</span>)
@@ -294,22 +503,55 @@ def deployer = uploadArchives.repositories.mavenDeployer
             pom(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'api'</span>).version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'mySpecialMavenVersion'</span>
         }
     }
-}</pre></div></div><br class="example-break"><p>You need to declare a filter for each artifact you want to publish. This filter defines a boolean expression for
-                    which Gradle artifact it accepts. Each filter has a POM associated with it which you can configure.
-                    To learn more about this have a look at <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/PomFilterContainer.html" target="_top"><code class="classname">PomFilterContainer</code></a>
-                    and its associated classes.
-                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="sub:dependency_mapping"></a>52.6.4.2.&nbsp;Dependency mapping</h4></div></div></div><p>The Maven plugin configures the default mapping between the Gradle configurations added by the
-                    Java and War plugin and the Maven scopes. Most
-                    of the time you don't need to touch this and you can safely skip this section. The mapping
-                    works like the following. You can map a configuration to one and only one scope. Different
-                    configurations can be mapped to one or different scopes. One can assign also a priority to a particular
-                    configuration-to-scope mapping. Have a look at
-                    <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/Conf2ScopeMappingContainer.html" target="_top"><code class="classname">Conf2ScopeMappingContainer</code></a>
-                    to learn more. To access the mapping configuration you can say:
-                </p><div class="example"><a name="mappings"></a><p class="title"><b>Example&nbsp;52.10.&nbsp;Accessing a mapping configuration</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task mappings &lt;&lt; {
+}</pre>
+       </div>
+      </div>
+      <br class="example-break">
+      <p>你需要为每个要发布的工件声明一个过滤器，这个过滤器定义了其接受 Gradle 工件的布尔表达式。每个过滤器都有一个与之关联的 POM，通过它你可以进行配置。要了解更多信息，请查看 <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/PomFilterContainer.html" target="_top"><code class="classname">PomFilterContainer</code></a> 及其关联的类。 <br>You need to declare a filter for each artifact you want to publish. This filter defines a boolean expression for which Gradle artifact it accepts. Each filter has a POM associated with it which you can configure. To learn more about this have a look at <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/PomFilterContainer.html" target="_top"><code class="classname">PomFilterContainer</code></a> and its associated classes.</p>
+     </div>
+     <div class="section">
+      <div class="titlepage">
+       <div>
+        <div>
+         <h4 class="title"><a name="sub:dependency_mapping"></a>52.6.4.2.&nbsp;依赖映射</h4>
+         <h6 class="title"><a name="sub:dependency_mapping"></a>52.6.4.2.&nbsp;Dependency mapping</h6>
+        </div>
+       </div>
+      </div>
+      <p>Maven 插件配置了由 Java 和 War 插件添加的 Gradle 配置与 Maven 作用域之间的默认映射。大多数时候，你不需要去接触它，并且你可以安全跳过本节内容。映射过程如下。你可以把一个配置只映射到一个作用域上，也可以将不同的配置映射到一个或多个作用域上。另外，还可以对特定的配置与作用域的映射指定优先级。你可以参考 <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/Conf2ScopeMappingContainer.html" target="_top"><code class="classname">Conf2ScopeMappingContainer</code></a> 来了解更多信息。要访问映射配置，你可以： <br>The Maven plugin configures the default mapping between the Gradle configurations added by the Java and War plugin and the Maven scopes. Most of the time you don't need to touch this and you can safely skip this section. The mapping works like the following. You can map a configuration to one and only one scope. Different configurations can be mapped to one or different scopes. One can assign also a priority to a particular configuration-to-scope mapping. Have a look at <a class="ulink" href="../javadoc/org/gradle/api/artifacts/maven/Conf2ScopeMappingContainer.html" target="_top"><code class="classname">Conf2ScopeMappingContainer</code></a> to learn more. To access the mapping configuration you can say:</p>
+      <div class="example">
+       <a name="mappings"></a>
+       <p class="title"><b>示例 52.10. 访问映射配置 - Example&nbsp;52.10.&nbsp;Accessing a mapping configuration</b></p>
+       <div class="example-contents">
+        <p><code class="filename">build.gradle</code></p>
+        <pre class="programlisting">task mappings &lt;&lt; {
     println conf2ScopeMappings.mappings
-}</pre></div></div><br class="example-break"><p>Gradle exclude rules are converted to Maven excludes if possible. Such a conversion is possible if in
-                    the Gradle exclude rule the group as well as the module name is specified (as Maven needs both in
-                    contrast to Ivy). Per-configuration excludes are also included in the Maven POM, if they are convertible.
-                </p></div></div></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N15574" name="ftn.N15574" class="para">19</a>] </sup>It is planned for a future release to provide out-of-the-box support for this
-                    </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="artifact_management.html" title="Chapter&nbsp;51.&nbsp;Publishing artifacts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="signing_plugin.html" title="Chapter&nbsp;53.&nbsp;The Signing Plugin">Next</a></div></div></div></body></html>
+}</pre>
+       </div>
+      </div>
+      <br class="example-break">
+      <p>如果有可能，Gradle 的排除规会转换为 Maven 的排除规则。如果在 Gradle 排除规则中指定了组及模块名称的话（与 Ivy 相反，Maven对这两个都需要），那么这种转换是可能的。对配置的排除规则如果可以被转换的话，也会包含在 Maven POM 中。 <br>Gradle exclude rules are converted to Maven excludes if possible. Such a conversion is possible if in the Gradle exclude rule the group as well as the module name is specified (as Maven needs both in contrast to Ivy). Per-configuration excludes are also included in the Maven POM, if they are convertible.</p>
+     </div>
+    </div>
+   </div>
+   <div class="footnotes">
+    <br>
+    <hr align="left" width="100">
+    <div class="footnote">
+     <p><sup>[<a href="#N15574" name="ftn.N15574" class="para">19</a>] </sup>已经计划在将来的发行版中为其提供开箱即用的支持。 <br><sup>[<a href="#N15574" name="ftn.N15574" class="para">19</a>] </sup>It is planned for a future release to provide out-of-the-box support for this</p>
+    </div>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="artifact_management.html" title="第五十一章. 发布工件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="signing_plugin.html" title="第五十三章. 签名插件">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
