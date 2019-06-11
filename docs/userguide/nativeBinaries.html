@@ -1,92 +1,265 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;54.&nbsp;Building native binaries</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide"><link rel="up" href="userguide.html" title="Gradle User Guide"><link rel="prev" href="signing_plugin.html" title="Chapter&nbsp;53.&nbsp;The Signing Plugin"><link rel="next" href="build_lifecycle.html" title="Chapter&nbsp;55.&nbsp;The Build Lifecycle"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="signing_plugin.html" title="Chapter&nbsp;53.&nbsp;The Signing Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="build_lifecycle.html" title="Chapter&nbsp;55.&nbsp;The Build Lifecycle">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="nativeBinaries"></a>Chapter&nbsp;54.&nbsp;Building native binaries</h1></div></div></div><div class="note"><p>
-            The Gradle support for building native binaries is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.
-        </p></div><p>
-        The various native binary plugins add support for building native software components, such as executables or shared libraries, from C++, C and other languages.
-        While many excellent build tools exist for this space of software development, Gradle offers developers it's trademark power and flexibility
-        together with the dependency management practices more traditionally found in the JVM development space.
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N15845"></a>54.1.&nbsp;Supported languages</h2></div></div></div><p>
-            The following source languages are currently supported:
-        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>C</p></li><li class="listitem"><p>C++</p></li><li class="listitem"><p>Objective-C</p></li><li class="listitem"><p>Objective-C++</p></li><li class="listitem"><p>Assembly</p></li><li class="listitem"><p>Windows resources</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="native-binaries:tool-chain-support"></a>54.2.&nbsp;Tool chain support</h2></div></div></div><p>
-            Gradle offers the ability to execute the same build using different tool chains. You can control which tool chain will be used to build
-            by changing the operating system PATH to include the desired tool chain compiler. Alternatively, you can configure the tool chains directly,
-            as described in <a class="xref" href="nativeBinaries.html#native_binaries:tool_chain">Section&nbsp;54.10, &ldquo;Tool chains&rdquo;</a>.
-        </p><p>
-            The following tool chains are supported:
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><div class="table-contents"><table id="N15868">
-                <tr><td>Operating System</td><td>Tool Chain</td><td>Notes</td></tr>
-            <tr>
-                <td>Linux</td><td><a class="ulink" href="http://gcc.gnu.org/" target="_top">GCC</a></td> <td></td>
-            </tr><tr>
-                <td>Linux</td><td><a class="ulink" href="http://clang.llvm.org" target="_top">Clang</a></td><td></td>
-            </tr><tr>
-                <td>Mac OS X</td><td>XCode</td><td>Uses the Clang tool chain bundled with XCode.</td>
-            </tr><tr>
-                <td>Mac OS X</td><td><a class="ulink" href="http://gcc.gnu.org/" target="_top">GCC</a></td><td></td>
-            </tr><tr>
-                <td>Mac OS X</td><td><a class="ulink" href="http://clang.llvm.org" target="_top">Clang</a></td><td></td>
-            </tr><tr>
-                <td>Windows</td><td><a class="ulink" href="http://www.microsoft.com/visualstudio/en-us" target="_top">Visual C++</a></td><td>Windows XP and later, Visual C++ 2010 and later.</td>
-            </tr><tr>
-                <td>Windows</td><td><a class="ulink" href="http://gcc.gnu.org/" target="_top">GCC</a> with <a class="ulink" href="http://cygwin.com" target="_top">Cywin 32</a></td><td>Windows XP and later. Cygwin 64 is currently not supported.</td>
-            </tr><tr>
-                <td>Windows</td><td><a class="ulink" href="http://gcc.gnu.org/" target="_top">GCC</a> with <a class="ulink" href="http://www.mingw.org/" target="_top">MinGW</a></td><td>Windows XP and later. <a class="ulink" href="http://mingw-w64.sourceforge.net" target="_top">Mingw-w64</a> is currently not supported.</td>
-            </tr></table></div></div><p>
-            The native plugins should generally work on other UNIX-like platforms, but are currently officially supported on the above platforms only.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N158D4"></a>54.3.&nbsp;Component model</h2></div></div></div><p>
-            A native binary project defines a set of <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> and <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> components,
-            each of which Gradle maps to a number of <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> outputs.
-            For each <code class="literal">executable</code> or <code class="literal">library</code> defined, Gradle adds a <a class="ulink" href="../javadoc/org/gradle/language/base/FunctionalSourceSet.html" target="_top"><code class="classname">FunctionalSourceSet</code></a> with the same name.
-            Each of these functional source sets will contain a language-specific source set for each of the languages supported by the project.
-        </p><p>
-            To build either a static or shared native library binary,
-            a <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> component is added to the <code class="literal">libraries</code> container.
-            Each <code class="literal">library</code> component can produce at least one <a class="ulink" href="../dsl/org.gradle.nativebinaries.SharedLibraryBinary.html" target="_top"><code class="classname">SharedLibraryBinary</code></a>
-            and at least one <a class="ulink" href="../dsl/org.gradle.nativebinaries.StaticLibraryBinary.html" target="_top"><code class="classname">StaticLibraryBinary</code></a>.
-        </p><div class="example"><a name="cppLibraries"></a><p class="title"><b>Example&nbsp;54.1.&nbsp;Defining a library component</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">libraries {
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第五十四章. 构建本机二进制文件 - Chapter&nbsp;54.&nbsp;Building native binaries</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="signing_plugin.html" title="第五十三章. 签名插件">
+  <link rel="next" href="build_lifecycle.html" title="第五十五章. 构建的生命周期">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="signing_plugin.html" title="第五十三章. 签名插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="build_lifecycle.html" title="第五十五章. 构建的生命周期">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="nativeBinaries"></a>第五十四章. 构建本机二进制文件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="nativeBinaries"></a>Chapter&nbsp;54.&nbsp;Building native binaries</h3>
+     </div>
+    </div>
+   </div>
+   <div class="note">
+    <p> Gradle 对构建本机二进制文件的支持目前为 <a class="link" href="feature_lifecycle.html">试验性阶段</a>。请注意，DSL 和其他配置可能在以后的 Gradle 版本中有所变化。 <br>The Gradle support for building native binaries is currently <a class="link" href="feature_lifecycle.html">incubating</a>. Please be aware that the DSL and other configuration may change in later Gradle versions.</p>
+   </div>
+   <p> 各种本机二进制插件添加了对从 C++，C 和其他语言构建本机软件组件（如可执行文件或共享库）的支持。 尽管在软件开发方面已经有许多出色的构建工具，但是 Gradle 向开发者提供了它的强大特征和灵活性，以及在 JVM 开发上更传统的依赖管理实践。 <br>The various native binary plugins add support for building native software components, such as executables or shared libraries, from C++, C and other languages. While many excellent build tools exist for this space of software development, Gradle offers developers it's trademark power and flexibility together with the dependency management practices more traditionally found in the JVM development space.</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N15845"></a>54.1. 受支持的语言</h2>
+       <h4 class="title"><a name="N15845"></a>54.1.&nbsp;Supported languages</h4>
+      </div>
+     </div>
+    </div>
+    <p> 当前支持以下源语言： <br>The following source languages are currently supported:</p>
+    <div class="itemizedlist">
+     <ul class="itemizedlist">
+      <li class="listitem"><p>C</p></li>
+      <li class="listitem"><p>C++</p></li>
+      <li class="listitem"><p>Objective-C</p></li>
+      <li class="listitem"><p>Objective-C++</p></li>
+      <li class="listitem"><p>Assembly</p></li>
+      <li class="listitem"><p>Windows resources</p></li>
+     </ul>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="native-binaries:tool-chain-support"></a>54.2. 工具链支持</h2>
+       <h4 class="title"><a name="native-binaries:tool-chain-support"></a>54.2.&nbsp;Tool chain support</h4>
+      </div>
+     </div>
+    </div>
+    <p> Gradle 提供了使用不同工具链执行相同构建的能力。你可以通过将操作系统的 PATH 更改为包含所需的工具链编译器，来控制使用哪个工具链进行构建。或者，你可以直接配置工具链，如<a class="xref" href="nativeBinaries.html#native_binaries:tool_chain">第 54.10 节，《工具链》</a>中所述。 <br>Gradle offers the ability to execute the same build using different tool chains. You can control which tool chain will be used to build by changing the operating system PATH to include the desired tool chain compiler. Alternatively, you can configure the tool chains directly, as described in <a class="xref" href="nativeBinaries.html#native_binaries:tool_chain">Section&nbsp;54.10, “Tool chains”</a>.</p>
+    <p> 支持以下的工具链： <br>The following tool chains are supported:</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <div class="table-contents">
+      <table id="N15868"> 
+       <tbody>
+        <tr>
+         <td>操作系统<br>Operating System</td>
+         <td>工具链<br>Tool Chain</td>
+         <td>备注<br>Notes</td>
+        </tr> 
+        <tr> 
+         <td>Linux</td>
+         <td><a class="ulink" href="http://gcc.gnu.org/" target="_top">GCC</a></td> 
+         <td></td> 
+        </tr>
+        <tr> 
+         <td>Linux</td>
+         <td><a class="ulink" href="http://clang.llvm.org" target="_top">Clang</a></td>
+         <td></td> 
+        </tr>
+        <tr> 
+         <td>Mac OS X</td>
+         <td>XCode</td>
+         <td>使用 XCode 捆绑的 Clang 工具链。<br>Uses the Clang tool chain bundled with XCode.</td> 
+        </tr>
+        <tr> 
+         <td>Mac OS X</td>
+         <td><a class="ulink" href="http://gcc.gnu.org/" target="_top">GCC</a></td>
+         <td></td> 
+        </tr>
+        <tr> 
+         <td>Mac OS X</td>
+         <td><a class="ulink" href="http://clang.llvm.org" target="_top">Clang</a></td>
+         <td></td> 
+        </tr>
+        <tr> 
+         <td>Windows</td>
+         <td><a class="ulink" href="http://www.microsoft.com/visualstudio/en-us" target="_top">Visual C++</a></td>
+         <td>Windows XP 及更高版本，Visual C++ 2010 及以上版本。<br>Windows XP and later, Visual C++ 2010 and later.</td> 
+        </tr>
+        <tr> 
+         <td>Windows</td>
+         <td><a class="ulink" href="http://gcc.gnu.org/" target="_top">GCC</a> with <a class="ulink" href="http://cygwin.com" target="_top">Cywin 32</a></td>
+         <td>Windows XP 和更高版本。当前不支持 Cygwin 64。<br>Windows XP and later. Cygwin 64 is currently not supported.</td> 
+        </tr>
+        <tr> 
+         <td>Windows</td>
+         <td><a class="ulink" href="http://gcc.gnu.org/" target="_top">GCC</a> with <a class="ulink" href="http://www.mingw.org/" target="_top">MinGW</a></td>
+         <td>Windows XP 和更高版本。当前不支持 <a class="ulink" href="http://mingw-w64.sourceforge.net" target="_top">Mingw-w64</a>。<br>Windows XP and later. <a class="ulink" href="http://mingw-w64.sourceforge.net" target="_top">Mingw-w64</a> is currently not supported.</td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <p> 本机插件通常在其他类 UNIX 平台上应该都可以用，但目前仅在上述平台上正式支持。 <br>The native plugins should generally work on other UNIX-like platforms, but are currently officially supported on the above platforms only.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N158D4"></a>54.3. 组件模型</h2>
+       <h4 class="title"><a name="N158D4"></a>54.3.&nbsp;Component model</h4>
+      </div>
+     </div>
+    </div>
+    <p> 本机二进制项目定义了一组 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> 和 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> 组件，每个组件 Gradle 都映射到大量的 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> 输出。对于定义的每个 <code class="literal">executable</code> 或 <code class="literal">library</code> ，Gradle 会添加有相同名称的 <a class="ulink" href="../javadoc/org/gradle/language/base/FunctionalSourceSet.html" target="_top"><code class="classname">FunctionalSourceSet</code></a> 。每一个功能源码集都将针对项目所支持的每一种语言包含特定语言的源码集。 <br>A native binary project defines a set of <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> and <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> components, each of which Gradle maps to a number of <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> outputs. For each <code class="literal">executable</code> or <code class="literal">library</code> defined, Gradle adds a <a class="ulink" href="../javadoc/org/gradle/language/base/FunctionalSourceSet.html" target="_top"><code class="classname">FunctionalSourceSet</code></a> with the same name. Each of these functional source sets will contain a language-specific source set for each of the languages supported by the project.</p>
+    <p> 要构建静态或共享本机库二进制文件，请将 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> 组件添加到 <code class="literal">libraries</code> 容器中。每个 <code class="literal">library</code> 组件都可以生成至少一个 <a class="ulink" href="../dsl/org.gradle.nativebinaries.SharedLibraryBinary.html" target="_top"><code class="classname">SharedLibraryBinary</code></a> 和至少一个 <a class="ulink" href="../dsl/org.gradle.nativebinaries.StaticLibraryBinary.html" target="_top"><code class="classname">StaticLibraryBinary</code></a>。 <br>To build either a static or shared native library binary, a <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> component is added to the <code class="literal">libraries</code> container. Each <code class="literal">library</code> component can produce at least one <a class="ulink" href="../dsl/org.gradle.nativebinaries.SharedLibraryBinary.html" target="_top"><code class="classname">SharedLibraryBinary</code></a> and at least one <a class="ulink" href="../dsl/org.gradle.nativebinaries.StaticLibraryBinary.html" target="_top"><code class="classname">StaticLibraryBinary</code></a>.</p>
+    <div class="example">
+     <a name="cppLibraries"></a>
+     <p class="title"><b>示例 54.1. 定义库组件 - Example&nbsp;54.1.&nbsp;Defining a library component</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">libraries {
     hello {}
-}</pre></div></div><br class="example-break"><p>
-            To build an executable binary,
-            an <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> component is added to the <code class="literal">executables</code> container
-            and associated with a set of sources.
-        </p><div class="example"><a name="cppExecutables"></a><p class="title"><b>Example&nbsp;54.2.&nbsp;Defining executable components</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">executables {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 要构建可执行的二进制文件，请将 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">Executable</code></a> 组件添加到 <code class="literal">executables</code> 容器中，并关联到一组源码上。 <br>To build an executable binary, an <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> component is added to the <code class="literal">executables</code> container and associated with a set of sources.</p>
+    <div class="example">
+     <a name="cppExecutables"></a>
+     <p class="title"><b>示例 54.2. 定义可执行组件 - Example&nbsp;54.2.&nbsp;Defining executable components</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">executables {
     main {}
-}</pre></div></div><br class="example-break"><p>
-            In many cases, more than one native binary can be produced for a component.
-            These binaries may vary based on the tool chain used to build, the compiler/linker flags supplied, the dependencies
-            provided, or additional source files provided. Each native binary produced for a component is referred to as <code class="literal">variant</code>.
-            Binary variants are discussed in detail below.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1592D"></a>54.4.&nbsp;Tasks</h2></div></div></div><p>
-            For each <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> that can be produced by a build,
-            a single <em class="firstterm">lifecycle task</em> is constructed that can be used to create that binary, together with a set of other tasks that do the actual
-            work of compiling, linking or assembling the binary.
-        </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><div class="table-contents"><table id="N1593A">
-                <tr><td>Component Type</td><td>Native Binary Type</td><td>Lifecycle task</td><td>Location of created binary</td></tr>
-            <tr>
-                <td><a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a></td><td><a class="ulink" href="../javadoc/org/gradle/nativebinaries/ExecutableBinary.html" target="_top"><code class="classname">ExecutableBinary</code></a></td><td><code class="literal"><em class="replaceable"><code>$component.name</code></em>Executable</code></td><td><code class="filename"><em class="replaceable"><code>$buildDir</code></em>/binaries/<em class="replaceable"><code>$binary.name</code></em>/<em class="replaceable"><code>$component.name</code></em></code></td>
-            </tr><tr>
-                <td><a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a></td><td><a class="ulink" href="../dsl/org.gradle.nativebinaries.SharedLibraryBinary.html" target="_top"><code class="classname">SharedLibraryBinary</code></a></td><td><code class="literal"><em class="replaceable"><code>$component.name</code></em>SharedLibrary</code></td><td><code class="filename"><em class="replaceable"><code>$buildDir</code></em>/binaries/<em class="replaceable"><code>$binary.name</code></em>/lib<em class="replaceable"><code>$component.name</code></em>.so</code></td>
-            </tr><tr>
-                <td><a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a></td><td><a class="ulink" href="../dsl/org.gradle.nativebinaries.StaticLibraryBinary.html" target="_top"><code class="classname">StaticLibraryBinary</code></a></td><td><code class="literal"><em class="replaceable"><code>$component.name</code></em>StaticLibrary</code></td><td><code class="filename"><em class="replaceable"><code>$buildDir</code></em>/binaries/<em class="replaceable"><code>$binary.name</code></em>/<em class="replaceable"><code>$component.name</code></em>.a</code></td>
-            </tr></table></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N1599D"></a>54.4.1.&nbsp;Working with shared libraries</h3></div></div></div><p>
-                For each executable binary produced, the <code class="literal">cpp</code> plugin provides an <code class="literal">install${binary.name}</code> task,
-                which creates a development install of the executable, along with the shared libraries it requires.
-                This allows you to run the executable without needing to install the shared libraries in their final locations.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="native_binaries:languages"></a>54.5.&nbsp;Language support</h2></div></div></div><p>
-            Presently, Gradle supports building native binaries from any combination of source languages listed below.
-            A native binary project will contain one or more named <code class="literal">FunctionalSourceSet</code> instances (eg 'main', 'test', etc),
-            each of which can contain <code class="literal">LanguageSourceSet</code>s containing source files, one for each language.
-        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>C</p></li><li class="listitem"><p>C++</p></li><li class="listitem"><p>Objective-C</p></li><li class="listitem"><p>Objective-C++</p></li><li class="listitem"><p>Assembly</p></li><li class="listitem"><p>Windows resources</p></li></ul></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N159C7"></a>54.5.1.&nbsp;C++ sources</h3></div></div></div><p>
-                C++ language support is provided by means of the <code class="literal">'cpp'</code> plugin.
-            </p><div class="example"><a name="cppPlugin"></a><p class="title"><b>Example&nbsp;54.3.&nbsp;The 'cpp' plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'cpp'</span></pre></div></div><br class="example-break"><p>
-                C++ sources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.cpp.CppSourceSet.html" target="_top"><code class="classname">CppSourceSet</code></a>,
-                which defines a set of C++ source files and optionally a set of exported header files (for a library).
-                By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.cpp.CppSourceSet.html" target="_top"><code class="classname">CppSourceSet</code></a> contains
-                <code class="filename">.cpp</code> source files in <code class="filename">src/${name}/cpp</code>,
-                and header files in <code class="filename">src/${name}/headers</code>.
-            </p><p>
-                While the <code class="literal">cpp</code> plugin defines these default locations for each <a class="ulink" href="../dsl/org.gradle.language.cpp.CppSourceSet.html" target="_top"><code class="classname">CppSourceSet</code></a>,
-                it is possible to extend or override these defaults to allow for a different project layout.
-            </p><div class="example"><a name="cppSourceSet"></a><p class="title"><b>Example&nbsp;54.4.&nbsp;C++ source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sources {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 在许多情况下，一个组件可以生成多个本机二进制文件。基于用于构建的工具链，提供的编译器或链接器标志，提供的依赖或其他源文件，这些二进制文件可能会有变化。一个组件生成的每个本机二进制都称为 <code class="literal">variant</code>。二进制文件变体下面再进行详细讨论。 <br>In many cases, more than one native binary can be produced for a component. These binaries may vary based on the tool chain used to build, the compiler/linker flags supplied, the dependencies provided, or additional source files provided. Each native binary produced for a component is referred to as <code class="literal">variant</code>. Binary variants are discussed in detail below.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N1592D"></a>54.4. 任务</h2>
+       <h4 class="title"><a name="N1592D"></a>54.4.&nbsp;Tasks</h4>
+      </div>
+     </div>
+    </div>
+    <p> 对于由构建产生的每一个 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a>，我们构造了一个<em class="firstterm">生命周期任务</em>，以及一组其他任务用于创建该二进制文件。这组任务执行编译，链接或组装二进制文件的实际工作。 <br>For each <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> that can be produced by a build, a single <em class="firstterm">lifecycle task</em> is constructed that can be used to create that binary, together with a set of other tasks that do the actual work of compiling, linking or assembling the binary.</p>
+    <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+     <div class="table-contents">
+      <table id="N1593A"> 
+       <tbody>
+        <tr>
+         <td>组件类型<br>Component Type</td>
+         <td>本机二进制类型<br>Native Binary Type</td>
+         <td>生命周期任务<br>Lifecycle task</td>
+         <td>已创建二进制文件的位置<br>Location of created binary</td>
+        </tr> 
+        <tr> 
+         <td><a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a></td>
+         <td><a class="ulink" href="../javadoc/org/gradle/nativebinaries/ExecutableBinary.html" target="_top"><code class="classname">ExecutableBinary</code></a></td>
+         <td><code class="literal"><em class="replaceable"><code>$component.name</code></em>Executable</code></td>
+         <td><code class="filename"><em class="replaceable"><code>$buildDir</code></em>/binaries/<em class="replaceable"><code>$binary.name</code></em>/<em class="replaceable"><code>$component.name</code></em></code></td> 
+        </tr>
+        <tr> 
+         <td><a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a></td>
+         <td><a class="ulink" href="../dsl/org.gradle.nativebinaries.SharedLibraryBinary.html" target="_top"><code class="classname">SharedLibraryBinary</code></a></td>
+         <td><code class="literal"><em class="replaceable"><code>$component.name</code></em>SharedLibrary</code></td>
+         <td><code class="filename"><em class="replaceable"><code>$buildDir</code></em>/binaries/<em class="replaceable"><code>$binary.name</code></em>/lib<em class="replaceable"><code>$component.name</code></em>.so</code></td> 
+        </tr>
+        <tr> 
+         <td><a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a></td>
+         <td><a class="ulink" href="../dsl/org.gradle.nativebinaries.StaticLibraryBinary.html" target="_top"><code class="classname">StaticLibraryBinary</code></a></td>
+         <td><code class="literal"><em class="replaceable"><code>$component.name</code></em>StaticLibrary</code></td>
+         <td><code class="filename"><em class="replaceable"><code>$buildDir</code></em>/binaries/<em class="replaceable"><code>$binary.name</code></em>/<em class="replaceable"><code>$component.name</code></em>.a</code></td> 
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N1599D"></a>54.4.1. 使用共享库</h3>
+        <h5 class="title"><a name="N1599D"></a>54.4.1.&nbsp;Working with shared libraries</h5>
+       </div>
+      </div>
+     </div>
+     <p> 对于生成的每个可执行二进制文件，<code class="literal">cpp</code> 插件提供了 <code class="literal">install${binary.name}</code> 任务，该任务将创建可执行文件的开发安装，以及它所需要的共享库。 它允许你在不需要在其最终位置安装共享库的情况下运行可执行文件。 <br>For each executable binary produced, the <code class="literal">cpp</code> plugin provides an <code class="literal">install${binary.name}</code> task, which creates a development install of the executable, along with the shared libraries it requires. This allows you to run the executable without needing to install the shared libraries in their final locations.</p>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="native_binaries:languages"></a>54.5.&nbsp;语言支持</h2>
+       <h4 class="title"><a name="native_binaries:languages"></a>54.5.&nbsp;Language support</h4>
+      </div>
+     </div>
+    </div>
+    <p> 目前，Gradle 支持从下面列出的源码语言的任意组合中构建本机二进制文件。本机二进制项目将包含一个或多个名为 <code class="literal">FunctionalSourceSet</code> 的实例（如“main”，“test”等等)，每个实例都可以包含多个只包含一种语言的 <code class="literal">LanguageSourceSet</code>。 <br>Presently, Gradle supports building native binaries from any combination of source languages listed below. A native binary project will contain one or more named <code class="literal">FunctionalSourceSet</code> instances (eg 'main', 'test', etc), each of which can contain <code class="literal">LanguageSourceSet</code>s containing source files, one for each language.</p>
+    <div class="itemizedlist">
+     <ul class="itemizedlist">
+      <li class="listitem"><p>C</p></li>
+      <li class="listitem"><p>C++</p></li>
+      <li class="listitem"><p>Objective-C</p></li>
+      <li class="listitem"><p>Objective-C++</p></li>
+      <li class="listitem"><p>Assembly</p></li>
+      <li class="listitem"><p>Windows resources</p></li>
+     </ul>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N159C7"></a>54.4.1.&nbsp;C++ 源码</h3>
+        <h5 class="title"><a name="N159C7"></a>54.5.1.&nbsp;C++ sources</h5>
+       </div>
+      </div>
+     </div>
+     <p> C++ 语言支持通过 <code class="literal">'cpp'</code> 插件提供。 <br>C++ language support is provided by means of the <code class="literal">'cpp'</code> plugin.</p>
+     <div class="example">
+      <a name="cppPlugin"></a>
+      <p class="title"><b>示例 54.3. 'cpp' 插件 - Example&nbsp;54.3.&nbsp;The 'cpp' plugin</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'cpp'</span></pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 把 C++ 源码包含到本机二进制文件中，是通过 <a class="ulink" href="../dsl/org.gradle.language.cpp.CppSourceSet.html" target="_top"><code class="classname">CppSourceSet</code></a> 来实现的，它定义了一组 C++ 源文件以及可选的一组导出的头文件（用于库）。默认情况下，对于任何命名的组件，<a class="ulink" href="../dsl/org.gradle.language.cpp.CppSourceSet.html" target="_top"><code class="classname">CppSourceSet</code></a> 包含了在 <code class="filename">src/${name}/cpp</code> 中的 <code class="filename">.cpp</code> 源文件，以及在 <code class="filename">src/${name}/headers</code> 中的头文件。 <br>C++ sources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.cpp.CppSourceSet.html" target="_top"><code class="classname">CppSourceSet</code></a>, which defines a set of C++ source files and optionally a set of exported header files (for a library). By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.cpp.CppSourceSet.html" target="_top"><code class="classname">CppSourceSet</code></a> contains <code class="filename">.cpp</code> source files in <code class="filename">src/${name}/cpp</code>, and header files in <code class="filename">src/${name}/headers</code>.</p>
+     <p> 当 <code class="literal">cpp</code> 插件为每个 <a class="ulink" href="../dsl/org.gradle.language.cpp.CppSourceSet.html" target="_top"><code class="classname">CppSourceSet</code></a> 定义了这些默认的位置时，可以扩展或重写这些默认值实现不同的项目布局。 <br>While the <code class="literal">cpp</code> plugin defines these default locations for each <a class="ulink" href="../dsl/org.gradle.language.cpp.CppSourceSet.html" target="_top"><code class="classname">CppSourceSet</code></a>, it is possible to extend or override these defaults to allow for a different project layout.</p>
+     <div class="example">
+      <a name="cppSourceSet"></a>
+      <p class="title"><b>示例 54.4.&nbsp;C++ 源码集 - Example&nbsp;54.4.&nbsp;C++ source set</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">sources {
     main {
         cpp {
             source {
@@ -95,22 +268,39 @@
             }
         }
     }
-}</pre></div></div><br class="example-break"><p>
-                For a library named 'main', files in <code class="filename">src/main/headers</code> are considered the &ldquo;public&rdquo; or &ldquo;exported&rdquo; headers.
-                Header files that should not be exported (but are used internally) should be placed inside the <code class="filename">src/main/cpp</code> directory (though be aware that
-                such header files should always be referenced in a manner relative to the file including them).
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15A0A"></a>54.5.2.&nbsp;C sources</h3></div></div></div><p>
-                C language support is provided by means of the <code class="literal">'c'</code> plugin.
-            </p><div class="example"><a name="cPlugin"></a><p class="title"><b>Example&nbsp;54.5.&nbsp;The 'c' plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'c'</span></pre></div></div><br class="example-break"><p>
-                C sources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a>,
-                which defines a set of C source files and optionally a set of exported header files (for a library).
-                By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a> contains
-                <code class="filename">.c</code> source files in <code class="filename">src/${name}/c</code>,
-                and header files in <code class="filename">src/${name}/headers</code>.
-            </p><p>
-                While the <code class="literal">c</code> plugin defines these default locations for each <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a>,
-                it is possible to extend or override these defaults to allow for a different project layout.
-            </p><div class="example"><a name="cSourceSet"></a><p class="title"><b>Example&nbsp;54.6.&nbsp;C source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sources {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 对于名为“main”的库，<code class="filename">src/main/headers</code> 中的文件都被视为“public”或“exported”头。不应导出（但内部使用）的头文件应放在 <code class="filename">src/main/cpp</code> 目录内（不过请注意，应该始终以包含它们的文件的相对路径这样一种方式来引用这些头文件）。 <br>For a library named 'main', files in <code class="filename">src/main/headers</code> are considered the “public” or “exported” headers. Header files that should not be exported (but are used internally) should be placed inside the <code class="filename">src/main/cpp</code> directory (though be aware that such header files should always be referenced in a manner relative to the file including them).</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15A0A"></a>54.5.2.&nbsp;C 源码</h3>
+        <h5 class="title"><a name="N15A0A"></a>54.5.2.&nbsp;C sources</h5>
+       </div>
+      </div>
+     </div>
+     <p> C 语言支持是通过 <code class="literal">'c'</code> 插件来提供的。 <br>C language support is provided by means of the <code class="literal">'c'</code> plugin.</p>
+     <div class="example">
+      <a name="cPlugin"></a>
+      <p class="title"><b>示例 54.5. 'C' 插件 - Example&nbsp;54.5.&nbsp;The 'c' plugin</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'c'</span></pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 把 C 源码包含到本机二进制文件中，是通过 <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a> 来实现的，它定义了一组 C 源文件以及可选的一组导出的头文件（用于库）。默认情况下，对于任何命名的组件，<a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a> 包含了在 <code class="filename">src/${name}/c</code> 中的 <code class="filename">.c</code> 源文件，以及在 <code class="filename">src/${name}/headers</code> 中的头文件。 <br>C sources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a>, which defines a set of C source files and optionally a set of exported header files (for a library). By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a> contains <code class="filename">.c</code> source files in <code class="filename">src/${name}/c</code>, and header files in <code class="filename">src/${name}/headers</code>.</p>
+     <p> 当 <code class="literal">c</code> 插件为每个 <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a> 定义了这些默认的位置时，可以扩展或重写这些默认值实现不同的项目布局。 <br>While the <code class="literal">c</code> plugin defines these default locations for each <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a>, it is possible to extend or override these defaults to allow for a different project layout.</p>
+     <div class="example">
+      <a name="cSourceSet"></a>
+      <p class="title"><b>示例 54.4.&nbsp;C 源码集 - Example&nbsp;54.6.&nbsp;C source set</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">sources {
     hello {
         c {
             source {
@@ -122,35 +312,92 @@
             }
         }
     }
-}</pre></div></div><br class="example-break"><p>
-                For a library named 'main', files in <code class="filename">src/main/headers</code> are considered the &ldquo;public&rdquo; or &ldquo;exported&rdquo; headers.
-                Header files that should not be exported (but are used internally) should be placed inside the <code class="filename">src/main/c</code> directory (though be aware that
-                such header files should always be referenced in a manner relative to the file including them).
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15A4D"></a>54.5.3.&nbsp;Assembler sources</h3></div></div></div><p>
-                Assembly language support is provided by means of the <code class="literal">'assembler'</code> plugin.
-            </p><div class="example"><a name="assemblerPlugin"></a><p class="title"><b>Example&nbsp;54.7.&nbsp;The 'assembler' plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'assembler'</span></pre></div></div><br class="example-break"><p>
-                Assembler sources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.assembler.AssemblerSourceSet.html" target="_top"><code class="classname">AssemblerSourceSet</code></a>,
-                which defines a set of Assembler source files.
-                By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.assembler.AssemblerSourceSet.html" target="_top"><code class="classname">AssemblerSourceSet</code></a> contains
-                <code class="filename">.s</code> source files under <code class="filename">src/${name}/asm</code>.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15A71"></a>54.5.4.&nbsp;Objective-C sources</h3></div></div></div><p>
-                Objective-C language support is provided by means of the <code class="literal">'objective-c'</code> plugin.
-            </p><div class="example"><a name="objectiveCPlugin"></a><p class="title"><b>Example&nbsp;54.8.&nbsp;The 'objective-c' plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'objective-c'</span></pre></div></div><br class="example-break"><p>
-                Objective-C sources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.objectivec.ObjectiveCSourceSet.html" target="_top"><code class="classname">ObjectiveCSourceSet</code></a>,
-                which defines a set of Objective-C source files.
-                By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.objectivec.ObjectiveCSourceSet.html" target="_top"><code class="classname">ObjectiveCSourceSet</code></a> contains
-                <code class="filename">.m</code> source files under <code class="filename">src/${name}/objectiveC</code>.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15A95"></a>54.5.5.&nbsp;Objective-C++ sources</h3></div></div></div><p>
-                Objective-C++ language support is provided by means of the <code class="literal">'objective-cpp'</code> plugin.
-            </p><div class="example"><a name="objectiveCppPlugin"></a><p class="title"><b>Example&nbsp;54.9.&nbsp;The 'objective-cpp' plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'objective-cpp'</span></pre></div></div><br class="example-break"><p>
-                Objective-C++ sources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.objectivecpp.ObjectiveCppSourceSet.html" target="_top"><code class="classname">ObjectiveCppSourceSet</code></a>,
-                which defines a set of Objective-C++ source files.
-                By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.objectivecpp.ObjectiveCppSourceSet.html" target="_top"><code class="classname">ObjectiveCppSourceSet</code></a> contains
-                <code class="filename">.mm</code> source files under <code class="filename">src/${name}/objectiveCpp</code>.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N15AB9"></a>54.6.&nbsp;Configuring the compiler, assembler and linker</h2></div></div></div><p>
-            Each binary to be produced is associated with a set of compiler and linker settings, which include command-line arguments as well as macro definitions.
-            These settings can be applied to all binaries, an individual binary, or selectively to a group of binaries based on some criteria.
-        </p><div class="example"><a name="allBinarySettings"></a><p class="title"><b>Example&nbsp;54.10.&nbsp;Settings that apply to all binaries</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">binaries.all {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 对于名为“main”的库，<code class="filename">src/main/headers</code> 中的文件都被视为“public”或“exported”头。不应导出（但内部使用）的头文件应放在 <code class="filename">src/main/c</code> 目录内（不过请注意，应该始终以包含它们的文件的相对路径这样一种方式来引用这些头文件）。 <br>For a library named 'main', files in <code class="filename">src/main/headers</code> are considered the “public” or “exported” headers. Header files that should not be exported (but are used internally) should be placed inside the <code class="filename">src/main/c</code> directory (though be aware that such header files should always be referenced in a manner relative to the file including them).</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15A4D"></a>54.5.3.&nbsp;汇编源码</h3>
+        <h5 class="title"><a name="N15A4D"></a>54.5.3.&nbsp;Assembler sources</h5>
+       </div>
+      </div>
+     </div>
+     <p> 汇编语言的支持是通过 <code class="literal">“assembler”</code> 插件提供的。 <br>Assembly language support is provided by means of the <code class="literal">'assembler'</code> plugin.</p>
+     <div class="example">
+      <a name="assemblerPlugin"></a>
+      <p class="title"><b>示例 54.7. 'assembler' 插件 - Example&nbsp;54.7.&nbsp;The 'assembler' plugin</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'assembler'</span></pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 把汇编源码包含到本机二进制文件中，是通过 <a class="ulink" href="../dsl/org.gradle.language.assembler.AssemblerSourceSet.html" target="_top"><code class="classname">AssemblerSourceSet</code></a> 来实现的，它定义了一组 Assembler 源文件。默认情况下，对于任何命名的组件，<a class="ulink" href="../dsl/org.gradle.language.assembler.AssemblerSourceSet.html" target="_top"><code class="classname">AssemblerSourceSet</code></a> 包含了在 <code class="filename">src/${name}/asm</code> 中的 <code class="filename">.s</code> 源文件。 <br>Assembler sources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.assembler.AssemblerSourceSet.html" target="_top"><code class="classname">AssemblerSourceSet</code></a>, which defines a set of Assembler source files. By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.assembler.AssemblerSourceSet.html" target="_top"><code class="classname">AssemblerSourceSet</code></a> contains <code class="filename">.s</code> source files under <code class="filename">src/${name}/asm</code>.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15A71"></a>54.5.4.&nbsp;Objective-C 源码</h3>
+        <h5 class="title"><a name="N15A71"></a>54.5.4.&nbsp;Objective-C sources</h5>
+       </div>
+      </div>
+     </div>
+     <p> Objective-C 语言的支持是通过 <code class="literal">'objective-c'</code> 插件提供的。 <br>Objective-C language support is provided by means of the <code class="literal">'objective-c'</code> plugin.</p>
+     <div class="example">
+      <a name="objectiveCPlugin"></a>
+      <p class="title"><b>示例&nbsp;54.8.&nbsp;'objective-c' 插件 - Example&nbsp;54.8.&nbsp;The 'objective-c' plugin</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'objective-c'</span></pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 把 Objective-C 源码包含到本机二进制文件中，是通过 <a class="ulink" href="../dsl/org.gradle.language.objectivec.ObjectiveCSourceSet.html" target="_top"><code class="classname">ObjectiveCSourceSet</code></a> 来实现的，它定义了一组 Objective-C 源文件。默认情况下，对于任何命名的组件，<a class="ulink" href="../dsl/org.gradle.language.objectivec.ObjectiveCSourceSet.html" target="_top"><code class="classname">ObjectiveCSourceSet</code></a> 包含了在 <code class="filename">src/${name}/objectiveC</code> 中的 <code class="filename">.m</code> 源文件。 <br>Objective-C sources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.objectivec.ObjectiveCSourceSet.html" target="_top"><code class="classname">ObjectiveCSourceSet</code></a>, which defines a set of Objective-C source files. By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.objectivec.ObjectiveCSourceSet.html" target="_top"><code class="classname">ObjectiveCSourceSet</code></a> contains <code class="filename">.m</code> source files under <code class="filename">src/${name}/objectiveC</code>.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15A95"></a>54.5.5.&nbsp;Objective-C++ 源码</h3>
+        <h5 class="title"><a name="N15A95"></a>54.5.5.&nbsp;Objective-C++ sources</h5>
+       </div>
+      </div>
+     </div>
+     <p> Objective-C++ 语言的支持是通过 <code class="literal">'objective-cpp'</code> 插件提供的。 <br>Objective-C++ language support is provided by means of the <code class="literal">'objective-cpp'</code> plugin.</p>
+     <div class="example">
+      <a name="objectiveCppPlugin"></a>
+      <p class="title"><b>示例 54.9. 'objective-cpp' 插件 - Example&nbsp;54.9.&nbsp;The 'objective-cpp' plugin</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'objective-cpp'</span></pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 把 Objective-C++ 源码包含到本机二进制文件中，是通过 <a class="ulink" href="../dsl/org.gradle.language.objectivecpp.ObjectiveCppSourceSet.html" target="_top"><code class="classname">ObjectiveCppSourceSet</code></a> 来实现的，其定义了一组 Objective-C++ 源文件。默认情况下，对于任何命名的组件，<a class="ulink" href="../dsl/org.gradle.language.objectivecpp.ObjectiveCppSourceSet.html" target="_top"><code class="classname">ObjectiveCppSourceSet</code></a> 包含了在 <code class="filename">src/${name}/objectiveCpp</code> 中的 <code class="filename">.mm</code> 源文件。 <br>Objective-C++ sources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.objectivecpp.ObjectiveCppSourceSet.html" target="_top"><code class="classname">ObjectiveCppSourceSet</code></a>, which defines a set of Objective-C++ source files. By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.objectivecpp.ObjectiveCppSourceSet.html" target="_top"><code class="classname">ObjectiveCppSourceSet</code></a> contains <code class="filename">.mm</code> source files under <code class="filename">src/${name}/objectiveCpp</code>.</p>
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N15AB9"></a>54.6. 配置编译器、汇编器和连接器</h2>
+       <h4 class="title"><a name="N15AB9"></a>54.6.&nbsp;Configuring the compiler, assembler and linker</h4>
+      </div>
+     </div>
+    </div>
+    <p> 要生成的每个二进制文件都与一组编译器和链接器设置相关联，这些设置包括命令行参数以及宏定义。这些设置可以应用于所有的二进制文件，单个二进制文件，或者根据某些条件有选择地应用于一组二进制文件。 <br>Each binary to be produced is associated with a set of compiler and linker settings, which include command-line arguments as well as macro definitions. These settings can be applied to all binaries, an individual binary, or selectively to a group of binaries based on some criteria.</p>
+    <div class="example">
+     <a name="allBinarySettings"></a>
+     <p class="title"><b>示例 54.10. 应用于所有二进制文件的设置 - Example&nbsp;54.10.&nbsp;Settings that apply to all binaries</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">binaries.all {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define a preprocessor macro for every binary</span>
     cppCompiler.define <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"NDEBUG"</span>
 
@@ -163,21 +410,34 @@
         cppCompiler.args <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"/Zi"</span>
         linker.args <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"/DEBUG"</span>
     }
-}</pre></div></div><br class="example-break"><p>
-            Each binary is associated with a particular <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.ToolChain.html" target="_top"><code class="classname">ToolChain</code></a>, allowing settings to be targeted based on
-            this value.
-        </p><p>
-            It is easy to apply settings to all binaries of a particular type:
-        </p><div class="example"><a name="allSharedLibraryBinarySettings"></a><p class="title"><b>Example&nbsp;54.11.&nbsp;Settings that apply to all shared libraries</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// For any shared library binaries built with Visual C++, define the DLL_EXPORT macro</span>
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 每个二进制文件都与特定的 <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.ToolChain.html" target="_top"><code class="classname">ToolChain</code></a> 关联，允许设置基于此值进行针对性的配置。 <br>Each binary is associated with a particular <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.ToolChain.html" target="_top"><code class="classname">ToolChain</code></a>, allowing settings to be targeted based on this value.</p>
+    <p> 让设置应用于特定类型的所有二进制文件很容易： <br>It is easy to apply settings to all binaries of a particular type:</p>
+    <div class="example">
+     <a name="allSharedLibraryBinarySettings"></a>
+     <p class="title"><b>示例 54.11. 应用于所有共享库的设置 - Example&nbsp;54.11.&nbsp;Settings that apply to all shared libraries</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// For any shared library binaries built with Visual C++, define the DLL_EXPORT macro</span>
 binaries.withType(SharedLibraryBinary) {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (toolChain in VisualCpp) {
         cCompiler.args <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"/Zi"</span>
         cCompiler.define <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"DLL_EXPORT"</span>
     }
-}</pre></div></div><br class="example-break"><p>
-            Furthermore, it is possible to specify settings that apply to all binaries produces for a particular <code class="literal">executable</code>
-            or <code class="literal">library</code> component:
-        </p><div class="example"><a name="componentBinarySettings"></a><p class="title"><b>Example&nbsp;54.12.&nbsp;Settings that apply to all binaries produced for the 'main' executable component</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">executables {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 此外，还可以指定设置应用于某个特定的 <code class="literal">executable</code> 或 <code class="literal">library</code> 组件产生的所有二进制文件： <br>Furthermore, it is possible to specify settings that apply to all binaries produces for a particular <code class="literal">executable</code> or <code class="literal">library</code> component:</p>
+    <div class="example">
+     <a name="componentBinarySettings"></a>
+     <p class="title"><b>示例 54.12. 应用于“main”可执行组件所产生的所有二进制文件的设置 - Example&nbsp;54.12.&nbsp;Settings that apply to all binaries produced for the 'main' executable component</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">executables {
     main {
         binaries.all {
             <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (toolChain in VisualCpp) {
@@ -187,29 +447,56 @@ binaries.withType(SharedLibraryBinary) {
             }
         }
     }
-}</pre></div></div><br class="example-break"><p>
-            The example above will apply the supplied configuration to all <code class="literal">executable</code> binaries built.
-        </p><p>
-            Similarly, settings can be specified to target binaries for a component that are of a particular type:
-            eg all <code class="literal">shared libraries</code> for the <code class="literal">main library</code> component.
-        </p><div class="example"><a name="sharedLibraryArgs"></a><p class="title"><b>Example&nbsp;54.13.&nbsp;Settings that apply only to shared libraries produced for the 'main' library component</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">libraries {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 上面的例子将会把提供的配置应用到所有构建的 <code class="literal">executable</code> 二进制文件。 <br>The example above will apply the supplied configuration to all <code class="literal">executable</code> binaries built.</p>
+    <p> 同样，也可以把设置指定为某种特定类型的组件的目标二进制文件：例如所有 <code class="literal">main library</code> 组件的 <code class="literal">shared libraries</code>。 <br>Similarly, settings can be specified to target binaries for a component that are of a particular type: eg all <code class="literal">shared libraries</code> for the <code class="literal">main library</code> component.</p>
+    <div class="example">
+     <a name="sharedLibraryArgs"></a>
+     <p class="title"><b>示例 54.13. 仅应用于“main” library 组件所产生的共享库的设置 - Example&nbsp;54.13.&nbsp;Settings that apply only to shared libraries produced for the 'main' library component</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">libraries {
     main {
         binaries.withType(SharedLibraryBinary) {
             <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define a preprocessor macro that only applies to shared libraries</span>
             cppCompiler.define <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"DLL_EXPORT"</span>
         }
     }
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="native_binaries:windows-resources"></a>54.7.&nbsp;Windows Resources</h2></div></div></div><p>
-            When using the <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.VisualCpp.html" target="_top"><code class="classname">VisualCpp</code></a> tool chain, Gradle is able to compile Window Resource (<code class="literal">rc</code>)
-            files and link them into a native binary. This functionality is provided by the <code class="literal">'windows-resources'</code> plugin.
-        </p><div class="example"><a name="windowsResourcesPlugin"></a><p class="title"><b>Example&nbsp;54.14.&nbsp;The 'windows-resources' plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'windows-resources'</span></pre></div></div><br class="example-break"><p>
-            Windows resources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.rc.WindowsResourceSet.html" target="_top"><code class="classname">WindowsResourceSet</code></a>,
-            which defines a set of Windows Resource source files.
-            By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.rc.WindowsResourceSet.html" target="_top"><code class="classname">WindowsResourceSet</code></a> contains
-            <code class="filename">.rc</code> source files under <code class="filename">src/${name}/rc</code>.
-        </p><p>
-            As with other source types, you can configure the location of the windows resources that should in included in the binary.
-        </p><div class="example"><a name="windowsResourceSet"></a><p class="title"><b>Example&nbsp;54.15.&nbsp;Configuring the location of Windows resource sources</b></p><div class="example-contents"><p><code class="filename">build-resource-only-dll.gradle</code></p><pre class="programlisting">sources {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="native_binaries:windows-resources"></a>54.7. Windows Resources</h2>
+       <h4 class="title"><a name="native_binaries:windows-resources"></a>54.7.&nbsp;Windows Resources</h4>
+      </div>
+     </div>
+    </div>
+    <p> 使用 <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.VisualCpp.html" target="_top"><code class="classname">VisualCpp</code></a> 工具链时， Gradle 能够编译 Window Resource（<code class="literal">rc</code>）文件，并将它们链接到本机二进制文件。 这个功能是由 <code class="literal">'windows-resources'</code> 插件提供的。 <br>When using the <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.VisualCpp.html" target="_top"><code class="classname">VisualCpp</code></a> tool chain, Gradle is able to compile Window Resource (<code class="literal">rc</code>) files and link them into a native binary. This functionality is provided by the <code class="literal">'windows-resources'</code> plugin.</p>
+    <div class="example">
+     <a name="windowsResourcesPlugin"></a>
+     <p class="title"><b>示例&nbsp;54.14.&nbsp;'windows-resources' 插件 - Example&nbsp;54.14.&nbsp;The 'windows-resources' plugin</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build.gradle</code></p>
+      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'windows-resources'</span></pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 把 Windows 资源包含到本机二进制文件中，是通过 <a class="ulink" href="../dsl/org.gradle.language.rc.WindowsResourceSet.html" target="_top"><code class="classname">WindowsResourceSet</code></a> 来实现的，其定义了一组 Windows Resource 源文件。默认情况下，对于任何已命名的组件，<a class="ulink" href="../dsl/org.gradle.language.rc.WindowsResourceSet.html" target="_top"><code class="classname">WindowsResourceSet</code></a> 包含了在 <code class="filename">src/${name}/rc</code> 中的 <code class="filename">.rc</code> 源文件。 <br>Windows resources to be included in a native binary are provided via a <a class="ulink" href="../dsl/org.gradle.language.rc.WindowsResourceSet.html" target="_top"><code class="classname">WindowsResourceSet</code></a>, which defines a set of Windows Resource source files. By default, for any named component the <a class="ulink" href="../dsl/org.gradle.language.rc.WindowsResourceSet.html" target="_top"><code class="classname">WindowsResourceSet</code></a> contains <code class="filename">.rc</code> source files under <code class="filename">src/${name}/rc</code>.</p>
+    <p> 与其他源码类型一样，你可以配置应该包含在二进制文件中的 windows 资源的位置。 <br>As with other source types, you can configure the location of the windows resources that should in included in the binary.</p>
+    <div class="example">
+     <a name="windowsResourceSet"></a>
+     <p class="title"><b>示例 54.15. 配置 Windows 资源源文件的位置 - Example&nbsp;54.15.&nbsp;Configuring the location of Windows resource sources</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build-resource-only-dll.gradle</code></p>
+      <pre class="programlisting">sources {
     helloRes {
         rc {
             source {
@@ -220,45 +507,99 @@ binaries.withType(SharedLibraryBinary) {
             }
         }
     }
-}</pre></div></div><br class="example-break"><p>
-            You are able to construct a resource-only library by providing Windows Resource sources with no other language sources,
-            and configure the linker as appropriate:
-        </p><div class="example"><a name="resourceOnlyDll"></a><p class="title"><b>Example&nbsp;54.16.&nbsp;Building a resource-only dll</b></p><div class="example-contents"><p><code class="filename">build-resource-only-dll.gradle</code></p><pre class="programlisting">libraries {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 你能够通过提供不包含其他语言源码的 Windows Resource 源文件，来构造纯资源库，并根据需要配置链接器︰ <br>You are able to construct a resource-only library by providing Windows Resource sources with no other language sources, and configure the linker as appropriate:</p>
+    <div class="example">
+     <a name="resourceOnlyDll"></a>
+     <p class="title"><b>示例 54.16. 构建纯资源 dll - Example&nbsp;54.16.&nbsp;Building a resource-only dll</b></p>
+     <div class="example-contents">
+      <p><code class="filename">build-resource-only-dll.gradle</code></p>
+      <pre class="programlisting">libraries {
     helloRes {
         binaries.all {
             rcCompiler.args <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"/v"</span>
             linker.args <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"/noentry"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"/machine:x86"</span>
         }
     }
-}</pre></div></div><br class="example-break"><p>
-            The example above also demonstrates the mechanism of passing extra command-line arguments to the resource compiler.
-            The <code class="literal">rcCompiler</code> extension is of type <a class="ulink" href="../dsl/org.gradle.nativebinaries.language.PreprocessingTool.html" target="_top"><code class="classname">PreprocessingTool</code></a>.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N15B53"></a>54.8.&nbsp;Library Dependencies</h2></div></div></div><p>
-            Dependencies for native components are binary libraries that export header files. The header files are used during compilation, with the compiled
-            binary dependency being used during linking and execution.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15B58"></a>54.8.1.&nbsp;Dependencies within the same project</h3></div></div></div><p>
-               A set of sources may depend on header files provided by another binary component within the same project.
-               A common example is a native executable component that uses functions provided by a separate native library component.
-           </p><p>
-               Such a library dependency can be easily provided to source set associated with the <code class="literal">executable</code> component:
-           </p><div class="example"><a name="cppSourceLibrary"></a><p class="title"><b>Example&nbsp;54.17.&nbsp;Providing a library dependency to the source set</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">sources {
+}</pre>
+     </div>
+    </div>
+    <br class="example-break">
+    <p> 上面的示例还说明了将额外的命令行参数传给资源编译器的机制。<code class="literal">rcCompiler</code> 扩展的类型为 <a class="ulink" href="../dsl/org.gradle.nativebinaries.language.PreprocessingTool.html" target="_top"><code class="classname">PreprocessingTool</code></a>。 <br>The example above also demonstrates the mechanism of passing extra command-line arguments to the resource compiler. The <code class="literal">rcCompiler</code> extension is of type <a class="ulink" href="../dsl/org.gradle.nativebinaries.language.PreprocessingTool.html" target="_top"><code class="classname">PreprocessingTool</code></a>.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="N15B53"></a>54.8.&nbsp;库依赖</h2>
+       <h4 class="title"><a name="N15B53"></a>54.8.&nbsp;Library Dependencies</h4>
+      </div>
+     </div>
+    </div>
+    <p> 本机组件的依赖是导出头文件的二进制库。这些头文件在编译期间使用，而已编译的二进制依赖则是在链接和执行的过程中使用。 <br>Dependencies for native components are binary libraries that export header files. The header files are used during compilation, with the compiled binary dependency being used during linking and execution.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15B58"></a>54.8.1.&nbsp;同一项目的依赖</h3>
+        <h5 class="title"><a name="N15B58"></a>54.8.1.&nbsp;Dependencies within the same project</h5>
+       </div>
+      </div>
+     </div>
+     <p> 一组源可能依赖于同一项目中另一个二进制组件提供的头文件。一个常见的示例是，一个本机可执行组件使用了单独的本机库组件提供的功能。 <br>A set of sources may depend on header files provided by another binary component within the same project. A common example is a native executable component that uses functions provided by a separate native library component.</p>
+     <p> 这样的库依赖可以很方便地提供给与 <code class="literal">executable</code> 组件相关联的源集： <br>Such a library dependency can be easily provided to source set associated with the <code class="literal">executable</code> component:</p>
+     <div class="example">
+      <a name="cppSourceLibrary"></a>
+      <p class="title"><b>示例 54.17. 向源集提供库依赖 - Example&nbsp;54.17.&nbsp;Providing a library dependency to the source set</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">sources {
     main {
         cpp {
             lib libraries.hello
         }
     }
-}</pre></div></div><br class="example-break"><p>
-               Alternatively, a library dependency can be provided directly to the <code class="literal">ExecutableBinary</code> for the <code class="literal">executable</code>.
-           </p><div class="example"><a name="cppBinaryLibrary"></a><p class="title"><b>Example&nbsp;54.18.&nbsp;Providing a library dependency to the binary</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">executables {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 另外，一个库依赖可以直接提供给 <code class="literal">executable</code> 的 <code class="literal">ExecutableBinary</code>。 <br>Alternatively, a library dependency can be provided directly to the <code class="literal">ExecutableBinary</code> for the <code class="literal">executable</code>.</p>
+     <div class="example">
+      <a name="cppBinaryLibrary"></a>
+      <p class="title"><b>示例 54.18. 向二进制文件提供库依赖 - Example&nbsp;54.18.&nbsp;Providing a library dependency to the binary</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">executables {
     main {
         binaries.all {
             <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Each executable binary produced uses the 'hello' static library binary</span>
             lib libraries.hello.<span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">static</span>
         }
     }
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15B7E"></a>54.8.2.&nbsp;Project Dependencies</h3></div></div></div><p>
-                For a component produced in a different Gradle project, the notation is similar.
-            </p><div class="example"><a name="cppProjectDependencies"></a><p class="title"><b>Example&nbsp;54.19.&nbsp;Declaring project dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":lib"</span>) {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15B7E"></a>54.8.2. 项目依赖</h3>
+        <h5 class="title"><a name="N15B7E"></a>54.8.2.&nbsp;Project Dependencies</h5>
+       </div>
+      </div>
+     </div>
+     <p> 对于在不同的 Gradle 项目产生的组件，表示方法是类似的。 <br>For a component produced in a different Gradle project, the notation is similar.</p>
+     <div class="example">
+      <a name="cppProjectDependencies"></a>
+      <p class="title"><b>示例 54.19. 定义项目依赖 - Example&nbsp;54.19.&nbsp;Declaring project dependencies</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":lib"</span>) {
     apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"cpp"</span>
     libraries {
         main {}
@@ -285,32 +626,55 @@ project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":exe"</span
             }
         }
     }
-}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="native_binaries:variants"></a>54.9.&nbsp;Native Binary Variants</h2></div></div></div><p>
-            For each executable or library defined, Gradle is able to build a number of different native binary variants.
-            Examples of different variants include debug vs release binaries, 32-bit vs 64-bit binaries, and binaries produced
-            with different custom preprocessor flags.
-        </p><p>
-            Binaries produced by Gradle can be differentiated on
-                <a class="link" href="nativeBinaries.html#native_binaries:build_type">build type</a>,
-                <a class="link" href="nativeBinaries.html#native_binaries:platform">platform</a> and
-                <a class="link" href="nativeBinaries.html#native_binaries:flavor">flavor</a>.
-            For each of these 'variant dimensions', it is possible to specify a set of available values as well as target each component at
-            one, some or all of these. For example, a plugin may define a range of support platforms, but you
-            may choose to only target Windows-x86 for a particular component.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="native_binaries:build_type"></a>54.9.1.&nbsp;Build types</h3></div></div></div><p>
-                A <code class="literal">build type</code> determines various non-functional aspects of a binary, such as whether debug information is included,
-                or what optimisation level the binary is compiled with. Typical build types are 'debug' and 'release', but a project
-                is free to define any set of build types.
-            </p><div class="example"><a name="buildTypes"></a><p class="title"><b>Example&nbsp;54.20.&nbsp;Defining build types</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="native_binaries:variants"></a>54.9.&nbsp;本地二进制变体</h2>
+       <h4 class="title"><a name="native_binaries:variants"></a>54.9.&nbsp;Native Binary Variants</h4>
+      </div>
+     </div>
+    </div>
+    <p> 对于每个定义的可执行文件或库，Gradle 能够构建多个不同的本机二进制变体。这样的示例包括调试与发布的二进制文件，32位与64位的二进制文件，以及使用不同的自定义预处理器标志生成的二进制文件。 <br>For each executable or library defined, Gradle is able to build a number of different native binary variants. Examples of different variants include debug vs release binaries, 32-bit vs 64-bit binaries, and binaries produced with different custom preprocessor flags.</p>
+    <p> 由 Gradle 生成的二进制文件可以在<a class="link" href="nativeBinaries.html#native_binaries:build_type">构建类型</a>，<a class="link" href="nativeBinaries.html#native_binaries:platform">平台</a> 和<a class="link" href="nativeBinaries.html#native_binaries:flavor">风格</a>上区分。对于这些“变体维度”中的每个维度，可以指定一组可用值，也可以针对每一个组件指定这里的一个、多个或全部的值。比如，插件可能定义了一系列支持的平台，但你可以对某个特定组件选择只针对 Windows-x86 构建。 <br>Binaries produced by Gradle can be differentiated on <a class="link" href="nativeBinaries.html#native_binaries:build_type">build type</a>, <a class="link" href="nativeBinaries.html#native_binaries:platform">platform</a> and <a class="link" href="nativeBinaries.html#native_binaries:flavor">flavor</a>. For each of these 'variant dimensions', it is possible to specify a set of available values as well as target each component at one, some or all of these. For example, a plugin may define a range of support platforms, but you may choose to only target Windows-x86 for a particular component.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="native_binaries:build_type"></a>54.9.1. 构建类型</h3>
+        <h5 class="title"><a name="native_binaries:build_type"></a>54.9.1.&nbsp;Build types</h5>
+       </div>
+      </div>
+     </div>
+     <p> <code class="literal">build type</code> 决定了二进制文件的各种非功能性方面，例如是否包含调试信息，或使用什么样的优化级别来编译。典型的构建类型为“debug”和“release”，但项目可以自由定义任意的一组构建类型。 <br>A <code class="literal">build type</code> determines various non-functional aspects of a binary, such as whether debug information is included, or what optimisation level the binary is compiled with. Typical build types are 'debug' and 'release', but a project is free to define any set of build types.</p>
+     <div class="example">
+      <a name="buildTypes"></a>
+      <p class="title"><b>示例 54.20. 定义构建类型 - Example&nbsp;54.20.&nbsp;Defining build types</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">model {
     buildTypes {
         debug
         release
     }
-}</pre></div></div><br class="example-break"><p>
-                If no build types are defined in a project, then a single, default build type called 'debug' is added.
-            </p><p>
-                For a build type, a Gradle project will typically define a set of compiler/linker flags per tool chain.
-            </p><div class="example"><a name="buildTypeConfig"></a><p class="title"><b>Example&nbsp;54.21.&nbsp;Configuring debug binaries</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">binaries.all {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 如果在项目中未定义任何构建类型，那么会添加一个默认的“debug”构建类型。 <br>If no build types are defined in a project, then a single, default build type called 'debug' is added.</p>
+     <p> 对于一个构建类型，一个 Gradle 项目通常会为每个工具链定义一组编译器或链接器标志。 <br>For a build type, a Gradle project will typically define a set of compiler/linker flags per tool chain.</p>
+     <div class="example">
+      <a name="buildTypeConfig"></a>
+      <p class="title"><b>示例 54.21. 配置调试的二进制文件 - Example&nbsp;54.21.&nbsp;Configuring debug binaries</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">binaries.all {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (toolChain in Gcc &amp;&amp; buildType == buildTypes.debug) {
         cppCompiler.args <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"-g"</span>
     }
@@ -319,21 +683,34 @@ project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":exe"</span
         cppCompiler.define <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'DEBUG'</span>
         linker.args <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'/DEBUG'</span>
     }
-}</pre></div></div><br class="example-break"><div class="note">
-                At this stage, it is completely up to the build script to configure the relevant compiler/linker flags for each
-                build type. Future versions of Gradle will automatically include the appropriate debug flags for any 'debug' build
-                type, and may be aware of various levels of optimisation as well.
-            </div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="native_binaries:platform"></a>54.9.2.&nbsp;Platform</h3></div></div></div><p>
-                An executable or library can be built to run on different operating systems and cpu architectures, with a variant being
-                produced for each platform. Gradle defines each OS/architecture combination as a <a class="ulink" href="../dsl/org.gradle.nativebinaries.platform.Platform.html" target="_top"><code class="classname">Platform</code></a>,
-                and a project may define any number of platforms.
-                If no platforms are defined in a project, then a single, default platform 'current' is added.
-            </p><div class="note">
-                Presently, a <code class="literal">Platform</code> consists of a defined operating system and architecture. As we continue to develop the
-                native binary support in Gradle, the concept of Platform will be extended to include things like C-runtime version, Windows SDK, ABI, etc.
-                Sophisticated builds may use the extensibility of Gradle to apply additional attributes to each platform, which can then be queried to
-                specify particular includes, preprocessor macros or compiler arguments for a native binary.
-            </div><div class="example"><a name="platforms"></a><p class="title"><b>Example&nbsp;54.22.&nbsp;Defining platforms</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <div class="note">
+       在这个阶段，完全由构建脚本来为每个构建类型配置相关的编译器或链接器标志。未来版本的 Gradle 将自动为任何 'debug' 构建类型包含相应的调试标志，并且还可能了解各个优化级别。 
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="native_binaries:platform"></a>54.9.2.&nbsp;平台</h3>
+        <h5 class="title"><a name="native_binaries:platform"></a>54.9.2.&nbsp;Platform</h5>
+       </div>
+      </div>
+     </div>
+     <p> 通过为每个平台生成一个变体，能够使可执行文件或库构建为可以运行在不同的操作系统及 CPU 架构上。Gradle 把每个操作系统/架构的组合定义为一个 <a class="ulink" href="../dsl/org.gradle.nativebinaries.platform.Platform.html" target="_top"><code class="classname">Platform</code></a>，并且一个项目可以定义任意多个平台。如果在项目中没有定义平台，则会添加一个默认的 'current' 平台。 <br>An executable or library can be built to run on different operating systems and cpu architectures, with a variant being produced for each platform. Gradle defines each OS/architecture combination as a <a class="ulink" href="../dsl/org.gradle.nativebinaries.platform.Platform.html" target="_top"><code class="classname">Platform</code></a>, and a project may define any number of platforms. If no platforms are defined in a project, then a single, default platform 'current' is added.</p>
+     <div class="note">
+       目前，一个 
+      <code class="literal">Platform</code> 由一个定义的操作系统和架构组成。随着我们继续开发 Gradle 的本机二进制支持，将扩展平台的概念，包含诸如 C-runtime 版本，Windows SDK，ABI 等等之类的内容。复杂的构建可能会使用 Gradle 的可扩展性把附加属性应用于每个平台，然后可以查询这些属性，以便指定一个本机二进制文件的特定包含，预处理器宏或编译器参数。 
+     </div>
+     <div class="example">
+      <a name="platforms"></a>
+      <p class="title"><b>示例 54.22. 定义平台 - Example&nbsp;54.22.&nbsp;Defining platforms</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">model {
     platforms {
         x8<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">6</span> {
             architecture <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"x86"</span>
@@ -345,18 +722,29 @@ project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">":exe"</span
             architecture <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"ia-64"</span>
         }
     }
-}</pre></div></div><br class="example-break"><p>
-                For a given variant, Gradle will attempt to find a <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.ToolChain.html" target="_top"><code class="classname">ToolChain</code></a> that is able to build
-                for the target platform. Available tool chains are searched in the order defined.
-                See the <a class="link" href="nativeBinaries.html#native_binaries:tool_chain">tool chain</a> section below for more details.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="native_binaries:flavor"></a>54.9.3.&nbsp;Flavor</h3></div></div></div><p>
-                Each component can have a set of named <code class="literal">flavors</code>, and a separate binary variant can be produced for each flavor.
-                While the <code class="literal">build type</code> and <code class="literal">target platform</code> variant dimensions have a defined meaning in Gradle,
-                each project is free to define any number of flavors and apply meaning to them in any way.
-            </p><p>
-                An example of component flavors might differentiate between 'demo', 'paid' and 'enterprise' editions of the component,
-                where the same set of sources is used to produce binaries with different functions.
-            </p><div class="example"><a name="flavors"></a><p class="title"><b>Example&nbsp;54.23.&nbsp;Defining flavors</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 对于给定的变体，Gradle 将尝试查找能够为目标平台构建的 <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.ToolChain.html" target="_top"><code class="classname">ToolChain</code></a> 。所有可用的工具链将按照定义的顺序进行查找。更多细节请参阅下面的<a class="link" href="nativeBinaries.html#native_binaries:tool_chain">工具链</a>部分。 <br>For a given variant, Gradle will attempt to find a <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.ToolChain.html" target="_top"><code class="classname">ToolChain</code></a> that is able to build for the target platform. Available tool chains are searched in the order defined. See the <a class="link" href="nativeBinaries.html#native_binaries:tool_chain">tool chain</a> section below for more details.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="native_binaries:flavor"></a>54.9.3.&nbsp;风格</h3>
+        <h5 class="title"><a name="native_binaries:flavor"></a>54.9.3.&nbsp;Flavor</h5>
+       </div>
+      </div>
+     </div>
+     <p> 每个组件都可以有一组命名的 <code class="literal">flavor</code>，并且可以为每种风格生成单独的二进制变体。虽然 <code class="literal">build type</code> 和 <code class="literal">target platform</code> 变体维度在 Gradle 中是有定义的含义的，但每个项目都可以自由地定义任意数量的风格，并以任意的方式对它们应用含义。 <br>Each component can have a set of named <code class="literal">flavors</code>, and a separate binary variant can be produced for each flavor. While the <code class="literal">build type</code> and <code class="literal">target platform</code> variant dimensions have a defined meaning in Gradle, each project is free to define any number of flavors and apply meaning to them in any way.</p>
+     <p> 有关组件风格的一个例子是，可以区分组件的“demo”，“paid”和“enterprise”版本，它们是用同样的源码来生成不同功能的二进制文件的。 <br>An example of component flavors might differentiate between 'demo', 'paid' and 'enterprise' editions of the component, where the same set of sources is used to produce binaries with different functions.</p>
+     <div class="example">
+      <a name="flavors"></a>
+      <p class="title"><b>示例 54.23. 定义风格 - Example&nbsp;54.23.&nbsp;Defining flavors</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">model {
     flavors {
         english
         french
@@ -372,46 +760,98 @@ libraries {
         }
         source sources.lib
     }
-}</pre></div></div><br class="example-break"><p>
-                In the example above, a library is defined with a 'english' and 'french' flavor. When compiling the 'french'
-                variant, a separate macro is defined which leads to a different binary being produced.
-            </p><p>
-                If no flavor is defined for a component, then a single default flavor named 'default' is used.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15C08"></a>54.9.4.&nbsp;Selecting the build types, platforms and flavors for a component</h3></div></div></div><p>
-                For a default component, Gradle will attempt to create a native binary variant for each and every combination of <code class="literal">buildType</code>,
-                <code class="literal">platform</code> and <code class="literal">flavor</code> defined for the project. It is possible to override this on a per-component
-                basis, by specifying the set of <code class="literal">targetBuildTypes</code>, <code class="literal">targetPlatforms</code> and/or <code class="literal">targetFlavors</code>.
-            </p><div class="example"><a name="targets"></a><p class="title"><b>Example&nbsp;54.24.&nbsp;Targeting a component at particular platforms</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">executables {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 在上面的示例中，这个库定义了 'english' 和 'french' 两个风格。当编译 'french' 变体时，定义了一个单独的宏，使其生成不同的二进制文件。 <br>In the example above, a library is defined with a 'english' and 'french' flavor. When compiling the 'french' variant, a separate macro is defined which leads to a different binary being produced.</p>
+     <p> 如果一个组件没有定义任何的风格，那么会使用一个叫“default”的默认风格。 <br>If no flavor is defined for a component, then a single default flavor named 'default' is used.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15C08"></a>54.9.4.&nbsp;为组件选择构建类型，平台和风格</h3>
+        <h5 class="title"><a name="N15C08"></a>54.9.4.&nbsp;Selecting the build types, platforms and flavors for a component</h5>
+       </div>
+      </div>
+     </div>
+     <p> 对于一个默认组件，Gradle 将尝试为项目定义的每个 <code class="literal">buildType</code>，<code class="literal">platform</code> 和 <code class="literal">flavor</code> 及它们的每一种组合创建本机二进制变体。通过指定 <code class="literal">targetBuildTypes</code>，<code class="literal">targetPlatforms</code> 或 <code class="literal">targetFlavor</code>的集合，是可以在项目的每个组件的基础上重写的。 <br>For a default component, Gradle will attempt to create a native binary variant for each and every combination of <code class="literal">buildType</code>, <code class="literal">platform</code> and <code class="literal">flavor</code> defined for the project. It is possible to override this on a per-component basis, by specifying the set of <code class="literal">targetBuildTypes</code>, <code class="literal">targetPlatforms</code> and/or <code class="literal">targetFlavors</code>.</p>
+     <div class="example">
+      <a name="targets"></a>
+      <p class="title"><b>示例&nbsp;54.24.&nbsp;针对特定平台上的组件 - Example&nbsp;54.24.&nbsp;Targeting a component at particular platforms</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">executables {
     main {
         targetPlatforms <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"x86"</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"x64"</span>
     }
-}</pre></div></div><br class="example-break"><p>
-                Here you can see that the <a class="ulink" href="../dsl/org.gradle.nativebinaries.TargetedNativeComponent.html#org.gradle.nativebinaries.TargetedNativeComponent:targetPlatforms(java.lang.String[])" target="_top"><code class="classname">TargetedNativeComponent.targetPlatforms()</code></a> method is used to
-                select the set of platforms to target for <code class="literal">executables.main</code>.
-            </p><p>
-                A similar mechanism exists for selecting <a class="ulink" href="../dsl/org.gradle.nativebinaries.TargetedNativeComponent.html#org.gradle.nativebinaries.TargetedNativeComponent:targetBuildTypes(java.lang.String[])" target="_top"><code class="classname">TargetedNativeComponent.targetBuildTypes()</code></a>
-                and <a class="ulink" href="../dsl/org.gradle.nativebinaries.TargetedNativeComponent.html#org.gradle.nativebinaries.TargetedNativeComponent:targetFlavors(java.lang.String[])" target="_top"><code class="classname">TargetedNativeComponent.targetFlavors()</code></a>.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15C3F"></a>54.9.5.&nbsp;Building all possible variants</h3></div></div></div><p>
-                When a set of build types, target platforms, and flavors is defined for a component,
-                a <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> model element is created for every possible
-                combination of these. However, in many cases it is not possible to build a particular variant, perhaps because
-                no tool chain is available to build for a particular platform.
-            </p><p>
-                If a binary variant cannot be built for any reason, then the <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a>
-                associated with that variant will not be <code class="literal">buildable</code>. It is possible to use this property to create a task
-                to generate all possible variants on a particular machine.
-            </p><div class="example"><a name="buildable"></a><p class="title"><b>Example&nbsp;54.25.&nbsp;Building all possible variants</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task buildAllExecutables {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 在这里你可以看到 <a class="ulink" href="../dsl/org.gradle.nativebinaries.TargetedNativeComponent.html#org.gradle.nativebinaries.TargetedNativeComponent:targetPlatforms(java.lang.String[])" target="_top"><code class="classname">TargetedNativeComponent.targetPlatforms()</code></a> 方法被用于为 <code class="literal">executables.main</code>选择一组目标平台。 <br>Here you can see that the <a class="ulink" href="../dsl/org.gradle.nativebinaries.TargetedNativeComponent.html#org.gradle.nativebinaries.TargetedNativeComponent:targetPlatforms(java.lang.String[])" target="_top"><code class="classname">TargetedNativeComponent.targetPlatforms()</code></a> method is used to select the set of platforms to target for <code class="literal">executables.main</code>.</p>
+     <p> 在选择 <a class="ulink" href="../dsl/org.gradle.nativebinaries.TargetedNativeComponent.html#org.gradle.nativebinaries.TargetedNativeComponent:targetBuildTypes(java.lang.String[])" target="_top"><code class="classname">TargetedNativeComponent.targetBuildTypes()</code></a> 和<a class="ulink" href="../dsl/org.gradle.nativebinaries.TargetedNativeComponent.html#org.gradle.nativebinaries.TargetedNativeComponent:targetFlavors(java.lang.String[])" target="_top"><code class="classname">TargetedNativeComponent.targetFlavors()</code></a>上也存在着类似的机制。 <br>A similar mechanism exists for selecting <a class="ulink" href="../dsl/org.gradle.nativebinaries.TargetedNativeComponent.html#org.gradle.nativebinaries.TargetedNativeComponent:targetBuildTypes(java.lang.String[])" target="_top"><code class="classname">TargetedNativeComponent.targetBuildTypes()</code></a> and <a class="ulink" href="../dsl/org.gradle.nativebinaries.TargetedNativeComponent.html#org.gradle.nativebinaries.TargetedNativeComponent:targetFlavors(java.lang.String[])" target="_top"><code class="classname">TargetedNativeComponent.targetFlavors()</code></a>.</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15C3F"></a>54.9.5.&nbsp;构建所有可能的变体</h3>
+        <h5 class="title"><a name="N15C3F"></a>54.9.5.&nbsp;Building all possible variants</h5>
+       </div>
+      </div>
+     </div>
+     <p> 当为一个组件定义了一组构建类型，目标平台及风格时，将会为它们的每种可能的组合创建一个 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> 模型元素。然而，在许多情况下无法构建特定的变体，可能的原因是没有可用于某个特定平台的构建的工具链。 <br>When a set of build types, target platforms, and flavors is defined for a component, a <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> model element is created for every possible combination of these. However, in many cases it is not possible to build a particular variant, perhaps because no tool chain is available to build for a particular platform.</p>
+     <p> 如果一个二进制变体因为某种原因而不能构建，那么与之关联的 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> 将不再是 <code class="literal">buildable</code>。可以使用这个属性来创建一个任务，生成在特定机器上所有可能的变体。 <br>If a binary variant cannot be built for any reason, then the <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeBinary.html" target="_top"><code class="classname">NativeBinary</code></a> associated with that variant will not be <code class="literal">buildable</code>. It is possible to use this property to create a task to generate all possible variants on a particular machine.</p>
+     <div class="example">
+      <a name="buildable"></a>
+      <p class="title"><b>示例 54.25.&nbsp;构建所有可能的变体 - Example&nbsp;54.25.&nbsp;Building all possible variants</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">task buildAllExecutables {
     dependsOn binaries.withType(ExecutableBinary).matching {
         it.buildable
     }
-}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="native_binaries:tool_chain"></a>54.10.&nbsp;Tool chains</h2></div></div></div><p>
-            A single build may utilize different tool chains to build variants for different platforms. To this end,
-            the core 'native-binary' plugins will attempt to locate and make available supported tool chains. However, the set
-            of tool chains for a project may also be explicitly defined, allowing additional cross-compilers to be configured
-            as well as allowing the install directories to be specified.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15C63"></a>54.10.1.&nbsp;Defining tool chains</h3></div></div></div><p>
-                The supported tool chain types are:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.Gcc.html" target="_top"><code class="classname">Gcc</code></a></p></li><li class="listitem"><p><a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.Clang.html" target="_top"><code class="classname">Clang</code></a></p></li><li class="listitem"><p><a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.VisualCpp.html" target="_top"><code class="classname">VisualCpp</code></a></p></li></ul></div><div class="example"><a name="toolChains"></a><p class="title"><b>Example&nbsp;54.26.&nbsp;Defining tool chains</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="native_binaries:tool_chain"></a>54.10. 工具链</h2>
+       <h4 class="title"><a name="native_binaries:tool_chain"></a>54.10.&nbsp;Tool chains</h4>
+      </div>
+     </div>
+    </div>
+    <p> 单个构建可以利用不同的工具链来构建不同平台的变体。为此，核心的“本机二进制”插件将尝试查找并提供受支持的工具链。不过，一个项目里的工具链集也可以被显式定义，允许配置其他交叉编译器以及指定安装目录。 <br>A single build may utilize different tool chains to build variants for different platforms. To this end, the core 'native-binary' plugins will attempt to locate and make available supported tool chains. However, the set of tool chains for a project may also be explicitly defined, allowing additional cross-compilers to be configured as well as allowing the install directories to be specified.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15C63"></a>54.10.1.&nbsp;定义工具链</h3>
+        <h5 class="title"><a name="N15C63"></a>54.10.1.&nbsp;Defining tool chains</h5>
+       </div>
+      </div>
+     </div>
+     <p> 支持的工具链类型有︰ <br>The supported tool chain types are:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem"><p><a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.Gcc.html" target="_top"><code class="classname">Gcc</code></a></p></li>
+       <li class="listitem"><p><a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.Clang.html" target="_top"><code class="classname">Clang</code></a></p></li>
+       <li class="listitem"><p><a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.VisualCpp.html" target="_top"><code class="classname">VisualCpp</code></a></p></li>
+      </ul>
+     </div>
+     <div class="example">
+      <a name="toolChains"></a>
+      <p class="title"><b>示例 54.26.&nbsp;定义工具链 - Example&nbsp;54.26.&nbsp;Defining tool chains</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">model {
     toolChains {
         visualCpp(VisualCpp) {
             <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Specify the installDir if Visual Studio cannot be located by default</span>
@@ -423,40 +863,61 @@ libraries {
         }
         clang(Clang)
     }
-}</pre></div></div><br class="example-break"><p>
-                Each tool chain implementation allows for a certain degree of configuration (see the API documentation for more details).
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15C87"></a>54.10.2.&nbsp;Using tool chains</h3></div></div></div><p>
-                It is not necessary or possible to specify the tool chain that should be used to build.
-                For a given variant, Gradle will attempt to locate a <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.ToolChain.html" target="_top"><code class="classname">ToolChain</code></a> that is able to build
-                for the target platform. Available tool chains are searched in the order defined.
-            </p><div class="note">
-                When a platform does not define an architecture or operating system, the default target of the tool chain
-                is assumed. So if a platform does not define a value for <code class="literal">operatingSystem</code>,
-                Gradle will find the first available tool chain that can build for the specified <code class="literal">architecture</code>.
-            </div><p>
-                The core Gradle tool chains are able to target the following architectures out of the box. In each case, the tool chain
-                will target the current operating system. See the next section for information on cross-compiling for other operating systems.
-            </p><div xmlns:xslthl="http://xslthl.sf.net" class="table"><div class="table-contents"><table id="N15C9B">
-                    <tr><td>Tool Chain</td><td>Architectures</td></tr>
-                <tr>
-                    <td>GCC</td><td>x86, x86_64</td>
-                </tr><tr>
-                    <td>Clang</td><td>x86, x86_64</td>
-                </tr><tr>
-                    <td>Visual C++</td><td>x86, x86_64, ia-64</td>
-                </tr></table></div></div><p>
-                So for GCC running on linux, the supported target platforms are 'linux/x86' and 'linux/x86_64'.
-                For GCC running on Windows via Cygwin, platforms 'windows/x86' and 'windows/x86_64' are supported.
-                (The Cygwin POSIX runtime is not yet modelled as part of the platform, but will be in the future.)
-            </p><p>
-                If no target platforms are defined for a project, then all binaries are built to target a default platform named 'current'.
-                This default platform does not specify any <code class="literal">architecture</code> or <code class="literal">operatingSystem</code> value,
-                hence using the default values of the first available tool chain.
-            </p><p>
-                Gradle provides a <em class="firstterm">hook</em> that allows the build author to control the exact set of arguments passed to a tool chain executable.
-                This enables the build author to work around any limitations in Gradle, or assumptions that Gradle makes.
-                The arguments hook should be seen as a 'last-resort' mechanism, with preference given to truly modelling the underlying domain.
-            </p><div class="example"><a name="withArguments"></a><p class="title"><b>Example&nbsp;54.27.&nbsp;Reconfigure tool arguments</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <p> 每个工具链的实现都允许一定程度的配置（更多细节请参阅 API 文档）。 <br>Each tool chain implementation allows for a certain degree of configuration (see the API documentation for more details).</p>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15C87"></a>54.10.2. 使用工具链</h3>
+        <h5 class="title"><a name="N15C87"></a>54.10.2.&nbsp;Using tool chains</h5>
+       </div>
+      </div>
+     </div>
+     <p> 我们没有必要也不可能指定应该用于构建的工具链。对于给定的变体，Gradle 将尝试查找能够为目标平台构建的 <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.ToolChain.html" target="_top"><code class="classname">ToolChain</code></a> 。可用的工具链是按定义的顺序来查找的。 <br>It is not necessary or possible to specify the tool chain that should be used to build. For a given variant, Gradle will attempt to locate a <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.ToolChain.html" target="_top"><code class="classname">ToolChain</code></a> that is able to build for the target platform. Available tool chains are searched in the order defined.</p>
+     <div class="note">
+       当一个平台没有定义架构或操作系统时，会假定工具链的默认目标。所以如果平台没有为 
+      <code class="literal">operatingSystem</code> 定义值的话，Gradle 将找到第一个可以为指定的 
+      <code class="literal">architecture</code> 构建的可用工具链。 
+     </div>
+     <p> 核心 Gradle 工具链对以下的架构能够开箱即用。在每种情况中，工具链都将针对当前的操作系统。有关其他操作系统交叉编译的信息，请参阅下一节。 <br>The core Gradle tool chains are able to target the following architectures out of the box. In each case, the tool chain will target the current operating system. See the next section for information on cross-compiling for other operating systems.</p>
+     <div xmlns:xslthl="http://xslthl.sf.net" class="table">
+      <div class="table-contents">
+       <table id="N15C9B"> 
+        <tbody>
+         <tr>
+          <td>工具链<br>Tool Chain</td>
+          <td>架构<br>Architectures</td>
+         </tr> 
+         <tr> 
+          <td>GCC</td>
+          <td>x86, x86_64</td> 
+         </tr>
+         <tr> 
+          <td>Clang</td>
+          <td>x86, x86_64</td> 
+         </tr>
+         <tr> 
+          <td>Visual C++</td>
+          <td>x86, x86_64, ia-64</td> 
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+     <p> 所以对于在 linux 上运行的 GCC，支持的目标平台为“linux/x86”和“linux/x86_64”；而对于在 Windows 上通过 Cygwin 运行的 GCC，支持的平台则为“windows/x86”和“windows/x86_64”。（Cygwin POSIX 运行时还不能模块为平台的一部分，但以后会实现。） <br>So for GCC running on linux, the supported target platforms are 'linux/x86' and 'linux/x86_64'. For GCC running on Windows via Cygwin, platforms 'windows/x86' and 'windows/x86_64' are supported. (The Cygwin POSIX runtime is not yet modelled as part of the platform, but will be in the future.)</p>
+     <p> 如果没有为项目定义目标平台，那么所有的二进制文件将针对默认平台“current”进行构建。这个默认平台不指定任何的 <code class="literal">architecture</code> 或 <code class="literal">operatingSystem</code> 值，因此会使用第一个可用工具链的默认值。 <br>If no target platforms are defined for a project, then all binaries are built to target a default platform named 'current'. This default platform does not specify any <code class="literal">architecture</code> or <code class="literal">operatingSystem</code> value, hence using the default values of the first available tool chain.</p>
+     <p> Gradle 提供了一个<em class="firstterm">钩子</em>，允许构建者控制传给可执行的工具链的确切参数集。这使得构建者能够围绕 Gradle 中的任何限制或做出的假定去使用。这个参数钩子应该被当作是一种“最后手段”的机制，我们更倾向于对基本领域真正地进行建模。 <br>Gradle provides a <em class="firstterm">hook</em> that allows the build author to control the exact set of arguments passed to a tool chain executable. This enables the build author to work around any limitations in Gradle, or assumptions that Gradle makes. The arguments hook should be seen as a 'last-resort' mechanism, with preference given to truly modelling the underlying domain.</p>
+     <div class="example">
+      <a name="withArguments"></a>
+      <p class="title"><b>示例 54.27.&nbsp;重新配置工具参数 - Example&nbsp;54.27.&nbsp;Reconfigure tool arguments</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">model {
     toolChains {
         visualCpp(VisualCpp) {
             cppCompiler.withArguments { args -&gt;
@@ -476,11 +937,27 @@ libraries {
         }
 
     }
-}</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15CD2"></a>54.10.3.&nbsp;Cross-compiling with GCC</h3></div></div></div><p>
-                Cross-compiling is possible with the <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.Gcc.html" target="_top"><code class="classname">Gcc</code></a> and <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.Clang.html" target="_top"><code class="classname">Clang</code></a> tool chains,
-                by adding support for additional target platforms.
-                This is done by specifying a target platform for a toolchain. For each targetted platform a custom configuration can be specified.
-            </p><div class="example"><a name="targetPlatforms"></a><p class="title"><b>Example&nbsp;54.28.&nbsp;Defining target platforms</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">model {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15CD2"></a>54.10.3.&nbsp;使用 GCC 进行交叉编译</h3>
+        <h5 class="title"><a name="N15CD2"></a>54.10.3.&nbsp;Cross-compiling with GCC</h5>
+       </div>
+      </div>
+     </div>
+     <p> 通过添加对其他目标平台的支持，可以做到使用 <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.Gcc.html" target="_top"><code class="classname">Gcc</code></a> 和 <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.Clang.html" target="_top"><code class="classname">Clang</code></a> 工具链进行交叉编译。这是通过为工具链指定目标平台来完成的。 对于每个目标平台，都可以指定一个自定义的配置。 <br>Cross-compiling is possible with the <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.Gcc.html" target="_top"><code class="classname">Gcc</code></a> and <a class="ulink" href="../dsl/org.gradle.nativebinaries.toolchain.Clang.html" target="_top"><code class="classname">Clang</code></a> tool chains, by adding support for additional target platforms. This is done by specifying a target platform for a toolchain. For each targetted platform a custom configuration can be specified.</p>
+     <div class="example">
+      <a name="targetPlatforms"></a>
+      <p class="title"><b>示例54.28.&nbsp;定义目标平台 - Example&nbsp;54.28.&nbsp;Defining target platforms</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">model {
     toolChains {
         gcc(Gcc) {
             target(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"arm"</span>){
@@ -502,32 +979,52 @@ libraries {
             architecture <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"sparc"</span>
         }
     }
-}</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="native_binaries:visual_studio"></a>54.11.&nbsp;Visual Studio IDE integration</h2></div></div></div><p>
-            Gradle has the ability to generate Visual Studio project and solution files for the native components defined in your build.
-            This ability is added by the <code class="literal">visual-studio</code> plugin. For a multi-project build, all projects with native components
-            should have this plugin applied.
-        </p><p>
-            When the <code class="literal">visual-studio</code> plugin is applied, a task name <code class="literal">${component.name}VisualStudio</code> is created
-            for each defined component. This task will generate a Visual Studio Solution file for the named component. This solution will include
-            a Visual Studio Project for that component, as well as linking to project files for each depended-on binary.
-        </p><p>
-            The content of the generated visual studio files can be modified via programmatic hooks, provided by the <code class="literal">visualStudio</code>
-            extension. Take a look at the 'visual-studio' sample, or see <a class="ulink" href="../dsl/org.gradle.ide.visualstudio.VisualStudioExtension.html#org.gradle.ide.visualstudio.VisualStudioExtension:projects" target="_top"><code class="classname">VisualStudioExtension.getProjects()</code></a>
-            and <a class="ulink" href="../dsl/org.gradle.ide.visualstudio.VisualStudioExtension.html#org.gradle.ide.visualstudio.VisualStudioExtension:solutions" target="_top"><code class="classname">VisualStudioExtension.getSolutions()</code></a> for more details.
-        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="native_binaries:cunit"></a>54.12.&nbsp;CUnit support</h2></div></div></div><p>
-            The Gradle <code class="literal">cunit</code> plugin provides support for compiling and executing CUnit tests in your native-binary project.
-            For each <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> and <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a>
-            defined in your project, Gradle will create a matching <a class="ulink" href="../dsl/org.gradle.nativebinaries.test.cunit.CUnitTestSuite.html" target="_top"><code class="classname">CUnitTestSuite</code></a> component,
-            named <code class="literal">${component.name}Test</code>.
-        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15D26"></a>54.12.1.&nbsp;CUnit sources</h3></div></div></div><p>
-                Gradle will create a <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a> named 'cunit' for each <a class="ulink" href="../dsl/org.gradle.nativebinaries.test.cunit.CUnitTestSuite.html" target="_top"><code class="classname">CUnitTestSuite</code></a> component
-                in the project. This source set should contain the cunit test files for the component sources. Source files can be located in the conventional location
-                (<code class="literal">src/${component.name}Test/cunit</code>) or can be configured like any other source set.
-            </p><p>
-                The job of initialising the CUnit test registry and executing the tests is performed by Gradle, via some generated CUnit launcher sources.
-                Gradle will expect and call a function with the signature <code class="literal">void gradle_cunit_register()</code> that you can use to configure the
-                actual CUnit suites and tests to execute.
-            </p><div class="example"><a name="cunitSources"></a><p class="title"><b>Example&nbsp;54.29.&nbsp;Registering CUnit tests</b></p><div class="example-contents"><p><code class="filename">suite_operators.c</code></p><pre class="programlisting">#include &lt;CUnit/Basic.h&gt;
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+    </div>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="native_binaries:visual_studio"></a>54.11.&nbsp;Visual Studio IDE 集成</h2>
+       <h4 class="title"><a name="native_binaries:visual_studio"></a>54.11.&nbsp;Visual Studio IDE integration</h4>
+      </div>
+     </div>
+    </div>
+    <p> Gradle 能够为构建中定义的本机组件生成 Visual Studio 项目和解决方案文件。这个功能是通过 <code class="literal">visual-studio</code> 插件添加的。对于多项目构建，所有有本机组件的项目都应该应用这个插件。 <br>Gradle has the ability to generate Visual Studio project and solution files for the native components defined in your build. This ability is added by the <code class="literal">visual-studio</code> plugin. For a multi-project build, all projects with native components should have this plugin applied.</p>
+    <p> 应用 <code class="literal">visual-studio</code> 插件时，会为每个定义的组件创建名称为 <code class="literal">${component.name}VisualStudio</code> 的任务。这个任务将为所命名的组件一个 Visual Studio Solution 文件。这个解决方案将包含该组件的 Visual Studio Project，以及链接至每个依赖二进制文件的项目文件。 <br>When the <code class="literal">visual-studio</code> plugin is applied, a task name <code class="literal">${component.name}VisualStudio</code> is created for each defined component. This task will generate a Visual Studio Solution file for the named component. This solution will include a Visual Studio Project for that component, as well as linking to project files for each depended-on binary.</p>
+    <p> 通过由<code class="literal">visualStudio</code> 扩展提供的程序化钩子，可以修改所生成的visual studio 文件的内容。更详细的信息，请参考“visual-studio”示例，或参阅 <a class="ulink" href="../dsl/org.gradle.ide.visualstudio.VisualStudioExtension.html#org.gradle.ide.visualstudio.VisualStudioExtension:projects" target="_top"><code class="classname">VisualStudioExtension.getProjects()</code></a> 及 <a class="ulink" href="../dsl/org.gradle.ide.visualstudio.VisualStudioExtension.html#org.gradle.ide.visualstudio.VisualStudioExtension:solutions" target="_top"><code class="classname">VisualStudioExtension.getSolutions()</code></a> 。 <br>The content of the generated visual studio files can be modified via programmatic hooks, provided by the <code class="literal">visualStudio</code> extension. Take a look at the 'visual-studio' sample, or see <a class="ulink" href="../dsl/org.gradle.ide.visualstudio.VisualStudioExtension.html#org.gradle.ide.visualstudio.VisualStudioExtension:projects" target="_top"><code class="classname">VisualStudioExtension.getProjects()</code></a> and <a class="ulink" href="../dsl/org.gradle.ide.visualstudio.VisualStudioExtension.html#org.gradle.ide.visualstudio.VisualStudioExtension:solutions" target="_top"><code class="classname">VisualStudioExtension.getSolutions()</code></a> for more details.</p>
+   </div>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a name="native_binaries:cunit"></a>54.12.&nbsp;CUnit 支持</h2>
+       <h4 class="title"><a name="native_binaries:cunit"></a>54.12.&nbsp;CUnit support</h4>
+      </div>
+     </div>
+    </div>
+    <p> Gradle <code class="literal">cunit</code> 插件支持在本机二进制项目中编译和执行 CUnit 测试。对于项目中定义的每个 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> 和 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> ，Gradle 将创建一个匹配的 <a class="ulink" href="../dsl/org.gradle.nativebinaries.test.cunit.CUnitTestSuite.html" target="_top"><code class="classname">CUnitTestSuite</code></a> 组件，名为 <code class="literal">${component.name}Test</code>。 <br>The Gradle <code class="literal">cunit</code> plugin provides support for compiling and executing CUnit tests in your native-binary project. For each <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> and <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> defined in your project, Gradle will create a matching <a class="ulink" href="../dsl/org.gradle.nativebinaries.test.cunit.CUnitTestSuite.html" target="_top"><code class="classname">CUnitTestSuite</code></a> component, named <code class="literal">${component.name}Test</code>.</p>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15D26"></a>54.12.1.&nbsp;CUnit 源码</h3>
+        <h5 class="title"><a name="N15D26"></a>54.12.1.&nbsp;CUnit sources</h5>
+       </div>
+      </div>
+     </div>
+     <p> Gradle 将为项目中的每个 <a class="ulink" href="../dsl/org.gradle.nativebinaries.test.cunit.CUnitTestSuite.html" target="_top"><code class="classname">CUnitTestSuite</code></a> 组件创建名为“cunit”的 <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a>。这个源码集应该包含组件源码的 cunit 测试文件。源码文件可以位于约定位置（<code class="literal">src/${component.name}Test/cunit</code>），也可以像其他源集一样进行配置。 <br>Gradle will create a <a class="ulink" href="../dsl/org.gradle.language.c.CSourceSet.html" target="_top"><code class="classname">CSourceSet</code></a> named 'cunit' for each <a class="ulink" href="../dsl/org.gradle.nativebinaries.test.cunit.CUnitTestSuite.html" target="_top"><code class="classname">CUnitTestSuite</code></a> component in the project. This source set should contain the cunit test files for the component sources. Source files can be located in the conventional location (<code class="literal">src/${component.name}Test/cunit</code>) or can be configured like any other source set.</p>
+     <p> 初始化 CUnit 测试注册和执行测试的作业都由 Gradle 通过某些生成的 CUnit 启动源码来执行。Gradle 将认定并调用一个 <code class="literal">void gradle_cunit_register()</code> 函数，这个函数你可以用于配置要执行的实际的 CUnit 套件及测试。 <br>The job of initialising the CUnit test registry and executing the tests is performed by Gradle, via some generated CUnit launcher sources. Gradle will expect and call a function with the signature <code class="literal">void gradle_cunit_register()</code> that you can use to configure the actual CUnit suites and tests to execute.</p>
+     <div class="example">
+      <a name="cunitSources"></a>
+      <p class="title"><b>示例 54.29. 注册 CUnit 测试 - Example&nbsp;54.29.&nbsp;Registering CUnit tests</b></p>
+      <div class="example-contents">
+       <p><code class="filename">suite_operators.c</code></p>
+       <pre class="programlisting">#include &lt;CUnit/Basic.h&gt;
 #include "gradle_cunit_register.h"
 #include "test_operators.h"
 
@@ -543,28 +1040,61 @@ void gradle_cunit_register() {
     CU_pSuite pSuiteMath = CU_add_suite("operator tests", suite_init, suite_clean);
     CU_add_test(pSuiteMath, "test_plus", test_plus);
     CU_add_test(pSuiteMath, "test_minus", test_minus);
-}</pre></div></div><br class="example-break"><div class="note">
-                Due to this mechanism, your CUnit sources may not contain a <code class="literal">main</code> method since this will clash with the method provided by Gradle.
-            </div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15D4B"></a>54.12.2.&nbsp;Building CUnit executables</h3></div></div></div><p>
-                A <a class="ulink" href="../dsl/org.gradle.nativebinaries.test.cunit.CUnitTestSuite.html" target="_top"><code class="classname">CUnitTestSuite</code></a> component has an associated
-                <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> or <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> component.
-                For each <a class="ulink" href="../dsl/org.gradle.nativebinaries.ProjectNativeBinary.html" target="_top"><code class="classname">ProjectNativeBinary</code></a> configured for the main component, a matching
-                <a class="ulink" href="../javadoc/org/gradle/nativebinaries/test/TestSuiteExecutableBinary.html" target="_top"><code class="classname">TestSuiteExecutableBinary</code></a> will be configured on the test suite component.
-                These test suite binaries can be configured in a similar way to any other binary instance:
-            </p><div class="example"><a name="cunitSources"></a><p class="title"><b>Example&nbsp;54.30.&nbsp;Registering CUnit tests</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">binaries.withType(TestSuiteExecutableBinary) {
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <div class="note">
+       由于这一机制，你的 CUnit 源码可能不包含 
+      <code class="literal">main</code>方法，因为这会与 Gradle 所提供的方法冲突。 
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15D4B"></a>54.12.2.&nbsp;构建 CUnit 可执行文件</h3>
+        <h5 class="title"><a name="N15D4B"></a>54.12.2.&nbsp;Building CUnit executables</h5>
+       </div>
+      </div>
+     </div>
+     <p> 一个 <a class="ulink" href="../dsl/org.gradle.nativebinaries.test.cunit.CUnitTestSuite.html" target="_top"><code class="classname">CUnitTestSuite</code></a> 组件有一个相关联的 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> 或 <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> 组件。对于为主组件配置的每一个 <a class="ulink" href="../dsl/org.gradle.nativebinaries.ProjectNativeBinary.html" target="_top"><code class="classname">ProjectNativeBinary</code></a>，在测试套件组件上都会配置一个匹配的 <a class="ulink" href="../javadoc/org/gradle/nativebinaries/test/TestSuiteExecutableBinary.html" target="_top"><code class="classname">TestSuiteExecutableBinary</code></a> 。这些测试套件二进制文件可以使用一种与其他二进制实例类似的方式来配置： <br>A <a class="ulink" href="../dsl/org.gradle.nativebinaries.test.cunit.CUnitTestSuite.html" target="_top"><code class="classname">CUnitTestSuite</code></a> component has an associated <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeExecutable.html" target="_top"><code class="classname">NativeExecutable</code></a> or <a class="ulink" href="../dsl/org.gradle.nativebinaries.NativeLibrary.html" target="_top"><code class="classname">NativeLibrary</code></a> component. For each <a class="ulink" href="../dsl/org.gradle.nativebinaries.ProjectNativeBinary.html" target="_top"><code class="classname">ProjectNativeBinary</code></a> configured for the main component, a matching <a class="ulink" href="../javadoc/org/gradle/nativebinaries/test/TestSuiteExecutableBinary.html" target="_top"><code class="classname">TestSuiteExecutableBinary</code></a> will be configured on the test suite component. These test suite binaries can be configured in a similar way to any other binary instance:</p>
+     <div class="example">
+      <a name="cunitSources"></a>
+      <p class="title"><b>示例 54.30. 注册 CUnit 测试 - Example&nbsp;54.30.&nbsp;Registering CUnit tests</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">binaries.withType(TestSuiteExecutableBinary) {
     lib library: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"cunit"</span>, linkage: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"static"</span>
 
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (flavor == flavors.failing) {
         cCompiler.define <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"PLUS_BROKEN"</span>
     }
-}</pre></div></div><br class="example-break"><div class="note">
-                Both the CUnit sources provided by your project and the generated launcher require the core CUnit headers and libraries.
-                Presently, this library dependency must be provided by your project for each <a class="ulink" href="../javadoc/org/gradle/nativebinaries/test/TestSuiteExecutableBinary.html" target="_top"><code class="classname">TestSuiteExecutableBinary</code></a>.
-            </div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="N15D7A"></a>54.12.3.&nbsp;Running CUnit tests</h3></div></div></div><p>
-                For each <a class="ulink" href="../javadoc/org/gradle/nativebinaries/test/TestSuiteExecutableBinary.html" target="_top"><code class="classname">TestSuiteExecutableBinary</code></a>, Gradle will create a task to execute this binary,
-                which will run all of the registered CUnit tests.
-                The generated test results will be located in the <code class="literal"><em class="replaceable"><code>${build.dir}</code></em>/test-results</code> directory.
-            </p><div class="example"><a name="completeCUnitExample"></a><p class="title"><b>Example&nbsp;54.31.&nbsp;Running CUnit tests</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"c"</span>
+}</pre>
+      </div>
+     </div>
+     <br class="example-break">
+     <div class="note">
+       你的项目及生成的启动器所提供的两种 CUnit 源码，都需要核心的 CUnit 头文件和库。目前，这个库依赖项必须由你的项目为每个 
+      <a class="ulink" href="../javadoc/org/gradle/nativebinaries/test/TestSuiteExecutableBinary.html" target="_top"><code class="classname">TestSuiteExecutableBinary</code></a> 提供。 
+     </div>
+    </div>
+    <div class="section">
+     <div class="titlepage">
+      <div>
+       <div>
+        <h3 class="title"><a name="N15D7A"></a>54.12.3. 运行 CUnit 测试</h3>
+        <h5 class="title"><a name="N15D7A"></a>54.12.3.&nbsp;Running CUnit tests</h5>
+       </div>
+      </div>
+     </div>
+     <p> 对于每个 <a class="ulink" href="../javadoc/org/gradle/nativebinaries/test/TestSuiteExecutableBinary.html" target="_top"><code class="classname">TestSuiteExecutableBinary</code></a>， Gradle 将创建一个任务来执行此二进制文件，这个任务将运行所有已注册的 CUnit 测试。 生成的测试结果将位于 <code class="literal"><em class="replaceable"><code>{build.dir}</code></em>/test-results</code> 目录中。 <br>For each <a class="ulink" href="../javadoc/org/gradle/nativebinaries/test/TestSuiteExecutableBinary.html" target="_top"><code class="classname">TestSuiteExecutableBinary</code></a>, Gradle will create a task to execute this binary, which will run all of the registered CUnit tests. The generated test results will be located in the <code class="literal"><em class="replaceable"><code>${build.dir}</code></em>/test-results</code> directory.</p>
+     <div class="example">
+      <a name="completeCUnitExample"></a>
+      <p class="title"><b>示例 54.31. 运行 CUnit 测试 - Example&nbsp;54.31.&nbsp;Running CUnit tests</b></p>
+      <div class="example-contents">
+       <p><code class="filename">build.gradle</code></p>
+       <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"c"</span>
 apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"cunit"</span>
 
 model {
@@ -593,7 +1123,14 @@ binaries.withType(TestSuiteExecutableBinary) {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (flavor == flavors.failing) {
         cCompiler.define <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"PLUS_BROKEN"</span>
     }
-}</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/native-binaries/cunit</code> which is in both the binary and source distributions of Gradle.</p></div></div></div><br class="example-break"><pre class="screen">&gt; gradle -q runFailingOperatorsTestCUnitExe
+}</pre>
+       <div class="exampleLocation">
+        <p><span class="emphasis"><em>注意︰</em> </span>此示例的代码可以在 Gradle 的二进制分发包或源码分发包中的 <code class="filename">samples/native-binaries/cunit</code> 内找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/native-binaries/cunit</code> which is in both the binary and source distributions of Gradle.</p>
+       </div>
+      </div>
+     </div>
+     <br class="example-break">
+     <pre class="screen">&gt; gradle -q runFailingOperatorsTestCUnitExe
 
 There were test failures:
   1. /home/user/gradle/samples/native-binaries/cunit/src/operatorsTest/cunit/test_plus.c:6  - plus(0, -2) == -2
@@ -603,6 +1140,31 @@ There were test failures:
 
 BUILD FAILED
 
-Total time: 1 secs</pre></div><div class="note"><p>
-                The current support for CUnit is quite rudimentary. Plans for future integration include:
-            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Allow tests to be declared with javadoc-style annotations.</p></li><li class="listitem"><p>Improved HTML reporting, similar to that available for JUnit.</p></li><li class="listitem"><p>Real-time feedback for test execution.</p></li><li class="listitem"><p>Support for additional test frameworks.</p></li></ul></div></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="signing_plugin.html" title="Chapter&nbsp;53.&nbsp;The Signing Plugin">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="build_lifecycle.html" title="Chapter&nbsp;55.&nbsp;The Build Lifecycle">Next</a></div></div></div></body></html>
+Total time: 1 secs</pre>
+    </div>
+    <div class="note">
+     <p> 当前对 CUnit 的支持还是相当基本。未来的集成计划包括： <br>The current support for CUnit is quite rudimentary. Plans for future integration include:</p>
+     <div class="itemizedlist">
+      <ul class="itemizedlist">
+       <li class="listitem"><p>允许使用 javadoc 风格的注解声明测试。</p><p>Allow tests to be declared with javadoc-style annotations.</p></li>
+       <li class="listitem"><p>改进 HTML 报告，类似于 JUnit 那样。</p><p>Improved HTML reporting, similar to that available for JUnit.</p></li>
+       <li class="listitem"><p>实时反馈测试的执行。</p><p>Real-time feedback for test execution.</p></li>
+       <li class="listitem"><p>支持其他测试框架。</p><p>Support for additional test frameworks.</p></li>
+      </ul>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="signing_plugin.html" title="第五十三章. 签名插件">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="build_lifecycle.html" title="第五十五章. 构建的生命周期">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
