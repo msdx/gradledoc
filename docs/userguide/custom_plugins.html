@@ -1,25 +1,25 @@
 <html>
  <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>Chapter&nbsp;58.&nbsp;Writing Custom Plugins</title>
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css" />
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css" />
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css" />
-  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator" />
-  <link rel="home" href="userguide.html" title="Gradle User Guide" />
-  <link rel="up" href="userguide.html" title="Gradle User Guide" />
-  <link rel="prev" href="custom_tasks.html" title="Chapter&nbsp;57.&nbsp;Writing Custom Task Classes" />
-  <link rel="next" href="organizing_build_logic.html" title="Chapter&nbsp;59.&nbsp;Organizing Build Logic" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>第五十八章. 编写自定义插件 - Chapter&nbsp;58.&nbsp;Writing Custom Plugins</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南">
+  <link rel="up" href="userguide.html" title="Gradle 用户指南">
+  <link rel="prev" href="custom_tasks.html" title="第五十七章. 编写自定义任务类">
+  <link rel="next" href="organizing_build_logic.html" title="第五十九章. 组织构建逻辑">
  </head>
  <body>
   <div class="navheader">
    <div>
     <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="custom_tasks.html" title="Chapter&nbsp;57.&nbsp;Writing Custom Task Classes">Previous</a>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="custom_tasks.html" title="第五十七章. 编写自定义任务类">上一章</a>
      <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
      <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="organizing_build_logic.html" title="Chapter&nbsp;59.&nbsp;Organizing Build Logic">Next</a>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="organizing_build_logic.html" title="第五十九章. 组织构建逻辑">下一章</a>
     </div>
    </div>
   </div>
@@ -27,71 +27,61 @@
    <div class="titlepage">
     <div>
      <div>
-      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="custom_plugins"></a>Chapter&nbsp;58.&nbsp;Writing Custom Plugins</h1>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="custom_plugins"></a>第五十八章. 编写自定义插件</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="custom_plugins"></a>Chapter&nbsp;58.&nbsp;Writing Custom Plugins</h3>
      </div>
     </div>
    </div>
-   <p>一个Gradle插件打包了构建逻辑的可重用部分，从而方便地应用于大量的工程构建。 Gradle允许你实现自定义插件, 以便你可以重用自己的构建逻辑, 并与他人分享。</p>
-   <p>A Gradle plugin packages up reusable pieces of build logic, which can be used across many different projects and builds. Gradle allows you to implement your own custom plugins, so you can reuse your build logic, and share it with others. </p>
-   <p> 你可以任选一种喜欢的语言来实现自定义插件，只要它能编译成字节码即可。这里我们以Groovy为例。你也可以使用Java或Scala。</p>
-   <p> You can implement a custom plugin in any language you like, provided the implementation ends up compiled as bytecode. For the examples here, we are going to use Groovy as the implementation language. You could use Java or Scala instead, if you want. </p>
+   <p>Gradle 插件打包了构建逻辑的可复用部分，这些逻辑可以在许多不同的项目和构建中使用。Gradle 允许你实现自己的自定义插件，因此你可以复用自己的构建逻辑，并与他人共享。 <br>A Gradle plugin packages up reusable pieces of build logic, which can be used across many different projects and builds. Gradle allows you to implement your own custom plugins, so you can reuse your build logic, and share it with others.</p>
+   <p> 你可以任选一种自己喜欢的语言来实现自定义插件，只要这个实现最终能够被编译成字节码。这里我们以 Groovy 为例，你也可以使用 Java 或 Scala。 <br>You can implement a custom plugin in any language you like, provided the implementation ends up compiled as bytecode. For the examples here, we are going to use Groovy as the implementation language. You could use Java or Scala instead, if you want.</p>
    <div class="section">
     <div class="titlepage">
      <div>
       <div>
-       <h2 class="title"><a name="N1670B"></a>58.1.&nbsp;Packaging a plugin</h2>
+       <h2 class="title"><a name="N1670B"></a>58.1.&nbsp;打包插件</h2>
+       <h4 class="title"><a name="N1670B"></a>58.1.&nbsp;Packaging a plugin</h4>
       </div>
      </div>
     </div>
-    <p>你可以把插件的源码放到下面几处。 </p>
-    <p>There are several places where you can put the source for the plugin. </p>
+    <p>有几个地方可以放插件的源码。 <br>There are several places where you can put the source for the plugin.</p>
     <div class="variablelist">
      <dl>
       <dt>
-       <span class="term">构建脚本（Build script）</span>
+       <span class="term">构建脚本<br>Build script</span>
       </dt>
       <dd>
-       <p>你可以直接在构建脚本里包含插件源码。好处是插件会自动编译并加入构建脚本的路径下而不需要配置。然而，在插件脚本外插件就不可见了，所以你不能在定义插件的插件脚本外复用插件。 </p>   
-       <p>You can include the source for the plugin directly in the build script. This has the benefit that the plugin is automatically compiled and included in the classpath of the build script without you having to do anything. However, the plugin is not visible outside the build script, and so you cannot reuse the plugin outside the build script it is defined in. </p>
+       <p>你可以直接在构建脚本中包含插件源码。好处是你不需要再做什么，这个插件就会自动编译并加入构建脚本的类路径中。然而，在这个构建脚本之外，插件是不可见的，因此你不能够在你定义这个插件的脚本以外的地方来复用它。 <br>You can include the source for the plugin directly in the build script. This has the benefit that the plugin is automatically compiled and included in the classpath of the build script without you having to do anything. However, the plugin is not visible outside the build script, and so you cannot reuse the plugin outside the build script it is defined in.</p>
       </dd>
       <dt>
-       <span class="term"><code class="filename">buildSrc</code> 工程</span>
-       <span class="term">（<code class="filename">buildSrc</code> project）</span>
+       <span class="term"><code class="filename">buildSrc</code> 项目<br><code class="filename">buildSrc</code> project</span>
       </dt>
       <dd>
-            <p>你可以将插件源码放在 <code class="filename"><em class="replaceable"><code>rootProjectDir</code></em>/buildSrc/src/main/groovy</code> 目录下。Gradle 会编译和测试插件，使其在构建脚本的路径上可见。对于构建使用的所有构建脚本，插件都是可见的。然而，在构建之外它是不可见的，因此你不能在定义插件的构建之外重用插件。</p>
-            <p>You can put the source for the plugin in the <code class="filename"><em class="replaceable"><code>rootProjectDir</code></em>/buildSrc/src/main/groovy</code> directory. Gradle will take care of compiling and testing the plugin and making it available on the classpath of the build script. The plugin is visible to every build script used by the build. However, it is not visible outside the build, and so you cannot reuse the plugin outside the build it is defined in. </p>
-            <p> 查看 <a class="xref" href="organizing_build_logic.html">Chapter&nbsp;59, <i>Organizing Build Logic</i></a> 以获取更多关于 <code class="filename">buildSrc</code> 工程的信息。</p>
-            <p> See <a class="xref" href="organizing_build_logic.html">Chapter&nbsp;59, <i>Organizing Build Logic</i></a> for more details about the <code class="filename">buildSrc</code> project.</p>
+       <p>你可以将插件源码放在 <code class="filename"><em class="replaceable"><code>rootProjectDir</code></em>/buildSrc/src/main/rootvy</code> 目录中。Gradle 将负责编译和测试插件，并使其在构建脚本的类路径中可用。该插件对构建所使用的每个构建脚本都是可见的。但是，它在构建外部不可见，因此你无法在定义它的构建之外的地方复用这个插件。 <br>You can put the source for the plugin in the <code class="filename"><em class="replaceable"><code>rootProjectDir</code></em>/buildSrc/src/main/groovy</code> directory. Gradle will take care of compiling and testing the plugin and making it available on the classpath of the build script. The plugin is visible to every build script used by the build. However, it is not visible outside the build, and so you cannot reuse the plugin outside the build it is defined in.</p>
+       <p> 有关 <code class="filename">buildSrc</code> 项目的更详细信息，请参阅《<a class="xref" href="organizing_build_logic.html">第五十九章，<i>组织构建逻辑</i></a>》。<br>See <a class="xref" href="organizing_build_logic.html">Chapter&nbsp;59, <i>Organizing Build Logic</i></a> for more details about the <code class="filename">buildSrc</code> project.</p>
       </dd>
       <dt>
-            <span class="term">独立工程</span>
-       <span class="term">（Standalone project）</span>
+       <span class="term">独立项目<br>Standalone project</span>
       </dt>
       <dd>
-            <p>你可以为你的插件创建一个独立的工程。这个工程创建和发布一个JAR包，随后你可以在多个构建中使用它，你也可以与别人分享它。总之，JAR可能包含了一些自定义插件，或者将几个相关的task捆绑到一个独立的library中，或者两者皆有。</p>
-       <p>You can create a separate project for your plugin. This project produces and publishes a JAR which you can then use in multiple builds and share with others. Generally, this JAR might include some custom plugins, or bundle several related task classes into a single library. Or some combination of the two. </p>
+       <p>你可以为你的插件创建单独的项目。这个项目会生成和发布一个 JAR，随后你可以在多个构建中使用它并分享出去。通常，这个 JAR 可能包含一些自定义插件，或者将多个相关的任务类捆绑到一个库中，或两者皆有。 <br>You can create a separate project for your plugin. This project produces and publishes a JAR which you can then use in multiple builds and share with others. Generally, this JAR might include some custom plugins, or bundle several related task classes into a single library. Or some combination of the two.</p>
       </dd>
      </dl>
     </div>
-    <p> 为了便于接受，在我们的例子中，我们首先会在构建脚本中自定义插件。随后我们会考虑如何创建一个独立的插件工程。</p>
-    <p> In our examples, we will start with the plugin in the build script, to keep things simple. Then we will look at creating a standalone project. </p>
+    <p> 在我们的例子中，我们将从在构建脚本中定义插件开始，以保持简单。随后我们会着眼于创建一个独立的项目。 <br>In our examples, we will start with the plugin in the build script, to keep things simple. Then we will look at creating a standalone project.</p>
    </div>
    <div class="section">
     <div class="titlepage">
      <div>
       <div>
-            <h2 class="title"><a name="N16734"></a>58.2.&nbsp;编写一个简单的插件</h2>
-       <h2 class="title"><a name="N16734"></a>58.2.&nbsp;Writing a simple plugin</h2>
+       <h2 class="title"><a name="N16734"></a>58.2.&nbsp;编写一个简单的插件</h2>
+       <h4 class="title"><a name="N16734"></a>58.2.&nbsp;Writing a simple plugin</h4>
       </div>
      </div>
     </div>
-    <p>要创建一个自定义插件，你需要编写一个 <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> 的实现类。当它被应用于一个工程时，Gradle会实例化这个插件，然后调用它的 <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html#apply(T)" target="_top"><code class="classname">Plugin.apply()</code></a> 方法。 这个方法会将工程对象作为参数传递进去，这样插件就可以用工程对象来配置工程。 下面的实例包含一个greeting插件, 它向工程添加了一个 <code class="literal">hello</code> 任务（task）。 </p>
-    <p>To create a custom plugin, you need to write an implementation of <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a>.Gradle instantiates the plugin and calls the plugin instance's <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html#apply(T)" target="_top"><code class="classname">Plugin.apply()</code></a> method when the plugin is used with a project. The project object is passed as a parameter, which the plugin can use to configure the project however it needs to. The following sample contains a greeting plugin, which adds a <code class="literal">58</code> task to the project. </p>
+    <p>要创建自定义插件，你需要编写一个 <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> 的实现。当插件用于项目时， Gradle 将实例化插件并调用插件实例的 <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html#apply(T)" target="_top"><code class="classname">Plugin.apply()</code></a> 方法。项目对象将作为参数传进去，插件可使用该参数来配置项目。以下示例包含了一个 greeting 插件，其向项目添加了一个 <code class="literal">hello</code> 任务。 <br>To create a custom plugin, you need to write an implementation of <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a>. Gradle instantiates the plugin and calls the plugin instance's <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html#apply(T)" target="_top"><code class="classname">Plugin.apply()</code></a> method when the plugin is used with a project. The project object is passed as a parameter, which the plugin can use to configure the project however it needs to. The following sample contains a greeting plugin, which adds a <code class="literal">hello</code> task to the project.</p>
     <div class="example">
      <a name="customPlugin"></a>
-     <p class="title"><b>Example&nbsp;58.1.&nbsp;一个自定义插件</b></p>
-     <p class="title"><b>Example&nbsp;58.1.&nbsp;A custom plugin</b></p>
+     <p class="title"><b>示例 58.1. 自定义插件 - Example&nbsp;58.1.&nbsp;A custom plugin</b></p>
      <div class="example-contents">
       <p><code class="filename">build.gradle</code></p>
       <pre class="programlisting">apply plugin: GreetingPlugin
@@ -99,36 +89,32 @@
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">implements</span> Plugin&lt;Project&gt; {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> apply(Project project) {
         project.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>) &lt;&lt; {
-            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">&quot;Hello from the GreetingPlugin&quot;</span>
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Hello from the GreetingPlugin"</span>
         }
     }
 }</pre>
-      <p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+      <p><strong class="userinput"><code>gradle -q hello</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
       <pre class="screen">&gt; gradle -q hello
 Hello from the GreetingPlugin</pre>
      </div>
     </div>
-    <br class="example-break" />
-    <p> 要注意，每个应用了插件的工程，都会创建一个插件的实例。</p>
-    <p> One thing to note is that a new instance of a given plugin is created for each project it is applied to. </p>
+    <br class="example-break">
+    <p> 需要注意的一点是，对于一个给定的插件，每一个应用它的项目都会创建一个新的实例。 <br>One thing to note is that a new instance of a given plugin is created for each project it is applied to.</p>
    </div>
    <div class="section">
     <div class="titlepage">
      <div>
       <div>
-            <h2 class="title"><a name="N16758"></a>58.3.&nbsp;从构建中获取输入</h2>
-       <h2 class="title"><a name="N16758"></a>58.3.&nbsp;Getting input from the build</h2>
+       <h2 class="title"><a name="N16758"></a>58.3.&nbsp;从构建中获取输入</h2>
+       <h4 class="title"><a name="N16758"></a>58.3.&nbsp;Getting input from the build</h4>
       </div>
      </div>
     </div>
-    <p>大多数插件需要从构建脚本中获取配置信息。为此可以使用 <em class="firstterm">extension 对象</em>。 Gradle <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">工程</code></a> 有一个绑定的 <a class="ulink" href="../javadoc/org/gradle/api/plugins/ExtensionContainer.html" target="_top"><code class="classname">ExtensionContainer</code></a> 对象，它能够帮助追踪传递给插件的所有设置和属性。通过告知extension容器你的插件，你可以捕获用户输入。只要向extension容器的extensions列表中添加一个Java Bean兼容类，你就可以获取输入。Groovy是一种适合编写插件的语言，因为它自动提供了Java Bean需要的getter/setter方法。 </p>
-    <p>Most plugins need to obtain some configuration from the build script. One method for doing this is to use <em class="firstterm">extension objects</em>. The Gradle <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> has an associated <a class="ulink" href="../javadoc/org/gradle/api/plugins/ExtensionContainer.html" target="_top"><code class="classname">ExtensionContainer</code></a> object that helps keep track of all the settings and properties being passed to plugins. You can capture user input by telling the extension container about your plugin. To capture input, simply add a Java Bean compliant class into the extension container's list of extensions. Groovy is a good language choice for a plugin because plain old Groovy objects contain all the getter and setter methods that a Java Bean requires. </p>
-    <p>让我们向工程添加一个简单的extension对象。这里我们添加了一个 <code class="literal">greeting</code> extension对象，它让我们可以配置 greeting。 </p>
-    <p>Let's add a simple extension object to the project. Here we add a <code class="literal">greeting</code> extension object to the project, which allows you to configure the greeting. </p>
+    <p>大多数插件需要从构建脚本获取一些配置。其中一种实现的方法是使用<em class="firstterm">扩展对象</em>。Gradle <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> 有一个相关联的 <a class="ulink" href="../javadoc/org/gradle/api/plugins/ExtensionContainer.html" target="_top"><code class="classname">ExtensionContainer</code></a> 对象，该对象能帮助跟踪传给插件的所有设置和属性。你可以通过告知扩展容器有关插件的信息来捕获用户输入。只要将符合 Java Bean 的类添加到扩展容器的扩展列表中，你就可以获取输入。对于一个插件而言，Groovy 是一种不错的语言选择，因为普通的旧 Groovy 对象就包含了 Java Bean 需要的所有 getter 和 setter 方法。 <br>Most plugins need to obtain some configuration from the build script. One method for doing this is to use <em class="firstterm">extension objects</em>. The Gradle <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> has an associated <a class="ulink" href="../javadoc/org/gradle/api/plugins/ExtensionContainer.html" target="_top"><code class="classname">ExtensionContainer</code></a> object that helps keep track of all the settings and properties being passed to plugins. You can capture user input by telling the extension container about your plugin. To capture input, simply add a Java Bean compliant class into the extension container's list of extensions. Groovy is a good language choice for a plugin because plain old Groovy objects contain all the getter and setter methods that a Java Bean requires.</p>
+    <p>让我们向项目添加一个简单的扩展对象。这里我们向项目添加了一个 <code class="literal">greeting</code> 扩展对象，它可以让从外配置问候语。 <br>Let's add a simple extension object to the project. Here we add a <code class="literal">greeting</code> extension object to the project, which allows you to configure the greeting.</p>
     <div class="example">
      <a name="customPluginWithConvention"></a>
-     <p class="title"><b>Example&nbsp;58.2.&nbsp;一个自定义插件 extension</b></p>
-     <p class="title"><b>Example&nbsp;58.2.&nbsp;A custom plugin extension</b></p>
+     <p class="title"><b>示例 58.2. 一个自定义插件扩展 - Example&nbsp;58.2.&nbsp;A custom plugin extension</b></p>
      <div class="example-contents">
       <p><code class="filename">build.gradle</code></p>
       <pre class="programlisting">apply plugin: GreetingPlugin
@@ -138,7 +124,7 @@ greeting.message = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">implements</span> Plugin&lt;Project&gt; {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> apply(Project project) {
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Add the 'greeting' extension object</span>
-        project.extensions.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">&quot;greeting&quot;</span>, GreetingPluginExtension)
+        project.extensions.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"greeting"</span>, GreetingPluginExtension)
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Add a task that uses the configuration</span>
         project.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>) &lt;&lt; {
             println project.greeting.message
@@ -149,20 +135,17 @@ greeting.message = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingPluginExtension {
     def String message = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello from GreetingPlugin'</span>
 }</pre>
-      <p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+      <p><strong class="userinput"><code>gradle -q hello</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
       <pre class="screen">&gt; gradle -q hello
 Hi from Gradle</pre>
      </div>
     </div>
-    <br class="example-break" />
-    <p>在这个例子中, <code class="classname">GreetingPluginExtension</code> 是一个普通的Groovy对象，它有一个域，名为 <code class="literal">message</code>。 这个 extension 对象被添加到插件列表，并以 <code class="literal">greeting</code> 作为标识。 这个对象随后作为一个与 extension 对象同名的工程属性可见。 </p>
-    <p>In this example, <code class="classname">GreetingPluginExtension</code> is a plain old Groovy object with a field called <code class="literal">message</code>. The extension object is added to the plugin list with the name <code class="literal">greeting</code>. This object then becomes available as a project property with the same name as the extension object. </p>
-    <p>通常情况下, 你可以在一个插件上获取到几个相关的属性。 Gradle 为每个 extension 对象添加了一个配置闭包, 以便于你可以将设置组织起来。 下面的例子展示了这如何工作。 </p>
-    <p>Oftentimes, you have several related properties you need to specify on a single plugin. Gradle adds a configuration closure block for each extension object, so you can group settings together. The following example shows you how this works. </p>
+    <br class="example-break">
+    <p>在这个示例中，<code class="classname">GreetingPluginExtension</code> 是一个普通的旧 Groovy 对象，它有一个叫 <code class="literal">message</code>的字段。这个扩展对象以 <code class="literal">greeting</code> 名字添加到插件列表中。然后该对象变为一个有效的项目属性，属性名称与这个扩展对象相同。 <br>In this example, <code class="classname">GreetingPluginExtension</code> is a plain old Groovy object with a field called <code class="literal">message</code>. The extension object is added to the plugin list with the name <code class="literal">greeting</code>. This object then becomes available as a project property with the same name as the extension object.</p>
+    <p>通常情况下，你会有几个相关联的属性需要在一个插件上指定。Gradle 为每个扩展对象添加了一个配置闭包块，因此你可以把这些设置分组。下面是其如何使用的例子。 <br>Oftentimes, you have several related properties you need to specify on a single plugin. Gradle adds a configuration closure block for each extension object, so you can group settings together. The following example shows you how this works.</p>
     <div class="example">
      <a name="customPluginWithAdvancedConvention"></a>
-     <p class="title"><b>Example&nbsp;58.3.&nbsp;有配置闭包的一个自定义插件</b></p>
-     <p class="title"><b>Example&nbsp;58.3.&nbsp;A custom plugin with configuration closure</b></p>
+     <p class="title"><b>示例 58.3. 有配置闭包的自定义插件 - Example&nbsp;58.3.&nbsp;A custom plugin with configuration closure</b></p>
      <div class="example-contents">
       <p><code class="filename">build.gradle</code></p>
       <pre class="programlisting">apply plugin: GreetingPlugin
@@ -174,9 +157,9 @@ greeting {
 
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">implements</span> Plugin&lt;Project&gt; {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> apply(Project project) {
-        project.extensions.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">&quot;greeting&quot;</span>, GreetingPluginExtension)
+        project.extensions.create(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"greeting"</span>, GreetingPluginExtension)
         project.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>) &lt;&lt; {
-            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">&quot;${project.greeting.message} from ${project.greeting.greeter}&quot;</span>
+            println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${project.greeting.message} from ${project.greeting.greeter}"</span>
         }
     }
 }
@@ -185,30 +168,27 @@ greeting {
     String message
     String greeter
 }</pre>
-      <p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
+      <p><strong class="userinput"><code>gradle -q hello</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
       <pre class="screen">&gt; gradle -q hello
 Hi from Gradle</pre>
      </div>
     </div>
-    <br class="example-break" />
-    <p>在这个例子中，可以在 <code class="literal">greeting</code> 闭包中包含几个配置。构建脚本中的闭包的名字 (<code class="literal">greeting</code>) 需要和 extension 对象的名字保持一致。然后，当闭包被执行的时候，Groovy 的闭包代理机制会将 extension 对象上的域映射到闭包内的变量上。 </p>
-    <p>In this example, several settings can be grouped together within the <code class="literal">greeting</code> closure. The name of the closure block in the build script (<code class="literal">greeting</code>) needs to match the extension object name. Then, when the closure is executed, the fields on the extension object will be mapped to the variables within the closure based on the standard Groovy closure delegate feature. </p>
+    <br class="example-break">
+    <p>在此示例中，可以将多个设置分组到 <code class="literal">greeting</code> 闭包中。构建脚本中的这个闭包块的名字（<code class="literal">greeting</code>）需要与扩展对象的名字匹配。然后，当执行闭包时，扩展对象上的字段将根据标准 Groovy 闭包委托功能映射到闭包内的变量上。 <br>In this example, several settings can be grouped together within the <code class="literal">greeting</code> closure. The name of the closure block in the build script (<code class="literal">greeting</code>) needs to match the extension object name. Then, when the closure is executed, the fields on the extension object will be mapped to the variables within the closure based on the standard Groovy closure delegate feature.</p>
    </div>
    <div class="section">
     <div class="titlepage">
      <div>
       <div>
-            <h2 class="title"><a name="N167A4"></a>58.4.&nbsp;使用自定义tasks和插件处理文件</h2>
-       <h2 class="title"><a name="N167A4"></a>58.4.&nbsp;Working with files in custom tasks and plugins</h2>
+       <h2 class="title"><a name="N167A4"></a>58.4.&nbsp;在自定义任务和插件中使用文件</h2>
+       <h4 class="title"><a name="N167A4"></a>58.4.&nbsp;Working with files in custom tasks and plugins</h4>
       </div>
      </div>
     </div>
-    <p> 在开发自定义tasks和插件的时候，将配置信息写在文件中，然后运行时读取是一个好的做法。 为此，你可以利用 <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)" target="_top"><code class="classname">Project.file()</code></a> 方法尽可能晚地解析文件的值。 </p>
-    <p> When developing custom tasks and plugins, it's a good idea to be very flexible when accepting input configuration for file locations. To do this, you can leverage the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)" target="_top"><code class="classname">Project.file()</code></a> method to resolve values to files as late as possible.</p>
+    <p> 在开发自定义任务和插件时，文件位置如果能够配置将使插件非常灵活。为此，你可以利用 <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)" target="_top"><code class="classname">Project.file()</code></a> 方法尽可能晚地将值解析为文件。 <br>When developing custom tasks and plugins, it's a good idea to be very flexible when accepting input configuration for file locations. To do this, you can leverage the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)" target="_top"><code class="classname">Project.file()</code></a> method to resolve values to files as late as possible.</p>
     <div class="example">
      <a name="lazyFileProperties"></a>
-     <p class="title"><b>Example&nbsp;58.4.&nbsp;懒解析文件属性</b></p>
-     <p class="title"><b>Example&nbsp;58.4.&nbsp;Evaluating file properties lazily</b></p>
+     <p class="title"><b>示例 58.4. 文件属性的惰性评估 - Example&nbsp;58.4.&nbsp;Evaluating file properties lazily</b></p>
      <div class="example-contents">
       <p><code class="filename">build.gradle</code></p>
       <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingToFileTask <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> DefaultTask {
@@ -223,7 +203,7 @@ Hi from Gradle</pre>
     def greet() {
         def file = getDestination()
         file.parentFile.mkdirs()
-        file.write <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">&quot;Hello!&quot;</span>
+        file.write <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Hello!"</span>
     }
 }
 
@@ -235,31 +215,28 @@ task sayGreeting(dependsOn: greet) &lt;&lt; {
     println file(greetingFile).text
 }
 
-ext.greetingFile = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">&quot;$buildDir/hello.txt&quot;</span></pre>
-      <p>Output of <strong class="userinput"><code>gradle -q sayGreeting</code></strong></p>
+ext.greetingFile = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/hello.txt"</span></pre>
+      <p><strong class="userinput"><code>gradle -q sayGreeting</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q sayGreeting</code></strong></p>
       <pre class="screen">&gt; gradle -q sayGreeting
 Hello!</pre>
      </div>
     </div>
-    <br class="example-break" />
-    <p> 在这个例子中, 我们将 <code class="literal">greet</code> 任务（task）的 <code class="literal">destination</code> 属性配置成一个闭包， 随后使用 <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)" target="_top"><code class="classname">Project.file()</code></a> 方法解析闭包，最终将闭包的返回值导入到一个文件对象中。你可以注意到，在上面的例子中，我们先在task中使用了 <code class="literal">greetingFile</code> 属性，然后才为它赋值。这种懒解析是一大利器，在设置一个文件属性的时候可以接受任何值，直到读取属性的时候才解析它。</p>
-    <p> In this example, we configure the <code class="literal">greet</code> task <code class="literal">destination</code> property as a closure, which is evaluated with the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)" target="_top"><code class="classname">Project.file()</code></a> method to turn the return value of the closure into a file object at the last minute. You will notice that in the example above we specify the <code class="literal">greetingFile</code> property value after we have configured to use it for the task. This kind of lazy evaluation is a key benefit of accepting any value when setting a file property, then resolving that value when reading the property. </p>
+    <br class="example-break">
+    <p> 在这个例子中，我们将 <code class="literal">greet</code> 任务的 <code class="literal">destination</code> 属性作为闭包配置，它将在最后通过 <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)" target="_top"><code class="classname">Project.file()</code></a> 方法将闭包中的返回值转换为一个文件对象。你会注意到，在上面例子中，我们是配置在任务中使用 <code class="literal">greettingFile</code> 属性之后才指定它的值。这种惰性求值的主要好处是在设置文件属性时它能够接收任何值，然后在读取属性时才解析这个值。 <br>In this example, we configure the <code class="literal">greet</code> task <code class="literal">destination</code> property as a closure, which is evaluated with the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)" target="_top"><code class="classname">Project.file()</code></a> method to turn the return value of the closure into a file object at the last minute. You will notice that in the example above we specify the <code class="literal">greetingFile</code> property value after we have configured to use it for the task. This kind of lazy evaluation is a key benefit of accepting any value when setting a file property, then resolving that value when reading the property.</p>
    </div>
    <div class="section">
     <div class="titlepage">
      <div>
       <div>
-            <h2 class="title"><a name="N167CE"></a>58.5.&nbsp;一个独立的工程</h2>
-            <h2 class="title"><a name="N167CE"></a>58.5.&nbsp;A standalone project</h2>
+       <h2 class="title"><a name="N167CE"></a>58.5. 独立项目</h2>
+       <h4 class="title"><a name="N167CE"></a>58.5.&nbsp;A standalone project</h4>
       </div>
      </div>
     </div>
-    <p>现在我们要把插件移动到一个独立的工程里以便于我们可以发布和分享它。 这个工程是一个普通的 Groovy 工程，它能创建一个包含插件类的JAR包。 这是一个简单的工程构建脚本。它应用了Groovy插件，还将Gradle API添加为一个编译时依赖。</p>
-    <p>Now we will move our plugin to a standalone project, so we can publish it and share it with others. This project is simply a Groovy project that produces a JAR containing the plugin classes. Here is a simple build script for the project. It applies the Groovy plugin, and adds the Gradle API as a compile-time dependency. </p>
+    <p>现在我们将插件移到一个独立的项目中，这样我们就可以发布它，并与他人共享。这个项目只是一个 Groovy 项目，其将生成包含插件类的 JAR。以下是该项目的一个简单的构建脚本。它应用了 Groovy 插件，并将 Gradle API 添加为编译时依赖。 <br>Now we will move our plugin to a standalone project, so we can publish it and share it with others. This project is simply a Groovy project that produces a JAR containing the plugin classes. Here is a simple build script for the project. It applies the Groovy plugin, and adds the Gradle API as a compile-time dependency.</p>
     <div class="example">
      <a name="customPluginStandalone"></a>
-     <p class="title"><b>Example&nbsp;58.5.&nbsp;一个自定义插件的构建</b></p>
-     <p class="title"><b>Example&nbsp;58.5.&nbsp;A build for a custom plugin</b></p>
+     <p class="title"><b>示例 58.5. 对自定义插件的构建 - Example&nbsp;58.5.&nbsp;A build for a custom plugin</b></p>
      <div class="example-contents">
       <p><code class="filename">build.gradle</code></p>
       <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy'</span>
@@ -269,41 +246,35 @@ dependencies {
     compile localGroovy()
 }</pre>
       <div class="exampleLocation">
-        <p><span class="emphasis"><em>注:</em></span> 可以在Gradle的源码集 <code class="filename">samples/customPlugin/plugin</code> 找到这个例子的代码.</p>
-        <p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/customPlugin/plugin</code> which is in both the binary and source distributions of Gradle.</p>
+       <p><span class="emphasis"><em>注意：</em></span>此例子的代码可以在 Gradle 的二进制文件或源码里的 <code class="filename">samples/customPlugin/plugin</code> 中看到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/customPlugin/plugin</code> which is in both the binary and source distributions of Gradle.</p>
       </div>
      </div>
     </div>
-    <br class="example-break" />
-    <p> 那么Gradle是怎么找到 <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> 依赖的呢? 答案是，你需要在jar包的 <code class="filename">META-INF/gradle-plugins</code> 目录下提供一个与你的插件同名的.properties文件。 </p>
-    <p> So how does Gradle find the <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> implementation? The answer is you need to provide a properties file in the jar's <code class="filename">META-INF/gradle-plugins</code> directory that matches the name of your plugin. </p>
+    <br class="example-break">
+    <p> 那么，Gradle 是如何找到 <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> 的实现的？答案是你需要在 jar 文件里的 <code class="filename">META-INF/gradle-plugins</code> 目录中提供一个属性文件，并且文件名要和插件名相匹配。 <br>So how does Gradle find the <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> implementation? The answer is you need to provide a properties file in the jar's <code class="filename">META-INF/gradle-plugins</code> directory that matches the name of your plugin.</p>
     <div class="example">
      <a name="customPluginStandalone"></a>
-     <p class="title"><b>Example&nbsp;58.6.&nbsp;编写一个自定义插件</b></p>
-     <p class="title"><b>Example&nbsp;58.6.&nbsp;Wiring for a custom plugin</b></p>
+     <p class="title"><b>示例 58.6. 连接自定义插件 - Example&nbsp;58.6.&nbsp;Wiring for a custom plugin</b></p>
      <div class="example-contents">
       <p><code class="filename">src/main/resources/META-INF/gradle-plugins/greeting.properties</code></p>
       <pre class="programlisting">implementation-class=org.gradle.GreetingPlugin</pre>
      </div>
     </div>
-    <br class="example-break" />
-    <p> 注意, .properties文件的文件名就是插件名，这个文件放在 resources 文件夹下，它的 <code class="literal">implementation-class</code> 属性声明了 <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> 的实现类。</p>
-    <p> Notice that the properties filename matches the plugin's name and is placed in the resources folder, and that the <code class="literal">implementation-class</code> property identifies the <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> implementation class. </p>
+    <br class="example-break">
+    <p> 注意，属性的文件名要和插件名相匹配，放在资源文件夹里，并且 <code class="literal">implementation-class</code> 属性要指定 <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> 的实现类。 <br>Notice that the properties filename matches the plugin's name and is placed in the resources folder, and that the <code class="literal">implementation-class</code> property identifies the <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> implementation class.</p>
     <div class="section">
      <div class="titlepage">
       <div>
        <div>
-        <h3 class="title"><a name="N16803"></a>58.5.1.&nbsp;在另一个工程中使用你的插件</h3>
-        <h3 class="title"><a name="N16803"></a>58.5.1.&nbsp;Using your plugin in another project</h3>
+        <h3 class="title"><a name="N16803"></a>58.5.1.&nbsp;在另一个项目中使用你的插件</h3>
+        <h5 class="title"><a name="N16803"></a>58.5.1.&nbsp;Using your plugin in another project</h5>
        </div>
       </div>
      </div>
-     <p>要在一个构建脚本中使用一个插件，你需要将插件类添加到构建脚本的路径下。为此，你使用一个 <code class="literal">buildscript { }</code> 代码块，如同 <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;59.5, “构建脚本的拓展依赖”</a> 中所描述的。下面的例子展示了当包含插件的JAR包被发布到一个本地仓库时，你可以如何配置它: </p>
-     <p>To use a plugin in a build script, you need to add the plugin classes to the build script's classpath. To do this, you use a <code class="literal">buildscript { }</code> block, as described in <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;59.5, “External dependencies for the build script”</a>. The following example shows how you might do this when the JAR containing the plugin has been published to a local repository: </p>
+     <p>要在构建脚本中使用一个插件，你需要将这个插件添加到构建脚本的类路径中。对此，你可以使用《<a class="xref" href="organizing_build_logic.html#sec:external_dependencies">第 59.5 节，“构建脚本的外部依赖”</a>》中所述的 <code class="literal">buildscript { }</code> 块。以下示例展示了当包含插件的 JAR 已经发布到本地仓库时，如何执行此操作： <br>To use a plugin in a build script, you need to add the plugin classes to the build script's classpath. To do this, you use a <code class="literal">buildscript { }</code> block, as described in <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;59.5, “External dependencies for the build script”</a>. The following example shows how you might do this when the JAR containing the plugin has been published to a local repository:</p>
      <div class="example">
       <a name="customPluginStandalone"></a>
-      <p class="title"><b>Example&nbsp;58.7.&nbsp;在另一个工程里使用一个自定义插件</b></p>
-      <p class="title"><b>Example&nbsp;58.7.&nbsp;Using a custom plugin in another project</b></p>
+      <p class="title"><b>示例 58.7. 在另一个项目中使用一个自定义插件 - Example&nbsp;58.7.&nbsp;Using a custom plugin in another project</b></p>
       <div class="example-contents">
        <p><code class="filename">build.gradle</code></p>
        <pre class="programlisting">buildscript {
@@ -319,23 +290,21 @@ dependencies {
 apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'greeting'</span></pre>
       </div>
      </div>
-     <br class="example-break" />
+     <br class="example-break">
     </div>
     <div class="section">
      <div class="titlepage">
       <div>
        <div>
-        <h3 class="title"><a name="N16818"></a>58.5.2.&nbsp;为你的插件编写测试</h3>
-        <h3 class="title"><a name="N16818"></a>58.5.2.&nbsp;Writing tests for your plugin</h3>
+        <h3 class="title"><a name="N16818"></a>58.5.2.&nbsp;为插件编写测试</h3>
+        <h5 class="title"><a name="N16818"></a>58.5.2.&nbsp;Writing tests for your plugin</h5>
        </div>
       </div>
      </div>
-     <p>测试插件功能的时候，你可以使用 <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> 类来创建 <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> 实例。 </p>
-     <p>You can use the <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> class to create <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> instances to use when you test your plugin implementation. </p>
+     <p>你可以使用 <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> 类来创建 <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> 实例，以在测试插件的实现时使用。 <br>You can use the <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> class to create <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> instances to use when you test your plugin implementation.</p>
      <div class="example">
       <a name="customPluginStandalone"></a>
-      <p class="title"><b>Example&nbsp;58.8.&nbsp;测试一个自定义插件</b></p>
-      <p class="title"><b>Example&nbsp;58.8.&nbsp;Testing a custom plugin</b></p>
+      <p class="title"><b>示例 58.8. 测试自定义插件 - Example&nbsp;58.8.&nbsp;Testing a custom plugin</b></p>
       <div class="example-contents">
        <p><code class="filename">src/test/groovy/org/gradle/GreetingPluginTest.groovy</code></p>
        <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingPluginTest {
@@ -349,23 +318,22 @@ apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'greet
 }</pre>
       </div>
      </div>
-     <br class="example-break" />
+     <br class="example-break">
     </div>
    </div>
    <div class="section">
     <div class="titlepage">
      <div>
       <div>
-        <h2 class="title"><a name="N16831"></a>58.6.&nbsp;管理多个域对象</h2>
-        <h2 class="title"><a name="N16831"></a>58.6.&nbsp;Maintaining multiple domain objects</h2>
+       <h2 class="title"><a name="N16831"></a>58.6. 维护多个域对象</h2>
+       <h4 class="title"><a name="N16831"></a>58.6.&nbsp;Maintaining multiple domain objects</h4>
       </div>
      </div>
     </div>
-    <p>Gradle提供了一些工具类来管理对象集合，在Gradle构建语言中表现良好。</p>
-    <p>Gradle provides some utility classes for maintaining collections of object, which work well with the Gradle build language.</p>
+    <p>Gradle 提供了一些维护对象集合的实用工具类，能够良好地在 Gradle 构建语言中使用。<br>Gradle provides some utility classes for maintaining collections of object, which work well with the Gradle build language.</p>
     <div class="example">
      <a name="domainObjectContainer"></a>
-     <p class="title"><b>Example&nbsp;58.9.&nbsp;管理域对象</b></p>
+     <p class="title"><b>示例 58.9. 管理域对象 - Example&nbsp;58.9.&nbsp;Managing domain objects</b></p>
      <div class="example-contents">
       <p><code class="filename">build.gradle</code></p>
       <pre class="programlisting">apply plugin: DocumentationPlugin
@@ -384,7 +352,7 @@ books {
 
 task books &lt;&lt; {
     books.each { book -&gt;
-        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">&quot;$book.name -&gt; $book.sourceFile&quot;</span>
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$book.name -&gt; $book.sourceFile"</span>
     }
 }
 
@@ -392,7 +360,7 @@ task books &lt;&lt; {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> apply(Project project) {
         def books = project.container(Book)
         books.all {
-            sourceFile = project.file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">&quot;src/docs/$name&quot;</span>)
+            sourceFile = project.file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"src/docs/$name"</span>)
         }
         project.extensions.books = books
     }
@@ -406,26 +374,25 @@ task books &lt;&lt; {
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">this</span>.name = name
     }
 }</pre>
-      <p>Output of <strong class="userinput"><code>gradle -q books</code></strong></p>
+      <p><strong class="userinput"><code>gradle -q books</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q books</code></strong></p>
       <pre class="screen">&gt; gradle -q books
 developerGuide -&gt; /home/user/gradle/samples/userguide/organizeBuildLogic/customPluginWithDomainObjectContainer/src/docs/developerGuide
 quickStart -&gt; /home/user/gradle/samples/userguide/organizeBuildLogic/customPluginWithDomainObjectContainer/src/docs/quick-start
 userGuide -&gt; /home/user/gradle/samples/userguide/organizeBuildLogic/customPluginWithDomainObjectContainer/src/docs/userGuide</pre>
      </div>
     </div>
-    <br class="example-break" />
-    <p><a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:container(java.lang.Class)" target="_top"><code class="classname">Project.container()</code></a> 方法创建了 <a class="ulink" href="../dsl/org.gradle.api.NamedDomainObjectContainer.html" target="_top"><code class="classname">NamedDomainObjectContainer</code></a> 的实例。该实例有很多管理和配置对象的有用方法。为了调用 <code class="literal">project.container</code> 的众多方法中的任意一个，被管理的对象必须暴露一个名为 “<code class="literal">name</code>” 属性，作为对象的唯一、稳定的名字。容器方法中的 <code class="literal">project.container(Class)</code> 通过调用类的构造器来创建新的实例，这个构造器应该传入一个字符串作为实例的名字。参见上述链接，查看允许自定义实例化策略的 <code class="literal">project.container</code> 方法的信息。</p>
-    <p> The <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:container(java.lang.Class)" target="_top"><code class="classname">Project.container()</code></a> methods create instances of <a class="ulink" href="../dsl/org.gradle.api.NamedDomainObjectContainer.html" target="_top"><code class="classname">NamedDomainObjectContainer</code></a>, that have many useful methods for managing and configuring the objects. In order to use a type with any of the <code class="literal">project.container</code> methods, it MUST expose a property named “<code class="literal">name</code>” as the unique, and constant, name for the object. The <code class="literal">project.container(Class)</code> variant of the container method creates new instances by attempting to invoke the constructor of the class that takes a single string argument, which is the desired name of the object. See the above link for <code class="literal">project.container</code> method variants that allow custom instantiation strategies. </p>
+    <br class="example-break">
+    <p> <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:container(java.lang.Class)" target="_top"><code class="classname">Project.container()</code></a> 方法创建了 <a class="ulink" href="../dsl/org.gradle.api.NamedDomainObjectContainer.html" target="_top"><code class="classname">NamedDomainObjectContainer</code></a>的实例，这些实例有许多用于管理和配置对象的有用方法。为能使用任意一种 <code class="literal">project.container</code> 方法的类型，必须公开一个“<code class="literal">name</code>”属性，作为对象的唯一且不变的名称。容器方法的 <code class="literal">project.container(Class)</code> 变体通过尝试调用该类只有一个 string 参数的构造函数来创建新实例，该参数是这个对象所想要的名称。请参阅以上链接，以查看 <code class="literal">project.container</code> 允许自定义实例化策略的重载方法。 <br>The <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:container(java.lang.Class)" target="_top"><code class="classname">Project.container()</code></a> methods create instances of <a class="ulink" href="../dsl/org.gradle.api.NamedDomainObjectContainer.html" target="_top"><code class="classname">NamedDomainObjectContainer</code></a>, that have many useful methods for managing and configuring the objects. In order to use a type with any of the <code class="literal">project.container</code> methods, it MUST expose a property named “<code class="literal">name</code>” as the unique, and constant, name for the object. The <code class="literal">project.container(Class)</code> variant of the container method creates new instances by attempting to invoke the constructor of the class that takes a single string argument, which is the desired name of the object. See the above link for <code class="literal">project.container</code> method variants that allow custom instantiation strategies.</p>
    </div>
   </div>
   <div class="navfooter">
    <div>
     <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="custom_tasks.html" title="Chapter&nbsp;57.&nbsp;Writing Custom Task Classes">Previous</a>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="custom_tasks.html" title="第五十七章. 编写自定义任务类">上一章</a>
      <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide">Contents</a>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
      <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="organizing_build_logic.html" title="Chapter&nbsp;59.&nbsp;Organizing Build Logic">Next</a>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="organizing_build_logic.html" title="第五十九章. 组织构建逻辑">下一章</a>
     </div>
    </div>
   </div>
