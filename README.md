@@ -12,10 +12,11 @@ Gradle 中文文档
 当前版本在线浏览地址:
 https://www.githang.com/gradledoc/userguide/userguide.html
 
-目前所有已翻译的 Gradle 版本浏览地址：
+目前所有已翻译及正翻译的 Gradle 版本浏览地址：
 
-- 2.0： http://gradledoc.githang.com/2.0/userguide/userguide.html
-- 1.12： http://gradledoc.githang.com/1.12/userguide/userguide.html
+- 2.14.1：http://gradledoc.githang.com/2.0/userguide/userguide.html
+- 2.0：http://gradledoc.githang.com/2.0/userguide/userguide.html
+- 1.12：http://gradledoc.githang.com/1.12/userguide/userguide.html
 
 ---
 
