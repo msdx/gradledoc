@@ -1,273 +1,108 @@
-<html>
- <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>第六章. 构建脚本基础 - Chapter&nbsp;6.&nbsp;Build Script Basics</title>
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
-  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
-  <link rel="home" href="userguide.html" title="Gradle 用户指南">
-  <link rel="up" href="userguide.html" title="Gradle 用户指南">
-  <link rel="prev" href="troubleshooting.html" title="第五章. 疑难解答">
-  <link rel="next" href="tutorial_java_projects.html" title="第七章. Java 快速入门">
- </head>
- <body>
-  <div class="navheader">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="troubleshooting.html" title="第五章. 疑难解答">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_java_projects.html" title="第七章. Java 快速入门">下一章</a>
-    </div>
-   </div>
-  </div>
-  <div class="chapter">
-   <div class="titlepage">
-    <div>
-     <div>
-      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_using_tasks"></a>第六章. 构建脚本基础</h1>
-      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_using_tasks"></a>Chapter&nbsp;6.&nbsp;Build Script Basics</h3>
-     </div>
-    </div>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N101A5"></a>6.1.&nbsp;项目和任务</h2>
-       <h4 class="title"><a name="N101A5"></a>6.1.&nbsp;Projects and tasks</h4>
-      </div>
-     </div>
-    </div>
-    <p>在整个Gradle，有两个最基础的概念：<em class="firstterm">项目</em> 和 <em class="firstterm">任务</em>。<br>Everything in Gradle sits on top of two basic concepts: <em class="firstterm">projects</em> and <em class="firstterm">tasks</em>.</p>
-    <p> 任何一个Gradle构建都是由一个或多个<em class="firstterm">项目</em>组成。一个项目代表着什么，取决于你想通过Gradle来做什么。比如，一个项目可能代表着一个JAR库，或者是一个Web应用程序。它也可能代表从其他项目所生成的JAR包组装起来的ZIP文件。一个项目不一定是代表一个要构建的东西，它也可能代表一个要完成的东西，比如把您的应用部署到预发布或生产环境。如果现在看得不是很明白，也不用担心。Gradle的按约定来构建的支持为项目提供了更具体的定义。 <br>Every Gradle build is made up of one or more <em class="firstterm">projects</em>. What a project represents depends on what it is that you are doing with Gradle. For example, a project might represent a library JAR or a web application. It might represent a distribution ZIP assembled from the JARs produced by other projects. A project does not necessarily represent a thing to be built. It might represent a thing to be done, such as deploying your application to staging or production environments. Don't worry if this seems a little vague for now. Gradle's build-by-convention support adds a more concrete definition for what a project is.</p>
-    <p>每一个项目都由一个或多个<em class="firstterm">任务</em>组成。一个任务表示构建执行的一些原子工作，比如编译一些类，创建一个JAR包，生成javadoc，或者是把一些档案发布到仓库中。<br>Each project is made up of one or more <em class="firstterm">tasks</em>. A task represents some atomic piece of work which a build performs. This might be compiling some classes, creating a JAR, generating javadoc, or publishing some archives to a repository.</p>
-    <p>现在，我们来看一下如何在一个项目的构建中定义一些简单的任务。后续的章节将更多的关注多项目的构建，以及多项目和多任务的内容。<br>For now, we will look at defining some simple tasks in a build with one project. Later chapters will look at working with multiple projects and more about working with projects and tasks.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N101BC"></a>6.2. Hello world</h2>
-       <h4 class="title"><a name="N101BC"></a>6.2.&nbsp;Hello world</h4>
-      </div>
-     </div>
-    </div>
-    <p>您可以使用 <span class="command"><strong>gradle</strong></span> 命令来运行Gradle构建。 <span class="command"><strong>gradle</strong></span>命令会在当前目录下查找一个 <code class="filename">build.gradle</code> 文件。 <sup>[<a href="#ftn.N101CA" name="N101CA" class="footnote">2</a>]</sup> 我们把这个 <code class="filename">build.gradle</code> 文件称为是一个 <em class="firstterm">构建脚本</em>，尽管严格上来讲，它只是一个构建的配置脚本，我们将会在后面看到。这个构建脚本定义了一个项目和它的任务。 <br>You run a Gradle build using the <span class="command"><strong>gradle</strong></span> command. The <span class="command"><strong>gradle</strong></span> command looks for a file called <code class="filename">build.gradle</code> in the current directory. <sup>[<a href="#ftn.N101CA" name="N101CA" class="footnote">2</a>]</sup> We call this <code class="filename">build.gradle</code> file a <em class="firstterm">build script</em>, although strictly speaking it is a build configuration script, as we will see later. The build script defines a project and its tasks.</p>
-    <p>试着创建一个叫 <code class="filename">build.gradle</code>的构建脚本，如下所示： <br>To try this out, create the following build script named <code class="filename">build.gradle</code>.</p>
-    <div class="example">
-     <a name="hello"></a>
-     <p class="title"><b>示例 6.1. 第一个构建脚本 - Example&nbsp;6.1.&nbsp;The first build script</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task hello {
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Build Script Basics - Gradle User Guide Version 2.14.1</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 2.14.1"><link rel="up" href="pt03.html" title="Part&nbsp;III.&nbsp;Writing Gradle build scripts"><link rel="prev" href="pt03.html" title="Part&nbsp;III.&nbsp;Writing Gradle build scripts"><link rel="next" href="build_init_plugin.html" title="Build Init Plugin - Gradle User Guide Version 2.14.1"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pt03.html" title="Part&nbsp;III.&nbsp;Writing Gradle build scripts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="build_init_plugin.html" title="Build Init Plugin - Gradle User Guide Version 2.14.1">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="tutorial_using_tasks"></a>Chapter&nbsp;14.&nbsp;Build Script Basics</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="tutorial_using_tasks.html#N10B3C">14.1. Projects and tasks</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#N10B53">14.2. Hello world</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#N10BB9">14.3. A shortcut task definition</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#N10BD0">14.4. Build scripts are code</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#sec:task_dependencies">14.5. Task dependencies</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#N10C32">14.6. Dynamic tasks</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#N10C47">14.7. Manipulating existing tasks</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#sec:shortcut_notations">14.8. Shortcut notations</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#sec:extra_task_properties">14.9. Extra task properties</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#N10CBD">14.10. Using Ant Tasks</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#N10CDD">14.11. Using methods</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#sec:default_tasks">14.12. Default tasks</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#configure-by-dag">14.13. Configure by DAG</a></span></dt><dt><span class="section"><a href="tutorial_using_tasks.html#N10D4A">14.14. Where to next?</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10B3C" class="section-anchor" href="#N10B3C"></a>14.1.&nbsp;Projects and tasks</h2></div></div></div><p>Everything in Gradle sits on top of two basic concepts: <em class="firstterm">projects</em> and <em class="firstterm">tasks</em>.</p><p>
+        Every Gradle build is made up of one or more <em class="firstterm">projects</em>.
+        What a project represents depends on what it is that you are doing with Gradle.
+        For example, a project might represent a library JAR or a web application. It might represent a
+        distribution ZIP assembled from the JARs produced by other projects. A project does not necessarily represent
+        a thing to be built. It might represent a thing to be done, such as deploying your application to staging or
+        production environments. Don't worry if this seems a little vague for now. Gradle's build-by-convention support adds
+        a more concrete definition for what a project is.
+    </p><p>Each project is made up of one or more <em class="firstterm">tasks</em>. A task represents some atomic piece
+        of work which a build performs. This might be compiling some classes, creating a JAR, generating Javadoc,
+        or publishing some archives to a repository.</p><p>For now, we will look at defining some simple tasks in a build with one project. Later chapters will look at
+        working with multiple projects and more about working with projects and tasks.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10B53" class="section-anchor" href="#N10B53"></a>14.2.&nbsp;Hello world</h2></div></div></div><p>You run a Gradle build using the <span class="command"><strong>gradle</strong></span> command. The <span class="command"><strong>gradle</strong></span> command
+            looks for a file called <code class="filename">build.gradle</code> in the current directory.
+            <sup>[<a href="#ftn.N10B61" name="N10B61" class="footnote">5</a>]</sup>
+            We call this <code class="filename">build.gradle</code> file a <em class="firstterm">build script</em>, although strictly speaking it is
+            a build configuration script, as we will see later. The build script defines a project and its tasks.
+        </p><p>To try this out, create the following build script named <code class="filename">build.gradle</code>.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="hello"></a><p class="title"><b>Example&nbsp;14.1.&nbsp;Your first build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello {
     doLast {
         println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>
     }
-}</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>然后在命令行shell里，进入到当前目录并运行<strong class="userinput"><code>gradle -q hello</code></strong>来执行这个构建脚本： <br>In a command-line shell, enter into the containing directory and execute the build script by running <strong class="userinput"><code>gradle -q hello</code></strong>:</p>
-    <div class="tip">
-     <h3 class="title"> <code class="option">-q</code> 参数的作用是什么？</h3>
-     <p>本用户指南中的很多例子都用了 <code class="option">-q</code>参数运行，这个参数是用于抑制Gradle的日志消息，以便只显示任务的输出结果，这样会使得在本用户指南里的文档的输出更清晰一点。如果你不想要的话，你可以不加上这个参数。如果想了解更多影响Gradle的输出的命令参数，请参阅<a class="xref" href="logging.html">第十八章， <i>日志</i></a> <br>Most of the examples in this user guide are run with the <code class="option">-q</code> command-line option. This suppresses Gradle's log messages, so that only the output of the tasks is shown. This keeps the example output in this user guide a little clearer. You don't need to use this option if you don't want. See <a class="xref" href="logging.html">Chapter&nbsp;18, <i>Logging</i></a> for more details about the command-line options which affect Gradle's output.</p>
-     <h5 class="title">What does <code class="option">-q</code> do?</h5>
-    </div>
-    <div class="example">
-     <a name="hello"></a>
-     <p class="title"><b>示例 6.2. 执行构建脚本 - Example&nbsp;6.2.&nbsp;Execution of a build script</b></p>
-     <div class="example-contents">
-      <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
-      <pre class="screen">&gt; gradle -q hello
-Hello world!</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>我们来看看这个脚本做了些什么。它定义了一个叫做 <code class="literal">hello</code>的任务，并且给它加了一个动作。当你执行<strong class="userinput"><code>gradle hello</code></strong>的时候，Gradle会执行这个<code class="literal">hello</code>任务，而这个任务又会执行您所提供的动作。这个动作只是一个包含了一些要执行的Groovy代码的闭包。 <br>What's going on here? This build script defines a single task, called <code class="literal">hello</code>, and adds an action to it. When you run <strong class="userinput"><code>gradle hello</code></strong>, Gradle executes the <code class="literal">hello</code> task, which in turn executes the action you've provided. The action is simply a closure containing some Groovy code to execute.</p>
-    <p>如果你认为它看上去和Ant的目标很像，那就对了。Gradle的任务相当于Ant的目标。但是，正如你所见，它们更加强大。我们使用与Ant不同的术语，是因为我们认为<span class="emphasis"><em>任务</em></span>这个词比<span class="emphasis"><em>目标</em></span>的含义更丰富。不过不幸的是，这也导致了与Ant的术语冲突。Ant会调用它自己的一些命令，比如像<code class="literal">javac</code> 或是 <code class="literal">copy</code>任务。因为，当我们讨论任务时，<span class="emphasis"><em>通常</em></span>指的是Gradle的任务，相当于Ant的目标。当我们讨论Ant 的任务时，我们会明确地说是 <span class="emphasis"><em>ant 任务</em></span>。 <br>If you think this looks similar to Ant's targets, well, you are right. Gradle tasks are the equivalent to Ant targets. But as you will see, they are much more powerful. We have used a different terminology than Ant as we think the word <span class="emphasis"><em>task</em></span> is more expressive than the word <span class="emphasis"><em>target</em></span>. Unfortunately this introduces a terminology clash with Ant, as Ant calls its commands, such as <code class="literal">javac</code> or <code class="literal">copy</code>, tasks. So when we talk about tasks, we <span class="emphasis"><em>always</em></span> mean Gradle tasks, which are the equivalent to Ant's targets. If we talk about Ant tasks (Ant commands), we explicitly say <span class="emphasis"><em>ant task</em></span>.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N10222"></a>6.3. 快速任务定义</h2>
-       <h4 class="title"><a name="N10222"></a>6.3.&nbsp;A shortcut task definition</h4>
-      </div>
-     </div>
-    </div>
-    <p>有一种简单的方法可以定义像上面我们的这类<code class="literal">hello</code> 任务，它看起来更简洁。<br>There is a shorthand way to define a task like our <code class="literal">hello</code> task above, which is more concise.</p>
-    <div class="example">
-     <a name="helloShortcut"></a>
-     <p class="title"><b>示例6.3. 任务定义的快捷方式 - Example&nbsp;6.3.&nbsp;A task definition shortcut</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task hello &lt;&lt; {
+}
+</pre></div></div><br class="example-break"><p>In a command-line shell, move to the containing directory and execute the build script with
+            <strong class="userinput"><code>gradle -q hello</code></strong>:
+        </p><div class="tip"><h3 class="title">What does <code class="option">-q</code> do?</h3><p>Most of the examples in this user guide are run with the <code class="option">-q</code> command-line option.
+                This suppresses Gradle's log messages, so that only the output of the tasks is shown. This keeps the example
+                output in this user guide a little clearer. You don't need to use this option if you don't want to.
+                See <a class="xref" href="logging.html">Chapter&nbsp;22, <i>Logging</i></a> for more details about the command-line options which affect Gradle's output.
+            </p></div><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="hello"></a><p class="title"><b>Example&nbsp;14.2.&nbsp;Execution of a build script</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+Hello world!
+</pre></div></div><br class="example-break"><p>What's going on here? This build script defines a single task, called <code class="literal">hello</code>, and
+            adds an action to it. When you run <strong class="userinput"><code>gradle hello</code></strong>, Gradle executes the
+            <code class="literal">hello</code> task, which in turn executes the action you've provided. The action is simply a
+            closure containing some Groovy code to execute.
+        </p><p>If you think this looks similar to Ant's targets, you would be right. Gradle tasks are the equivalent to
+            Ant targets, but as you will see, they are much more powerful. We have used a different terminology than Ant
+            as we think the word <span class="emphasis"><em>task</em></span> is more expressive than the word <span class="emphasis"><em>target</em></span>.
+            Unfortunately this introduces a terminology clash with Ant, as Ant calls its commands, such as
+            <code class="literal">javac</code> or <code class="literal">copy</code>, tasks. So when we talk about tasks,
+            we <span class="emphasis"><em>always</em></span> mean Gradle tasks, which are the equivalent to Ant's targets. If we talk
+            about Ant tasks (Ant commands), we explicitly say <span class="emphasis"><em>Ant task</em></span>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10BB9" class="section-anchor" href="#N10BB9"></a>14.3.&nbsp;A shortcut task definition</h2></div></div></div><p>There is a shorthand way to define a task like our <code class="literal">hello</code> task above, which is more
+            concise.</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="helloShortcut"></a><p class="title"><b>Example&nbsp;14.3.&nbsp;A task definition shortcut</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>
-}</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>这里再一次使用了一个闭包的方式来定义一个 <code class="literal">hello</code> 任务去执行。在本用户指南中，我们还会再使用这种任务定义的风格。<br>Again, this defines a task called <code class="literal">hello</code> with a single closure to execute. We will use this task definition style throughout the user guide.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N10239"></a>6.4. 构建脚本即代码</h2>
-       <h4 class="title"><a name="N10239"></a>6.4.&nbsp;Build scripts are code</h4>
-      </div>
-     </div>
-    </div>
-    <p>Gradle的构建脚本向您开放了Groovy的全部功能。作为开胃菜，可以看看下这个例子： <br>Gradle's build scripts expose to you the full power of Groovy. As an appetizer, have a look at this:</p>
-    <div class="example">
-     <a name="upper"></a>
-     <p class="title"><b>示例6.4. 在Gradle任务中使用Groovy - Example&nbsp;6.4.&nbsp;Using Groovy in Gradle's tasks</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task upper &lt;&lt; {
+}
+</pre></div></div><br class="example-break"><p>Again, this defines a task called <code class="literal">hello</code> with a single closure to execute.
+            We will use this task definition style throughout the user guide.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10BD0" class="section-anchor" href="#N10BD0"></a>14.4.&nbsp;Build scripts are code</h2></div></div></div><p>Gradle's build scripts give you the full power of Groovy. As an appetizer, have a look at this:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="upper"></a><p class="title"><b>Example&nbsp;14.4.&nbsp;Using Groovy in Gradle's tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task upper &lt;&lt; {
     String someString = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'mY_nAmE'</span>
-    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Original: "</span> + someString
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Original: "</span> + someString 
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Upper case: "</span> + someString.toUpperCase()
-}</pre>
-      <p>Output of <strong class="userinput"><code>gradle -q upper</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q upper</code></strong></p>
-      <pre class="screen">&gt; gradle -q upper
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q upper</code></strong></p><pre class="screen">&gt; gradle -q upper
 Original: mY_nAmE
-Upper case: MY_NAME</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>或者<br>or</p>
-    <div class="example">
-     <a name="count"></a>
-     <p class="title"><b>示例6.5. 在Gradle任务中使用Groovy - Example&nbsp;6.5.&nbsp;Using Groovy in Gradle's tasks</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task count &lt;&lt; {
+Upper case: MY_NAME
+</pre></div></div><br class="example-break"><p>or</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="count"></a><p class="title"><b>Example&nbsp;14.5.&nbsp;Using Groovy in Gradle's tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task count &lt;&lt; {
     4.times { print <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$it "</span> }
-}</pre>
-      <p>Output of <strong class="userinput"><code>gradle -q count</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q count</code></strong></p>
-      <pre class="screen">&gt; gradle -q count
-0 1 2 3</pre>
-     </div>
-    </div>
-    <br class="example-break">
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:task_dependencies"></a>6.5. 任务依赖</h2>
-       <h4 class="title"><a name="sec:task_dependencies"></a>6.5.&nbsp;Task dependencies</h4>
-      </div>
-     </div>
-    </div>
-    <p>你应该也已经猜到了，我们可以声明任务之间的依赖关系。 <br>As you probably have guessed, you can declare dependencies between your tasks.</p>
-    <div class="example">
-     <a name="intro"></a>
-     <p class="title"><b>示例6.6. 声明任务之间的依赖关系 - Example&nbsp;6.6.&nbsp;Declaration of dependencies between tasks</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task hello &lt;&lt; {
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q count</code></strong></p><pre class="screen">&gt; gradle -q count
+0 1 2 3 
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:task_dependencies" class="section-anchor" href="#sec:task_dependencies"></a>14.5.&nbsp;Task dependencies</h2></div></div></div><p>As you probably have guessed, you can declare tasks that depend on other tasks.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="intro"></a><p class="title"><b>Example&nbsp;14.6.&nbsp;Declaration of task that depends on other task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>
 }
 task intro(dependsOn: hello) &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm Gradle"</span>
-}</pre>
-      <p><strong class="userinput"><code>gradle -q intro</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q intro</code></strong></p>
-      <pre class="screen">&gt; gradle -q intro
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q intro</code></strong></p><pre class="screen">&gt; gradle -q intro
 Hello world!
-I'm Gradle</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>在添加依赖时，对应的任务不一定要存在。<br>To add a dependency, the corresponding task does not need to exist.</p>
-    <div class="example">
-     <a name="lazyDependsOn"></a>
-     <p class="title"><b>示例6.7. 延迟依赖——另一个任务（暂）不存在 - Example&nbsp;6.7.&nbsp;Lazy dependsOn - the other task does not exist (yet)</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task taskX(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>) &lt;&lt; {
+I'm Gradle
+</pre></div></div><br class="example-break"><p>To add a dependency, the corresponding task does not need to exist.</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="lazyDependsOn"></a><p class="title"><b>Example&nbsp;14.7.&nbsp;Lazy dependsOn - the other task does not exist (yet)</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task taskX(dependsOn: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>) &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskX'</span>
 }
 task taskY &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskY'</span>
-}</pre>
-      <p><strong class="userinput"><code>gradle -q taskX</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p>
-      <pre class="screen">&gt; gradle -q taskX
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q taskX</code></strong></p><pre class="screen">&gt; gradle -q taskX
 taskY
-taskX</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p><code class="literal">taskX</code> 依赖 <code class="literal">taskY</code> 是在 <code class="literal">taskY</code> 之前定义的。这点在多项目构建中非常有用。有关任务依赖的更多信息，可以参阅 <a class="xref" href="more_about_tasks.html#sec:adding_dependencies_to_tasks">第15.4节，“给任务添加依赖”</a>。 <br>The dependency of <code class="literal">taskX</code> to <code class="literal">taskY</code> is declared before <code class="literal">taskY</code> is defined. This is very important for multi-project builds. Task dependencies are discussed in more detail in <a class="xref" href="more_about_tasks.html#sec:adding_dependencies_to_tasks">Section&nbsp;15.4, “Adding dependencies to a task”</a>.</p>
-    <p>请注意，当一个任务还没有被定义的时候，不能使用快捷符号（见 <a class="xref" href="tutorial_using_tasks.html#sec:shortcut_notations">第6.8节，“快捷标记”</a>）。<br>Please notice that you can't use shortcut notation (see <a class="xref" href="tutorial_using_tasks.html#sec:shortcut_notations">Section&nbsp;6.8, “Shortcut notations”</a>) when referring to a task that is not yet defined.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N1029B"></a>6.6. 动态任务</h2>
-       <h4 class="title"><a name="N1029B"></a>6.6.&nbsp;Dynamic tasks</h4>
-      </div>
-     </div>
-    </div>
-    <p>Groovy的强大之处，不仅仅是用在定义一个任务做什么的时候。例如，你也可以使用它来动态地创建一些任务。 <br>The power of Groovy can be used for more than defining what a task does. For example, you can also use it to dynamically create tasks.</p>
-    <div class="example">
-     <a name="dynamic"></a>
-     <p class="title"><b>示例6.8. 任务的动态创建 - Example&nbsp;6.8.&nbsp;Dynamic creation of a task</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">4.times { counter -&gt;
-    task <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"task$counter"</span> &lt;&lt; {
-        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm task number $counter"</span>
-    }
-}</pre>
-      <p><strong class="userinput"><code>gradle -q task1</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q task1</code></strong></p>
-      <pre class="screen">&gt; gradle -q task1
-I'm task number 1</pre>
-     </div>
-    </div>
-    <br class="example-break">
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N102B0"></a>6.7. 操纵现有任务</h2>
-       <h4 class="title"><a name="N102B0"></a>6.7.&nbsp;Manipulating existing tasks</h4>
-      </div>
-     </div>
-    </div>
-    <p>与Ant不同，一旦任务被创建了，就可以通过一个 <span class="emphasis"><em>API</em></span>去访问它。例如，你可以去给它们添加其他的依赖。 <br>Once tasks are created they can be accessed via an <span class="emphasis"><em>API</em></span>. This is different to Ant. For example you can create additional dependencies.</p>
-    <div class="example">
-     <a name="dynamicDepends"></a>
-     <p class="title"><b>示例6.9. 通过API访问任务——添加依赖 - Example&nbsp;6.9.&nbsp;Accessing a task via API - adding a dependency</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">4.times { counter -&gt;
+taskX
+</pre></div></div><br class="example-break"><p>The dependency of <code class="literal">taskX</code> to <code class="literal">taskY</code> is declared before
+            <code class="literal">taskY</code> is defined. This is very important for multi-project builds. Task dependencies are
+            discussed in more detail in <a class="xref" href="more_about_tasks.html#sec:adding_dependencies_to_tasks">Section&nbsp;17.4, &ldquo;Adding dependencies to a task&rdquo;</a>.
+        </p><p>Please notice that you can't use shortcut notation (see <a class="xref" href="tutorial_using_tasks.html#sec:shortcut_notations">Section&nbsp;14.8, &ldquo;Shortcut notations&rdquo;</a>)
+        when referring to a task that is not yet defined.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10C32" class="section-anchor" href="#N10C32"></a>14.6.&nbsp;Dynamic tasks</h2></div></div></div><p>The power of Groovy can be used for more than defining what a task does. For example, you can also use it
+            to dynamically create tasks.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="dynamic"></a><p class="title"><b>Example&nbsp;14.8.&nbsp;Dynamic creation of a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">4.times { counter -&gt;
     task <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"task$counter"</span> &lt;&lt; {
         println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm task number $counter"</span>
     }
 }
-task0.dependsOn task2, task3</pre>
-      <p><strong class="userinput"><code>gradle -q task0</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q task0</code></strong></p>
-      <pre class="screen">&gt; gradle -q task0
+</pre><p>Output of <strong class="userinput"><code>gradle -q task1</code></strong></p><pre class="screen">&gt; gradle -q task1
+I'm task number 1
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10C47" class="section-anchor" href="#N10C47"></a>14.7.&nbsp;Manipulating existing tasks</h2></div></div></div><p>Once tasks are created they can be accessed via an <span class="emphasis"><em>API</em></span>. For instance, you could use this to
+        dynamically add dependencies to a task, at runtime.  Ant doesn't allow anything like this.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="dynamicDepends"></a><p class="title"><b>Example&nbsp;14.9.&nbsp;Accessing a task via API - adding a dependency</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">4.times { counter -&gt;
+    task <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"task$counter"</span> &lt;&lt; {
+        println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm task number $counter"</span>
+    }
+}
+task0.dependsOn task2, task3
+</pre><p>Output of <strong class="userinput"><code>gradle -q task0</code></strong></p><pre class="screen">&gt; gradle -q task0
 I'm task number 2
 I'm task number 3
-I'm task number 0</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>或者，你也可以对已经存在的任务添加行为。<br>Or you can add behavior to an existing task.</p>
-    <div class="example">
-     <a name="helloEnhanced"></a>
-     <p class="title"><b>示例6.10. 通过API访问任务——添加行为 - Example&nbsp;6.10.&nbsp;Accessing a task via API - adding behaviour</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task hello &lt;&lt; {
+I'm task number 0
+</pre></div></div><br class="example-break"><p>Or you can add behavior to an existing task.</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="helloEnhanced"></a><p class="title"><b>Example&nbsp;14.10.&nbsp;Accessing a task via API - adding behaviour</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello Earth'</span>
 }
 hello.doFirst {
@@ -278,94 +113,48 @@ hello.doLast {
 }
 hello &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello Jupiter'</span>
-}</pre>
-      <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
-      <pre class="screen">&gt; gradle -q hello
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
 Hello Venus
 Hello Earth
 Hello Mars
-Hello Jupiter</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p><code class="literal">doFirst</code>和<code class="literal">doLast</code> 可以被多次调用，它们分别是向任务的动作列表的开头或结尾添加一个动作。当任务执行的时候，动作列表的这些动作会依次执行。<code class="literal">&lt;&lt;</code> 操作只是 <code class="literal">doLast</code>的别名。 <br>The calls <code class="literal">doFirst</code> and <code class="literal">doLast</code> can be executed multiple times. They add an action to the beginning or the end of the task's actions list. When the task executes, the actions in the action list are executed in order. The <code class="literal">&lt;&lt;</code> operator is simply an alias for <code class="literal">doLast</code>.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:shortcut_notations"></a>6.8. 快捷符号</h2>
-       <h4 class="title"><a name="sec:shortcut_notations"></a>6.8.&nbsp;Shortcut notations</h4>
-      </div>
-     </div>
-    </div>
-    <p>你可能在前面的例子中也注意到了，一个<span class="emphasis"><em>已存在</em></span>任务会有一个便捷的符号用于访问。 每一个任务都可作为这个构建脚本中的一个属性。 <br>As you might have noticed in the previous examples, there is a convenient notation for accessing an <span class="emphasis"><em>existing</em></span> task. Each task is available as a property of the build script:</p>
-    <div class="example">
-     <a name="helloWithShortCut"></a>
-     <p class="title"><b>示例6.11. 以构建脚本的属性的方式访问任务 - Example&nbsp;6.11.&nbsp;Accessing task as a property of the build script</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task hello &lt;&lt; {
+Hello Jupiter
+</pre></div></div><br class="example-break"><p>The calls <code class="literal">doFirst</code> and <code class="literal">doLast</code> can be executed multiple times.
+            They add an action to the beginning or the end of the task's actions list. When the task executes, the
+            actions in the action list are executed in order. The <code class="literal">&lt;&lt;</code> operator is simply an
+            alias for <code class="literal">doLast</code>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:shortcut_notations" class="section-anchor" href="#sec:shortcut_notations"></a>14.8.&nbsp;Shortcut notations</h2></div></div></div><p>As you might have noticed in the previous examples, there is a convenient notation for accessing an
+            <span class="emphasis"><em>existing</em></span> task. Each task is available as a property of the build script:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="helloWithShortCut"></a><p class="title"><b>Example&nbsp;14.11.&nbsp;Accessing task as a property of the build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Hello world!'</span>
 }
 hello.doLast {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Greetings from the $hello.name task."</span>
-}</pre>
-      <p><strong class="userinput"><code>gradle -q hello</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
-      <pre class="screen">&gt; gradle -q hello
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
 Hello world!
-Greetings from the hello task.</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>这使得代码很易于阅读，尤其是当使用插件所提供的任务时（例如 <code class="literal">compile</code>）。<br>This enables very readable code, especially when using the out of the box tasks provided by the plugins (e.g. <code class="literal">compile</code>).</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:extra_task_properties"></a>6.9. 额外的任务属性</h2>
-       <h4 class="title"><a name="sec:extra_task_properties"></a>6.9.&nbsp;Extra task properties</h4>
-      </div>
-     </div>
-    </div>
-    <p>您可以把您自己的属性添加到一个任务中。譬如如果要添加一个 <code class="literal">myProperty</code>属性，可以为 <code class="literal">ext.myProperty</code>设置一个初始值，然后您就可以像使用预定义的任务属性一样对它进行读取或设置。 <br>You can add your own properties to a task. To add a property named <code class="literal">myProperty</code>, set <code class="literal">ext.myProperty</code> to an initial value. From that point on, the property can be read and set like a predefined task property.</p>
-    <div class="example">
-     <a name="extraTaskProperties"></a>
-     <p class="title"><b>示例6.12. 为任务添加额外的属性 - Example&nbsp;6.12.&nbsp;Adding extra properties to a task</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task myTask {
+Greetings from the hello task.
+</pre></div></div><br class="example-break"><p>This enables very readable code, especially when using the tasks provided by the plugins,
+              like the <code class="literal">compile</code> task.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:extra_task_properties" class="section-anchor" href="#sec:extra_task_properties"></a>14.9.&nbsp;Extra task properties</h2></div></div></div><p>You can add your own properties to a task. To add a property named <code class="literal">myProperty</code>,
+            set <code class="literal">ext.myProperty</code> to an initial value. From that point on, the property can be read
+            and set like a predefined task property.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="extraTaskProperties"></a><p class="title"><b>Example&nbsp;14.12.&nbsp;Adding extra properties to a task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task myTask {
     ext.myProperty = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"myValue"</span>
 }
 
 task printTaskProperties &lt;&lt; {
     println myTask.myProperty
-}</pre>
-      <p><strong class="userinput"><code>gradle -q printTaskProperties</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q printTaskProperties</code></strong></p>
-      <pre class="screen">&gt; gradle -q printTaskProperties
-myValue</pre>
-     </div>
-    </div>
-    <br class="example-break"> 额外属性并不局限于任务，你可以在 
-    <a class="xref" href="writing_build_scripts.html#sec:extra_properties">第13.4.2节，“额外属性”</a>中了解更多关于它们的内容。 
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N10326"></a>6.10. 使用 Ant 任务</h2>
-       <h4 class="title"><a name="N10326"></a>6.10.&nbsp;Using Ant Tasks</h4>
-      </div>
-     </div>
-    </div>
-    <p>Ant任务是Gradle的一级公民。Gradle通过简单地依赖Groovy，对Ant任务提供了强大的集成。Groovy自带了一个神奇的<code class="literal">AntBuilder</code>，在Gradle中使用Ant任务比在<code class="filename">build.xml</code>中调用更方便和强大。通过下面的例子，您可以学习到如何执行ant任务，以及如何访问ant属性： <br>Ant tasks are first-class citizens in Gradle. Gradle provides excellent integration for Ant tasks by simply relying on Groovy. Groovy is shipped with the fantastic <code class="literal">AntBuilder</code>. Using Ant tasks from Gradle is as convenient and more powerful than using Ant tasks from a <code class="filename">build.xml</code> file. From the example below, you can learn how to execute ant tasks and how to access ant properties:</p>
-    <div class="example">
-     <a name="antLoadfile"></a>
-     <p class="title"><b>示例6.13. 使用AntBuilder 执行 ant.loadfile 目标 - Example&nbsp;6.13.&nbsp;Using AntBuilder to execute ant.loadfile target</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task loadfile &lt;&lt; {
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q printTaskProperties</code></strong></p><pre class="screen">&gt; gradle -q printTaskProperties
+myValue
+</pre></div></div><br class="example-break">
+        Extra properties aren't limited to tasks. You can read more about them in <a class="xref" href="writing_build_scripts.html#sec:extra_properties">Section&nbsp;16.4.2, &ldquo;Extra properties&rdquo;</a>.
+    </div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10CBD" class="section-anchor" href="#N10CBD"></a>14.10.&nbsp;Using Ant Tasks</h2></div></div></div><p>Ant tasks are first-class citizens in Gradle. Gradle provides excellent integration for Ant tasks by simply
+            relying on Groovy. Groovy is shipped with the fantastic <code class="literal">AntBuilder</code>. Using Ant tasks
+            from Gradle is as convenient and more powerful than using Ant tasks from a <code class="filename">build.xml</code>
+            file. From the example below, you can learn how to execute Ant tasks and how to access Ant properties:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="antLoadfile"></a><p class="title"><b>Example&nbsp;14.13.&nbsp;Using AntBuilder to execute ant.loadfile target</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task loadfile &lt;&lt; {
     def files = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'../antLoadfileResources'</span>).listFiles().sort()
     files.each { File file -&gt;
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (file.isFile()) {
@@ -374,38 +163,18 @@ myValue</pre>
             println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"${ant.properties[file.name]}"</span>
         }
     }
-}</pre>
-      <p><strong class="userinput"><code>gradle -q loadfile</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q loadfile</code></strong></p>
-      <pre class="screen">&gt; gradle -q loadfile
-*** agile.manifesto.txt ***
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q loadfile</code></strong></p><pre class="screen">&gt; gradle -q loadfile
+ *** agile.manifesto.txt ***
 Individuals and interactions over processes and tools
 Working software over comprehensive documentation
 Customer collaboration  over contract negotiation
 Responding to change over following a plan
  *** gradle.manifesto.txt ***
 Make the impossible possible, make the possible easy and make the easy elegant.
-(inspired by Moshe Feldenkrais)</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>在构建脚本中您可以利用Ant做更多的事情，更多细节请参阅 <a class="xref" href="ant.html">第十七章，<i>在Gradle中使用Ant</i></a>。<br>There is lots more you can do with Ant in your build scripts. You can find out more in <a class="xref" href="ant.html">Chapter&nbsp;17, <i>Using Ant from Gradle</i></a>.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N10346"></a>6.11. 使用方法</h2>
-       <h4 class="title"><a name="N10346"></a>6.11.&nbsp;Using methods</h4>
-      </div>
-     </div>
-    </div>
-    <p> Gradle的内向扩展取决于您如何组织您的构建逻辑。在上面的例子中，组织您的构建逻辑的第一个层次是抽取出方法。 <br>Gradle scales in how you can organize your build logic. The first level of organizing your build logic for the example above, is extracting a method.</p>
-    <div class="example">
-     <a name="antLoadfileWithMethod"></a>
-     <p class="title"><b>示例6.14. 在构建逻辑中使用方法 - Example&nbsp;6.14.&nbsp;Using methods to organize your build logic</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task checksum &lt;&lt; {
+(inspired by Moshe Feldenkrais)</pre></div></div><br class="example-break"><p>There is lots more you can do with Ant in your build scripts. You can find out more in <a class="xref" href="ant.html">Chapter&nbsp;19, <i>Using Ant from Gradle</i></a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10CDD" class="section-anchor" href="#N10CDD"></a>14.11.&nbsp;Using methods</h2></div></div></div><p>Gradle scales in how you can organize your build logic. The first level of organizing your build logic for
+            the example above, is extracting a method.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="antLoadfileWithMethod"></a><p class="title"><b>Example&nbsp;14.14.&nbsp;Using methods to organize your build logic</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task checksum &lt;&lt; {
     fileList(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'../antLoadfileResources'</span>).each {File file -&gt;
         ant.checksum(file: file, property: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"cs_$file.name"</span>)
         println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$file.name Checksum: ${ant.properties["</span>cs_$file.name<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"]}"</span>
@@ -421,32 +190,14 @@ task loadfile &lt;&lt; {
 
 File[] fileList(String dir) {
     file(dir).listFiles({file -&gt; file.isFile() } as FileFilter).sort()
-}</pre>
-      <p><strong class="userinput"><code>gradle -q loadfile</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q loadfile</code></strong></p>
-      <pre class="screen">&gt; gradle -q loadfile
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q loadfile</code></strong></p><pre class="screen">&gt; gradle -q loadfile
 I'm fond of agile.manifesto.txt
-I'm fond of gradle.manifesto.txt</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>在后面您将会看到，像这样的方法可以在多项目构建的子项目之间共享。即使您的构建逻辑变得很复杂，Gradle也提供了一种非常方便的方式去组织它。关于这一点，我们会用一整个章节来讨论，详请参阅 <a class="xref" href="organizing_build_logic.html">第五十九章，<i>组织构建逻辑</i></a>。 <br>Later you will see that such methods can be shared among subprojects in multi-project builds. If your build logic becomes more complex, Gradle offers you other very convenient ways to organize it. We have devoted a whole chapter to this. See <a class="xref" href="organizing_build_logic.html">Chapter&nbsp;59, <i>Organizing Build Logic</i></a>.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:default_tasks"></a>6.12. 默认任务</h2>
-       <h4 class="title"><a name="sec:default_tasks"></a>6.12.&nbsp;Default tasks</h4>
-      </div>
-     </div>
-    </div>
-    <p>Gradle允许您在构建中定义一个或多个的默认任务。 <br>Gradle allows you to define one or more default tasks for your build.</p>
-    <div class="example">
-     <a name="defaultTasks"></a>
-     <p class="title"><b>示例6.15. 定义一个默认任务 - Example&nbsp;6.15.&nbsp;Defining a default tasks</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">defaultTasks <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'clean'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'run'</span>
+I'm fond of gradle.manifesto.txt</pre></div></div><br class="example-break"><p>Later you will see that such methods can be shared among subprojects in multi-project builds. If your
+            build logic becomes more complex, Gradle offers you other very convenient ways to organize it. We have
+            devoted a whole chapter to this. See <a class="xref" href="organizing_build_logic.html">Chapter&nbsp;41, <i>Organizing Build Logic</i></a>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:default_tasks" class="section-anchor" href="#sec:default_tasks"></a>14.12.&nbsp;Default tasks</h2></div></div></div><p>Gradle allows you to define one or more default tasks that are executed if no other tasks are specified.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="defaultTasks"></a><p class="title"><b>Example&nbsp;14.15.&nbsp;Defining a default task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">defaultTasks <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'clean'</span>, <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'run'</span>
 
 task clean &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'Default Cleaning!'</span>
@@ -458,33 +209,19 @@ task run &lt;&lt; {
 
 task other &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"I'm not a default task!"</span>
-}</pre>
-      <p><strong class="userinput"><code>gradle -q</code></strong>的构建结果<br>Output of <strong class="userinput"><code>gradle -q</code></strong></p>
-      <pre class="screen">&gt; gradle -q
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q</code></strong></p><pre class="screen">&gt; gradle -q
 Default Cleaning!
-Default Running!</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>这与运行 <strong class="userinput"><code>gradle clean run</code></strong>的结果是一样的。在多项目构建中，每一个子项目都可以有它自己的指定的默认任务。如果一个子项目没有指定默认任务，而父项目定义了的话，那么将会使用父项目的。 <br>This is equivalent to running <strong class="userinput"><code>gradle clean run</code></strong>. In a multi-project build every subproject can have its own specific default tasks. If a subproject does not specify default tasks, the default tasks of the parent project are used (if defined).</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="configure-by-dag"></a>6.13. 使用 DAG 配置</h2>
-       <h4 class="title"><a name="configure-by-dag"></a>6.13.&nbsp;Configure by DAG</h4>
-      </div>
-     </div>
-    </div>
-    <p>正如我们后面会详细描述的的（见<a class="xref" href="build_lifecycle.html">第五十五章，<i>构建的生命周期</i></a>），Gradle有一个配置阶段和一个执行阶段。在配置阶段后，Gradle会了解所有应该执行的任务。Gradle提供了一个钩子来让你使用这些信息。一个使用场景是，可以检查某个发布任务是否在这些要执行的任务当中。借由此，您可以为一些变量进行不同的赋值。 <br>As we later describe in full detail (see <a class="xref" href="build_lifecycle.html">Chapter&nbsp;55, <i>The Build Lifecycle</i></a>), Gradle has a configuration phase and an execution phase. After the configuration phase, Gradle knows all tasks that should be executed. Gradle offers you a hook to make use of this information. A use-case for this would be to check if the release task is among the tasks to be executed. Depending on this, you can assign different values to some variables.</p>
-    <p>在下面的例子中，<code class="literal">distribution</code>和<code class="literal">release</code> 任务的执行会导致<code class="literal">version</code> 变量有不同的结果。<br>In the following example, execution of the <code class="literal">distribution</code> and <code class="literal">release</code> tasks results in different value of the <code class="literal">version</code> variable.</p>
-    <div class="example">
-     <a name="configByDagNoRelease"></a>
-     <p class="title"><b>示例6.16. 根据所选择的任务输出不同的构建结果 - Example&nbsp;6.16.&nbsp;Different outcomes of build depending on chosen tasks</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task distribution &lt;&lt; {
+Default Running!
+</pre></div></div><br class="example-break"><p>This is equivalent to running <strong class="userinput"><code>gradle clean run</code></strong>. In a multi-project build every
+            subproject can have its own specific default tasks. If a subproject does not specify default tasks, the
+            default tasks of the parent project are used (if defined).
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="configure-by-dag" class="section-anchor" href="#configure-by-dag"></a>14.13.&nbsp;Configure by DAG</h2></div></div></div><p>As we later describe in full detail (see <a class="xref" href="build_lifecycle.html">Chapter&nbsp;20, <i>The Build Lifecycle</i></a>), Gradle has a
+            configuration phase and an execution phase. After the configuration phase, Gradle knows all tasks that should
+            be executed. Gradle offers you a hook to make use of this information. A use-case for this would be to check
+            if the release task is among the tasks to be executed. Depending on this, you can assign different values
+            to some variables.
+        </p><p>In the following example, execution of the <code class="literal">distribution</code> and <code class="literal">release</code> tasks results in different value of the <code class="literal">version</code> variable.</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="configByDagNoRelease"></a><p class="title"><b>Example&nbsp;14.16.&nbsp;Different outcomes of build depending on chosen tasks</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task distribution &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"We build the zip with version=$version"</span>
 }
 
@@ -498,49 +235,17 @@ gradle.taskGraph.whenReady {taskGraph -&gt;
     } <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">else</span> {
         version = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0-SNAPSHOT'</span>
     }
-}</pre>
-      <p><strong class="userinput"><code>gradle -q distribution</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q distribution</code></strong></p>
-      <pre class="screen">&gt; gradle -q distribution
-We build the zip with version=1.0-SNAPSHOT</pre>
-      <p><strong class="userinput"><code>gradle -q release</code></strong>的输出结果<br>Output of <strong class="userinput"><code>gradle -q release</code></strong></p>
-      <pre class="screen">&gt; gradle -q release
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q distribution</code></strong></p><pre class="screen">&gt; gradle -q distribution
+We build the zip with version=1.0-SNAPSHOT
+</pre><p>Output of <strong class="userinput"><code>gradle -q release</code></strong></p><pre class="screen">&gt; gradle -q release
 We build the zip with version=1.0
-We release now</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>在这里，很重要的一点是，<code class="literal">whenReady</code> 会在发布任务执行<span class="emphasis"><em>之前</em></span>影响到它。即使这个发布任务不是 <span class="emphasis"><em>主要的</em></span> （即传给 <span class="command"><strong>gradle</strong></span> 命令行的任务），这一点也同样有效。 <br>The important thing is that <code class="literal">whenReady</code> affects the release task <span class="emphasis"><em>before</em></span> the release task is executed. This works even when the release task is not the <span class="emphasis"><em>primary</em></span> task (i.e., the task passed to the <span class="command"><strong>gradle</strong></span> command).</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N103B3"></a>6.14. 下一步目标？</h2>
-       <h4 class="title"><a name="N103B3"></a>6.14.&nbsp;Where to next?</h4>
-      </div>
-     </div>
-    </div>
-    <p> 在本章中，我们已经对任务有了初步的了解。但是关于任务的内容还不仅仅是这些，如果你想了解更多的细节，请参阅 <a class="xref" href="more_about_tasks.html">第十五章，<i>任务进阶</i></a>。 <br>In this chapter, we have had a first look at tasks. But this is not the end of the story for tasks. If you want to jump into more of the details, have a look at <a class="xref" href="more_about_tasks.html">Chapter&nbsp;15, <i>More about Tasks</i></a>.</p>
-    <p> 另外，本教程接下来是 《<a class="xref" href="tutorial_java_projects.html">第七章， <i>Java 快速入门</i></a>》 以及《<a class="xref" href="artifact_dependencies_tutorial.html">第八章， <i>依赖管理基础</i></a>》。 <br>Otherwise, continue on to the tutorials in <a class="xref" href="tutorial_java_projects.html">Chapter&nbsp;7, <i>Java Quickstart</i></a> and <a class="xref" href="artifact_dependencies_tutorial.html">Chapter&nbsp;8, <i>Dependency Management Basics</i></a>.</p>
-   </div>
-   <div class="footnotes">
-    <br>
-    <hr align="left" width="100">
-    <div class="footnote">
-     <p><sup>[<a href="#N101CA" name="ftn.N101CA" class="para">2</a>] </sup>有一些命令行开关可以改变这一行为，请参阅《<a class="xref" href="gradle_command_line.html">附录&nbsp;D， <i>Gradle 命令行</i></a>》。<br><sup>[<a href="#N101CA" name="ftn.N101CA" class="para">2</a>] </sup>There are command line switches to change this behavior. See <a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>)</p>
-    </div>
-   </div>
-  </div>
-  <div class="navfooter">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="troubleshooting.html" title="第五章. 疑难解答">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_java_projects.html" title="第七章. Java 快速入门">下一章</a>
-    </div>
-   </div>
-  </div>
- </body>
-</html>
+We release now
+</pre></div></div><br class="example-break"><p>The important thing is that <code class="literal">whenReady</code> affects the release task <span class="emphasis"><em>before</em></span> the release task is executed.
+        This works even when the release task is not the <span class="emphasis"><em>primary</em></span> task (i.e., the task passed to the <span class="command"><strong>gradle</strong></span> command).
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10D4A" class="section-anchor" href="#N10D4A"></a>14.14.&nbsp;Where to next?</h2></div></div></div><p>
+            In this chapter, we have had a first look at tasks. But this is not the end of the story for tasks. If you want to jump into more of the details,
+            have a look at <a class="xref" href="more_about_tasks.html">Chapter&nbsp;17, <i>More about Tasks</i></a>.
+        </p><p>
+            Otherwise, continue on to the tutorials in <a class="xref" href="tutorial_java_projects.html">Chapter&nbsp;44, <i>Java Quickstart</i></a> and <a class="xref" href="artifact_dependencies_tutorial.html">Chapter&nbsp;7, <i>Dependency Management Basics</i></a>.
+        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N10B61" name="ftn.N10B61" class="para">5</a>] </sup>There are command line switches to change this behavior. See <a class="xref" href="gradle_command_line.html">Appendix&nbsp;D, <i>Gradle Command Line</i></a>)</p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pt03.html" title="Part&nbsp;III.&nbsp;Writing Gradle build scripts">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="build_init_plugin.html" title="Build Init Plugin - Gradle User Guide Version 2.14.1">Next</a></div></div></div></body></html>

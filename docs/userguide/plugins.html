@@ -1,207 +1,211 @@
-<html>
- <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>第二十一章. Gradle 插件 - Chapter&nbsp;21.&nbsp;Gradle Plugins</title>
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
-  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
-  <link rel="home" href="userguide.html" title="Gradle 用户指南">
-  <link rel="up" href="userguide.html" title="Gradle 用户指南">
-  <link rel="prev" href="build_environment.html" title="第二十章. 构建环境">
-  <link rel="next" href="standard_plugins.html" title="第二十二章. 标准的 Gradle 插件">
- </head>
- <body>
-  <div class="navheader">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="build_environment.html" title="第二十章. 构建环境">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="第二十二章. 标准的 Gradle 插件">下一章</a>
-    </div>
-   </div>
-  </div>
-  <div class="chapter">
-   <div class="titlepage">
-    <div>
-     <div>
-      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="plugins"></a>第二十一章. Gradle 插件</h1>
-      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="plugins"></a>Chapter&nbsp;21.&nbsp;Gradle Plugins</h3>
-     </div>
-    </div>
-   </div>
-   <p> Gradle 在它的核心中有意地为真实世界的自动化提供一些有用的功能。所有有用的功能，例如能够编译 Java代码，都是通过<span class="emphasis"><em>插件</em></span>来添加的。插件添加了新任务（如 <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a>），域对象（如 <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a>），约定（如主要的 Java 源码是位于 <code class="literal">的src/main/java</code>），以及从扩展的核心对象和其他插件的对象。 <br>Gradle at its core intentionally provides little useful functionality for real world automation. All of the useful features, such as the ability to compile Java code for example, are added by <span class="emphasis"><em>plugins</em></span>. Plugins add new tasks (e.g. <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a>), domain objects (e.g. <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a>), conventions (e.g. main Java source is located at <code class="literal">src/main/java</code>) as well as extending core objects and objects from other plugins.</p>
-   <p> 在本章中，我们将讨论如何使用插件以及有关插件的术语和概念。 <br>In this chapter we will discuss how to use plugins and the terminology and concepts surrounding plugins.</p>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:using_plugins"></a>21.1. 应用插件</h2>
-       <h4 class="title"><a name="sec:using_plugins"></a>21.1.&nbsp;Applying plugins</h4>
-      </div>
-     </div>
-    </div>
-    <p> 插件可以说是被<span class="emphasis"><em>应用的</em></span>，通过 <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:apply(java.util.Map)" target="_top"><code class="classname">Project.apply()</code></a>方法来完成。 <br>Plugins are said to be <span class="emphasis"><em>applied</em></span>, which is done via the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:apply(java.util.Map)" target="_top"><code class="classname">Project.apply()</code></a> method.</p>
-    <div class="example">
-     <a name="useJavaPlugin"></a>
-     <p class="title"><b>示例 21.1. 应用插件 - Example&nbsp;21.1.&nbsp;Applying a plugin</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span></pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p> 插件都有表示自己的一个简称。在上述例子中，我们使用简称“<code class="literal">java</code>”来应用 <a class="ulink" href="../javadoc/org/gradle/api/plugins/JavaPlugin.html" target="_top"><code class="classname">JavaPlugin</code></a>。 <br>Plugins advertise a short name for themselves. In the above case, we are using the short name ‘<code class="literal">java</code>’ to apply the <a class="ulink" href="../javadoc/org/gradle/api/plugins/JavaPlugin.html" target="_top"><code class="classname">JavaPlugin</code></a>.</p>
-    <p> 我们还可以使用下面的语法： <br>We could also have used the following syntax:</p>
-    <div class="example">
-     <a name="pluginIntro"></a>
-     <p class="title"><b>示例 21.2. 通过类型应用插件 - Example&nbsp;21.2.&nbsp;Applying a plugin by type</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">apply plugin: org.gradle.api.plugins.JavaPlugin</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p> 归功于 Gradle 的默认导入（见《<a class="xref" href="ide_support.html">附录 E，<i>现有的 IDE 支持和如何应对不支持的情况</i></a>》），你也可以这样写： <br>Thanks to Gradle's default imports (see <a class="xref" href="ide_support.html">Appendix&nbsp;E, <i>Existing IDE Support and how to cope without it</i></a>) you could also write:</p>
-    <div class="example">
-     <a name="pluginIntro"></a>
-     <p class="title"><b>示例 21.2. 通过类型应用插件 - Example&nbsp;21.3.&nbsp;Applying a plugin by type</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">apply plugin: JavaPlugin</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p> 插件的应用是<span class="emphasis"><em>幂等的</em></span>。也就是说，一个插件可以应用多次。如果插件之前已经被应用，则任何进一步的应用都不会有影响。 <br>The application of plugins is <span class="emphasis"><em>idempotent</em></span>. That is, a plugin can be applied multiple times. If the plugin has previously been applied, any further applications will have no effect.</p>
-    <p> 一个插件是简单的任何实现了<a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> 接口的类。 Gradle 提供了核心插件作为其发行版的一部分，所以你只需要简单地使用上面的插件即可。但是，对于第三方插件，你需要进行配置以使插件在构建类路径中可用。有关如何执行此操作的详细信息，请参阅<a class="xref" href="organizing_build_logic.html#sec:external_dependencies">第 59.5 节，《构建脚本的外部依赖》</a>。 <br>A plugin is simply any class that implements the <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> interface. Gradle provides the core plugins as part of its distribution so simply applying the plugin as above is all you need to do. For 3rd party plugins however, you need to make the plugins available to the build classpath. For more information on how to do this, see <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;59.5, “External dependencies for the build script”</a>.</p>
-    <p> 关于编写自己的插件的详细信息，请参阅《<a class="xref" href="custom_plugins.html">第 58章，<i>编写自定义插件</i></a>》。 <br>For more on writing your own plugins, see <a class="xref" href="custom_plugins.html">Chapter&nbsp;58, <i>Writing Custom Plugins</i></a>.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N11857"></a>21.2. 插件都做了什么</h2>
-       <h4 class="title"><a name="N11857"></a>21.2.&nbsp;What plugins do</h4>
-      </div>
-     </div>
-    </div>
-    <p> 在项目中应用插件可以使插件扩展 project 的功能。它可以做的事情有： <br>Applying a plugin to the project allows the plugin to extend the project's capabilities. It can do things such as:</p>
-    <div class="itemizedlist">
-     <ul class="itemizedlist">
-      <li class="listitem">将任务添加到 project（如编译、测试）<br>Add tasks to the project (e.g. compile, test)</li>
-      <li class="listitem">使用有用的默认设置对已添加的任务进行预配置。<br>Pre-configure added tasks with useful defaults.</li>
-      <li class="listitem">向项目中添加依赖配置 （见<a class="xref" href="artifact_dependencies_tutorial.html#configurations">第 8.3 节，《依赖配置》</a>）。<br>Add dependency configurations to the project (see <a class="xref" href="artifact_dependencies_tutorial.html#configurations">Section&nbsp;8.3, “Dependency configurations”</a>).</li>
-      <li class="listitem">通过扩展对现有类型添加新的属性和方法。<br>Add new properties and methods to existing type via extensions.</li>
-     </ul>
-    </div>
-    <p> 我们来看看以下内容： <br>Let's check this out:</p>
-    <div class="example">
-     <a name="pluginIntro"></a>
-     <p class="title"><b>示例 21.4. 通过插件添加任务 - Example&nbsp;21.4.&nbsp;Tasks added by a plugin</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Gradle Plugins - Gradle User Guide Version 2.14.1</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 2.14.1"><link rel="up" href="pt03.html" title="Part&nbsp;III.&nbsp;Writing Gradle build scripts"><link rel="prev" href="multi_project_builds.html" title="Multi-project Builds - Gradle User Guide Version 2.14.1"><link rel="next" href="standard_plugins.html" title="Standard Gradle plugins - Gradle User Guide Version 2.14.1"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="multi_project_builds.html" title="Multi-project Builds - Gradle User Guide Version 2.14.1">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="Standard Gradle plugins - Gradle User Guide Version 2.14.1">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="plugins"></a>Chapter&nbsp;25.&nbsp;Gradle Plugins</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="plugins.html#N12ED0">25.1. What plugins do</a></span></dt><dt><span class="section"><a href="plugins.html#sec:types_of_plugins">25.2. Types of plugins</a></span></dt><dt><span class="section"><a href="plugins.html#sec:using_plugins">25.3. Applying plugins</a></span></dt><dt><span class="section"><a href="plugins.html#sec:applying_plugins_buildscript">25.4. Applying plugins with the buildscript block</a></span></dt><dt><span class="section"><a href="plugins.html#sec:plugins_block">25.5. Applying plugins with the plugins DSL</a></span></dt><dt><span class="section"><a href="plugins.html#sec:custom_plugin_repositories">25.6. Custom Plugin Repositories</a></span></dt><dt><span class="section"><a href="plugins.html#sec:plugin_markers">25.7. Plugin Marker Artifacts</a></span></dt><dt><span class="section"><a href="plugins.html#N1309F">25.8. Finding community plugins</a></span></dt><dt><span class="section"><a href="plugins.html#N130A8">25.9. More on plugins</a></span></dt></dl></div><p>
+        Gradle at its core intentionally provides very little for real world automation. All of the useful
+        features, like the ability to compile Java code, are added by <span class="emphasis"><em>plugins</em></span>.
+        Plugins add new tasks (e.g. <a class="ulink" href="../dsl/org.gradle.api.tasks.compile.JavaCompile.html" target="_top"><code class="classname">JavaCompile</code></a>), domain objects (e.g.
+        <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a>), conventions (e.g. Java source is located at
+        <code class="literal">src/main/java</code>) as well as extending core objects and objects from other plugins.
+    </p><p>
+        In this chapter we will discuss how to use plugins and the terminology and concepts surrounding plugins.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N12ED0" class="section-anchor" href="#N12ED0"></a>25.1.&nbsp;What plugins do</h2></div></div></div><p>
+            Applying a plugin to a project allows the plugin to extend the project's capabilities. It can do things
+            such as:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Extend the Gradle model (e.g. add new DSL elements that can be configured)</li><li class="listitem">Configure the project according to conventions (e.g. add new tasks or configure sensible defaults)</li><li class="listitem">Apply specific configuration (e.g. add organizational repositories or enforce standards)</li></ul></div><p>
+            By applying plugins, rather than adding logic to the project build script, we can reap a number of benefits.  Applying plugins:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Promotes reuse and reduces the overhead of maintaining similar logic across multiple projects</li><li class="listitem">Allows a higher degree of modularization, enhancing comprehensibility and organization</li><li class="listitem">Encapsulates imperative logic and allows build scripts to be as declarative as possible</li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:types_of_plugins" class="section-anchor" href="#sec:types_of_plugins"></a>25.2.&nbsp;Types of plugins</h2></div></div></div><p>
+            There are two general types of plugins in Gradle, <span class="emphasis"><em>script</em></span> plugins and <span class="emphasis"><em>binary</em></span> plugins.
+            Script plugins are additional build scripts that further configure the build and usually implement a declarative approach to
+            manipulating the build.  They are typically used within a build although they can be externalized and accessed from a remote
+            location.  Binary plugins are classes that implement the <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> interface and adopt a programmatic
+            approach to manipulating the build.  Binary plugins can reside within a build script, within the project hierarchy or externally
+            in a plugin jar.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:using_plugins" class="section-anchor" href="#sec:using_plugins"></a>25.3.&nbsp;Applying plugins</h2></div></div></div><p>
+            Plugins are said to be <span class="emphasis"><em>applied</em></span>, which is done via the <a class="ulink" href="../dsl/org.gradle.api.Project.html#org.gradle.api.Project:apply(java.util.Map)" target="_top"><code class="classname">Project.apply(java.util.Map)</code></a> method.
+            The application of plugins is <span class="emphasis"><em>idempotent</em></span>. That is, the same plugin can be applied multiple times. If the plugin
+            has previously been applied, any further applications are safe and will have no effect.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N12F07" class="section-anchor" href="#N12F07"></a>25.3.1.&nbsp;Script plugins</h3></div></div></div><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="configureProjectUsingScript"></a><p class="title"><b>Example&nbsp;25.1.&nbsp;Applying a script plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply from: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'other.gradle'</span>
+</pre></div></div><br class="example-break"><p>
+                Script plugins can be applied from a script on the local filesystem or at a remote location.  Filesystem
+                locations are relative to the project directory, while remote script locations are specified with an HTTP URL.
+                Multiple script plugins (of either form) can be applied to a given build.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:applying_binary_plugins" class="section-anchor" href="#sec:applying_binary_plugins"></a>25.3.2.&nbsp;Binary plugins</h3></div></div></div><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="useJavaPlugin"></a><p class="title"><b>Example&nbsp;25.2.&nbsp;Applying a binary plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+</pre></div></div><br class="example-break"><p>
+                Plugins can be applied using a <span class="emphasis"><em>plugin id</em></span>.  The plugin id serves as a unique identifier
+                for a given plugin.  Core plugins register a short name that can be used as the plugin id. In the above case, we are
+                using the short name &lsquo;<code class="literal">java</code>&rsquo; to apply the <a class="ulink" href="../javadoc/org/gradle/api/plugins/JavaPlugin.html" target="_top"><code class="classname">JavaPlugin</code></a>.
+                Community plugins, on the other hand, use a fully qualified form for the plugin id (e.g. <code class="literal">com.github.foo.bar</code>),
+                although some legacy plugins may still utilize a short, unqualified form.
+            </p><p>
+                Rather than using a plugin id, plugins can also be applied by simply specifying the class of the plugin:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="pluginIntro"></a><p class="title"><b>Example&nbsp;25.3.&nbsp;Applying a binary plugin by type</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: JavaPlugin
+</pre></div></div><br class="example-break"><p>
+                The <code class="literal">JavaPlugin</code> symbol in the above sample refers to the the <a class="ulink" href="../javadoc/org/gradle/api/plugins/JavaPlugin.html" target="_top"><code class="classname">JavaPlugin</code></a>.
+                This class does not strictly need to be imported as the <code class="literal">org.gradle.api.plugins</code> package is automatically imported in all build scripts
+                (see <a class="xref" href="writing_build_scripts.html#script-default-imports">Section&nbsp;16.8, &ldquo;Default imports&rdquo;</a>). Furthermore, it is not necessary to append <code class="literal">.class</code> to identify a class literal in Groovy as it is in Java.
+            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N12F53" class="section-anchor" href="#N12F53"></a>25.3.2.1.&nbsp;Locations of binary plugins</h4></div></div></div><p>
+                    A plugin is simply any class that implements the <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html" target="_top"><code class="classname">Plugin</code></a> interface. Gradle provides
+                    the core plugins as part of its distribution so simply applying the plugin as above is all you need to do.
+                    However, non-core binary plugins need to be available to the build classpath before they can be applied.  This can
+                    be achieved in a number of ways, including:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Defining the plugin as an inline class declaration inside a build script.</li><li class="listitem">Defining the plugin as a source file under the buildSrc directory in the project (see <a class="xref" href="organizing_build_logic.html#sec:build_sources">Section&nbsp;41.4, &ldquo;Build sources in the <code class="filename">buildSrc</code> project&rdquo;</a>).</li><li class="listitem">Including the plugin from an external jar defined as a buildscript dependency (see <a class="xref" href="plugins.html#sec:applying_plugins_buildscript">Section&nbsp;25.4, &ldquo;Applying plugins with the buildscript block&rdquo;</a>).</li><li class="listitem">Including the plugin from the plugin portal using the plugins DSL (see <a class="xref" href="plugins.html#sec:plugins_block">Section&nbsp;25.5, &ldquo;Applying plugins with the plugins DSL&rdquo;</a>).</li></ul></div><p>
+                    For more on defining your own plugins, see <a class="xref" href="custom_plugins.html">Chapter&nbsp;39, <i>Writing Custom Plugins</i></a>.
+                </p></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:applying_plugins_buildscript" class="section-anchor" href="#sec:applying_plugins_buildscript"></a>25.4.&nbsp;Applying plugins with the buildscript block</h2></div></div></div><p>
+            Binary plugins that have been published as external jar files can be added to a project by adding the plugin to the
+            build script classpath and then applying the plugin.  External jars can be added to the build script classpath
+            using the <code class="code">buildscript {}</code> block as described in <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;41.6, &ldquo;External dependencies for the build script&rdquo;</a>.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="applyPluginBuildscript"></a><p class="title"><b>Example&nbsp;25.4.&nbsp;Applying a plugin with the buildscript block</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"com.jfrog.bintray.gradle:gradle-bintray-plugin:0.4.1"</span>
+    }
+}
 
-task show &lt;&lt; {
-    println relativePath(compileJava.destinationDir)
-    println relativePath(processResources.destinationDir)
-}</pre>
-      <p><strong class="userinput"><code>gradle -q show</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q show</code></strong></p>
-      <pre class="screen">&gt; gradle -q show
-build/classes/main
-build/resources/main</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p> Java 插件已经向 project 添加了 <code class="literal">compileJava</code> 和 <code class="literal">processResources</code> 任务，并且配置了这两个任务的 <code class="literal">destinationDir</code> 属性。 <br>The Java plugin has added a <code class="literal">compileJava</code> task and a <code class="literal">processResources</code> task to the project and configured the <code class="literal">destinationDir</code> property of both of these tasks.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sub:more_about_convention_objects"></a>21.3.&nbsp;约定</h2>
-       <h4 class="title"><a name="sub:more_about_convention_objects"></a>21.3.&nbsp;Conventions</h4>
-      </div>
-     </div>
-    </div>
-    <p> 插件可以通过智能的方式对项目进行预配置，以支持约定优于配置配置。Gradle 为此提供了相关机制和复杂的支持，这正是强大而简洁的构建脚本的关键组成部分。 <br>Plugins can pre-configure the project in smart ways to support convention-over-configuration. Gradle provides mechanisms and sophisticated support and it's a key ingredient in powerful-yet-concise build scripts.</p>
-    <p> 在上面的示例中我们看到，Java 插件添加了一个名为 <code class="literal">compileJava</code> 的任务，这个任务有一个名为 <code class="literal">destinationDir</code> 的属性（即配置编译后的 Java 代码存放的地方）。Java 插件默认设置这个属性指向项目目录中的 <code class="literal">build/classes/main</code>。这就是一个<span class="emphasis"><em>合理的默认值</em></span>的约定优于配置的例子。 <br>We saw in the example above that the Java plugins adds a task named <code class="literal">compileJava</code> that has a property named <code class="literal">destinationDir</code> (that configures where the compiled Java source should be placed). The Java plugin defaults this property to point to <code class="literal">build/classes/main</code> in the project directory. This is an example of convention-over-configuration via a <span class="emphasis"><em>reasonable default</em></span>.</p>
-    <p> 我们可以简单地通过给它一个新的值来更改此属性。 <br>We can change this property simply by giving it a new value.</p>
-    <div class="example">
-     <a name="pluginConfig"></a>
-     <p class="title"><b>示例 21.5. 更改插件的默认设置 - Example&nbsp;21.5.&nbsp;Changing plugin defaults</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"com.jfrog.bintray"</span>
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:plugins_block" class="section-anchor" href="#sec:plugins_block"></a>25.5.&nbsp;Applying plugins with the plugins DSL</h2></div></div></div><div class="note"><p>
+                The plugins DSL is currently <a class="link" href="feature_lifecycle.html">incubating</a>.
+                Please be aware that the DSL and other configuration may change in later Gradle versions.
+            </p></div><p>
+            The new plugins DSL provides a more succinct and convenient way to declare plugin dependencies.  It works with the
+            new <a class="ulink" href="http://plugins.gradle.org" target="_top">Gradle plugin portal</a> to provide easy access to both core and community
+            plugins.  The plugins script block configures an instance of <a class="ulink" href="../dsl/org.gradle.plugin.use.PluginDependenciesSpec.html" target="_top"><code class="classname">PluginDependenciesSpec</code></a>.
+        </p><p>
+            To apply a core plugin, the short name can be used:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="useJavaPluginDSL"></a><p class="title"><b>Example&nbsp;25.5.&nbsp;Applying a core plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">plugins {
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+}
+</pre></div></div><br class="example-break"><p>
+            To apply a community plugin from the portal, the fully qualified plugin id must be used:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="useCommunityPluginDSL"></a><p class="title"><b>Example&nbsp;25.6.&nbsp;Applying a community plugin</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">plugins {
+    id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"com.jfrog.bintray"</span> version <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"0.4.1"</span>
+}
+</pre></div></div><br class="example-break"><p>
+            No further configuration is necessary.  Specifically, there is no need to configure the buildscript classpath.
+            Gradle will resolve the plugin in the plugin portal, locate it, and make it available to the build.
+        </p><p>
+            See <a class="ulink" href="../dsl/org.gradle.plugin.use.PluginDependenciesSpec.html" target="_top"><code class="classname">PluginDependenciesSpec</code></a> for more information on using the Plugin DSL.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="plugins_dsl_limitations" class="section-anchor" href="#plugins_dsl_limitations"></a>25.5.1.&nbsp;Limitations of the plugins DSL</h3></div></div></div><p>
+                The new way to add plugins to a project is much more than a more convenient syntax. The new DSL is processed very
+                differently to the old one. The new mechanism allows Gradle to determine the plugins in use very early and very
+                quickly. This allows Gradle to do smart things such as:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Optimize the loading and reuse of plugin classes.</li><li class="listitem">Allow different plugins to use different versions of dependencies.</li><li class="listitem">Provide editors detailed information about the potential properties and values in the buildscript for
+                editing assistance.</li></ul></div><p>
+                This requires that plugins be specified in a way that Gradle can easily and quickly extract, before executing the
+                rest of the build script. It also requires that the definition of plugins to use be somewhat static.
+            </p><p>
+                There are some key differences between the new plugin mechanism and the &ldquo;traditional&rdquo; <code class="code">apply()</code> method
+                mechanism. There are also some constraints, some of which are temporary limitations while the mechanism is still
+                being developed and some are inherent to the new approach.
+            </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N12FD5" class="section-anchor" href="#N12FD5"></a>25.5.1.1.&nbsp;Constrained Syntax</h4></div></div></div><p>
+                    The new <code class="code">plugins {}</code> block does not support arbitrary Groovy code. It is constrained, in order to be idempotent
+                    (produce the same result every time) and side effect free (safe for Gradle to execute at any time).
+                </p><p>
+                    The form is:
+                </p><pre class="programlisting">
+plugins {
+    id &laquo;plugin id&raquo; version &laquo;plugin version&raquo;
+}
+                </pre><p>
+                    Where <code class="literal">&laquo;plugin version&raquo;</code> and <code class="literal">&laquo;plugin id&raquo;</code> must be constant, literal, strings.
+                    No other statements are allowed; their presence will cause a compilation error.
+                </p><p>
+                    The <code class="code">plugins {}</code> block must also be a top level statement in the buildscript. It cannot be nested inside
+                    another construct (e.g. an if-statement or for-loop).
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N12FEE" class="section-anchor" href="#N12FEE"></a>25.5.1.2.&nbsp;Can only be used in build scripts</h4></div></div></div><p>
+                    The <code class="code">plugins {}</code> block can currently only be used in a project's build script. It cannot be used in
+                    script plugins, the settings.gradle file or init scripts.
+                </p><p>
+                    <span class="emphasis"><em>Future versions of Gradle will remove this restriction.</em></span>
+                </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N12FFB" class="section-anchor" href="#N12FFB"></a>25.5.1.3.&nbsp;Cannot be used in conjunction with subprojects {}, allprojects {}, etc</h4></div></div></div><p>
+                    It is not possible to use the familiar pattern of applying a plugin to multiple projects at once using <code class="code">subprojects {}</code>,
+                    etc at the moment. There is currently no mechanism for applying a plugin to multiple projects at once. At the moment, each
+                    project that requires a plugin must declare so in the <code class="code">plugins {}</code> block in its buildscript.
+                </p><p>
+                    <span class="emphasis"><em>Future versions of Gradle will remove this restriction.</em></span>
+                </p></div><p>
+                If the restrictions of the new syntax are prohibitive, the recommended approach is to apply plugins using the
+                <a class="link" href="plugins.html#sec:applying_plugins_buildscript">buildscript {} block</a>.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:custom_plugin_repositories" class="section-anchor" href="#sec:custom_plugin_repositories"></a>25.6.&nbsp;Custom Plugin Repositories</h2></div></div></div><div class="note"><p>
+                The <code class="code">pluginRepositories {}</code> DSL is currently <a class="link" href="feature_lifecycle.html">incubating</a>.
+                Please be aware that the DSL and other configuration may change in later Gradle versions.
+            </p></div><p>
+            By default, the <code class="code">plugins {}</code> DSL resolves plugins from the public <a class="ulink" href="https://plugins.gradle.org" target="_top">Gradle Plugin Portal.</a>
+            Many build authors would also like to resolve plugins from private Maven or Ivy repositories because the plugins contain proprietary implementation
+            details, or just to have more control over what plugins are available to their builds.
+        </p><p>
+            To specify custom plugin repositories, add a <code class="code">pluginRepositories {}</code> block to the <code class="code">settings.gradle</code> file:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="customPluginRepositories"></a><p class="title"><b>Example&nbsp;25.7.&nbsp;Using plugins from custom plugin repositories.</b></p><div class="example-contents"><p><code class="filename">settings.gradle</code></p><pre class="programlisting">pluginRepositories {
+  maven {
+    url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'maven-repo'</span>
+  }
+  gradlePluginPortal()
+  ivy {
+    url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ivy-repo'</span>
+  }
+}
+</pre></div></div><br class="example-break"><p>
+            This tells Gradle to first look in the Maven repository at <code class="literal">maven-repo</code> when resolving plugins and then to
+            check the Gradle Plugin Portal if the plugins are not found in the Maven repository. If you don't want the Gradle Plugin Portal to be searched,
+            omit the <code class="code">gradlePluginPortal()</code> line. Finally, the Ivy repository at <code class="literal">ivy-repo</code> will be checked.
+        </p><p>
+            The <code class="code">pluginRepositories {}</code> block may only appear in the <code class="code">settings.gradle</code> file, and must be the first block in the file.
+            Custom Maven and Ivy plugin repositories must contain <a class="link" href="plugins.html#sec:plugin_markers">plugin marker artifacts</a> in addition to the artifacts
+            which actually implement the plugin. For more information on publishing plugins to custom repositories read <a class="xref" href="javaGradle_plugin.html">Chapter&nbsp;40, <i>The Java Gradle Plugin Development Plugin</i></a>.
+        </p><p>
+            See <a class="ulink" href="../dsl/org.gradle.plugin.repository.PluginRepositoriesSpec.html" target="_top"><code class="classname">PluginRepositoriesSpec</code></a> for complete documentation for using the
+            <code class="code">pluginRepositories {}</code> block.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:plugin_markers" class="section-anchor" href="#sec:plugin_markers"></a>25.7.&nbsp;Plugin Marker Artifacts</h2></div></div></div><p>
+            Since the <code class="code">plugins {}</code> DSL block only allows for declaring plugins by their globally unique plugin <code class="literal">id</code> and
+            <code class="literal">version</code> properties, Gradle needs a way to look up the coordinates of the plugin implementation artifact. To do so,
+            Gradle will look for a Plugin Marker Artifact with the coordinates <code class="literal">plugin.id:plugin.id.gradle.plugin:plugin.version</code>.
+            This marker needs to have a dependency on the actual plugin implementation. Publishing these markers is automated by the
+            <a class="link" href="javaGradle_plugin.html">java-gradle-plugin</a>.
+        </p><p>
+            For example, the following complete sample from the <code class="literal">sample-plugins</code> project shows how to publish a
+            <code class="literal">org.gradle.sample.hello</code> plugin and a <code class="literal">org.gradle.sample.goodbye</code> plugin to both an Ivy and Maven repository
+            using the combination of the <a class="link" href="javaGradle_plugin.html">java-gradle-plugin</a>, the
+            <a class="link" href="publishing_maven.html">maven-publish</a> plugin, and the <a class="link" href="publishing_ivy.html">ivy-publish</a> plugin.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="completePluginPublishing"></a><p class="title"><b>Example&nbsp;25.8.&nbsp;Complete Plugin Publishing Sample</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">plugins {
+  id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java-gradle-plugin'</span>
+  id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'maven-publish'</span>
+  id <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'ivy-publish'</span>
+}
 
-compileJava.destinationDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/output/classes"</span>)
+group <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle.sample'</span>
+version <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0.0'</span>
 
-task show &lt;&lt; {
-    println relativePath(compileJava.destinationDir)
-}</pre>
-      <p><strong class="userinput"><code>gradle -q show</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q show</code></strong></p>
-      <pre class="screen">&gt; gradle -q show
-build/output/classes</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p> 然而，<code class="literal">compileJava</code> 任务可能不是唯一需要知道类文件位置的任务。 <br>However, the <code class="literal">compileJava</code> task is likely to not be the only task that needs to know where the class files are.</p>
-    <p> Java 插件增加了<span class="emphasis"><em>源文件集</em></span>（见<a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a>）的概念来描述一组源文件的各个方面，其中一个方面是在编译的时候写入类文件的地方。Java 插件将 <code class="literal">compileJava</code> 任务的 <code class="literal">destinationDir</code> 属性映射到源文件集的这一方面。 <br>The Java plugin adds the concept of <span class="emphasis"><em>source sets</em></span> (see <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a>) to describe the aspects of a set of source, one aspect being where the class files should be written to when it is compiled. The Java plugin maps the <code class="literal">destinationDir</code> property of the <code class="literal">compileJava</code> task to this aspect of the source set.</p>
-    <p> 我们可以通过这个源文件集来修改类文件的写入位置。 <br>We can change where the class files are written via the source set.</p>
-    <div class="example">
-     <a name="pluginConvention"></a>
-     <p class="title"><b>示例 21.6. 插件约定对象 - Example&nbsp;21.6.&nbsp;Plugin convention object</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
+gradlePlugin {
+  plugins {
+    hello {
+      id = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.sample.hello"</span>
+      implementationClass = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.sample.hello.HelloPlugin"</span>
+    }
+    goodbye {
+      id = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.sample.goodbye"</span>
+      implementationClass = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.gradle.sample.goodbye.GoodbyePlugin"</span>
+    }
+  }
+}
 
-sourceSets.main.output.classesDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/output/classes"</span>)
-
-task show &lt;&lt; {
-    println relativePath(compileJava.destinationDir)
-}</pre>
-      <p><strong class="userinput"><code>gradle -q show</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q show</code></strong></p>
-      <pre class="screen">&gt; gradle -q show
-build/output/classes</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p> 在上面的示例中，我们应用了 Java 插件，除此之外还做了下列操作： <br>In the example above, we applied the Java plugin which, among other things, did the following:</p>
-    <div class="itemizedlist">
-     <ul class="itemizedlist">
-      <li class="listitem">添加了一个新的域对象类型： <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"> <code class="classname">SourceSet</code> </a><br>Added a new domain object type: <a class="ulink" href="../dsl/org.gradle.api.tasks.SourceSet.html" target="_top"><code class="classname">SourceSet</code></a></li>
-      <li class="listitem">通过属性的默认值（即约定值）配置了一个 <code class="literal">main</code> 源码集<br>Configured a <code class="literal">main</code> source set with default (i.e. conventional) values for properties</li>
-      <li class="listitem">配置了支持任务来使用这些属性执行工作<br>Configured supporting tasks to use these properties to perform work</li>
-     </ul>
-    </div>
-    <p> 所有这一切都发生在 <code class="literal">apply plugin: "java"</code> 这一步过程中。在上面的例子中，我们在约定配置被执行之后，<span class="emphasis"><em>修改了</em></span>类文件的预定位置。通过这个例子的输出可以注意到，<code class="literal">compileJava.destinationDir</code> 的值也改变了，以反映配置的变化。 <br>All of this happened during the <code class="literal">apply plugin: "java"</code> step. In the example above, we <span class="emphasis"><em>changed</em></span> the desired location of the class files after this conventional configuration had been performed. Notice by the output with the example that the value for <code class="literal">compileJava.destinationDir</code> also changed to reflect the configuration change.</p>
-    <p> 考虑一下有另一个任务使用到类文件的情况。如果这个任务被配置为使用 <code class="literal">sourceSets.main.output.classesDir</code> 的值，那么在这里修改它就会同时更新 <code class="literal">compileJava</code> 任务和那另一个任务，不管它的值是什么时候改的。 <br>Consider the case where another task is to consume the classes files. If this task is configured to use the value from <code class="literal">sourceSets.main.output.classesDir</code>, then changing it in this location will update both the <code class="literal">compileJava</code> task and this other consumer task whenever it is changed.</p>
-    <p> 这种配置对象属性以随时反映另一个对象任务值（即使它发生变化）的能力被称为“<span class="emphasis"><em>约定映射</em></span>”。它可以令 Gradle 通过约定优于配置和合理的默认设置来实现简洁的配置，而如果需要修改约定的默认值时，也不需要完全重新配置。如果没有这一点，在上面的例子中，我们就不得不重新配置每个需要使用类文件的对象。 <br>This ability to configure properties of objects to reflect the value of another object's task at all times (i.e. even when it changes) is known as “<span class="emphasis"><em>convention mapping</em></span>”. It allows Gradle to provide conciseness through convention-over-configuration and sensible defaults yet not require complete reconfiguration if a conventional default needs to be changed. Without this, in the example above, we would have had to reconfigure every object that needs to work with the class files.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N118FA"></a>21.4. 更多关于插件的内容</h2>
-       <h4 class="title"><a name="N118FA"></a>21.4.&nbsp;More on plugins</h4>
-      </div>
-     </div>
-    </div>
-    <p> 本章旨在介绍插件和 Gradle 以及它们所扮演的角色。有关插件内部运作的详细信息，请参阅《<a class="xref" href="custom_plugins.html">第五十八章，<i>编写自定义插件</i></a>》。 <br>This chapter aims to serve as an introduction to plugins and Gradle and the role they play. For more information on the inner workings of plugins, see <a class="xref" href="custom_plugins.html">Chapter&nbsp;58, <i>Writing Custom Plugins</i></a>.</p>
-   </div>
-  </div>
-  <div class="navfooter">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="build_environment.html" title="第二十章. 构建环境">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="第二十二章. 标准的 Gradle 插件">下一章</a>
-    </div>
-   </div>
-  </div>
- </body>
-</html>
+publishing {
+  repositories {
+    maven {
+      url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"../consuming/maven-repo"</span>
+    }
+    ivy {
+      url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"../consuming/ivy-repo"</span>
+    }
+  }
+}
+</pre></div></div><br class="example-break"><p>
+            Running <code class="literal">gradle publish</code> in the sample directory causes the following repo layouts to exist:
+        </p><p>
+            <img src="img/pluginMarkers.png">
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N1309F" class="section-anchor" href="#N1309F"></a>25.8.&nbsp;Finding community plugins</h2></div></div></div><p>
+            Gradle has a vibrant community of plugin developers who contribute plugins for a wide variety of capabilities.
+            The Gradle <a class="ulink" href="http://plugins.gradle.org" target="_top">plugin portal</a> provides an interface for searching and
+            exploring community plugins.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N130A8" class="section-anchor" href="#N130A8"></a>25.9.&nbsp;More on plugins</h2></div></div></div><p>
+            This chapter aims to serve as an introduction to plugins and Gradle and the role they play. For more information on the inner workings
+            of plugins, see <a class="xref" href="custom_plugins.html">Chapter&nbsp;39, <i>Writing Custom Plugins</i></a>.
+        </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="multi_project_builds.html" title="Multi-project Builds - Gradle User Guide Version 2.14.1">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="standard_plugins.html" title="Standard Gradle plugins - Gradle User Guide Version 2.14.1">Next</a></div></div></div></body></html>

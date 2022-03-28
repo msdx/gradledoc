@@ -1,8 +1,28 @@
+<!--
+
+     Licensed to the Apache Software Foundation (ASF) under one
+     or more contributor license agreements.  See the NOTICE file
+     distributed with this work for additional information
+     regarding copyright ownership.  The ASF licenses this file
+     to you under the Apache License, Version 2.0 (the
+     "License"); you may not use this file except in compliance
+     with the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing,
+     software distributed under the License is distributed on an
+     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+     specific language governing permissions and limitations
+     under the License.
+
+-->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 
-<title>org.gradle.plugins.ide.eclipse.model (Gradle API 2.0)</title>
+<title>org.gradle.plugins.ide.eclipse.model (Gradle API 2.14.1)</title>
 <meta name="keywords" content="org.gradle.plugins.ide.eclipse.model package">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel ="stylesheet" TYPE="text/css" HREF="../../../../../../stylesheet.css" title="Style">
@@ -11,7 +31,7 @@
 <script type="text/javascript">
 function windowTitle()
 {
-    parent.document.title="org.gradle.plugins.ide.eclipse.model (Gradle API 2.0)";
+    parent.document.title="org.gradle.plugins.ide.eclipse.model (Gradle API 2.14.1)";
 }
 </script>
 <noscript>
@@ -51,13 +71,12 @@ function windowTitle()
     <h1 class="title">Package org.gradle.plugins.ide.eclipse.model</h1>
 </div>
 
-<div class="header">
-    <h2 title=" Classes for the model used by the <a href='../../../../../../org/gradle/plugins/ide/eclipse/EclipsePlugin.html' title='EclipsePlugin'>EclipsePlugin</a>.
+
+<h2 title="Package org.gradle.plugins.ide.eclipse.model Description" class="title">Package org.gradle.plugins.ide.eclipse.model Description</h2>
+<div class="header"> Classes for the model used by the <a href='../../../../../../org/gradle/plugins/ide/eclipse/EclipsePlugin.html' title='EclipsePlugin'>EclipsePlugin</a>.
  
-" class="title"> Classes for the model used by the <a href='../../../../../../org/gradle/plugins/ide/eclipse/EclipsePlugin.html' title='EclipsePlugin'>EclipsePlugin</a>.
- 
-</h2>
 </div>
+
 
 <div class="contentContainer">
 
@@ -88,6 +107,14 @@ function windowTitle()
                             </td>
                             <td>A reference to a file in eclipse.</td>
                         </tr>
+<tr class="altColor">
+                            <td class="colOne">
+                                <strong><a href="WbModuleEntry.html" title="class in org/gradle/plugins/ide/eclipse/model">
+                                    WbModuleEntry
+                                </a></strong>
+                            </td>
+                            <td>Represents an entry in <code>wb-module</code>.</td>
+                        </tr>
 
                     </tbody>
                 </table>
@@ -114,7 +141,7 @@ function windowTitle()
                                     AbstractClasspathEntry
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>Common superclass for all <a href='../../../../../../org/gradle/plugins/ide/eclipse/model/ClasspathEntry.html' title='ClasspathEntry'>ClasspathEntry</a> instances.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -122,7 +149,7 @@ function windowTitle()
                                     AbstractLibrary
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>Common superclass for the library elements.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -130,7 +157,7 @@ function windowTitle()
                                     AccessRule
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>Access rule associated to a classpath entry.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -138,7 +165,7 @@ function windowTitle()
                                     BuildCommand
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>A build command.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -154,7 +181,7 @@ function windowTitle()
                                     Container
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>A container classpath entry.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -199,6 +226,14 @@ function windowTitle()
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
+                                <strong><a href="EclipseProject.DeprecationWarningDecoratedProject.html" title="class in org/gradle/plugins/ide/eclipse/model">
+                                    EclipseProject.DeprecationWarningDecoratedProject
+                                </a></strong>
+                            </td>
+                            <td></td>
+                        </tr>
+<tr class="altColor">
+                            <td class="colOne">
                                 <strong><a href="EclipseWtp.html" title="class in org/gradle/plugins/ide/eclipse/model">
                                     EclipseWtp
                                 </a></strong>
@@ -227,7 +262,7 @@ function windowTitle()
                                     Facet
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>A project facet.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -243,7 +278,7 @@ function windowTitle()
                                     Library
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>A classpath entry representing a library.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -251,7 +286,7 @@ function windowTitle()
                                     Link
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>Link.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -259,7 +294,7 @@ function windowTitle()
                                     Output
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>A classpath entry representing an output folder.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -275,7 +310,7 @@ function windowTitle()
                                     ProjectDependency
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>A classpath entry representing a project dependency.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -291,7 +326,7 @@ function windowTitle()
                                     Variable
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>A variable library entry.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -299,7 +334,7 @@ function windowTitle()
                                     WbDependentModule
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>A wtp descriptor dependent module entry.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -307,7 +342,7 @@ function windowTitle()
                                     WbProperty
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>A wtp descriptor property entry.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -315,7 +350,7 @@ function windowTitle()
                                     WbResource
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>A wtp descriptor resource entry.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -358,7 +393,8 @@ function windowTitle()
                                     Facet.FacetType
                                 </a></strong>
                             </td>
-                            <td></td>
+                            <td>An <CODE>installed</CODE> facet is really present on an Eclipse project whereas facet type <CODE>fixed</CODE> means that
+ this facet is locked and cannot be simply removed. </td>
                         </tr>
 
                     </tbody>
@@ -397,7 +433,7 @@ function windowTitle()
         </ul>
     </div>
 
-    <div class="aboutLanguage"><em>Gradle API 2.0</em></div>
+    <div class="aboutLanguage"><em>Gradle API 2.14.1</em></div>
     <a name="skip-navbar_bottom">
         <!--   -->
     </a></div>

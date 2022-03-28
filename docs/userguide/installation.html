@@ -1,125 +1,21 @@
-<html>
- <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>第四章. 安装Gradle - Chapter&nbsp;4.&nbsp;Installing Gradle</title>
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
-  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
-  <link rel="home" href="userguide.html" title="Gradle 用户指南">
-  <link rel="up" href="userguide.html" title="Gradle 用户指南">
-  <link rel="prev" href="tutorials.html" title="第三章. 教程">
-  <link rel="next" href="troubleshooting.html" title="第五章. 疑难解答">
- </head>
- <body>
-  <div class="navheader">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorials.html" title="第三章. 教程">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="troubleshooting.html" title="第五章. 疑难解答">下一章</a>
-    </div>
-   </div>
-  </div>
-  <div class="chapter">
-   <div class="titlepage">
-    <div>
-     <div>
-      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="installation"></a>第四章. 安装Gradle</h1>
-      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="installation"></a>Chapter&nbsp;4.&nbsp;Installing Gradle</h3>
-     </div>
-    </div>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N10116"></a>4.1. 环境要求</h2>
-       <h4 class="title"><a name="N10116"></a>4.1.&nbsp;Prerequisites</h4>
-      </div>
-     </div>
-    </div>
-    <p>Gradle需要安装Java6或更高以上版本的JDK或JRE。Gradle自带了Groovy库，因此不需要安装Groovy。已经安装的Groovy会被Gradle所忽略。 <br>Gradle requires a Java JDK or JRE to be installed. Gradle requires a Java version 6 or higher. Gradle ships with its own Groovy library, therefore no Groovy needs to be installed. Any existing Groovy installation is ignored by Gradle.</p>
-    <p>Gradle会使用在您的path环境变量中找到的JDK（可以使用<strong class="userinput"><code>java -version</code></strong>命令来检查自己的JDK版本）。 另外，您也可以设置 <code class="envar">JAVA_HOME</code> 环境变量来指向你想要的JDK的安装目录。 <br>Gradle uses whichever JDK it finds in your path (to check, use <strong class="userinput"><code>java -version</code></strong>). Alternatively, you can set the <code class="envar">JAVA_HOME</code> environment variable to point to the install directory of the desired JDK.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N10123"></a>4.2. 下载</h2>
-       <h4 class="title"><a name="N10123"></a>4.2.&nbsp;Download</h4>
-      </div>
-     </div>
-    </div>
-    <p>您可以从<a class="ulink" href="http://www.gradle.org/downloads" target="_top">Gradle 官方网站</a>上下载Gradle的发行包。<br>You can download one of the Gradle distributions from the <a class="ulink" href="http://www.gradle.org/downloads" target="_top">Gradle web site</a>.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N1012C"></a>4.3. 解压</h2>
-       <h4 class="title"><a name="N1012C"></a>4.3.&nbsp;Unpacking</h4>
-      </div>
-     </div>
-    </div>
-    <p>Gradle的发行包是一个ZIP文件。完整的发行包包含以下内容：<br>The Gradle distribution comes packaged as a ZIP. The full distribution contains:</p>
-    <div class="itemizedlist">
-     <ul class="itemizedlist">
-      <li class="listitem"><p>Gradle可执行文件。</p><p>The Gradle binaries.</p></li>
-      <li class="listitem"><p>用户指南（HTML和PDF两种版本）。</p><p>The user guide (HTML and PDF).</p></li>
-      <li class="listitem"><p>DSL参考指南。</p><p>The DSL reference guide.</p></li>
-      <li class="listitem"><p>API文档（包括Javadoc和Groovydoc）。</p><p>The API documentation (Javadoc and Groovydoc).</p></li>
-      <li class="listitem"><p>大量的样例，包括用户指南里的例子，以及一些完整的和更加复杂的构建。您可以把它们作为您自己的构建的基础。 </p><p>Extensive samples, including the examples referenced in the user guide, along with some complete and more complex builds you can use the starting point for your own build. </p></li>
-      <li class="listitem"><p>源代码。这些源代码仅供参考。如果您想要自己来编译Gradle，您需要去下载源码发行包，或者是从源码仓库里检出代码。具体请参阅<a class="ulink" href="http://www.gradle.org/development" target="_top">Gradle官方网站</a>。 </p><p>The binary sources. This is for reference only. If you want to build Gradle you need to download the source distribution or checkout the sources from the source repository. See the <a class="ulink" href="http://www.gradle.org/development" target="_top">Gradle web site</a> for details. </p></li>
-     </ul>
-    </div>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N10148"></a>4.4. 环境变量</h2>
-       <h4 class="title"><a name="N10148"></a>4.4.&nbsp;Environment variables</h4>
-      </div>
-     </div>
-    </div>
-    <p>要运行Gradle，您需要将 <code class="filename"><em class="replaceable"><code>GRADLE_HOME</code></em>/bin</code> 添加到您的 <code class="envar">PATH</code>环境变量中。通常添加了之后就可以运行Gradle了。 <br>For running Gradle, add <code class="filename"><em class="replaceable"><code>GRADLE_HOME</code></em>/bin</code> to your <code class="envar">PATH</code> environment variable. Usually, this is sufficient to run Gradle.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N10155"></a>4.5. 运行和测试您的安装</h2>
-       <h4 class="title"><a name="N10155"></a>4.5.&nbsp;Running and testing your installation</h4>
-      </div>
-     </div>
-    </div>
-    <p>您可以通过<span class="command"><strong>gradle</strong></span>命令来运行Gradle。输入<span class="command"><strong>gradle -v</strong></span>就可以检查Gradle是否被正确安装。该命令会输出Gradle的版本，以及本地环境的配置（groovy和JVM版本等等）。所显示的Gradle版本应该与您已经安装的发行包相匹配。 <br>You run Gradle via the <span class="command"><strong>gradle</strong></span> command. To check if Gradle is properly installed just type <span class="command"><strong>gradle -v</strong></span>. The output shows Gradle version and also local environment configuration (groovy and JVM version, etc.). The displayed Gradle version should match the distribution you have downloaded.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N10160"></a>4.6. JVM 选项</h2>
-       <h4 class="title"><a name="N10160"></a>4.6.&nbsp;JVM options</h4>
-      </div>
-     </div>
-    </div>
-    <p>Gradle运行时的JVM参数可以通过<code class="envar">GRADLE_OPTS</code> 或是 <code class="envar">JAVA_OPTS</code>的环境变量来设置，这些环境变量也可以一起使用。习惯上， <code class="envar">JAVA_OPTS</code> 是一个与其他Java应用程序共享的环境变量，一个典型的场景是在 <code class="envar">JAVA_OPTS</code> 中设置HTTP代理，而在<code class="envar">GRADLE_OPTS</code>中设置内存选项。这些环境变量也可以在 <span class="command"><strong>gradle</strong></span> 或 <span class="command"><strong>gradlew</strong></span> 脚本文件的开头设置。 <br>JVM options for running Gradle can be set via environment variables. You can use <code class="envar">GRADLE_OPTS</code> or <code class="envar">JAVA_OPTS</code>. Those variables can be used together. <code class="envar">JAVA_OPTS</code> is by convention an environment variable shared by many Java applications. A typical use case would be to set the HTTP proxy in <code class="envar">JAVA_OPTS</code> and the memory options in <code class="envar">GRADLE_OPTS</code>. Those variables can also be set at the beginning of the <span class="command"><strong>gradle</strong></span> or <span class="command"><strong>gradlew</strong></span> script.</p>
-   </div>
-  </div>
-  <div class="navfooter">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="tutorials.html" title="第三章. 教程">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="troubleshooting.html" title="第五章. 疑难解答">下一章</a>
-    </div>
-   </div>
-  </div>
- </body>
-</html>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Installing Gradle - Gradle User Guide Version 2.14.1</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 2.14.1"><link rel="up" href="pt02.html" title="Part&nbsp;II.&nbsp;Working with existing builds"><link rel="prev" href="pt02.html" title="Part&nbsp;II.&nbsp;Working with existing builds"><link rel="next" href="tutorial_gradle_command_line.html" title="Using the Gradle Command-Line - Gradle User Guide Version 2.14.1"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pt02.html" title="Part&nbsp;II.&nbsp;Working with existing builds">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_command_line.html" title="Using the Gradle Command-Line - Gradle User Guide Version 2.14.1">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="installation"></a>Chapter&nbsp;3.&nbsp;Installing Gradle</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="installation.html#N100D6">3.1. Prerequisites</a></span></dt><dt><span class="section"><a href="installation.html#N100E3">3.2. Download</a></span></dt><dt><span class="section"><a href="installation.html#N100EC">3.3. Unpacking</a></span></dt><dt><span class="section"><a href="installation.html#N10108">3.4. Environment variables</a></span></dt><dt><span class="section"><a href="installation.html#N10118">3.5. Running and testing your installation</a></span></dt><dt><span class="section"><a href="installation.html#N10123">3.6. JVM options</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N100D6" class="section-anchor" href="#N100D6"></a>3.1.&nbsp;Prerequisites</h2></div></div></div><p>Gradle requires a Java JDK or JRE to be installed, version 6 or higher (to check, use <strong class="userinput"><code>java -version</code></strong>).
+    	Gradle ships with its own Groovy library, therefore Groovy does not need to be installed. Any existing Groovy installation is ignored by Gradle.
+    </p><p>Gradle uses whatever JDK it finds in your path.
+        Alternatively, you can set the <code class="envar">JAVA_HOME</code> environment variable to point to the installation directory
+        of the desired JDK.
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N100E3" class="section-anchor" href="#N100E3"></a>3.2.&nbsp;Download</h2></div></div></div><p>You can download one of the Gradle distributions from the <a class="ulink" href="http://www.gradle.org/downloads" target="_top">Gradle web site</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N100EC" class="section-anchor" href="#N100EC"></a>3.3.&nbsp;Unpacking</h2></div></div></div><p>The Gradle distribution comes packaged as a ZIP. The full distribution contains:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>The Gradle binaries.</p></li><li class="listitem"><p>The user guide (HTML and PDF).</p></li><li class="listitem"><p>The DSL reference guide.</p></li><li class="listitem"><p>The API documentation (Javadoc and Groovydoc).</p></li><li class="listitem"><p>Extensive samples, including the examples referenced in the user guide, along with some complete and more
+            complex builds you can use as a starting point for your own build.
+        </p></li><li class="listitem"><p>The binary sources. This is for reference only. If you want to build Gradle you need to download the source distribution
+            or checkout the sources from the source repository. See the <a class="ulink" href="http://www.gradle.org/development" target="_top">Gradle web site</a> for details.
+        </p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10108" class="section-anchor" href="#N10108"></a>3.4.&nbsp;Environment variables</h2></div></div></div><p>For running Gradle, firstly add the environment variable <code class="envar">GRADLE_HOME</code>. This should point to the unpacked files from the 
+    Gradle website. Next add <code class="filename"><em class="replaceable"><code>GRADLE_HOME</code></em>/bin</code> to your <code class="envar">PATH</code> environment variable. 
+    Usually, this is sufficient to run Gradle.
+</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10118" class="section-anchor" href="#N10118"></a>3.5.&nbsp;Running and testing your installation</h2></div></div></div><p>You run Gradle via the <span class="command"><strong>gradle</strong></span> command. To check if Gradle is properly installed just type
+<span class="command"><strong>gradle -v</strong></span>. The output shows the Gradle version and also the local environment configuration (Groovy, JVM version, OS, etc.).
+    The displayed Gradle version should match the distribution you have downloaded.
+</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N10123" class="section-anchor" href="#N10123"></a>3.6.&nbsp;JVM options</h2></div></div></div><p>JVM options for running Gradle can be set via environment variables. You can use either <code class="envar">GRADLE_OPTS</code>
+or <code class="envar">JAVA_OPTS</code>, or both. <code class="envar">JAVA_OPTS</code> is by convention an environment
+variable shared by many Java applications. A typical use case would be to set the HTTP proxy in <code class="envar">JAVA_OPTS</code>
+and the memory options in <code class="envar">GRADLE_OPTS</code>. Those variables can also be set at the beginning
+of the <span class="command"><strong>gradle</strong></span> or <span class="command"><strong>gradlew</strong></span> script.
+</p><p>Note that it's not currently possible to set JVM options for Gradle on the command line.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pt02.html" title="Part&nbsp;II.&nbsp;Working with existing builds">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="tutorial_gradle_command_line.html" title="Using the Gradle Command-Line - Gradle User Guide Version 2.14.1">Next</a></div></div></div></body></html>

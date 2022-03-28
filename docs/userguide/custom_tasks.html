@@ -1,123 +1,64 @@
-<html>
- <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>第五十七章. 编写自定义任务类 - Chapter&nbsp;57.&nbsp;Writing Custom Task Classes</title>
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
-  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
-  <link rel="home" href="userguide.html" title="Gradle 用户指南">
-  <link rel="up" href="userguide.html" title="Gradle 用户指南">
-  <link rel="prev" href="multi_project_builds.html" title="第五十六章.&nbsp;多项目构建">
-  <link rel="next" href="custom_plugins.html" title="第五十八章. 编写自定义插件">
- </head>
- <body>
-  <div class="navheader">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="multi_project_builds.html" title="第五十六章.&nbsp;多项目构建">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="custom_plugins.html" title="第五十八章. 编写自定义插件">下一章</a>
-    </div>
-   </div>
-  </div>
-  <div class="chapter">
-   <div class="titlepage">
-    <div>
-     <div>
-      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="custom_tasks"></a>第五十七章. 编写自定义任务类</h1>
-      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="custom_tasks"></a>Chapter&nbsp;57.&nbsp;Writing Custom Task Classes</h3>
-     </div>
-    </div>
-   </div>
-   <p>Gradle 支持两种类型的任务。一种是简单任务，你可以使用一个动作闭包来定义它。我们在《<a class="xref" href="tutorial_using_tasks.html">第六章，<i>构建脚本基础</i></a>》中已经看到过。对于这种类型的任务，动作闭包确定了任务的行为。这种类型的任务便于实现构建脚本中只执行一次的任务。 <br>Gradle supports two types of task. One such type is the simple task, where you define the task with an action closure. We have seen these in <a class="xref" href="tutorial_using_tasks.html">Chapter&nbsp;6, <i>Build Script Basics</i></a>. For this type of task, the action closure determines the behaviour of the task. This type of task is good for implementing one-off tasks in your build script.</p>
-   <p> 另一种是增强任务，它把行为建立在任务中，并且任务提供了一些属性用于配置行为。我们在《<a class="xref" href="more_about_tasks.html">第十五章，<i>有关任务的详细信息</i></a>》中看到过。大多数 Gradle 插件使用增强任务。通过增强任务，你不需要像使用简单任务一样实现任务行为。你只需要简单地声明该任务，并使用其属性来配置它。通过这种方式，增强任务允许让你在许多不同位置，甚至是跨不同构建，来复用某个行为。 <br>The other type of task is the enhanced task, where the behaviour is built into the task, and the task provides some properties which you can use to configure the behaviour. We have seen these in <a class="xref" href="more_about_tasks.html">Chapter&nbsp;15, <i>More about Tasks</i></a>. Most Gradle plugins use enhanced tasks. With enhanced tasks, you don't need to implement the task behaviour as you do with simple tasks. You simply declare the task and configure the task using its properties. In this way, enhanced tasks let you reuse a piece of behaviour in many different places, possibly across different builds.</p>
-   <p> 增强任务的行为和属性由任务的类定义。当你声明一个增强任务时，要指定该任务的类型或类。 <br>The behaviour and properties of an enhanced task is defined by the task's class. When you declare an enhanced task, you specify the type, or class of the task.</p>
-   <p> 在 Gradle 中实现自己的自定义任务类并不难。你可以使用你喜欢的任何语言来实现一个自定义任务类，只要它最终会被编译成字节码。在我们的示例中，我们将使用 Groovy 作为实现语言，但你也可以使用 Java 或 Scala。通常来说，使用 Groovy 是一种最简单的选择，因为 Gradle API 就是被设计为方便使用 Groovy 的。 <br>Implementing your own custom task class in Gradle is easy. You can implement a custom task class in pretty much any language you like, provided it ends up compiled to bytecode. In our examples, we are going to use Groovy as the implementation language, but you could use, for example, Java or Scala. In general, using Groovy is the easiest option, because the Gradle API is designed to work well with Groovy.</p>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N1651A"></a>57.1.&nbsp;封装一个任务类</h2>
-       <h4 class="title"><a name="N1651A"></a>57.1.&nbsp;Packaging a task class</h4>
-      </div>
-     </div>
-    </div>
-    <p>有几个地方可以放任务类的源码。 <br>There are several places where you can put the source for the task class.</p>
-    <div class="variablelist">
-     <dl>
-      <dt>
-       <span class="term">构建脚本<br>Build script</span>
-      </dt>
-      <dd>
-       <p>你可以直接在构建脚本中包含任务类。这样做的好处是，你不需要再另外做什么，这个任务类就会自动编译并包含在构建脚本的类路径中。但是在构建脚本之外，这个任务类是不可见的，因此你无法在定义这个它的构建脚本以外的地方复用这个任务类。 <br>You can include the task class directly in the build script. This has the benefit that the task class is automatically compiled and included in the classpath of the build script without you having to do anything. However, the task class is not visible outside the build script, and so you cannot reuse the task class outside the build script it is defined in.</p>
-      </dd>
-      <dt>
-       <span class="term"><code class="filename">buildSrc</code> 项目<br><code class="filename">buildSrc</code> project</span>
-      </dt>
-      <dd>
-       <p>您可以将任务类的源码放在 <code class="filename"><em class="replaceable"><code>rootProjectDir</code></em>/buildSrc/src/main/rootvy</code> 目录中。Gradle 将会编译和测试这个任务类，并使其在构建脚本的类路径中可用。这个任务类对该构建所使用的每个构建脚本都可见。然而，它在构建外部不可见，因此你无法在定义这个任务类的构建之外的其他地方来复用它。使用 <code class="filename">buildSrc</code> 项目方法能够保持任务声明——即任务应该做什么，与任务实现——即任务是怎么做的之间相互独立。<br>You can put the source for the task class in the <code class="filename"><em class="replaceable"><code>rootProjectDir</code></em>/buildSrc/src/main/groovy</code> directory. Gradle will take care of compiling and testing the task class and making it available on the classpath of the build script. The task class is visible to every build script used by the build. However, it is not visible outside the build, and so you cannot reuse the task class outside the build it is defined in. Using the <code class="filename">buildSrc</code> project approach keeps separate the task declaration - that is, what the task should do - from the task implementation - that is, how the task does it.</p>
-       <p> 有关<code class="filename">buildSrc</code> 项目的更详细信息，请参阅《<a class="xref" href="organizing_build_logic.html">第五十九章，<i>组织构建逻辑</i></a>》。<br>See <a class="xref" href="organizing_build_logic.html">Chapter&nbsp;59, <i>Organizing Build Logic</i></a> for more details about the <code class="filename">buildSrc</code> project.</p>
-      </dd>
-      <dt>
-       <span class="term">独立项目<br>Standalone project</span>
-      </dt>
-      <dd>
-       <p>你可以为你的任务类创建单独的项目。这个项目会生成和发布一个 JAR，你可以在多个构建中使用并分享出去。通常，这个 JAR 可能包含一些定制插件，或者将多个相关任务类捆绑到一个库中，或两者皆有。 <br>You can create a separate project for your task class. This project produces and publishes a JAR which you can then use in multiple builds and share with others. Generally, this JAR might include some custom plugins, or bundle several related task classes into a single library. Or some combination of the two.</p>
-      </dd>
-     </dl>
-    </div>
-    <p> 在我们的例子中，为了简单，我们将从在构建脚本中定义任务类开始。然后我们看一下创建一个独立的项目的方式。 <br>In our examples, we will start with the task class in the build script, to keep things simple. Then we will look at creating a standalone project.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N16546"></a>57.2.&nbsp;编写一个简单的任务类</h2>
-       <h4 class="title"><a name="N16546"></a>57.2.&nbsp;Writing a simple task class</h4>
-      </div>
-     </div>
-    </div>
-    <p>要实现自定义任务类，请扩展 <a class="ulink" href="../dsl/org.gradle.api.DefaultTask.html" target="_top"><code class="classname">DefaultTask</code></a>。 <br>To implement a custom task class, you extend <a class="ulink" href="../dsl/org.gradle.api.DefaultTask.html" target="_top"><code class="classname">DefaultTask</code></a>.</p>
-    <div class="example">
-     <a name="customTask"></a>
-     <p class="title"><b>示例 57.1. 定义一个自定义任务 - Example&nbsp;57.1.&nbsp;Defining a custom task</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingTask <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> DefaultTask {
-}</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>这个任务不执行任何有用的操作，所以我们来添加一些行为。为此，我们向任务添加一个方法，并使用 <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskAction.html" target="_top"><code class="classname">TaskAction</code></a> 注解标记它。当任务执行时，Gradle 将调用这个方法。你不必使用方法来定义任务的行为。比如，你可以在任务构造方法中调用 <code class="literal">doFirst()</code> 或 <code class="literal">doLast()</code> 并传入一个闭包来添加行为。 <br>This task doesn't do anything useful, so let's add some behaviour. To do so, we add a method to the task and mark it with the <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskAction.html" target="_top"><code class="classname">TaskAction</code></a> annotation. Gradle will call the method when the task executes. You don't have to use a method to define the behaviour for the task. You could, for instance, call <code class="literal">doFirst()</code> or <code class="literal">doLast()</code> with a closure in the task constructor to add behaviour.</p>
-    <div class="example">
-     <a name="customTaskWithAction"></a>
-     <p class="title"><b>示例 57.2. 一个 hello world 任务 - Example&nbsp;57.2.&nbsp;A hello world task</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task hello(type: GreetingTask)
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Writing Custom Task Classes - Gradle User Guide Version 2.14.1</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 2.14.1"><link rel="up" href="pt04.html" title="Part&nbsp;IV.&nbsp;Extending the build"><link rel="prev" href="pt04.html" title="Part&nbsp;IV.&nbsp;Extending the build"><link rel="next" href="custom_plugins.html" title="Writing Custom Plugins - Gradle User Guide Version 2.14.1"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pt04.html" title="Part&nbsp;IV.&nbsp;Extending the build">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="custom_plugins.html" title="Writing Custom Plugins - Gradle User Guide Version 2.14.1">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="custom_tasks"></a>Chapter&nbsp;38.&nbsp;Writing Custom Task Classes</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="custom_tasks.html#N14573">38.1. Packaging a task class</a></span></dt><dt><span class="section"><a href="custom_tasks.html#N1459F">38.2. Writing a simple task class</a></span></dt><dt><span class="section"><a href="custom_tasks.html#N145E8">38.3. A standalone project</a></span></dt><dt><span class="section"><a href="custom_tasks.html#incremental_tasks">38.4. Incremental tasks</a></span></dt></dl></div><p>Gradle supports two types of task. One such type is the simple task, where you define the task with an
+        action closure. We have seen these in <a class="xref" href="tutorial_using_tasks.html">Chapter&nbsp;14, <i>Build Script Basics</i></a>. For this type of task, the action
+        closure determines the behaviour of the task. This type of task is good for implementing one-off tasks in your
+        build script.
+    </p><p>
+        The other type of task is the enhanced task, where the behaviour is built into the task, and the task
+        provides some properties which you can use to configure the behaviour. We have seen these in
+        <a class="xref" href="more_about_tasks.html">Chapter&nbsp;17, <i>More about Tasks</i></a>. Most Gradle plugins use enhanced tasks. With enhanced tasks, you don't need
+        to implement the task behaviour as you do with simple tasks.
+        You simply declare the task and configure the task using its properties. In this way, enhanced tasks let you reuse
+        a piece of behaviour in many different places, possibly across different builds.
+    </p><p>
+        The behaviour and properties of an enhanced task is defined by the task's class. When you declare an enhanced task, you
+        specify the type, or class of the task.
+    </p><p>
+        Implementing your own custom task class in Gradle is easy.
+        You can implement a custom task class in pretty much any language you like, provided it ends up compiled to bytecode.
+        In our examples, we are going to use Groovy as the implementation language, but you could use, for example, Java
+        or Scala. In general, using Groovy is the easiest option, because the Gradle API is designed to work well with Groovy.
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N14573" class="section-anchor" href="#N14573"></a>38.1.&nbsp;Packaging a task class</h2></div></div></div><p>There are several places where you can put the source for the task class.
+        </p><div class="variablelist"><dl><dt><span class="term">Build script</span></dt><dd><p>You can include the task class directly in the build script. This has the benefit that the task class is
+                        automatically compiled and included in the classpath of the build script without you having to do anything.
+                        However, the task class is not visible outside the build script, and so you cannot reuse the task class
+                        outside the build script it is defined in.
+                    </p></dd><dt><span class="term"><code class="filename">buildSrc</code> project</span></dt><dd><p>You can put the source for the task class in the
+                        <code class="filename"><em class="replaceable"><code>rootProjectDir</code></em>/buildSrc/src/main/groovy</code> directory.
+                        Gradle will take care of compiling and testing the task class and making it available on the
+                        classpath of the build script. The task class is visible to every build script used by the build.
+                        However, it is not visible outside the build, and so you cannot reuse the task class outside the
+                        build it is defined in.
+                        Using the <code class="filename">buildSrc</code> project approach separates
+                        the task declaration - that is, what the task should do - from the task implementation - that is,
+                        how the task does it.</p><p>
+                        See <a class="xref" href="organizing_build_logic.html">Chapter&nbsp;41, <i>Organizing Build Logic</i></a> for more details about the <code class="filename">buildSrc</code>
+                        project.</p></dd><dt><span class="term">Standalone project</span></dt><dd><p>You can create a separate project for your task class. This project produces and
+                        publishes a JAR which you can then use in multiple builds and share with others. Generally, this JAR
+                        might include some custom plugins, or bundle several related task classes into a single library. Or
+                        some combination of the two.
+                    </p></dd></dl></div><p> In our examples, we will start with the task class in the build script, to keep things simple.
+            Then we will look at creating a standalone project.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N1459F" class="section-anchor" href="#N1459F"></a>38.2.&nbsp;Writing a simple task class</h2></div></div></div><p>To implement a custom task class, you extend <a class="ulink" href="../dsl/org.gradle.api.DefaultTask.html" target="_top"><code class="classname">DefaultTask</code></a>.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="customTask"></a><p class="title"><b>Example&nbsp;38.1.&nbsp;Defining a custom task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingTask <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> DefaultTask {
+}
+</pre></div></div><br class="example-break"><p>This task doesn't do anything useful, so let's add some behaviour. To do so, we add a method to the task
+            and mark it with the <a class="ulink" href="../javadoc/org/gradle/api/tasks/TaskAction.html" target="_top"><code class="classname">TaskAction</code></a> annotation. Gradle will call the
+            method when the task executes. You don't have to use a method to define the behaviour for the task. You
+            could, for instance, call <code class="literal">doFirst()</code> or <code class="literal">doLast()</code> with a closure in the
+            task constructor to add behaviour.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="customTaskWithAction"></a><p class="title"><b>Example&nbsp;38.2.&nbsp;A hello world task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task hello(type: GreetingTask)
 
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingTask <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> DefaultTask {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@TaskAction</span>
     def greet() {
         println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello from GreetingTask'</span>
     }
-}</pre>
-      <p><strong class="userinput"><code>gradle -q hello</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p>
-      <pre class="screen">&gt; gradle -q hello
-hello from GreetingTask</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>让我们添加一个属性到任务中，这样我们就可以自定义它。任务只是 POGO，当你声明一个任务时，可以在这个任务对象上设置属性或调用方法。这里我们添加了一个 <code class="literal">greeting</code> 属性，并在声明 <code class="literal">greeting</code> 任务时设置它的值。 <br>Let's add a property to the task, so we can customize it. Tasks are simply POGOs, and when you declare a task, you can set the properties or call methods on the task object. Here we add a <code class="literal">greeting</code> property, and set the value when we declare the <code class="literal">greeting</code> task.</p>
-    <div class="example">
-     <a name="customTaskWithProperty"></a>
-     <p class="title"><b>示例 57.3. 一个自定义的 hello world 任务 - Example&nbsp;57.3.&nbsp;A customizable hello world task</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Use the default greeting</span>
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+hello from GreetingTask</pre></div></div><br class="example-break"><p>Let's add a property to the task, so we can customize it. Tasks are simply POGOs, and when you declare a
+            task, you can set the properties or call methods on the task object. Here we add a <code class="literal">greeting</code>
+            property, and set the value when we declare the <code class="literal">greeting</code> task.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="customTaskWithProperty"></a><p class="title"><b>Example&nbsp;38.3.&nbsp;A customizable hello world task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Use the default greeting</span>
 task hello(type: GreetingTask)
 
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Customize the greeting</span>
@@ -132,49 +73,20 @@ task greeting(type: GreetingTask) {
     def greet() {
         println greeting
     }
-}</pre>
-      <p><strong class="userinput"><code>gradle -q hello greeting</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q hello greeting</code></strong></p>
-      <pre class="screen">&gt; gradle -q hello greeting
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q hello greeting</code></strong></p><pre class="screen">&gt; gradle -q hello greeting
 hello from GreetingTask
-greetings from GreetingTask</pre>
-     </div>
-    </div>
-    <br class="example-break">
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N1658F"></a>57.3. 独立项目</h2>
-       <h4 class="title"><a name="N1658F"></a>57.3.&nbsp;A standalone project</h4>
-      </div>
-     </div>
-    </div>
-    <p>现在我们将任务移到一个独立的项目中，这样我们就可以发布它，并与他人共享。这个项目只是一个 Groovy 项目，其将生成包含任务类的 JAR。以下是该项目的一个简单的构建脚本。它应用了 Groovy 插件，并将 Gradle API 添加为编译时依赖。 <br>Now we will move our task to a standalone project, so we can publish it and share it with others. This project is simply a Groovy project that produces a JAR containing the task class. Here is a simple build script for the project. It applies the Groovy plugin, and adds the Gradle API as a compile-time dependency.</p>
-    <div class="example">
-     <a name="customTaskStandalone"></a>
-     <p class="title"><b>示例 57.4. 一个自定义任务的构建 - Example&nbsp;57.4.&nbsp;A build for a custom task</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy'</span>
+greetings from GreetingTask</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N145E8" class="section-anchor" href="#N145E8"></a>38.3.&nbsp;A standalone project</h2></div></div></div><p>Now we will move our task to a standalone project, so we can publish it and share it with others.
+            This project is simply a Groovy project that produces a JAR containing the task class.
+            Here is a simple build script for the project. It applies the Groovy plugin, and adds the Gradle API
+            as a compile-time dependency.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="customTaskStandalone"></a><p class="title"><b>Example&nbsp;38.4.&nbsp;A build for a custom task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply plugin: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'groovy'</span>
 
 dependencies {
     compile gradleApi()
     compile localGroovy()
-}</pre>
-      <div class="exampleLocation">
-       <p><span class="emphasis"><em>注意：</em></span>此例子的代码可以在 Gradle 的二进制文件或源码里的 <code class="filename">samples/customPlugin/plugin</code> 中看到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/customPlugin/plugin</code> which is in both the binary and source distributions of Gradle.</p>
-      </div>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>我们只是按照约定将任务类的源码放在对应的位置。.<br>We just follow the convention for where the source for the task class should go.</p>
-    <div class="example">
-     <a name="customTaskStandalone"></a>
-     <p class="title"><b>示例 57.5. 自定义任务 - Example&nbsp;57.5.&nbsp;A custom task</b></p>
-     <div class="example-contents">
-      <p><code class="filename">src/main/groovy/org/gradle/GreetingTask.groovy</code></p>
-      <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">package</span> org.gradle
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/customPlugin/plugin</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"><p>We just follow the convention for where the source for the task class should go.</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="customTaskStandalone"></a><p class="title"><b>Example&nbsp;38.5.&nbsp;A custom task</b></p><div class="example-contents"><p><code class="filename">src/main/groovy/org/gradle/GreetingTask.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">package</span> org.gradle
 
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.gradle.api.DefaultTask
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.gradle.api.tasks.TaskAction
@@ -186,104 +98,58 @@ dependencies {
     def greet() {
         println greeting
     }
-}</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <div class="section">
-     <div class="titlepage">
-      <div>
-       <div>
-        <h3 class="title"><a name="N165B3"></a>57.3.1.&nbsp;在另一个项目中使用你的任务类</h3>
-        <h5 class="title"><a name="N165B3"></a>57.3.1.&nbsp;Using your task class in another project</h5>
-       </div>
-      </div>
-     </div>
-     <p>要在一个构建脚本中使用一个任务类，你需要将这个类添加到构建脚本的类路径中。要做到这一点，请使用《<a class="xref" href="organizing_build_logic.html#sec:external_dependencies">第 59.5 节，“构建脚本的外部依赖”</a>》中所述的 <code class="literal">buildscript { }</code> 块。以下示例展示了当包含任务类的 JAR 已发布到本地存储库时，你可以如何操作。 <br>To use a task class in a build script, you need to add the class to the build script's classpath. To do this, you use a <code class="literal">buildscript { }</code> block, as described in <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;59.5, “External dependencies for the build script”</a>. The following example shows how you might do this when the JAR containing the task class has been published to a local repository:</p>
-     <div class="example">
-      <a name="usingCustomTask"></a>
-      <p class="title"><b>示例 57.6. 在另一个项目中使用自定义任务 - Example&nbsp;57.6.&nbsp;Using a custom task in another project</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting">buildscript {
+}
+</pre></div></div><br class="example-break"><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N1460C" class="section-anchor" href="#N1460C"></a>38.3.1.&nbsp;Using your task class in another project</h3></div></div></div><p>To use a task class in a build script, you need to add the class to the build script's classpath. To
+                do this, you use a <code class="literal">buildscript { }</code> block, as described in <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;41.6, &ldquo;External dependencies for the build script&rdquo;</a>.
+                The following example shows how you might do this when the JAR containing the task class has been published
+                to a local repository:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="usingCustomTask"></a><p class="title"><b>Example&nbsp;38.6.&nbsp;Using a custom task in another project</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">buildscript {
     repositories {
         maven {
             url uri(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'../repo'</span>)
         }
     }
     dependencies {
-        classpath group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'customPlugin'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0-SNAPSHOT'</span>
+        classpath group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.gradle'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'customPlugin'</span>,
+                  version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.0-SNAPSHOT'</span>
     }
 }
 
 task greeting(type: org.gradle.GreetingTask) {
     greeting = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'howdy!'</span>
-}</pre>
-      </div>
-     </div>
-     <br class="example-break">
-    </div>
-    <div class="section">
-     <div class="titlepage">
-      <div>
-       <div>
-        <h3 class="title"><a name="N165C8"></a>57.3.2.&nbsp;为你的任务类编写测试</h3>
-        <h5 class="title"><a name="N165C8"></a>57.3.2.&nbsp;Writing tests for your task class</h5>
-       </div>
-      </div>
-     </div>
-     <p>你可以使用 <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> 类来创建 <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> 实例以在测试任务类时使用。 <br>You can use the <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> class to create <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> instances to use when you test your task class.</p>
-     <div class="example">
-      <a name="customTaskStandalone"></a>
-      <p class="title"><b>示例 57.7. 测试自定义任务 - Example&nbsp;57.7.&nbsp;Testing a custom task</b></p>
-      <div class="example-contents">
-       <p><code class="filename">src/test/groovy/org/gradle/GreetingTaskTest.groovy</code></p>
-       <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingTaskTest {
+}
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N14621" class="section-anchor" href="#N14621"></a>38.3.2.&nbsp;Writing tests for your task class</h3></div></div></div><p>You can use the <a class="ulink" href="../javadoc/org/gradle/testfixtures/ProjectBuilder.html" target="_top"><code class="classname">ProjectBuilder</code></a> class to create
+                <a class="ulink" href="../dsl/org.gradle.api.Project.html" target="_top"><code class="classname">Project</code></a> instances to use when you test your task class.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="customTaskStandalone"></a><p class="title"><b>Example&nbsp;38.7.&nbsp;Testing a custom task</b></p><div class="example-contents"><p><code class="filename">src/test/groovy/org/gradle/GreetingTaskTest.groovy</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> GreetingTaskTest {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@Test</span>
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">public</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> canAddTaskToProject() {
         Project project = ProjectBuilder.builder().build()
         def task = project.task(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'greeting'</span>, type: GreetingTask)
         assertTrue(task <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">instanceof</span> GreetingTask)
     }
-}</pre>
-      </div>
-     </div>
-     <br class="example-break">
-    </div>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="incremental_tasks"></a>57.4.&nbsp;增量任务</h2>
-       <h4 class="title"><a name="incremental_tasks"></a>57.4.&nbsp;Incremental tasks</h4>
-      </div>
-     </div>
-    </div>
-    <div class="note">
-     <p> 增量任务还是一个<a class="link" href="feature_lifecycle.html">实验性</a> 功能。 <br>Incremental tasks are an <a class="link" href="feature_lifecycle.html">incubating</a> feature.</p>
-     <p> 从上面所述的实现的引入（在 Gradle 1.6 发布周期的早期）以来，Gradle 社区内部的讨论中就产生了一些出色的想法，将有关任务实现者的更改信息暴露到下面所述内容中。因此，这个功能的 API 几乎可以肯定将在即将推出的版本中进行更改。但是，请对当前的实现做实现，并与 Gradle 社区分享你的经验。 <br>Since the introduction of the implementation described above (early in the Gradle 1.6 release cycle), discussions within the Gradle community have produced superior ideas for exposing the information about changes to task implementors to what is described below. As such, the API for this feature will almost certainly change in upcoming releases. However, please do experiment with the current implementation and share your experiences with the Gradle community.</p>
-     <p> 这个功能孵化过程是 Gradle 功能生命周期的一部分（参见《<a class="xref" href="feature_lifecycle.html">附录&nbsp;C，<i>功能的生命周期</i></a>》），它存在的目的是为了整合早期用户的反馈内容来确保高质量的最终实现。 <br>The feature incubation process, which is part of the Gradle feature lifecycle (see <a class="xref" href="feature_lifecycle.html">Appendix&nbsp;C, <i>The Feature Lifecycle</i></a>), exists for this purpose of ensuring high quality final implementation through incorporation of early user feedback.</p>
-    </div>
-    <p> 通过 Gradle，实现一个在所有输入和输出都是最新状态时跳过的任务是非常简单的（参见《<a class="xref" href="more_about_tasks.html#sec:up_to_date_checks">第 15.9 节，“跳过最新的任务”</a>）。然而，有时候从上次执行以来，只有少数输入文件发生了更改，而你想避免重新处理所有未修改的输入。这对于将输入文件按1:1的基础转换为输出文件的转换任务来说特别有用。 <br>With Gradle, it's very simple to implement a task that gets skipped when all of it's inputs and outputs are up to date (see <a class="xref" href="more_about_tasks.html#sec:up_to_date_checks">Section&nbsp;15.9, “Skipping tasks that are up-to-date”</a>). However, there are times when only a few input files have changed since the last execution, and you'd like to avoid reprocessing all of the unchanged inputs. This can be particularly useful for a transformer task, that converts input files to output files on a 1:1 basis.</p>
-    <p> 如果你想优化你的构建，以便只处理已过时的输入，你可以使用<em class="firstterm">增量任务</em>执行此操作。 <br>If you'd like to optimise your build so that only out-of-date inputs are processed, you can do so with an <em class="firstterm">incremental task</em>.</p>
-    <div class="section">
-     <div class="titlepage">
-      <div>
-       <div>
-        <h3 class="title"><a name="N165FD"></a>57.4.1.&nbsp;实现增量任务</h3>
-        <h5 class="title"><a name="N165FD"></a>57.4.1.&nbsp;Implementing an incremental task</h5>
-       </div>
-      </div>
-     </div>
-     <p> 对于一个要增量处理输入的任务，它必须包含一个<em class="firstterm">增量任务操作</em>。这是一个任务操作方法，它包含了一个 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html" target="_top"><code class="classname">IncrementalTaskInputs</code></a> 参数，该参数提示 Gradle 这个操作将只处理那些更改的输入。 <br>For a task to process inputs incrementally, that task must contain an <em class="firstterm">incremental task action</em>. This is a task action method that contains a single <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html" target="_top"><code class="classname">IncrementalTaskInputs</code></a> parameter, which indicates to Gradle that the action will process the changed inputs only.</p>
-     <p> 这个增量任务操作可以提供一个 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> 操作来处理所有过时的输入文件，以及一个对自上次执行以来已经被删除的文件执行的 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed()</code></a> 操作。 <br>The incremental task action may supply an <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> action for processing any input file that is out-of-date, and a <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed()</code></a> action that executes for any input file that has been removed since the previous execution.</p>
-     <div class="example">
-      <a name="taskDefinition"></a>
-      <p class="title"><b>示例 57.8. 定义增量任务操作 - Example&nbsp;57.8.&nbsp;Defining an incremental task action</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> IncrementalReverseTask <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> DefaultTask {
+}
+</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="incremental_tasks" class="section-anchor" href="#incremental_tasks"></a>38.4.&nbsp;Incremental tasks</h2></div></div></div><div class="note"><p>
+                Incremental tasks are an <a class="link" href="feature_lifecycle.html">incubating</a> feature.
+            </p><p>
+                Since the introduction of the implementation described above (early in the Gradle 1.6 release cycle), discussions within the Gradle community have produced
+                superior ideas for exposing the information about changes to task implementors to what is described below. As such, the API for this feature will almost certainly
+                change in upcoming releases. However, please do experiment with the current implementation and share your experiences with the Gradle community.
+            </p><p>
+                The feature incubation process, which is part of the Gradle feature lifecycle (see <a class="xref" href="feature_lifecycle.html">Appendix&nbsp;C, <i>The Feature Lifecycle</i></a>), exists for this purpose of ensuring high quality
+                final implementations through incorporation of early user feedback.
+            </p></div><p>
+            With Gradle, it's very simple to implement a task that gets skipped when all of it's inputs and outputs are up to date (see <a class="xref" href="more_about_tasks.html#sec:up_to_date_checks">Section&nbsp;17.9, &ldquo;Skipping tasks that are up-to-date&rdquo;</a>).
+            However, there are times when only a few input files have changed since the last execution, and you'd like to avoid reprocessing all of the unchanged inputs.
+            This can be particularly useful for a transformer task, that converts input files to output files on a 1:1 basis.
+        </p><p>
+            If you'd like to optimise your build so that only out-of-date inputs are processed, you can do so with an <em class="firstterm">incremental task</em>.
+        </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N14656" class="section-anchor" href="#N14656"></a>38.4.1.&nbsp;Implementing an incremental task</h3></div></div></div><p>
+                For a task to process inputs incrementally, that task must contain an <em class="firstterm">incremental task action</em>. This is a task action method that contains a
+                single <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html" target="_top"><code class="classname">IncrementalTaskInputs</code></a> parameter, which indicates to Gradle that the action will process the changed inputs only.
+            </p><p>
+                The incremental task action may supply an <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate(org.gradle.api.Action)</code></a> action for processing any input file that is out-of-date,
+                and a <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed(org.gradle.api.Action)</code></a> action that executes for any input file that has been removed since the previous execution.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="taskDefinition"></a><p class="title"><b>Example&nbsp;38.8.&nbsp;Defining an incremental task action</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> IncrementalReverseTask <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">extends</span> DefaultTask {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@InputDirectory</span>
     def File inputDir
 
@@ -295,7 +161,11 @@ task greeting(type: org.gradle.GreetingTask) {
 
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-annotation">@TaskAction</span>
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> execute(IncrementalTaskInputs inputs) {
-        println inputs.incremental ? <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"CHANGED inputs considered out of date"</span> : <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"ALL inputs considered out of date"</span>
+        println inputs.incremental ? <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"CHANGED inputs considered out of date"</span>
+                                   : <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"ALL inputs considered out of date"</span>
+        <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (!inputs.incremental)
+            project.delete(outputDir.listFiles())
+
         inputs.outOfDate { change -&gt;
             println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"out of date: ${change.file.name}"</span>
             def targetFile = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> File(outputDir, change.file.name)
@@ -308,165 +178,87 @@ task greeting(type: org.gradle.GreetingTask) {
             targetFile.delete()
         }
     }
-}</pre>
-       <div class="exampleLocation">
-        <p><span class="emphasis"><em>注︰</em> </span>此示例的代码可以在 Gradle 的二进制及源码分发包的 <code class="filename">samples/userguide/tasks/incrementalTask</code> 中找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/tasks/incrementalTask</code> which is in both the binary and source distributions of Gradle.</p>
-       </div>
-      </div>
-     </div>
-     <br class="example-break">
-     <p> 对于像这样的简单转换任务，任务操作只需要对任何过时的输入生成输出文件，并删除任何已移除的输入的输出文件。 <br>For a simple transformer task like this, the task action simply needs to generate output files for any out-of-date inputs, and delete output files for any removed inputs.</p>
-     <p> 一个任务可能只包含一个增量任务操作。 <br>A task may only contain a single incremental task action.</p>
-    </div>
-    <div class="section">
-     <div class="titlepage">
-      <div>
-       <div>
-        <h3 class="title"><a name="N1662D"></a>57.4.2.&nbsp;哪些输入是被视为过时的？</h3>
-        <h5 class="title"><a name="N1662D"></a>57.4.2.&nbsp;Which inputs are considered out of date?</h5>
-       </div>
-      </div>
-     </div>
-     <p> 当 Gradle 有了前一次任务执行的历史，并且从那一次执行之后任务执行的上下文中只有输入有修改，那么 Gradle 就能够确定这个任务需要重新处理哪些文件。在这种情况下，将对<span class="emphasis"><span class="emphasis"><em>已添加的</em></span>或<span class="emphasis"><em>已修改的</em></span>的输入文件执行 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> 操作，并且对任何<span class="emphasis"><em>已移除的</em></span>输入文件执行 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removal()</code></a> 操作。 </span><br>When Gradle has history of a previous task execution, and the only changes to the task execution context since that execution are to input files, then Gradle is able to determine which input files need to be reprocessed by the task. In this case, the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> action will be executed for any input file that was <span class="emphasis"><em>added</em></span> or <span class="emphasis"><em>modified</em></span>, and the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed()</code></a> action will be executed for any <span class="emphasis"><em>removed</em></span> input file.</p>
-     <p> 然而，有许多情况下，Gradle 还是无法确定需要重新处理哪些输入文件。包括比如： <br>However, there are many cases where Gradle is unable to determine which input files need to be reprocessed. Examples include:</p>
-     <div class="itemizedlist">
-      <ul class="itemizedlist">
-       <li class="listitem">没有自上次执行以来的有效历史记录。<br>There is no history available from a previous execution.</li>
-       <li class="listitem">你正在使用不同版本的 Gradle 构建。Gradle 目前不使用来自不同版本的任务历史记录。<br>You are building with a different version of Gradle. Currently, Gradle does not use task history from a different version.</li>
-       <li class="listitem">添加到任务的 <code class="literal">upToDateWhen</code> 条件返回 <code class="literal">false</code>。<br>An <code class="literal">upToDateWhen</code> criteria added to the task returns <code class="literal">false</code>.</li>
-       <li class="listitem">自上次执行以来，输入属性已有修改。<br>An input property has changed since the previous execution.</li>
-       <li class="listitem">自上次执行以来，一有个或多个的输出文件已更改。<br>One or more output files have changed since the previous execution.</li>
-      </ul>
-     </div>
-     <p> 在以上所述的任一情况下，Gradle 将把所有输入文件视为 <code class="literal">outOfDate</code>，然后会对每个输入文件执行 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> 操作，并且将不再执行 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removremoval()</code></a> 操作。 <br>In any of these cases, Gradle will consider all of the input files to be <code class="literal">outOfDate</code>. The <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> action will be executed for every input file, and the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed()</code></a> action will not be executed at all.</p>
-     <p> 你可以使用 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:incremental" target="_top"><code class="classname">IncrementalTaskInputs.isIncremental()</code></a> 来检查 Gradle 是否能够确定输入文件的增量更改。 <br>You can check if Gradle was able to determine the incremental changes to input files with <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:incremental" target="_top"><code class="classname">IncrementalTaskInputs.isIncremental()</code></a>.</p>
-    </div>
-    <div class="section">
-     <div class="titlepage">
-      <div>
-       <div>
-        <h3 class="title"><a name="N1666E"></a>57.4.3.&nbsp;增量任务的操作</h3>
-        <h5 class="title"><a name="N1666E"></a>57.4.3.&nbsp;An incremental task in action</h5>
-       </div>
-      </div>
-     </div>
-     <p> 考虑到<a class="link" href="custom_tasks.html#taskDefinition" title="示例 57.8. 定义增量任务操作">上面的</a>增量任务实现，我们可以通过示例探讨各种更改场景。请注意，各种变化的任务（“updateInputs”，“removeInput”等）仅用于演示：它们通常不会在构建脚本中。 <br>Given the incremental task implementation <a class="link" href="custom_tasks.html#taskDefinition" title="Example&nbsp;57.8.&nbsp;Defining an incremental task action">above</a>, we can explore the various change scenarios by example. Note that the various mutation tasks ('updateInputs', 'removeInput', etc) are only present for demonstration purposes: these would not normally be part of your build script.</p>
-     <p> 首先，考虑到 <code class="literal">IncrementalReverseTask</code> 第一次针对一组输入执行。在这种情况下，所有输入都将认为是“过时的”： <br>First, consider the <code class="literal">IncrementalReverseTask</code> executed against a set of inputs for the first time. In this case, all inputs will be considered "out of date":</p>
-     <div class="example">
-      <a name="incrementalTaskFirstRun"></a>
-      <p class="title"><b>示例 57.9. 首次运行增量任务 - Example&nbsp;57.9.&nbsp;Running the incremental task for the first time</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting">task incrementalReverse(type: IncrementalReverseTask) {
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/userguide/tasks/incrementalTask</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"><p>
+                If for some reason the task is not run incremental, e.g. by running with --rerun-tasks, only the
+                outOfDate action is executed, even if there where deleted input files. You should consider handling this
+                case at the beginning, as is done in the example above.
+            </p><p>
+                For a simple transformer task like this, the task action simply needs to generate output files for any out-of-date inputs,
+                and delete output files for any removed inputs.
+            </p><p>
+                A task may only contain a single incremental task action.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N14688" class="section-anchor" href="#N14688"></a>38.4.2.&nbsp;Which inputs are considered out of date?</h3></div></div></div><p>
+                When Gradle has history of a previous task execution, and the only changes to the task execution context since that execution are to input files,
+                then Gradle is able to determine which input files need to be reprocessed by the task.
+                In this case, the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate(org.gradle.api.Action)</code></a> action will be executed for any input file that was <span class="emphasis"><em>added</em></span> or <span class="emphasis"><em>modified</em></span>,
+                and the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed(org.gradle.api.Action)</code></a> action will be executed for any <span class="emphasis"><em>removed</em></span> input file.
+            </p><p>
+                However, there are many cases where Gradle is unable to determine which input files need to be reprocessed. Examples include:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">There is no history available from a previous execution.</li><li class="listitem">You are building with a different version of Gradle. Currently, Gradle does not use task history from a different version.</li><li class="listitem">An <code class="literal">upToDateWhen</code> criteria added to the task returns <code class="literal">false</code>.</li><li class="listitem">An input property has changed since the previous execution.</li><li class="listitem">One or more output files have changed since the previous execution.</li></ul></div><p>
+                In any of these cases, Gradle will consider all of the input files to be <code class="literal">outOfDate</code>.
+                The <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate(org.gradle.api.Action)</code></a> action will be executed for every input file, and the
+                <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed(org.gradle.api.Action)</code></a> action will not be executed at all.
+            </p><p>
+                You can check if Gradle was able to determine the incremental changes to input files with <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:incremental" target="_top"><code class="classname">IncrementalTaskInputs.isIncremental()</code></a>.
+            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N146C9" class="section-anchor" href="#N146C9"></a>38.4.3.&nbsp;An incremental task in action</h3></div></div></div><p>
+                Given the incremental task implementation <a class="link" href="custom_tasks.html#taskDefinition" title="Example&nbsp;38.8.&nbsp;Defining an incremental task action">above</a>, we can explore the various change scenarios by example.
+                Note that the various mutation tasks ('updateInputs', 'removeInput', etc) are only present for demonstration purposes: these would not normally be part of your build script.
+            </p><p>
+                First, consider the <code class="literal">IncrementalReverseTask</code> executed against a set of inputs for the first time.
+                In this case, all inputs will be considered &ldquo;out of date&rdquo;:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="incrementalTaskFirstRun"></a><p class="title"><b>Example&nbsp;38.9.&nbsp;Running the incremental task for the first time</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task incrementalReverse(type: IncrementalReverseTask) {
     inputDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'inputs'</span>)
     outputDir = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/outputs"</span>)
     inputProperty = project.properties[<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'taskInputProperty'</span>] ?: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"original"</span>
-}</pre>
-       <p>构建布局<br>Build layout</p>
-       <pre class="programlisting">incrementalTask/
+}
+</pre><p>Build layout</p><pre class="programlisting">incrementalTask/
   build.gradle
   inputs/
     1.txt
     2.txt
-    3.txt</pre>
-       <p><strong class="userinput"><code>gradle -q incrementalReverse</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q incrementalReverse</code></strong></p>
-       <pre class="screen">&gt; gradle -q incrementalReverse
+    3.txt
+</pre><p>Output of <strong class="userinput"><code>gradle -q incrementalReverse</code></strong></p><pre class="screen">&gt; gradle -q incrementalReverse
 ALL inputs considered out of date
 out of date: 1.txt
 out of date: 2.txt
-out of date: 3.txt</pre>
-      </div>
-     </div>
-     <br class="example-break">
-     <p> 当然，当再次执行任务时没有任何修改，那么任务本身是最新的，并且不会向这个任务操作报告任何文件： <br>Naturally when the task is executed again with no changes, then task itself is up to date and no files are reported to the task action:</p>
-     <div class="example">
-      <a name="incrementalTaskNoChange"></a>
-      <p class="title"><b>示例 57.10. 在输入不变时运行增量任务 - Example&nbsp;57.10.&nbsp;Running the incremental task with unchanged inputs</b></p>
-      <div class="example-contents">
-       <p><strong class="userinput"><code>gradle -q incrementalReverse</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q incrementalReverse</code></strong></p>
-       <pre class="screen">&gt; gradle -q incrementalReverse</pre>
-      </div>
-     </div>
-     <br class="example-break">
-     <p> 当以某种方式修改了输入文件，或者新增输入文件时，重新执行这个任务会使这些文件被上报到 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a>： <br>When an input file is modified in some way or a new input file is added, then re-executing the task results in those files being reported to <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a>:</p>
-     <div class="example">
-      <a name="incrementalTaskUpdatedInputs"></a>
-      <p class="title"><b>示例 57.11. 有输入文件更新时运行增量任务 - Example&nbsp;57.11.&nbsp;Running the incremental task with updated input files</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting">task updateInputs() &lt;&lt; {
+out of date: 3.txt</pre></div></div><br class="example-break"><p>
+                Naturally when the task is executed again with no changes, then the entire task is up to date and no files are reported to the task action:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="incrementalTaskNoChange"></a><p class="title"><b>Example&nbsp;38.10.&nbsp;Running the incremental task with unchanged inputs</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q incrementalReverse</code></strong></p><pre class="screen">&gt; gradle -q incrementalReverse
+</pre></div></div><br class="example-break"><p>
+                When an input file is modified in some way or a new input file is added, then re-executing the task results in those files being reported to <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate(org.gradle.api.Action)</code></a>:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="incrementalTaskUpdatedInputs"></a><p class="title"><b>Example&nbsp;38.11.&nbsp;Running the incremental task with updated input files</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task updateInputs() &lt;&lt; {
     file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'inputs/1.txt'</span>).text = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Changed content for existing file 1."</span>
     file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'inputs/4.txt'</span>).text = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Content for new file 4."</span>
-}</pre>
-       <p><strong class="userinput"><code>gradle -q updateInputs incrementalReverse</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q updateInputs incrementalReverse</code></strong></p>
-       <pre class="screen">&gt; gradle -q updateInputs incrementalReverse
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q updateInputs incrementalReverse</code></strong></p><pre class="screen">&gt; gradle -q updateInputs incrementalReverse
 CHANGED inputs considered out of date
 out of date: 1.txt
-out of date: 4.txt</pre>
-      </div>
-     </div>
-     <br class="example-break">
-     <p> 当删除一个现有的输入文件后，重新执行这个任务会使该文件被报告给 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removal()</code></a>： <br>When an existing input file is removed, then re-executing the task results that file being reported to <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed()</code></a>:</p>
-     <div class="example">
-      <a name="incrementalTaskRemovedInput"></a>
-      <p class="title"><b>示例 57.12. 当输入文件被删除时运行增量任务 - Example&nbsp;57.12.&nbsp;Running the incremental task with an input file removed</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting">task removeInput() &lt;&lt; {
+out of date: 4.txt</pre></div></div><br class="example-break"><p>
+                When an existing input file is removed, then re-executing the task results in that file being reported to <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed(org.gradle.api.Action)</code></a>:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="incrementalTaskRemovedInput"></a><p class="title"><b>Example&nbsp;38.12.&nbsp;Running the incremental task with an input file removed</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task removeInput() &lt;&lt; {
     file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'inputs/3.txt'</span>).delete()
-}</pre>
-       <p><strong class="userinput"><code>gradle -q removeInput incrementalReverse</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q removeInput incrementalReverse</code></strong></p>
-       <pre class="screen">&gt; gradle -q removeInput incrementalReverse
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q removeInput incrementalReverse</code></strong></p><pre class="screen">&gt; gradle -q removeInput incrementalReverse
 CHANGED inputs considered out of date
-removed: 3.txt</pre>
-      </div>
-     </div>
-     <br class="example-break">
-     <p> 当删除（或修改）输出文件时，Gradle 无法确定哪些输入文件是已过时的。在这种情况下，<span class="emphasis"><em>所有的</em></span> 输入文件都会被报告给 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> 操作，并且不会向 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removal()</code></a> 操作报告任何输入文件： <br>When an output file is deleted (or modified), then Gradle is unable to determine which input files are out of date. In this case, <span class="emphasis"><em>all</em></span> input files are reported to the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> action, and no input files are reported to the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed()</code></a> action:</p>
-     <div class="example">
-      <a name="incrementalTaskRemovedOutput"></a>
-      <p class="title"><b>示例 57.13. 当输出文件被删除时运行增量任务 - Example&nbsp;57.13.&nbsp;Running the incremental task with an output file removed</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting">task removeOutput() &lt;&lt; {
+removed: 3.txt</pre></div></div><br class="example-break"><p>
+                When an output file is deleted (or modified), then Gradle is unable to determine which input files are out of date.
+                In this case, <span class="emphasis"><em>all</em></span> input files are reported to the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate(org.gradle.api.Action)</code></a> action,
+                and no input files are reported to the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed(org.gradle.api.Action)</code></a> action:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="incrementalTaskRemovedOutput"></a><p class="title"><b>Example&nbsp;38.13.&nbsp;Running the incremental task with an output file removed</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task removeOutput() &lt;&lt; {
     file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$buildDir/outputs/1.txt"</span>).delete()
-}</pre>
-       <p><strong class="userinput"><code>gradle -q removeOutput incrementalReverse</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q removeOutput incrementalReverse</code></strong></p>
-       <pre class="screen">&gt; gradle -q removeOutput incrementalReverse
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q removeOutput incrementalReverse</code></strong></p><pre class="screen">&gt; gradle -q removeOutput incrementalReverse
 ALL inputs considered out of date
 out of date: 1.txt
 out of date: 2.txt
-out of date: 3.txt</pre>
-      </div>
-     </div>
-     <br class="example-break">
-     <p> 当修改任务的输入属性时，Gradle 无法确定该属性对任务的输出会有怎样的影响，因此将假定所有输入文件都已过时。所以与更改输出文件的示例类似，<span class="emphasis"><em>所有的</em></span>输入文件将报告给 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> 操作，并且不会向 <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removal()</code></a> 操作报告任何输入文件： <br>When a task input property modified, Gradle is not able to determine how this property impacted the task outputs, so all input files are assumed to be out of date. So similar to the changed output file example, <span class="emphasis"><em>all</em></span> input files are reported to the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate()</code></a> action, and no input files are reported to the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed()</code></a> action:</p>
-     <div class="example">
-      <a name="incrementalTaskChangedProperty"></a>
-      <p class="title"><b>示例 57.14. 当输入属性被更改时运行增量任务 - Example&nbsp;57.14.&nbsp;Running the incremental task with an input property changed</b></p>
-      <div class="example-contents">
-       <p><strong class="userinput"><code>gradle -q -PtaskInputProperty=changed incrementalReverse</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q -PtaskInputProperty=changed incrementalReverse</code></strong></p>
-       <pre class="screen">&gt; gradle -q -PtaskInputProperty=changed incrementalReverse
+out of date: 3.txt</pre></div></div><br class="example-break"><p>
+                When a task input property is modified, Gradle is unable to determine how this property impacted the task outputs, so all input files are assumed to be out of date.
+                So similar to the changed output file example, <span class="emphasis"><em>all</em></span> input files are reported to
+                the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:outOfDate(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.outOfDate(org.gradle.api.Action)</code></a> action,
+                and no input files are reported to the <a class="ulink" href="../dsl/org.gradle.api.tasks.incremental.IncrementalTaskInputs.html#org.gradle.api.tasks.incremental.IncrementalTaskInputs:removed(org.gradle.api.Action)" target="_top"><code class="classname">IncrementalTaskInputs.removed(org.gradle.api.Action)</code></a> action:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="incrementalTaskChangedProperty"></a><p class="title"><b>Example&nbsp;38.14.&nbsp;Running the incremental task with an input property changed</b></p><div class="example-contents"><p>Output of <strong class="userinput"><code>gradle -q -PtaskInputProperty=changed incrementalReverse</code></strong></p><pre class="screen">&gt; gradle -q -PtaskInputProperty=changed incrementalReverse
 ALL inputs considered out of date
 out of date: 1.txt
 out of date: 2.txt
-out of date: 3.txt</pre>
-      </div>
-     </div>
-     <br class="example-break">
-    </div>
-   </div>
-  </div>
-  <div class="navfooter">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="multi_project_builds.html" title="第五十六章.&nbsp;多项目构建">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="custom_plugins.html" title="第五十八章. 编写自定义插件">下一章</a>
-    </div>
-   </div>
-  </div>
- </body>
-</html>
+out of date: 3.txt</pre></div></div><br class="example-break"></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pt04.html" title="Part&nbsp;IV.&nbsp;Extending the build">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="custom_plugins.html" title="Writing Custom Plugins - Gradle User Guide Version 2.14.1">Next</a></div></div></div></body></html>

@@ -1,107 +1,58 @@
-<html>
- <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>第五十九章. 组织构建逻辑 - Chapter&nbsp;59.&nbsp;Organizing Build Logic</title>
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
-  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
-  <link rel="home" href="userguide.html" title="Gradle 用户指南">
-  <link rel="up" href="userguide.html" title="Gradle 用户指南">
-  <link rel="prev" href="custom_plugins.html" title="第五十八章. 编写自定义插件">
-  <link rel="next" href="init_scripts.html" title="第六十章. 初始化脚本">
- </head>
- <body>
-  <div class="navheader">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="custom_plugins.html" title="第五十八章. 编写自定义插件">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="第六十章. 初始化脚本">下一章</a>
-    </div>
-   </div>
-  </div>
-  <div class="chapter">
-   <div class="titlepage">
-    <div>
-     <div>
-      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="organizing_build_logic"></a>第五十九章. 组织构建逻辑</h1>
-      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="organizing_build_logic"></a>Chapter&nbsp;59.&nbsp;Organizing Build Logic</h3>
-     </div>
-    </div>
-   </div>
-   <p>Gradle提供了多种方法来组织构建逻辑。首先，你可以直接将构建逻辑置于任务的操作闭包中。如果有多个任务使用相同的逻辑，那么可以将这段逻辑抽取到一个方法中。如果多项目构建的多个项目有相同的逻辑，你可以把这个方法定义在父项目中。如果构建逻辑过于复杂，无法通过方法进行正确建模，你就要使用面向对象模型了。<sup>[<a href="#ftn.N16866" name="N16866" class="footnote">25</a>]</sup>这对 Gradle 来说很简单，只需要把你的类放到某个目录中，Gradle 就会自动编译它们并将它们加入构建脚本的类路径中。 <br>Gradle offers a variety of ways to organize your build logic. First of all you can put your build logic directly in the action closure of a task. If a couple of tasks share the same logic you can extract this logic into a method. If multiple projects of a multi-project build share some logic you can define this method in the parent project. If the build logic gets too complex for being properly modeled by methods you want have an OO Model. <sup>[<a href="#ftn.N16866" name="N16866" class="footnote">25</a>]</sup> Gradle makes this very easy. Just drop your classes in a certain directory and Gradle automatically compiles them and puts them in the classpath of your build script.</p>
-   <p>下面可以组织构建逻辑的方法摘要：<br>Here is a summary of the ways you can organise your build logic:</p>
-   <div class="itemizedlist">
-    <ul class="itemizedlist">
-     <li class="listitem"><p>POGO。你可以直接在构建脚本中声明和使用普通的 Groovy 对象（POGO）。别忘了构建脚本是使用 Groovy 来写的，Groovy 会向你提供许多优秀的方式来组织代码。 </p><p>POGOs. You can declare and use plain old Groovy objects (POGOs) directly in your build script. The build script is written in Groovy, after all, and Groovy provides you with lots of excellent ways to organize code. </p></li>
-     <li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:inherited_properties_and_methods">继承的属性和方法</a>。在多项目构建中，子项目将继承父项目的属性和方法。</p><p><a class="link" href="organizing_build_logic.html#sec:inherited_properties_and_methods">Inherited properties and methods</a>. In a multi-project build, sub-projects inherit the properties and methods of their parent project.</p></li>
-     <li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:injected_configuration">配置注入</a>。在多项目构建中，一个项目（通常是根项目）可以将属性和方法注入到另一个项目中。</p><p><a class="link" href="organizing_build_logic.html#sec:injected_configuration">Configuration injection</a>. In a multi-project build, a project (usually the root project) can inject properties and methods into another project.</p></li>
-     <li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:build_sources"><code class="filename">buildSrc</code> 项目</a>。把构建类的源码放到特定目录中， Gradle 会自动编译它们，并将它们包含在构建脚本的类路径中。 </p><p><a class="link" href="organizing_build_logic.html#sec:build_sources"><code class="filename">buildSrc</code> project</a>. Drop the source for your build classes into a certain directory and Gradle automatically compiles them and includes them in the classpath of your build script. </p></li>
-     <li class="listitem"><p><a class="link" href="tutorial_this_and_that.html#sec:configuring_using_external_script">共享脚本</a>。在外部构建中定义公共配置，然后把这个脚本应用于多个项目，这些项目可能在不同的构建中。 </p><p><a class="link" href="tutorial_this_and_that.html#sec:configuring_using_external_script">Shared scripts</a>. Define common configuration in an external build, and apply the script to multiple projects, possibly across different builds. </p></li>
-     <li class="listitem"><p><a class="link" href="custom_tasks.html">自定义任务</a>。把构建逻辑放到一个自定义任务中，并在多个地方复用该任务。</p><p><a class="link" href="custom_tasks.html">Custom tasks</a>. Put your build logic into a custom task, and reuse that task in multiple places.</p></li>
-     <li class="listitem"><p><a class="link" href="custom_plugins.html">自定义插件</a>。把构建逻辑放到自定义插件中，并将该插件应用于多个项目。插件必须在构建脚本的类路径中，你可以通过使用 <a class="link" href="organizing_build_logic.html#sec:build_sources"><code class="filename">build sources</code></a> 或通过添加包含插件的 <a class="link" href="organizing_build_logic.html#sec:external_dependencies">外部库</a> 来实现。 </p><p><a class="link" href="custom_plugins.html">Custom plugins</a>. Put your build logic into a custom plugin, and apply that plugin to multiple projects. The plugin must be in the classpath of your build script. You can achieve this either by using <a class="link" href="organizing_build_logic.html#sec:build_sources"><code class="filename">build sources</code></a> or by adding an <a class="link" href="organizing_build_logic.html#sec:external_dependencies">external library</a> that contains the plugin. </p></li>
-     <li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:external_build">执行外部构建</a>。从当前构建执行另一个 Gradle 构建。</p><p><a class="link" href="organizing_build_logic.html#sec:external_build">Execute an external build</a>. Execute another Gradle build from the current build.</p></li>
-     <li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:external_dependencies">外部库</a>。直接在构建文件中使用外部库。 </p><p><a class="link" href="organizing_build_logic.html#sec:external_dependencies">External libraries</a>. Use external libraries directly in your build file. </p></li>
-    </ul>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:inherited_properties_and_methods"></a>59.1.&nbsp;继承的属性和方法</h2>
-       <h4 class="title"><a name="sec:inherited_properties_and_methods"></a>59.1.&nbsp;Inherited properties and methods</h4>
-      </div>
-     </div>
-    </div>
-    <p>项目构建脚本中定义的任何方法或属性，它的所有子项目都是可见的。你可以通过这一特点来定义公共配置，并将构建逻辑抽取到子项目可复用的方法中。 <br>Any method or property defined in a project build script is also visible to all the sub-projects. You can use this to define common configurations, and to extract build logic into methods which can be reused by the sub-projects.</p>
-    <div class="example">
-     <a name="inheritedBuildLogic"></a>
-     <p class="title"><b>示例59.1. 使用继承的属性和方法 - Example&nbsp;59.1.&nbsp;Using inherited properties and methods</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define an extra property</span>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Organizing Build Logic - Gradle User Guide Version 2.14.1</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 2.14.1"><link rel="up" href="pt04.html" title="Part&nbsp;IV.&nbsp;Extending the build"><link rel="prev" href="javaGradle_plugin.html" title="The Java Gradle Plugin Development Plugin - Gradle User Guide Version 2.14.1"><link rel="next" href="init_scripts.html" title="Initialization Scripts - Gradle User Guide Version 2.14.1"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="javaGradle_plugin.html" title="The Java Gradle Plugin Development Plugin - Gradle User Guide Version 2.14.1">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="Initialization Scripts - Gradle User Guide Version 2.14.1">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="organizing_build_logic"></a>Chapter&nbsp;41.&nbsp;Organizing Build Logic</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="organizing_build_logic.html#sec:inherited_properties_and_methods">41.1. Inherited properties and methods</a></span></dt><dt><span class="section"><a href="organizing_build_logic.html#sec:injected_configuration">41.2. Injected configuration</a></span></dt><dt><span class="section"><a href="organizing_build_logic.html#sec:configuring_using_external_script">41.3. Configuring the project using an external build script</a></span></dt><dt><span class="section"><a href="organizing_build_logic.html#sec:build_sources">41.4. Build sources in the <code class="filename">buildSrc</code> project</a></span></dt><dt><span class="section"><a href="organizing_build_logic.html#sec:external_build">41.5. Running another Gradle build from a build</a></span></dt><dt><span class="section"><a href="organizing_build_logic.html#sec:external_dependencies">41.6. External dependencies for the build script</a></span></dt><dt><span class="section"><a href="organizing_build_logic.html#sec:ant_optional_dependencies">41.7. Ant optional dependencies</a></span></dt><dt><span class="section"><a href="organizing_build_logic.html#sec:philosophy">41.8. Summary</a></span></dt></dl></div><p>Gradle offers a variety of ways to organize your build logic. First of all you can put your build logic
+        directly in the action closure of a task. If a couple of tasks share the same logic you can extract this logic
+        into a method. If multiple projects of a multi-project build share some logic you can define this method in the
+        parent project. If the build logic gets too complex for being properly modeled by methods then you likely should
+        implement your logic with classes to encapsulate your logic.
+        <sup>[<a href="#ftn.N149C6" name="N149C6" class="footnote">20</a>]</sup>
+        Gradle makes this very easy. Just drop your classes in a certain directory and Gradle automatically compiles them
+        and puts them in the classpath of your build script.
+    </p><p>Here is a summary of the ways you can organise your build logic:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>POGOs. You can declare and use plain old Groovy objects (POGOs) directly in your build script. The
+                build script is written in Groovy, after all, and Groovy provides you with lots of excellent ways to
+                organize code.
+            </p></li><li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:inherited_properties_and_methods">Inherited properties and methods</a>. In a
+                multi-project build, sub-projects inherit the properties and methods of their parent project.</p></li><li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:injected_configuration">Configuration injection</a>. In a
+                multi-project build, a project (usually the root project) can inject properties and methods into another
+                project.</p></li><li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:build_sources"><code class="filename">buildSrc</code> project</a>. Drop the source for
+                your build classes into a certain directory and Gradle automatically compiles them and includes them
+                in the classpath of your build script.
+            </p></li><li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:configuring_using_external_script">Shared scripts</a>. Define common configuration
+                in an external build, and apply the script to multiple projects, possibly across different builds.
+            </p></li><li class="listitem"><p><a class="link" href="custom_tasks.html">Custom tasks</a>. Put your build logic into a custom task, and
+                reuse that task in multiple places.</p></li><li class="listitem"><p><a class="link" href="custom_plugins.html">Custom plugins</a>. Put your build logic into a custom plugin,
+                and apply that plugin to multiple projects. The plugin must be in the classpath of your build script.
+                You can achieve this either by using <a class="link" href="organizing_build_logic.html#sec:build_sources"><code class="filename">build sources</code></a> or
+                by adding an <a class="link" href="organizing_build_logic.html#sec:external_dependencies">external library</a> that contains the plugin.
+            </p></li><li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:external_build">Execute an external build</a>. Execute another Gradle build from the
+                current build.</p></li><li class="listitem"><p><a class="link" href="organizing_build_logic.html#sec:external_dependencies">External libraries</a>. Use external libraries directly
+                in your build file.
+            </p></li></ul></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:inherited_properties_and_methods" class="section-anchor" href="#sec:inherited_properties_and_methods"></a>41.1.&nbsp;Inherited properties and methods</h2></div></div></div><p>Any method or property defined in a project build script is also visible to all the sub-projects. You
+            can use this to define common configurations, and to extract build logic into methods which can be reused
+            by the sub-projects.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="inheritedBuildLogic"></a><p class="title"><b>Example&nbsp;41.1.&nbsp;Using inherited properties and methods</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define an extra property</span>
 ext.srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/java'</span>
 
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define a method</span>
 def getSrcDir(project) {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">return</span> project.file(srcDirName)
-}</pre>
-      <p><code class="filename">child/build.gradle</code></p>
-      <pre class="programlisting">task show &lt;&lt; {
+}
+</pre><p><code class="filename">child/build.gradle</code></p><pre class="programlisting">task show &lt;&lt; {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Use inherited property</span>
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'srcDirName: '</span> + srcDirName
 
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Use inherited method</span>
     File srcDir = getSrcDir(project)
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'srcDir: '</span> + rootProject.relativePath(srcDir)
-}</pre>
-      <p><strong class="userinput"><code>gradle -q show</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q show</code></strong></p>
-      <pre class="screen">&gt; gradle -q show
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q show</code></strong></p><pre class="screen">&gt; gradle -q show
 srcDirName: src/java
-srcDir: child/src/java</pre>
-     </div>
-    </div>
-    <br class="example-break">
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:injected_configuration"></a>59.2.&nbsp;注入配置</h2>
-       <h4 class="title"><a name="sec:injected_configuration"></a>59.2.&nbsp;Injected configuration</h4>
-      </div>
-     </div>
-    </div>
-    <p>你可以使用在<a class="xref" href="multi_project_builds.html#sec:cross_project_configuration">第 56.1 节，《跨项目配置》</a>和<a class="xref" href="multi_project_builds.html#sec:subproject_configuration">第 56.2 节，《子项目配置》</a> 中所论述的配置注入技术，将属性和方法注入到各个项目中。通常来说，它是比继承更好的选择，原因如下：在构建脚本中，注入是显式的，你可以将不同的逻辑注入到不同的项目，并且可以注入任何类型的配置，如仓库，插件，任务等等。以下是关于注入的示例。 <br>You can use the configuration injection technique discussed in <a class="xref" href="multi_project_builds.html#sec:cross_project_configuration">Section&nbsp;56.1, “Cross project configuration”</a> and <a class="xref" href="multi_project_builds.html#sec:subproject_configuration">Section&nbsp;56.2, “Subproject configuration”</a> to inject properties and methods into various projects. This is generally a better option than inheritance, for a number of reasons: The injection is explicit in the build script, You can inject different logic into different projects, And you can inject any kind of configuration such as repositories, plug-ins, tasks, and so on. The following sample shows how this works.</p>
-    <div class="example">
-     <a name="injectedBuildLogic"></a>
-     <p class="title"><b>示例 59.2. 使用注入的属性和方法 - Example&nbsp;59.2.&nbsp;Using injected properties and methods</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">subprojects {
+srcDir: child/src/java
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:injected_configuration" class="section-anchor" href="#sec:injected_configuration"></a>41.2.&nbsp;Injected configuration</h2></div></div></div><p>You can use the configuration injection technique discussed in <a class="xref" href="multi_project_builds.html#sec:cross_project_configuration">Section&nbsp;24.1, &ldquo;Cross project configuration&rdquo;</a>
+            and <a class="xref" href="multi_project_builds.html#sec:subproject_configuration">Section&nbsp;24.2, &ldquo;Subproject configuration&rdquo;</a> to inject properties and methods into various projects.
+            This is generally a better option than inheritance, for a number of reasons: The injection is
+            explicit in the build script, You can inject different logic into different projects, And you can inject
+            any kind of configuration such as repositories, plug-ins, tasks, and so on.
+            The following sample shows how this works.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="injectedBuildLogic"></a><p class="title"><b>Example&nbsp;41.2.&nbsp;Using injected properties and methods</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">subprojects {
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Define a new property</span>
     ext.srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'src/java'</span>
 
@@ -120,150 +71,91 @@ srcDir: child/src/java</pre>
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Inject special case configuration into a particular project</span>
 project(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">':child2'</span>) {
     ext.srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"$srcDirName/legacy"</span>
-}</pre>
-      <p><code class="filename">child1/build.gradle</code></p>
-      <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Use injected property and method. Here, we override the injected value</span>
+}
+</pre><p><code class="filename">child1/build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Use injected property and method. Here, we override the injected value</span>
 srcDirName = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'java'</span>
-def dir = srcDir()</pre>
-      <p><strong class="userinput"><code>gradle -q show</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q show</code></strong></p>
-      <pre class="screen">&gt; gradle -q show
+def dir = srcDir()
+</pre><p>Output of <strong class="userinput"><code>gradle -q show</code></strong></p><pre class="screen">&gt; gradle -q show
 project: :child1
 srcDirName: java
 srcDir: child1/java
 project: :child2
 srcDirName: src/java/legacy
-srcDir: child2/src/java/legacy</pre>
-     </div>
-    </div>
-    <br class="example-break">
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:build_sources"></a>59.3.&nbsp;在 <code class="filename">buildSrc</code> 项目中的构建源码</h2>
-       <h4 class="title"><a name="sec:build_sources"></a>59.3.&nbsp;Build sources in the <code class="filename">buildSrc</code> project</h4>
-      </div>
-     </div>
-    </div>
-    <p>当你运行 Gradle 时，它会检查 <code class="filename">buildSrc</code> 目录是否存在。如果存在，Gradle 会自动编译和测试其代码，并将它加到构建脚本的类路径中。你不需要提供任何进一步的指示信息。这可能是添加自定义任务和插件的好地方。 <br>When you run Gradle, it checks for the existence of a directory called <code class="filename">buildSrc</code>. Gradle then automatically compiles and tests this code and puts it in the classpath of your build script. You don't need to provide any further instruction. This can be a good place to add your custom tasks and plugins.</p>
-    <p>对于多项目构建，只能有一个在根项目目录中的 <code class="filename">buildSrc</code> 目录。 <br>For multi-project builds there can be only one <code class="filename">buildSrc</code> directory, which has to be in the root project directory.</p>
-    <p>下面列出的是 Gradle 应用到 <code class="filename">buildSrc</code> 项目的默认构建脚本。<br>Listed below is the default build script that Gradle applies to the <code class="filename">buildSrc</code> project:</p>
-    <div class="figure">
-     <a name="N168FF"></a>
-     <p class="title"><b>图&nbsp;59.1.&nbsp;默认的 buildSrc 构建脚本 - Figure&nbsp;59.1.&nbsp;Default buildSrc build script</b></p>
-     <div class="figure-contents">
-      <pre class="programlisting">apply plugin: 'groovy'
+srcDir: child2/src/java/legacy</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:configuring_using_external_script" class="section-anchor" href="#sec:configuring_using_external_script"></a>41.3.&nbsp;Configuring the project using an external build script</h2></div></div></div><p>You can configure the current project using an external build script. All of the Gradle build language
+            is available in the external script. You can even apply other scripts from the external script.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="configureProjectUsingScript"></a><p class="title"><b>Example&nbsp;41.3.&nbsp;Configuring the project using an external build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">apply from: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'other.gradle'</span>
+</pre><p><code class="filename">other.gradle</code></p><pre class="programlisting">println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"configuring $project"</span>
+task hello &lt;&lt; {
+    println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello from other script'</span>
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q hello</code></strong></p><pre class="screen">&gt; gradle -q hello
+configuring root project 'configureProjectUsingScript'
+hello from other script</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:build_sources" class="section-anchor" href="#sec:build_sources"></a>41.4.&nbsp;Build sources in the <code class="filename">buildSrc</code> project</h2></div></div></div><p>When you run Gradle, it checks for the existence of a directory called <code class="filename">buildSrc</code>.
+            Gradle then automatically compiles and tests this code and puts it in the classpath of your build script.
+            You don't need to provide any further instruction. This can be a good place to add your custom tasks and plugins.
+        </p><p>For multi-project builds there can be only one <code class="filename">buildSrc</code> directory, which has to be
+            in the root project directory.
+        </p><p>Listed below is the default build script that Gradle applies to the <code class="filename">buildSrc</code> project:</p><div class="figure"><a xmlns:xslthl="http://xslthl.sf.net" name="N14A7B"></a><p class="title"><b>Figure&nbsp;41.1.&nbsp;Default buildSrc build script</b></p><div class="figure-contents"><pre class="programlisting">apply plugin: 'groovy'
 dependencies {
     compile gradleApi()
     compile localGroovy()
-}</pre>
-     </div>
-    </div>
-    <br class="figure-break">
-    <p> 这意味着你只需将构建源代码放到这个目录当中，并保持 Java/Groovy 项目的布局约定（见<a class="xref" href="java_plugin.html#javalayout" title="表 23.4. Java 插件——默认项目布局">表&nbsp;23.4，“Java 插件——默认项目布局”</a>）。 <br>This means that you can just put you build source code in this directory and stick to the layout convention for a Java/Groovy project (see <a class="xref" href="java_plugin.html#javalayout" title="Table&nbsp;23.4.&nbsp;Java plugin - default project layout">Table&nbsp;23.4, “Java plugin - default project layout”</a>).</p>
-    <p> 如果你想更灵活，那么可以提供自己的 <code class="filename">build.gradle</code>。Gradle 会应用默认的构建脚本，不管是否另有脚本被指定。这意味着你只需要声明你所需要的额外内容。以下是一个例子。请注意，此示例不需要声明对 Gradle API 的依赖，因为这已由默认的构建脚本完成： <br>If you need more flexibility, you can provide your own <code class="filename">build.gradle</code>. Gradle applies the default build script regardless of whether there is one specified. This means you only need to declare the extra things you need. Below is an example. Notice that this example does not need to declare a dependency on the Gradle API, as this is done by the default build script:</p>
-    <div class="example">
-     <a name="customBuildSrcBuild"></a>
-     <p class="title"><b>示例 59.3. 自定义 buildSrc 构建脚本 - Example&nbsp;59.3.&nbsp;Custom buildSrc build script</b></p>
-     <div class="example-contents">
-      <p><code class="filename">buildSrc/build.gradle</code></p>
-      <pre class="programlisting">repositories {
+}
+
+</pre></div></div><br class="figure-break"><p>
+            This means that you can just put your build source code in this directory and stick to the layout convention for a
+            Java/Groovy project (see <a class="xref" href="java_plugin.html#javalayout" title="Table&nbsp;45.4.&nbsp;Java plugin - default project layout">Table&nbsp;45.4, &ldquo;Java plugin - default project layout&rdquo;</a>).
+        </p><p>
+            If you need more flexibility, you can provide your own <code class="filename">build.gradle</code>. Gradle applies the default build script
+            regardless of whether there is one specified. This means you only need to declare the extra things you need. Below is an example.
+            Notice that this example does not need to declare a dependency on the Gradle API, as this is done by the default build script:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="customBuildSrcBuild"></a><p class="title"><b>Example&nbsp;41.4.&nbsp;Custom buildSrc build script</b></p><div class="example-contents"><p><code class="filename">buildSrc/build.gradle</code></p><pre class="programlisting">repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.11'</span>
-}</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p> <code class="filename">buildSrc</code> 项目可以是一个多项目构建，就像其他常规 Gradle 多项目构建。但是，你需要使你想要的所有项目，在 <code class="filename">buildSrc</code> 根项目的实际构建 <code class="literal">runtime</code> 依赖的类路径上。你可以通过把它添加到每一个想要导出的项目的配置上来完成： <br>The <code class="filename">buildSrc</code> project can be a multi-project build. This works like any other regular Gradle multi-project build. However, you need to make all of the projects that you wish be on the classpath of the actual build <code class="literal">runtime</code> dependencies of the root project in <code class="filename">buildSrc</code>. You can do this by adding this to the configuration of each project you wish to export:</p>
-    <div class="example">
-     <a name="multiProjectBuildSrc"></a>
-     <p class="title"><b>示例 59.4. 将子项目添加到根 buildSrc 项目 - Example&nbsp;59.4.&nbsp;Adding subprojects to the root buildSrc project</b></p>
-     <div class="example-contents">
-      <p><code class="filename">buildSrc/build.gradle</code></p>
-      <pre class="programlisting">rootProject.dependencies {
+    testCompile <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'junit:junit:4.12'</span>
+}
+</pre></div></div><br class="example-break"><p>
+            The <code class="filename">buildSrc</code> project can be a multi-project build, just like any other regular multi-project build. However,
+            all of the projects that should be on the classpath of the actual build must be <code class="literal">runtime</code> dependencies of the root project in
+            <code class="filename">buildSrc</code>. You can do this by adding this to the configuration of each project you wish to export:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="multiProjectBuildSrc"></a><p class="title"><b>Example&nbsp;41.5.&nbsp;Adding subprojects to the root buildSrc project</b></p><div class="example-contents"><p><code class="filename">buildSrc/build.gradle</code></p><pre class="programlisting">rootProject.dependencies {
   runtime project(path)
-}</pre>
-      <div class="exampleLocation">
-       <p><span class="emphasis"><em>注意：</em></span> 此示例的代码可以在 Gradle 的二进制文件或源码中的 <code class="filename">samples/multiProjectBuildSrc</code> 里找到。<br><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/multiProjectBuildSrc</code> which is in both the binary and source distributions of Gradle.</p>
-      </div>
-     </div>
-    </div>
-    <br class="example-break">
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:external_build"></a>59.4.&nbsp;从一个构建中运行另一个 Gradle 构建</h2>
-       <h4 class="title"><a name="sec:external_build"></a>59.4.&nbsp;Running another Gradle build from a build</h4>
-      </div>
-     </div>
-    </div>
-    <p>你可以使用 <a class="ulink" href="../dsl/org.gradle.api.tasks.GradleBuild.html" target="_top"><code class="classname">GradleBuild</code></a> 任务。你可以使用 <code class="literal">dir</code> 或 <code class="literal">buildFile</code> 属性来指定要执行的构建，以及使用 <code class="literal">tasks</code> 属性来指定要执行的任务。 <br>You can use the <a class="ulink" href="../dsl/org.gradle.api.tasks.GradleBuild.html" target="_top"><code class="classname">GradleBuild</code></a> task. You can use either of the <code class="literal">dir</code> or <code class="literal">buildFile</code> properties to specify which build to execute, and the <code class="literal">tasks</code> property to specify which tasks to execute.</p>
-    <div class="example">
-     <a name="nestedBuild"></a>
-     <p class="title"><b>示例 59.5. 从一个构建运行另一个构建 - Example&nbsp;59.5.&nbsp;Running another build from a build</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">task build(type: GradleBuild) {
+}
+</pre><div class="exampleLocation"><p><span class="emphasis"><em>Note:</em></span> The code for this example can be found at <code class="filename">samples/multiProjectBuildSrc</code> in the &lsquo;-all&rsquo; distribution of Gradle.</p></div></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:external_build" class="section-anchor" href="#sec:external_build"></a>41.5.&nbsp;Running another Gradle build from a build</h2></div></div></div><p>You can use the <a class="ulink" href="../dsl/org.gradle.api.tasks.GradleBuild.html" target="_top"><code class="classname">GradleBuild</code></a> task. You can use either of the
+            <code class="literal">dir</code> or <code class="literal">buildFile</code> properties to specify which build to execute,
+            and the <code class="literal">tasks</code> property to specify which tasks to execute.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="nestedBuild"></a><p class="title"><b>Example&nbsp;41.6.&nbsp;Running another build from a build</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task build(type: GradleBuild) {
     buildFile = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'other.gradle'</span>
     tasks = [<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello'</span>]
-}</pre>
-      <p><code class="filename">other.gradle</code></p>
-      <pre class="programlisting">task hello &lt;&lt; {
+}
+</pre><p><code class="filename">other.gradle</code></p><pre class="programlisting">task hello &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"hello from the other build."</span>
-}</pre>
-      <p><strong class="userinput"><code>gradle -q build</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q build</code></strong></p>
-      <pre class="screen">&gt; gradle -q build
-hello from the other build.</pre>
-     </div>
-    </div>
-    <br class="example-break">
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:external_dependencies"></a>59.5.&nbsp;构建脚本的外部依赖</h2>
-       <h4 class="title"><a name="sec:external_dependencies"></a>59.5.&nbsp;External dependencies for the build script</h4>
-      </div>
-     </div>
-    </div>
-    <p>如果构建脚本需要使用外部库，那么可以将它们添加到构建脚本本身的脚本类路径中。你可以通过使用 <code class="literal">buildscript()</code> 方法，并传入一个声明构建脚本类路径的闭包来完成。 <br>If your build script needs to use external libraries, you can add them to the script's classpath in the build script itself. You do this using the <code class="literal">buildscript()</code> method, passing in a closure which declares the build script classpath.</p>
-    <div class="example">
-     <a name="declareExternalBuildDependency"></a>
-     <p class="title"><b>示例 59.6. 声明构建脚本的外部依赖 - Example&nbsp;59.6.&nbsp;Declaring external dependencies for the build script</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">buildscript {
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q build</code></strong></p><pre class="screen">&gt; gradle -q build
+hello from the other build.
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:external_dependencies" class="section-anchor" href="#sec:external_dependencies"></a>41.6.&nbsp;External dependencies for the build script</h2></div></div></div><p>If your build script needs to use external libraries, you can add them to the script's classpath in the
+            build script itself. You do this using the <code class="literal">buildscript()</code> method, passing in a closure which
+            declares the build script classpath.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="declareExternalBuildDependency"></a><p class="title"><b>Example&nbsp;41.7.&nbsp;Declaring external dependencies for the build script</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">buildscript {
     repositories {
         mavenCentral()
-}
     }
     dependencies {
         classpath group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-codec'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-codec'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.2'</span>
     }
-}</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>这个传给 <code class="literal">buildscript()</code> 方法的闭包配置了一个 <a class="ulink" href="../javadoc/org/gradle/api/initialization/dsl/ScriptHandler.html" target="_top"><code class="classname">ScriptHandler</code></a> 实例。你可以通过将依赖添加到 <code class="literal">classpath</code> 配置的方式来声明构建脚本类路径。这与 Java 编译类路径的声明方式是一样的。你可以使用<a class="xref" href="dependency_management.html#sec:how_to_declare_your_dependencies">第 50.4 节，《如何声明你的依赖》</a>中描述的除项目依赖之外的任何依赖类型。<br>The closure passed to the <code class="literal">buildscript()</code> method configures a <a class="ulink" href="../javadoc/org/gradle/api/initialization/dsl/ScriptHandler.html" target="_top"><code class="classname">ScriptHandler</code></a> instance. You declare the build script classpath by adding dependencies to the <code class="literal">classpath</code> configuration. This is the same way you declare, for example, the Java compilation classpath. You can use any of the dependency types described in <a class="xref" href="dependency_management.html#sec:how_to_declare_your_dependencies">Section&nbsp;50.4, “How to declare your dependencies”</a>, except project dependencies.</p>
-    <p>声明了构建脚本类路径后，你可以在构建脚本中使用这些类，就像使用其他在类路径上的类一样。以下示例是在上一示例的基础上，增加了使用构建脚本类路径中的类。<br>Having declared the build script classpath, you can use the classes in your build script as you would any other classes on the classpath. The following example adds to the previous example, and uses classes from the build script classpath.</p>
-    <div class="example">
-     <a name="externalBuildDependency"></a>
-     <p class="title"><b>示例 59.7. 具有外部依赖的构建脚本 - Example&nbsp;59.7.&nbsp;A build script with external dependencies</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.apache.commons.codec.binary.Base6<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">4</span>
+}
+</pre></div></div><br class="example-break"><p>The closure passed to the <code class="literal">buildscript()</code> method configures a
+            <a class="ulink" href="../javadoc/org/gradle/api/initialization/dsl/ScriptHandler.html" target="_top"><code class="classname">ScriptHandler</code></a> instance. You declare the build script
+            classpath by adding dependencies to the <code class="literal">classpath</code> configuration. This is the same way
+            you declare, for example, the Java compilation classpath. You can use any of the dependency types described
+            in <a class="xref" href="dependency_management.html#sec:how_to_declare_your_dependencies">Section&nbsp;23.4, &ldquo;How to declare your dependencies&rdquo;</a>, except project dependencies.</p><p>Having declared the build script classpath, you can use the classes in your build script as you would
+            any other classes on the classpath. The following example adds to the previous example, and uses classes
+            from the build script classpath.</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="externalBuildDependency"></a><p class="title"><b>Example&nbsp;41.8.&nbsp;A build script with external dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.apache.commons.codec.binary.Base6<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">4</span>
 
 buildscript {
     repositories {
         mavenCentral()
-}
     }
     dependencies {
         classpath group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-codec'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-codec'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'1.2'</span>
@@ -273,36 +165,27 @@ buildscript {
 task encode &lt;&lt; {
     def <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">byte</span>[] encodedString = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> Base6<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">4</span>().encode(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'hello world\n'</span>.getBytes())
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">new</span> String(encodedString)
-}</pre>
-      <p><strong class="userinput"><code>gradle -q encode</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q encode</code></strong></p>
-      <pre class="screen">&gt; gradle -q encode
-aGVsbG8gd29ybGQK</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p> 对于多项目构建，定义在一个项目的构建脚本中的依赖，可用于所有子项目的构建脚本。 <br>For multi-project builds, the dependencies declared in the a project's build script, are available to the build scripts of all sub-projects.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:ant_optional_dependencies"></a>59.6.&nbsp;Ant 可选依赖</h2>
-       <h4 class="title"><a name="sec:ant_optional_dependencies"></a>59.6.&nbsp;Ant optional dependencies</h4>
-      </div>
-     </div>
-    </div>
-    <p>出于我们尚未完全理解的原因，Ant 的可选任务不会选取外部依赖，但你可以很容易地用用另一种方式来实现。<sup>[<a href="#ftn.N1699D" name="N1699D" class="footnote">26</a>]</sup> <br>For reasons we don't fully understand yet, external dependencies are not picked up by Ant's optional tasks. But you can easily do it in another way. <sup>[<a href="#ftn.N1699D" name="N1699D" class="footnote">26</a>]</sup></p>
-    <div class="example">
-     <a name="buildLogic"></a>
-     <p class="title"><b>示例 59.8. Ant 的可选依赖 - Example&nbsp;59.8.&nbsp;Ant optional dependencies</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">configurations {
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q encode</code></strong></p><pre class="screen">&gt; gradle -q encode
+aGVsbG8gd29ybGQK
+</pre></div></div><br class="example-break"><p>
+            For multi-project builds, the dependencies declared with a project's <code class="literal">buildscript()</code> method
+            are available to the build scripts of all its sub-projects.
+        </p><p>
+            Build script dependencies may be Gradle plugins.
+            Please consult <a class="xref" href="plugins.html">Chapter&nbsp;25, <i>Gradle Plugins</i></a> for more information on Gradle plugins.
+        </p><p>
+            Every project automatically has a <code class="literal">buildEnvironment</code> task of type <a class="ulink" href="../dsl/org.gradle.api.tasks.diagnostics.BuildEnvironmentReportTask.html" target="_top"><code class="classname">BuildEnvironmentReportTask</code></a>
+            that can be invoked to report on the resolution of the build script dependencies.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:ant_optional_dependencies" class="section-anchor" href="#sec:ant_optional_dependencies"></a>41.7.&nbsp;Ant optional dependencies</h2></div></div></div><p>For reasons we don't fully understand yet, external dependencies are not picked up by Ant's optional
+            tasks. But you can easily do it in another way.
+            <sup>[<a href="#ftn.N14B2B" name="N14B2B" class="footnote">21</a>]</sup>
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="buildLogic"></a><p class="title"><b>Example&nbsp;41.9.&nbsp;Ant optional dependencies</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">configurations {
     ftpAntTask
 }
 
 dependencies {
-    ftpAntTask(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.apache.ant:ant-commons-net:1.9.3"</span>) {
+    ftpAntTask(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"org.apache.ant:ant-commons-net:1.9.6"</span>) {
         module(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"commons-net:commons-net:1.4.1"</span>) {
             dependencies <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"oro:oro:2.0.8:jar"</span>
         }
@@ -318,44 +201,16 @@ task ftp &lt;&lt; {
             fileset(dir: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"htdocs/manual"</span>)
         }
     }
-}</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>这对于客户端模块的用法也是一个不错的示例。对于这个用例而言，在 Maven 中央仓中针对 ant-commons-net 任务的 POM 文件没有提供到正确的信息。<br>This is also nice example for the usage of client modules. The POM file in Maven Central for the ant-commons-net task does not provide the right information for this use case.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:philosophy"></a>59.7. 总结</h2>
-       <h4 class="title"><a name="sec:philosophy"></a>59.7.&nbsp;Summary</h4>
-      </div>
-     </div>
-    </div>
-    <p>Gradle 提供了多种方法来组织构建逻辑。你可以选择适合你的领域的方式，并在不必要的方向之间找到合适的平衡，避免冗余和使代码库难以维护。我们的经验是，即使非常复杂的定制构建逻辑，也很少在不同构建之间共享。其他构建工具强制将此构建逻辑分隔为单独的项目，Gradle 则给你节省了这些不必要的开销和间接性。 <br>Gradle offers you a variety of ways of organizing your build logic. You can choose what is right for your domain and find the right balance between unnecessary indirections, and avoiding redundancy and a hard to maintain code base. It is our experience that even very complex custom build logic is rarely shared between different builds. Other build tools enforce a separation of this build logic into a separate project. Gradle spares you this unnecessary overhead and indirection.</p>
-   </div>
-   <div class="footnotes">
-    <br>
-    <hr align="left" width="100">
-    <div class="footnote">
-     <p><sup>[<a href="#N16866" name="ftn.N16866" class="para">25</a>] </sup>可能是从一个类到一些非常复杂的东西的范围。 <br><sup>[<a href="#N16866" name="ftn.N16866" class="para">25</a>] </sup>Which might range from a single class to something very complex.</p>
-    </div>
-    <div class="footnote">
-     <p><sup>[<a href="#N1699D" name="ftn.N1699D" class="para">26</a>] </sup>实际上，我们认为这是更好的解决方案。仅当你的构建脚本和 Ant 的可选任务需要 <span class="emphasis"><em>相同的</em></span> 库时，你才需要定义它两次。在这种情况下，如果 Ant 的可选任务能自动获取 <code class="literal">gradesettings</code> 中定义的类路径，会相当不错。 <br><sup>[<a href="#N1699D" name="ftn.N1699D" class="para">26</a>] </sup>In fact, we think this is anyway the nicer solution. Only if your buildscript and Ant's optional task need the <span class="emphasis"><em>same</em></span> library you would have to define it two times. In such a case it would be nice, if Ant's optional task would automatically pickup the classpath defined in the <code class="literal">gradesettings</code>.</p>
-    </div>
-   </div>
-  </div>
-  <div class="navfooter">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="custom_plugins.html" title="第五十八章. 编写自定义插件">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="第六十章. 初始化脚本">下一章</a>
-    </div>
-   </div>
-  </div>
- </body>
-</html>
+}
+</pre></div></div><br class="example-break"><p>This is also a good example for the usage of client modules. The POM file in Maven Central for the
+        ant-commons-net task does not provide the right information for this use case.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:philosophy" class="section-anchor" href="#sec:philosophy"></a>41.8.&nbsp;Summary</h2></div></div></div><p>Gradle offers you a variety of ways of organizing your build logic. You can choose what is right for your
+            domain and find the right balance between unnecessary indirections, and avoiding redundancy and a hard to
+            maintain code base. It is our experience that even very complex custom build logic is rarely shared between
+            different builds. Other build tools enforce a separation of this build logic into a separate project. Gradle
+            spares you this unnecessary overhead and indirection.
+        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N149C6" name="ftn.N149C6" class="para">20</a>] </sup>Which might range from a single class to something very complex.
+            </p></div><div class="footnote"><p><sup>[<a href="#N14B2B" name="ftn.N14B2B" class="para">21</a>] </sup>In fact, we think this is a better solution. Only if your buildscript and Ant's optional
+                    task need the <span class="emphasis"><em>same</em></span> library would you have to define it twice. In such a
+                    case it would be nice if Ant's optional task would automatically pick up the classpath defined
+                    in the &ldquo;<code class="filename">gradle.settings</code>&rdquo; file.
+                </p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="javaGradle_plugin.html" title="The Java Gradle Plugin Development Plugin - Gradle User Guide Version 2.14.1">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="init_scripts.html" title="Initialization Scripts - Gradle User Guide Version 2.14.1">Next</a></div></div></div></body></html>

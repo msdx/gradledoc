@@ -1,104 +1,48 @@
-<html>
- <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>第六十二章. 嵌入 Gradle - Chapter&nbsp;62.&nbsp;Embedding Gradle</title>
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
-  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
-  <link rel="home" href="userguide.html" title="Gradle 用户指南">
-  <link rel="up" href="userguide.html" title="Gradle 用户指南">
-  <link rel="prev" href="gradle_wrapper.html" title="第六十一章.&nbsp;Gradle 包装器">
-  <link rel="next" href="comparing_builds.html" title="第六十三章. 构建比较">
- </head>
- <body>
-  <div class="navheader">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="gradle_wrapper.html" title="第六十一章.&nbsp;Gradle 包装器">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="comparing_builds.html" title="第六十三章. 构建比较">下一章</a>
-    </div>
-   </div>
-  </div>
-  <div class="chapter">
-   <div class="titlepage">
-    <div>
-     <div>
-      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="embedding"></a>第六十二章. 嵌入 Gradle</h1>
-      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="embedding"></a>Chapter&nbsp;62.&nbsp;Embedding Gradle</h3>
-     </div>
-    </div>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:embedding_introduction"></a>62.1. Tooling API 简介</h2>
-       <h4 class="title"><a name="sec:embedding_introduction"></a>62.1.&nbsp;Introduction to the Tooling API</h4>
-      </div>
-     </div>
-    </div>
-    <p>1.0 里程碑 3 发行版带来了新 API，叫 tooling API，可用于嵌入 Gradle。这个 API 允许你执行和监视构建，以及向 Gradle 查询有关构建的细节。它的主要受众是 IDE，CI 服务器，其他的 UI 作者或你的 Gradle 插件的集成测试。不过，它是向所有需要在其应用程序中嵌入 Gradle 的人开放的。 <br>The 1.0 milestone 3 release brought a new API called the tooling API, which you can use for embedding Gradle. This API allows you to execute and monitor builds, and to query Gradle about the details of a build. The main audience for this API is IDE, CI server, other UI authors, or integration testing of your Gradle plugins. However, it is open for anyone who needs to embed Gradle in their application.</p>
-    <p>这个 tooling API 的基本特征是它以独立于版本的方式运行。这意味着你可以使用同一 API 来处理不同目标g版本的 Gradle。Toolin API 是能感知到 Gradle 包装器的，默认情况下，它使用与包装器驱动的项目相同的 Gradle 版本。 <br>A fundamental characteristic of the tooling API is that it operates in a version independent way. This means that you can use the same API to work with different target versions of Gradle. The tooling API is Gradle wrapper aware and, by default, uses the same target Gradle version as that used by the wrapper-powered project.</p>
-    <p>目前这个 tooling API 提供了以下这些功能： <br>Some features that the tooling API provides today:</p>
-    <div class="itemizedlist">
-     <ul class="itemizedlist">
-      <li class="listitem">你可以查询 Gradle 关于构建的详细信息，包括项目层次结构和项目依赖，外部依赖（包括源代码及 javadoc jars），每一个项目的源代码目录和任务。 <br>You can query Gradle for the details of a build, including the project hierarchy and the project dependencies, external dependencies (including source and javadoc jars), source directories and tasks of each project.</li>
-      <li class="listitem">你可以执行构建，并且监听标准输出和错误输出的日志和进度（例如当你在命令上运行时显示在“状态栏”上的内容）。 <br>You can execute a build, and listen to stdout and stderr logging and progress (e.g. the stuff shown in the 'status bar' when you run on the command line).</li>
-      <li class="listitem">Tooling API 可以下载并安装相应的 Gradle 版本，类似于包装器。请记住，tooling API 是有包装器感知的，因此你不应该直接配置 Gradle 分发包。 <br>Tooling API can download and install the appropriate Gradle version, similar to the wrapper. Bear in mind that the tooling API is wrapper aware so you should not need to configure a Gradle distribution directly.</li>
-      <li class="listitem">它的实现是轻量级的，只有很少的依赖。同时它也是一个行为良好的库，并且不会假定你的类装入器结构或日志记录配置。这便于把 API 捆绑在应用程序中。 <br>The implementation is lightweight, with only a small number of dependencies. It is also a well-behaved library, and makes no assumptions about your class loader structure or logging configuration. This makes the API easy to bundle in your application.</li>
-     </ul>
-    </div>
-    <p> </p>
-    <p>将来我们可能会支持一些其他有趣的功能： <br>In future we may support other interesting features:</p>
-    <div class="itemizedlist">
-     <ul class="itemizedlist">
-      <li class="listitem">性能。这个API 让我们有机会进行大量的缓存，静态分析以及抢占式的工作，从而为用户提供更快的速度。 <br>Performance. The API gives us the opportunity to do lots of caching, static analysis and preemptive work, to make things faster for the user.</li>
-      <li class="listitem">改进进度监视和构建取消。例如，允许监视测试执行。 <br>Better progress monitoring and build cancellation. For example, allowing test execution to be monitored.</li>
-      <li class="listitem">当构建中的内容有变化时进行通知，以便可以更新 UI 和模型。例如，Eclipse 或 IDEA 项目将在后台立即更新。 <br>Notifications when things in the build change, so that UIs and models can be updated. For example, your Eclipse or IDEA project will update immediately, in the background.</li>
-      <li class="listitem">对用户提供的配置进行验证和输入提示。 <br>Validating and prompting for user supplied configuration.</li>
-      <li class="listitem">对用户凭据的输入提示和管理。 <br>Prompting for and managing user credentials.</li>
-     </ul>
-    </div>
-    <p> </p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:embedding_daemon"></a>62.2.&nbsp;Tooling API 及 Gradle 构建守护进程</h2>
-       <h4 class="title"><a name="sec:embedding_daemon"></a>62.2.&nbsp;Tooling API and the Gradle Build Daemon</h4>
-      </div>
-     </div>
-    </div>
-    <p>请查看《<a class="xref" href="gradle_daemon.html">第 19 章，<i>Gradle 守护进程</i></a>》。Tooling API 全程使用守护进程，举例来说，没有守护进程，你就不能正式使用 Tooling API。这意味着后续调用 Tooling API 时，都会在同一个长期存活的进程中执行构建请求或任务执行请求的模型。《<a class="xref" href="gradle_daemon.html">第 19 章，<i>Gradle 守护进程</i></a>》包含了有关守护进程的更多详细内容，特别是有关派生新守护程序情况的内容。 <br>Please take a look at <a class="xref" href="gradle_daemon.html">Chapter&nbsp;19, <i>The Gradle Daemon</i></a>. The Tooling API uses the daemon all the time, e.g. you cannot officially use the Tooling API without the daemon. This means that subsequent calls to the Tooling API, be it model building requests or task executing requests can be executed in the same long-living process. <a class="xref" href="gradle_daemon.html">Chapter&nbsp;19, <i>The Gradle Daemon</i></a> contains more details about the daemon, specifically information on situations when new daemons are forked.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:embedding_quickstart"></a>62.3. 快速入门</h2>
-       <h4 class="title"><a name="sec:embedding_quickstart"></a>62.3.&nbsp;Quickstart</h4>
-      </div>
-     </div>
-    </div>
-    <p>由于Tooling API 是面向程序员的接口，因此大部分的文档都在 Javadoc 中。这正是我们的目的——我们不希望本章节内容篇幅太大。相反，我们将添加更多的代码示例并改进 Javadoc 文档。Tooling API 的主要入口点是 <a class="ulink" href="../javadoc/org/gradle/tooling/GradleConnector.html" target="_top"><code class="classname">GradleConnector</code></a>。你可以从该处浏览并找到代码示例及其他说明。学习如何使用Tooling API 的有效方法是检出并运行 <code class="filename">$gradleHome/samples/toolingApi</code> 中的 <span class="emphasis"><em>示例</em></span>。 <br>Since the tooling API is an interface for a programmer most of the documentation lives in the Javadoc. This is exactly our intention - we don't expect this chapter to grow very much. Instead we will add more code samples and improve the Javadoc documentation. The main entry point to the tooling API is the <a class="ulink" href="../javadoc/org/gradle/tooling/GradleConnector.html" target="_top"><code class="classname">GradleConnector</code></a>. You can navigate from there and find code samples and other instructions. Pretty effective way of learning how to use the tooling API is checking out and running the <span class="emphasis"><em>samples</em></span> that live in <code class="filename">$gradleHome/samples/toolingApi</code>.</p>
-    <p> 如果你正在嵌入 Gradle，并且正在寻找 tooling API 所需要的确切依赖，那么请查看 <code class="filename">$gradleHome/samples/toolingApi</code> 中的样本。依赖是在 Gradle 构建脚本中声明的。你还可以找到获取 Jar 的仓库声明。 <br>If you're embedding Gradle and you're looking for exact set of dependencies the tooling API Jar requires please look at one of the samples in <code class="filename">$gradleHome/samples/toolingApi</code>. The dependencies are declared in the Gradle build scripts. You can also find the repository declarations where the Jars are obtained from.</p>
-   </div>
-  </div>
-  <div class="navfooter">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="gradle_wrapper.html" title="第六十一章.&nbsp;Gradle 包装器">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="comparing_builds.html" title="第六十三章. 构建比较">下一章</a>
-    </div>
-   </div>
-  </div>
- </body>
-</html>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Embedding Gradle using the Tooling API - Gradle User Guide Version 2.14.1</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 2.14.1"><link rel="up" href="pt02.html" title="Part&nbsp;II.&nbsp;Working with existing builds"><link rel="prev" href="troubleshooting.html" title="Troubleshooting - Gradle User Guide Version 2.14.1"><link rel="next" href="pt03.html" title="Part&nbsp;III.&nbsp;Writing Gradle build scripts"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="troubleshooting.html" title="Troubleshooting - Gradle User Guide Version 2.14.1">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="pt03.html" title="Part&nbsp;III.&nbsp;Writing Gradle build scripts">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="embedding"></a>Chapter&nbsp;13.&nbsp;Embedding Gradle using the Tooling API</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="embedding.html#sec:embedding_introduction">13.1. Introduction to the Tooling API</a></span></dt><dt><span class="section"><a href="embedding.html#sec:embedding_features">13.2. Tooling API Features</a></span></dt><dt><span class="section"><a href="embedding.html#sec:embedding_daemon">13.3. Tooling API and the Gradle Build Daemon</a></span></dt><dt><span class="section"><a href="embedding.html#sec:embedding_quickstart">13.4. Quickstart</a></span></dt><dt><span class="section"><a href="embedding.html#sec:embedding_compatibility">13.5. Gradle and Java version compatibility</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:embedding_introduction" class="section-anchor" href="#sec:embedding_introduction"></a>13.1.&nbsp;Introduction to the Tooling API</h2></div></div></div><p>Gradle provides a programmatic API called the Tooling API,
+            which you can use for embedding Gradle into your own software.
+            This API allows you to execute and monitor builds and to query Gradle about the details of a build.
+            The main audience for this API is IDE, CI server, other UI authors; however, the API is open for anyone who needs to embed Gradle in their application.
+
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><a class="link" href="test_kit.html">Gradle TestKit</a> uses the Tooling API for functional testing of your Gradle plugins.
+                </li><li class="listitem"><a class="ulink" href="http://projects.eclipse.org/projects/tools.buildship" target="_top">Eclipse Buildship</a> uses the Tooling API for importing your Gradle project and running tasks.
+                </li><li class="listitem"><a class="ulink" href="https://www.jetbrains.com/idea/" target="_top">IntelliJ IDEA</a> uses the Tooling API for importing your Gradle project and running tasks.
+                </li></ul></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:embedding_features" class="section-anchor" href="#sec:embedding_features"></a>13.2.&nbsp;Tooling API Features</h2></div></div></div><p>A fundamental characteristic of the Tooling API is that it operates in a version independent way.
+            This means that you can use the same API to work with different target versions of Gradle, including versions that are both newer and older than the version of the Tooling API that you are using.
+            The Tooling API is Gradle wrapper aware and, by default, uses the same target Gradle version as that used by the wrapper-powered project.
+        </p><p>Some features that the Tooling API provides:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">Query the details of a build,
+                    including the project hierarchy and the project dependencies,
+                    external dependencies (including source and Javadoc jars),
+                    source directories and tasks of each project.
+                </li><li class="listitem">Execute a build and listen to stdout and stderr logging and progress messages
+                    (e.g. the messages shown in the 'status bar' when you run on the command line).
+                </li><li class="listitem">Execute a specific test class or test method.</li><li class="listitem">Receive interesting events as a build executes, such as project configuration, task execution or test execution.</li><li class="listitem">Cancel a build that is running.</li><li class="listitem">Combine multiple separate Gradle builds into a single composite build.</li><li class="listitem">The Tooling API can download and install the appropriate Gradle version, similar to the wrapper.
+                </li><li class="listitem">The implementation is lightweight, with only a small number of dependencies.
+                    It is also a well-behaved library, and makes no assumptions about your classloader structure or logging configuration.
+                    This makes the API easy to embed in your application.
+                </li></ul></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:embedding_daemon" class="section-anchor" href="#sec:embedding_daemon"></a>13.3.&nbsp;Tooling API and the Gradle Build Daemon</h2></div></div></div><p>
+            The Tooling API always uses the Gradle daemon. This means that subsequent calls to the Tooling API, be it model building requests or task executing requests
+            will be executed in the same long-living process. <a class="xref" href="gradle_daemon.html">Chapter&nbsp;6, <i>The Gradle Daemon</i></a> contains more details about the daemon,
+            specifically information on situations when new daemons are forked.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:embedding_quickstart" class="section-anchor" href="#sec:embedding_quickstart"></a>13.4.&nbsp;Quickstart</h2></div></div></div><p>As the Tooling API is an interface for developers, the Javadoc is the main documentation for it. We provide several <span class="emphasis"><em>samples</em></span> that live
+            in <code class="filename">samples/toolingApi</code> in your Gradle distribution. These samples specify all of the required dependencies for the Tooling API with examples for
+            querying information from Gradle builds and executing tasks from the Tooling API.
+        </p><p>
+            The main entry point to the Tooling API is the <a class="ulink" href="../javadoc/org/gradle/tooling/GradleConnector.html" target="_top"><code class="classname">GradleConnector</code></a>. You can navigate from there to find code samples and
+            explore the available Tooling API models.
+
+            There are two ways of using the <code class="literal">GradleConnector</code> to connect to a Gradle build.
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem">
+                    You can use <a class="ulink" href="../javadoc/org/gradle/tooling/GradleConnector.html#connect()" target="_top"><code class="classname">GradleConnector.connect()</code></a> to create a <a class="ulink" href="../javadoc/org/gradle/tooling/ProjectConnection.html" target="_top"><code class="classname">ProjectConnection</code></a>.
+                    A <code class="literal">ProjectConnection</code> connects to a single Gradle project. Using the connection you can execute tasks, tests and retrieve models relative to this project.
+                    This is the original API provided by the Tooling API. Use this API when you wish to use a stable non-incubating API.
+                </li><li class="listitem">
+                    You can use <a class="ulink" href="../javadoc/org/gradle/tooling/GradleConnector.html#newGradleConnection()" target="_top"><code class="classname">GradleConnector.newGradleConnection()</code></a> to create a
+                    <a class="ulink" href="../javadoc/org/gradle/tooling/connection/GradleConnectionBuilder.html" target="_top"><code class="classname">GradleConnectionBuilder</code></a>.
+                    <code class="literal">GradleConnectionBuilder</code> can be used to connect to any number of Gradle builds at one time. Executing tasks and retrieving models are performed in the context
+                    of the composite. Instead of retrieving a single model for a single Gradle project, the Tooling API can provide all models for all projects with a single method call.
+                    Note that this API is currently <a class="link" href="feature_lifecycle.html">incubating</a> and may change at any time.
+                </li></ul></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:embedding_compatibility" class="section-anchor" href="#sec:embedding_compatibility"></a>13.5.&nbsp;Gradle and Java version compatibility</h2></div></div></div><p>The current version of the Tooling API supports running builds using Gradle versions 1.0-milestone-8 and later. Support for versions from 1.0-milestone-8 to 1.1 is deprecated and will be removed from the Tooling API in Gradle 3.0.</p><p>You should note that not all features of the Tooling API are available for all versions of Gradle. For example, build cancellation is only available when a build uses Gradle 2.1 and later. Refer to the documentation for each class and method for more details.</p><p>The current Gradle version can be used from Tooling API versions 1.2 or later. Support for execution using tooling API versions 1.2 to 1.12 is deprecated and will be removed in Gradle 3.0.</p><p>The Tooling API requires Java 6 or later. Support for Java 6 is currently deprecated and will be removed in Gradle 3.0.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="troubleshooting.html" title="Troubleshooting - Gradle User Guide Version 2.14.1">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="pt03.html" title="Part&nbsp;III.&nbsp;Writing Gradle build scripts">Next</a></div></div></div></body></html>

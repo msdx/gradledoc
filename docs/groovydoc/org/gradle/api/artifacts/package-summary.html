@@ -1,8 +1,28 @@
+<!--
+
+     Licensed to the Apache Software Foundation (ASF) under one
+     or more contributor license agreements.  See the NOTICE file
+     distributed with this work for additional information
+     regarding copyright ownership.  The ASF licenses this file
+     to you under the Apache License, Version 2.0 (the
+     "License"); you may not use this file except in compliance
+     with the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing,
+     software distributed under the License is distributed on an
+     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+     specific language governing permissions and limitations
+     under the License.
+
+-->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 
-<title>org.gradle.api.artifacts (Gradle API 2.0)</title>
+<title>org.gradle.api.artifacts (Gradle API 2.14.1)</title>
 <meta name="keywords" content="org.gradle.api.artifacts package">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel ="stylesheet" TYPE="text/css" HREF="../../../../stylesheet.css" title="Style">
@@ -11,7 +31,7 @@
 <script type="text/javascript">
 function windowTitle()
 {
-    parent.document.title="org.gradle.api.artifacts (Gradle API 2.0)";
+    parent.document.title="org.gradle.api.artifacts (Gradle API 2.14.1)";
 }
 </script>
 <noscript>
@@ -51,13 +71,12 @@ function windowTitle()
     <h1 class="title">Package org.gradle.api.artifacts</h1>
 </div>
 
-<div class="header">
-    <h2 title=" Classes for declaring and using artifacts and artifact dependencies.
+
+<h2 title="Package org.gradle.api.artifacts Description" class="title">Package org.gradle.api.artifacts Description</h2>
+<div class="header"> Classes for declaring and using artifacts and artifact dependencies.
  
-" class="title"> Classes for declaring and using artifacts and artifact dependencies.
- 
-</h2>
 </div>
+
 
 <div class="contentContainer">
 
@@ -98,6 +117,15 @@ function windowTitle()
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
+                                <strong><a href="ComponentMetadata.html" title="class in org/gradle/api/artifacts">
+                                    ComponentMetadata
+                                </a></strong>
+                            </td>
+                            <td>Provides a read-only view of a resolved component's metadata, which typically originates from
+ a component descriptor (Ivy file, Maven POM).</td>
+                        </tr>
+<tr class="altColor">
+                            <td class="colOne">
                                 <strong><a href="ComponentMetadataDetails.html" title="class in org/gradle/api/artifacts">
                                     ComponentMetadataDetails
                                 </a></strong>
@@ -107,11 +135,45 @@ function windowTitle()
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
+                                <strong><a href="ComponentModuleMetadata.html" title="class in org/gradle/api/artifacts">
+                                    ComponentModuleMetadata
+                                </a></strong>
+                            </td>
+                            <td>Contains immutable component module metadata information.</td>
+                        </tr>
+<tr class="altColor">
+                            <td class="colOne">
+                                <strong><a href="ComponentModuleMetadataDetails.html" title="class in org/gradle/api/artifacts">
+                                    ComponentModuleMetadataDetails
+                                </a></strong>
+                            </td>
+                            <td>Contains and allows configuring component module metadata information.
+ </td>
+                        </tr>
+<tr class="altColor">
+                            <td class="colOne">
+                                <strong><a href="ComponentSelection.html" title="class in org/gradle/api/artifacts">
+                                    ComponentSelection
+                                </a></strong>
+                            </td>
+                            <td>Represents a tuple of the component selector of a module and a candidate version
+ to be evaluated in a component selection rule.</td>
+                        </tr>
+<tr class="altColor">
+                            <td class="colOne">
+                                <strong><a href="ComponentSelectionRules.html" title="class in org/gradle/api/artifacts">
+                                    ComponentSelectionRules
+                                </a></strong>
+                            </td>
+                            <td>Represents a container for component selection rules.  </td>
+                        </tr>
+<tr class="altColor">
+                            <td class="colOne">
                                 <strong><a href="ConfigurablePublishArtifact.html" title="class in org/gradle/api/artifacts">
                                     ConfigurablePublishArtifact
                                 </a></strong>
                             </td>
-                            <td>A PublishArtifact whose properties can be modified.</td>
+                            <td>A <a href='../../../../org/gradle/api/artifacts/PublishArtifact.html' title='PublishArtifact'>PublishArtifact</a> whose properties can be modified.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -181,6 +243,30 @@ function windowTitle()
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
+                                <strong><a href="DependencySubstitution.html" title="class in org/gradle/api/artifacts">
+                                    DependencySubstitution
+                                </a></strong>
+                            </td>
+                            <td>Provides means to substitute a different dependency during resolution.</td>
+                        </tr>
+<tr class="altColor">
+                            <td class="colOne">
+                                <strong><a href="DependencySubstitutions.html" title="class in org/gradle/api/artifacts">
+                                    DependencySubstitutions
+                                </a></strong>
+                            </td>
+                            <td>Allows replacing dependencies with other dependencies.</td>
+                        </tr>
+<tr class="altColor">
+                            <td class="colOne">
+                                <strong><a href="DependencySubstitutions.Substitution.html" title="class in org/gradle/api/artifacts">
+                                    DependencySubstitutions.Substitution
+                                </a></strong>
+                            </td>
+                            <td>Provides a DSL-friendly mechanism for specifying the target of a substitution.</td>
+                        </tr>
+<tr class="altColor">
+                            <td class="colOne">
                                 <strong><a href="ExcludeRule.html" title="class in org/gradle/api/artifacts">
                                     ExcludeRule
                                 </a></strong>
@@ -218,16 +304,8 @@ function windowTitle()
                                     FileCollectionDependency
                                 </a></strong>
                             </td>
-                            <td>A <CODE>FileCollectionDependency</CODE> is a Dependency on a collection of local files which are not stored in a
+                            <td>A <CODE>FileCollectionDependency</CODE> is a <a href='../../../../org/gradle/api/artifacts/Dependency.html' title='Dependency'>Dependency</a> on a collection of local files which are not stored in a
  repository.</td>
-                        </tr>
-<tr class="altColor">
-                            <td class="colOne">
-                                <strong><a href="IvyModuleMetadata.html" title="class in org/gradle/api/artifacts">
-                                    IvyModuleMetadata
-                                </a></strong>
-                            </td>
-                            <td>The metadata about an Ivy module that acts as an input to a component metadata rule.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -317,7 +395,7 @@ function windowTitle()
                                     ResolvableDependencies
                                 </a></strong>
                             </td>
-                            <td>A set of Dependency objects which can be resolved to a set of <CODE>File</CODE> instances.</td>
+                            <td>A set of <a href='../../../../org/gradle/api/artifacts/Dependency.html' title='Dependency'>Dependency</a> objects which can be resolved to a set of <CODE>File</CODE> instances.</td>
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
@@ -333,7 +411,7 @@ function windowTitle()
                                     ResolvedConfiguration
                                 </a></strong>
                             </td>
-                            <td>A <CODE>ResolvedConfiguration</CODE> represents the result of resolving a Configuration, and provides access
+                            <td>A <CODE>ResolvedConfiguration</CODE> represents the result of resolving a <a href='../../../../org/gradle/api/artifacts/Configuration.html' title='Configuration'>Configuration</a>, and provides access
  to both the artifacts and the meta-data of the result.</td>
                         </tr>
 <tr class="altColor">
@@ -358,7 +436,7 @@ function windowTitle()
                                     SelfResolvingDependency
                                 </a></strong>
                             </td>
-                            <td>A <CODE>SelfResolvingDependency</CODE> is a Dependency which is able to resolve itself, independent of a
+                            <td>A <CODE>SelfResolvingDependency</CODE> is a <a href='../../../../org/gradle/api/artifacts/Dependency.html' title='Dependency'>Dependency</a> which is able to resolve itself, independent of a
  repository.</td>
                         </tr>
 <tr class="altColor">
@@ -396,14 +474,6 @@ function windowTitle()
                                 </a></strong>
                             </td>
                             <td>A <a href='../../../../org/gradle/api/Namer.html' title='Namer'>Namer</a> namer for configurations that returns <a href='#getName()'>getName()</a>.</td>
-                        </tr>
-<tr class="altColor">
-                            <td class="colOne">
-                                <strong><a href="ResolveException.html" title="class in org/gradle/api/artifacts">
-                                    ResolveException
-                                </a></strong>
-                            </td>
-                            <td></td>
                         </tr>
 
                     </tbody>
@@ -461,6 +531,14 @@ function windowTitle()
                         </tr>
 <tr class="altColor">
                             <td class="colOne">
+                                <strong><a href="ResolveException.html" title="class in org/gradle/api/artifacts">
+                                    ResolveException
+                                </a></strong>
+                            </td>
+                            <td></td>
+                        </tr>
+<tr class="altColor">
+                            <td class="colOne">
                                 <strong><a href="UnknownConfigurationException.html" title="class in org/gradle/api/artifacts">
                                     UnknownConfigurationException
                                 </a></strong>
@@ -511,7 +589,7 @@ function windowTitle()
         </ul>
     </div>
 
-    <div class="aboutLanguage"><em>Gradle API 2.0</em></div>
+    <div class="aboutLanguage"><em>Gradle API 2.14.1</em></div>
     <a name="skip-navbar_bottom">
         <!--   -->
     </a></div>

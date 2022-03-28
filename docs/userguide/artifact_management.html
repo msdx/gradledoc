@@ -1,129 +1,34 @@
-<html>
- <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>第五十一章. 发布工件 - Chapter&nbsp;51.&nbsp;Publishing artifacts</title>
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
-  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
-  <link rel="home" href="userguide.html" title="Gradle 用户指南">
-  <link rel="up" href="userguide.html" title="Gradle 用户指南">
-  <link rel="prev" href="dependency_management.html" title="第五十章. 依赖管理">
-  <link rel="next" href="maven_plugin.html" title="第五十二章. Maven 插件">
- </head>
- <body>
-  <div class="navheader">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="dependency_management.html" title="第五十章. 依赖管理">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="maven_plugin.html" title="第五十二章. Maven 插件">下一章</a>
-    </div>
-   </div>
-  </div>
-  <div class="chapter">
-   <div class="titlepage">
-    <div>
-     <div>
-      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="artifact_management"></a>第五十一章. 发布工件</h1>
-      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="artifact_management"></a>Chapter&nbsp;51.&nbsp;Publishing artifacts</h3>
-     </div>
-    </div>
-   </div>
-   <div class="note">
-    <p> 本章介绍的是在 Gradle 1.0 版本中的<span class="emphasis"><em>原始</em></span>发布机制：在 Gradle 1.3，我们引入了新的发布机制。这种新机制现在还在<a class="link" href="feature_lifecycle.html">试验性阶段</a>而尚未完成，它它引入了一些新的概念和特性，使得 Gradle 的发布功能更强大。 <br>This chapter describes the <span class="emphasis"><em>original</em></span> publishing mechanism available in Gradle 1.0: in Gradle 1.3 a new mechanism for publishing was introduced. While this new mechanism is <a class="link" href="feature_lifecycle.html">incubating</a> and not yet complete, it introduces some new concepts and features that do (and will) make Gradle publishing even more powerful.</p>
-    <p> 你可以阅读<a class="xref" href="publishing_ivy.html">第 64 章《，<i>Ivy 发布（新）</i>》</a>及<a class="xref" href="publishing_maven.html">第 65 章，《<i>Maven 发布（新）</i>》</a>中新发布插件的内容。请尝试它们，并向我们反馈。 <br>You can read about the new publishing plugins in <a class="xref" href="publishing_ivy.html">Chapter&nbsp;64, <i>Ivy Publishing (new)</i></a> and <a class="xref" href="publishing_maven.html">Chapter&nbsp;65, <i>Maven Publishing (new)</i></a>. Please try them out and give us feedback.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N153C3"></a>51.1. 导言</h2>
-       <h4 class="title"><a name="N153C3"></a>51.1.&nbsp;Introduction</h4>
-      </div>
-     </div>
-    </div>
-    <p>本章介绍了如何声明项目的输出工件，以及如何使用这些工件（比如上传这些工件）。我们将项目的工件定义为项目向外界提供的文件。它可能是一个库，一个 ZIP 分发包，或任何其他文件。一个项目想发布多少个工件都可以。 <br>This chapter is about how you declare the outgoing artifacts of your project, and how to work with them (e.g. upload them). We define the artifacts of the projects as the files the project provides to the outside world. This might be a library or a ZIP distribution or any other file. A project can publish as many artifacts as it wants.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="artifacts_and_configurations"></a>51.2.&nbsp;构件和配置</h2>
-       <h4 class="title"><a name="artifacts_and_configurations"></a>51.2.&nbsp;Artifacts and configurations</h4>
-      </div>
-     </div>
-    </div>
-    <p>与依赖一样，工件也按配置进行分组。事实上，一个配置可以同时包含工件和依赖。 <br>Like dependencies, artifacts are grouped by configurations. In fact, a configuration can contain both artifacts and dependencies at the same time.</p>
-    <p>对于项目中的每个配置，Gradle 提供了 <code class="literal">upload<em class="replaceable"><code>ConfigurationName</code></em></code> 和 <code class="literal">build<em class="replaceable"><code>ConfigurationName</code></em></code> 任务。<sup>[<a href="#ftn.N153DA" name="N153DA" class="footnote">18</a>]</sup> 执行这些任务会构建或上传属于各自配置的工件。 <br>For each configuration in your project, Gradle provides the tasks <code class="literal">upload<em class="replaceable"><code>ConfigurationName</code></em></code> and <code class="literal">build<em class="replaceable"><code>ConfigurationName</code></em></code>. <sup>[<a href="#ftn.N153DA" name="N153DA" class="footnote">18</a>]</sup> Execution of these tasks will build or upload the artifacts belonging to the respective configuration.</p>
-    <p>表格 <a class="xref" href="java_plugin.html#tab:configurations" title="表23.5. Java插件 ​​- 依赖配置">表 23.5，“Java 插件——依赖配置”</a>显示了 Java 插件添加的配置，其中两个配置和工件的使用有关。<code class="code">archives</code> 配置是指定你的工件的标准配置。Java 插件会自动把默认 jar 指定到这个配置。我们将在<a class="xref" href="artifact_management.html#project_libraries">第 51.5 节，《项目库详谈》</a>中详细讨论 <code class="code">runtime</code> 配置。 与依赖一样，你可以声明许多自定义配置，并将工件分配给它们。 <br>Table <a class="xref" href="java_plugin.html#tab:configurations" title="Table&nbsp;23.5.&nbsp;Java plugin - dependency configurations">Table&nbsp;23.5, “Java plugin - dependency configurations”</a> shows the configurations added by the Java plugin. Two of the configurations are relevant for the usage with artifacts. The <code class="code">archives</code> configuration is the standard configuration to assign your artifacts to. The Java plugin automatically assigns the default jar to this configuration. We will talk more about the <code class="code">runtime</code> configuration in <a class="xref" href="artifact_management.html#project_libraries">Section&nbsp;51.5, “More about project libraries”</a>. As with dependencies, you can declare as many custom configurations as you like and assign artifacts to them.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N153EC"></a>51.3.&nbsp;声明工件</h2>
-       <h4 class="title"><a name="N153EC"></a>51.3.&nbsp;Declaring artifacts</h4>
-      </div>
-     </div>
-    </div>
-    <div class="section">
-     <div class="titlepage">
-      <div>
-       <div>
-        <h3 class="title"><a name="N153EF"></a>51.3.1. 归档任务工件</h3>
-        <h5 class="title"><a name="N153EF"></a>51.3.1.&nbsp;Archive task artifacts</h5>
-       </div>
-      </div>
-     </div>
-     <p>你可以使用归档任务来定义工件：<br>You can use an archive task to define an artifact:</p>
-     <div class="example">
-      <a name="archiveTaskArtifact"></a>
-      <p class="title"><b>示例 51.1. 使用归档任务定义一个工件 - Example&nbsp;51.1.&nbsp;Defining an artifact using an archive task</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting">task myJar(type: Jar)
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Publishing artifacts - Gradle User Guide Version 2.14.1</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 2.14.1"><link rel="up" href="pt03.html" title="Part&nbsp;III.&nbsp;Writing Gradle build scripts"><link rel="prev" href="comparing_builds.html" title="Comparing Builds - Gradle User Guide Version 2.14.1"><link rel="next" href="maven_plugin.html" title="The Maven Plugin - Gradle User Guide Version 2.14.1"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="comparing_builds.html" title="Comparing Builds - Gradle User Guide Version 2.14.1">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="maven_plugin.html" title="The Maven Plugin - Gradle User Guide Version 2.14.1">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="artifact_management"></a>Chapter&nbsp;30.&nbsp;Publishing artifacts</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="artifact_management.html#N138EB">30.1. Introduction</a></span></dt><dt><span class="section"><a href="artifact_management.html#artifacts_and_configurations">30.2. Artifacts and configurations</a></span></dt><dt><span class="section"><a href="artifact_management.html#N13913">30.3. Declaring artifacts</a></span></dt><dt><span class="section"><a href="artifact_management.html#N13951">30.4. Publishing artifacts</a></span></dt><dt><span class="section"><a href="artifact_management.html#project_libraries">30.5. More about project libraries</a></span></dt></dl></div><div class="note"><p>
+            This chapter describes the <span class="emphasis"><em>original</em></span> publishing mechanism available in Gradle 1.0: in Gradle 1.3 a new mechanism for publishing was introduced.
+            While this new mechanism is <a class="link" href="feature_lifecycle.html">incubating</a> and not yet complete, it introduces some new concepts and features that do (and will) make Gradle publishing even more powerful.
+        </p><p>
+            You can read about the new publishing plugins in <a class="xref" href="publishing_ivy.html">Chapter&nbsp;33, <i>Ivy Publishing (new)</i></a> and <a class="xref" href="publishing_maven.html">Chapter&nbsp;34, <i>Maven Publishing (new)</i></a>. Please try them out and give us feedback.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N138EB" class="section-anchor" href="#N138EB"></a>30.1.&nbsp;Introduction</h2></div></div></div><p>This chapter is about how you declare the outgoing artifacts of your project, and how to work with
+            them (e.g. upload them). We define the artifacts of the projects as the files the project provides to the
+            outside world. This might be a library or a ZIP distribution or any other file. A project can publish as many artifacts as it wants.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="artifacts_and_configurations" class="section-anchor" href="#artifacts_and_configurations"></a>30.2.&nbsp;Artifacts and configurations</h2></div></div></div><p>Like dependencies, artifacts are grouped by configurations. In fact, a configuration can contain
+            both artifacts and dependencies at the same time.
+        </p><p>For each configuration in your project, Gradle provides the tasks <code class="literal">upload<em class="replaceable"><code>ConfigurationName</code></em></code> and
+        <code class="literal">build<em class="replaceable"><code>ConfigurationName</code></em></code>.
+        <sup>[<a href="#ftn.N13902" name="N13902" class="footnote">18</a>]</sup>
+        Execution of these tasks will build or upload the artifacts belonging to the respective configuration.
+        </p><p><a class="xref" href="java_plugin.html#tab:configurations" title="Table&nbsp;45.5.&nbsp;Java plugin - dependency configurations">Table&nbsp;45.5, &ldquo;Java plugin - dependency configurations&rdquo;</a> shows the configurations added by the Java plugin. Two of the
+        configurations are relevant for the usage with artifacts. The <code class="code">archives</code> configuration is the standard
+        configuration to assign your artifacts to. The Java plugin automatically assigns the default jar to this
+        configuration. We will talk more about the <code class="code">runtime</code> configuration in <a class="xref" href="artifact_management.html#project_libraries">Section&nbsp;30.5, &ldquo;More about project libraries&rdquo;</a>.
+        As with dependencies, you can declare as many custom configurations as you like and assign artifacts to them.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N13913" class="section-anchor" href="#N13913"></a>30.3.&nbsp;Declaring artifacts</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N13916" class="section-anchor" href="#N13916"></a>30.3.1.&nbsp;Archive task artifacts</h3></div></div></div><p>You can use an archive task to define an artifact:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="archiveTaskArtifact"></a><p class="title"><b>Example&nbsp;30.1.&nbsp;Defining an artifact using an archive task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task myJar(type: Jar)
 
 artifacts {
     archives myJar
-}</pre>
-      </div>
-     </div>
-     <br class="example-break">
-     <p>请务必注意，你所创建的作为构建一部分的自定义归档不会自动分配给任何配置，必须进行显式的指定。<br>It is important to note that the custom archives you are creating as part of your build are not automatically assigned to any configuration. You have to explicitly do this assignment.</p>
-    </div>
-    <div class="section">
-     <div class="titlepage">
-      <div>
-       <div>
-        <h3 class="title"><a name="N15400"></a>51.3.2.&nbsp;文件工件</h3>
-        <h5 class="title"><a name="N15400"></a>51.3.2.&nbsp;File artifacts</h5>
-       </div>
-      </div>
-     </div>
-     <p>你也可以使用文件来定义工件：<br>You can also use a file to define an artifact:</p>
-     <div class="example">
-      <a name="fileArtifact"></a>
-      <p class="title"><b>示例 51.2. 使用文件定义工件 - Example&nbsp;51.2.&nbsp;Defining an artifact using a file</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting">def someFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/somefile.txt'</span>)
+}
+</pre></div></div><br class="example-break"><p>It is important to note that the custom archives you are creating as part of your build are not
+            automatically assigned to any configuration. You have to explicitly do this assignment.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N13927" class="section-anchor" href="#N13927"></a>30.3.2.&nbsp;File artifacts</h3></div></div></div><p>You can also use a file to define an artifact:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="fileArtifact"></a><p class="title"><b>Example&nbsp;30.2.&nbsp;Defining an artifact using a file</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">def someFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/somefile.txt'</span>)
 
 artifacts {
     archives someFile
-}</pre>
-      </div>
-     </div>
-     <br class="example-break">
-     <p>Gradle 将基于文件的名字确定工件的属性。你可以自定义这些属性：<br>Gradle will figure out the properties of the artifact based on the name of the file. You can customize these properties:</p>
-     <div class="example">
-      <a name="fileArtifact"></a>
-      <p class="title"><b>示例 51.3. 自定义工件 - Example&nbsp;51.3.&nbsp;Customizing an artifact</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting">task myTask(type:  MyTaskType) {
+}
+</pre></div></div><br class="example-break"><p>Gradle will figure out the properties of the artifact based on the name of the file. You can customize these properties:</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="fileArtifact"></a><p class="title"><b>Example&nbsp;30.3.&nbsp;Customizing an artifact</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task myTask(type:  MyTaskType) {
     destFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/somefile.txt'</span>)
 }
 
@@ -133,44 +38,21 @@ artifacts {
         type <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'text'</span>
         builtBy myTask
     }
-}</pre>
-      </div>
-     </div>
-     <br class="example-break">
-     <p>有基于映射的语法来定义使用文件的工件。这个映射必须饮食一个 <code class="literal">file</code> 条目，它可能还包含其他的工件属性： <br>There is a map-based syntax for defining an artifact using a file. The map must include a <code class="literal">file</code> entry that defines the file. The map may include other artifact properties:</p>
-     <div class="example">
-      <a name="fileArtifact"></a>
-      <p class="title"><b>示例 51.4. 用于使用文件定义工件的映射语法 - Example&nbsp;51.4.&nbsp;Map syntax for defining an artifact using a file</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting">task generate(type:  MyTaskType) {
+}
+</pre></div></div><br class="example-break"><p>There is a map-based syntax for defining an artifact using a file. The map must include a <code class="literal">file</code> entry that
+                defines the file. The map may include other artifact properties:
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="fileArtifact"></a><p class="title"><b>Example&nbsp;30.4.&nbsp;Map syntax for defining an artifact using a file</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">task generate(type:  MyTaskType) {
     destFile = file(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'build/somefile.txt'</span>)
 }
 
 artifacts {
     archives file: generate.destFile, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'my-artifact'</span>, type: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'text'</span>, builtBy: generate
-}</pre>
-      </div>
-     </div>
-     <br class="example-break">
-    </div>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N1542A"></a>51.4. 发布工件</h2>
-       <h4 class="title"><a name="N1542A"></a>51.4.&nbsp;Publishing artifacts</h4>
-      </div>
-     </div>
-    </div>
-    <p>我们说过，每个配置都有一个特定的上传任务。但是在执行上传之前，你必须配置上传任务，并定义这些工件要发布到的位置。你所定义的仓库（如<a class="xref" href="dependency_management.html#sec:repositories">第 50.6 节，《仓库》</a>中所述）不会自动地用于上传。实际上，有些仓库仅允许下载工件。以下是有关如何对配置的上传任务进行配置的例子： <br>We have said that there is a specific upload task for each configuration. But before you can do an upload, you have to configure the upload task and define where to publish the artifacts to. The repositories you have defined (as described in <a class="xref" href="dependency_management.html#sec:repositories">Section&nbsp;50.6, “Repositories”</a>) are not automatically used for uploading. In fact, some of those repositories allow only for artifact downloading. Here is an example how you can configure the upload task of a configuration:</p>
-    <div class="example">
-     <a name="uploading"></a>
-     <p class="title"><b>示例 51.5. 上传任务的配置 - Example&nbsp;51.5.&nbsp;Configuration of the upload task</b></p>
-     <div class="example-contents">
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">repositories {
+}
+</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N13951" class="section-anchor" href="#N13951"></a>30.4.&nbsp;Publishing artifacts</h2></div></div></div><p>We have said that there is a specific upload task for each configuration. Before you can do an upload,
+            you have to configure the upload task and define where to publish the artifacts to. The repositories you have defined (as described
+            in <a class="xref" href="dependency_management.html#sec:repositories">Section&nbsp;23.6, &ldquo;Repositories&rdquo;</a>) are not automatically used for uploading. In fact, some of those repositories only allow downloading artifacts, not uploading.
+            Here is an example of how you can configure the upload task of a configuration:
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="uploading"></a><p class="title"><b>Example&nbsp;30.5.&nbsp;Configuration of the upload task</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     flatDir {
         name <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"fileRepo"</span>
         dirs <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"repo"</span>
@@ -188,44 +70,28 @@ uploadArchives {
             url <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.mycompany.com"</span>
         }
     }
-}</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>正如你所见，你可以使用一个现有仓库的引用，也可以创建一个新仓库。如<a class="xref" href="dependency_management.html#sub:more_about_ivy_resolvers">第 50.6.8 节，《更多关于 Ivy 解析器的信息》</a>中所述，你可以使用适合于上传的所有 Ivy 解析器。 <br>As you can see, you can either use a reference to an existing repository or create a new repository. As described in <a class="xref" href="dependency_management.html#sub:more_about_ivy_resolvers">Section&nbsp;50.6.9, “More about Ivy resolvers”</a>, you can use all the Ivy resolvers suitable for the purpose of uploading.</p>
-    <p>如果一个上传仓库定义了多个模式，Gradle 必须选择用于上传每个文件的模式。默认情况下，Gradle 会上传到由 <code class="literal">url</code> 及可选的 <code class="literal">layout</code> 参数一起定义的模式。如果没有提供 <code class="literal">url</code> 参数，Gradle 将使用第一个定义的 <code class="literal">artifactPattern</code> 进行上传；或者对于上传 Ivy 文件，将使用第一个定义的<code class="literal">ivyPattern</code>（如果有设置）。 <br>If an upload repository is defined with multiple patterns, Gradle must choose a pattern to use for uploading each file. By default, Gradle will upload to the pattern defined by the <code class="literal">url</code> parameter, combined with the optional <code class="literal">layout</code> parameter. If no <code class="literal">url</code> parameter is supplied, then Gradle will use the first defined <code class="literal">artifactPattern</code> for uploading, or the first defined <code class="literal">ivyPattern</code> for uploading Ivy files, if this is set.</p>
-    <p>关于上传到 Maven 仓库的内容，在<a class="xref" href="maven_plugin.html#uploading_to_maven_repositories">么 52.6 节，《与 Maven 仓库的交互》</a>中有描述。<br>Uploading to a Maven repository is described in <a class="xref" href="maven_plugin.html#uploading_to_maven_repositories">Section&nbsp;52.6, “Interacting with Maven repositories”</a>.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="project_libraries"></a>51.5.&nbsp;关于项目库的更多信息</h2>
-       <h4 class="title"><a name="project_libraries"></a>51.5.&nbsp;More about project libraries</h4>
-      </div>
-     </div>
-    </div>
-    <p>如果你的项目是作为一个库使用，那么你需要定义这个库的工件以及这些工件的依赖。Java 插件为此添加了一个 <code class="code">runtime</code> 配置，并隐式地假定 <code class="code">runtime</code> 依赖是你要发布的工件的依赖。当然，这是可以完全自定义的。你可以添加自己的自定义配置，或者让现有的配置从其他配置中扩展。你可以有不同组的工件，并且这些工件有不同的依赖。这一机制非常强大和灵活。 <br>If your project is supposed to be used as a library, you need to define what are the artifacts of this library and what are the dependencies of these artifacts. The Java plugin adds a <code class="code">runtime</code> configuration for this purpose, with the implicit assumption that the <code class="code">runtime</code> dependencies are the dependencies of the artifact you want to publish. Of course this is fully customizable. You can add your own custom configuration or let the existing configurations extend from other configurations. You might have different group of artifacts which have a different set of dependencies. This mechanism is very powerful and flexible.</p>
-    <p>如果有人希望把你的项目作为一个库使用，那么她只需要在要依赖的依赖配置上声明。Gradle 依赖提供了 <code class="code">configuration</code> 属性来声明它。如果这个属性没有指定，则使用 <code class="code">default</code> 配置（见 <a class="xref" href="dependency_management.html#sec:dependency_configurations">第 50.4.9 节，《依赖配置》</a>）。把一个项目作为库使用，可能是因为多项目构建，也可能是从仓库中获取项目。在后一种情况下，仓库中的 <code class="filename">ivy.xml</code> 描述符应该包含所有必要的信息。如果你使用 Maven 仓库，则没有如上所述的灵活性。有关如何发布到 Maven 仓库，请参阅<a class="xref" href="maven_plugin.html#uploading_to_maven_repositories">第 52.6 节，《与 Maven 存储库交互》</a>一节。 <br>If someone wants to use your project as a library, she simply needs to declare on which configuration of the dependency to depend on. A Gradle dependency offers the <code class="code">configuration</code> property to declare this. If this is not specified, the <code class="code">default</code> configuration is used (see <a class="xref" href="dependency_management.html#sec:dependency_configurations">Section&nbsp;50.4.9, “Dependency configurations”</a>). Using your project as a library can either happen from within a multi-project build or by retrieving your project from a repository. In the latter case, an <code class="filename">ivy.xml</code> descriptor in the repository is supposed to contain all the necessary information. If you work with Maven repositories you don't have the flexibility as described above. For how to publish to a Maven repository, see the section <a class="xref" href="maven_plugin.html#uploading_to_maven_repositories">Section&nbsp;52.6, “Interacting with Maven repositories”</a>.</p>
-   </div>
-   <div class="footnotes">
-    <br>
-    <hr align="left" width="100">
-    <div class="footnote">
-     <p><sup>[<a href="#N153DA" name="ftn.N153DA" class="para">18</a>] </sup>确切地说，Base 插件提供了这些任务。这个插件会在你使用 Java 插件时自动地应用进来。<br><sup>[<a href="#N153DA" name="ftn.N153DA" class="para">18</a>] </sup>To be exact, the Base plugin provides those tasks. This plugin is automatically applied if you use the Java plugin.</p>
-    </div>
-   </div>
-  </div>
-  <div class="navfooter">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="dependency_management.html" title="第五十章. 依赖管理">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="maven_plugin.html" title="第五十二章. Maven 插件">下一章</a>
-    </div>
-   </div>
-  </div>
- </body>
-</html>
+}
+</pre></div></div><br class="example-break"><p>As you can see, you can either use a reference to an existing repository or create a new repository.
+        As described in <a class="xref" href="dependency_management.html#sub:more_about_ivy_resolvers">Section&nbsp;23.6.9, &ldquo;More about Ivy resolvers&rdquo;</a>, you can use all the Ivy resolvers suitable
+        for the purpose of uploading.
+        </p><p>If an upload repository is defined with multiple patterns, Gradle must choose a pattern to use for uploading each file.
+            By default, Gradle will upload to the pattern defined by the <code class="literal">url</code> parameter, combined with the optional <code class="literal">layout</code> parameter.
+            If no <code class="literal">url</code> parameter is supplied, then Gradle will use the first defined <code class="literal">artifactPattern</code> for uploading,
+            or the first defined <code class="literal">ivyPattern</code> for uploading Ivy files, if this is set.
+        </p><p>Uploading to a Maven repository is described in <a class="xref" href="maven_plugin.html#uploading_to_maven_repositories">Section&nbsp;31.6, &ldquo;Interacting with Maven repositories&rdquo;</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="project_libraries" class="section-anchor" href="#project_libraries"></a>30.5.&nbsp;More about project libraries</h2></div></div></div><p>If your project is supposed to be used as a library, you need to define what are the artifacts of this library
+            and what are the dependencies of these artifacts. The Java plugin adds a <code class="code">runtime</code> configuration for
+            this purpose, with the implicit assumption that the <code class="code">runtime</code> dependencies are the dependencies of
+            the artifact you want to publish. Of course this is fully customizable. You can add your own custom configuration or let the
+            existing configurations extend from other configurations. You might have a different group of artifacts which have
+            a different set of dependencies. This mechanism is very powerful and flexible.
+            </p><p>If someone wants to use your project as a library, she simply needs to declare which configuration of
+            the dependency to depend on.
+            A Gradle dependency offers the <code class="code">configuration</code> property to declare this. If this
+            is not specified, the <code class="code">default</code> configuration is used (see <a class="xref" href="dependency_management.html#sec:dependency_configurations">Section&nbsp;23.4.9, &ldquo;Dependency configurations&rdquo;</a>).
+            Using your project as a library
+            can either happen from within a multi-project build or by retrieving your project from a repository. In
+            the latter case, an <code class="filename">ivy.xml</code> descriptor in the repository is supposed to contain all the necessary information. If you
+            work with Maven repositories you don't have the flexibility as described above. For how to publish to a Maven
+            repository, see the section <a class="xref" href="maven_plugin.html#uploading_to_maven_repositories">Section&nbsp;31.6, &ldquo;Interacting with Maven repositories&rdquo;</a>.
+        </p></div><div class="footnotes"><br><hr align="left" width="100"><div class="footnote"><p><sup>[<a href="#N13902" name="ftn.N13902" class="para">18</a>] </sup>To be exact, the Base plugin provides those tasks. This plugin is automatically applied if you use
+        the Java plugin.</p></div></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="comparing_builds.html" title="Comparing Builds - Gradle User Guide Version 2.14.1">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="maven_plugin.html" title="The Maven Plugin - Gradle User Guide Version 2.14.1">Next</a></div></div></div></body></html>

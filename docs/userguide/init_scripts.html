@@ -1,212 +1,101 @@
-<html>
- <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>第六十章. 初始化脚本 - Chapter&nbsp;60.&nbsp;Initialization Scripts</title>
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
-  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
-  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
-  <link rel="home" href="userguide.html" title="Gradle 用户指南">
-  <link rel="up" href="userguide.html" title="Gradle 用户指南">
-  <link rel="prev" href="organizing_build_logic.html" title="第五十九章. 组织构建逻辑">
-  <link rel="next" href="gradle_wrapper.html" title="第六十一章.&nbsp;Gradle 包装器">
- </head>
- <body>
-  <div class="navheader">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="organizing_build_logic.html" title="第五十九章. 组织构建逻辑">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="gradle_wrapper.html" title="第六十一章.&nbsp;Gradle 包装器">下一章</a>
-    </div>
-   </div>
-  </div>
-  <div class="chapter">
-   <div class="titlepage">
-    <div>
-     <div>
-      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="init_scripts"></a>第六十章. 初始化脚本</h1>
-      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="init_scripts"></a>Chapter&nbsp;60.&nbsp;Initialization Scripts</h3>
-     </div>
-    </div>
-   </div>
-   <p>Gradle 提供了一种强大的机制，能让你根据当前环境自定义构建。这种机制还支持希望与 Gradle 集成的工具。 <br>Gradle provides a powerful mechanism to allow customizing the build based on the current environment. This mechanism also supports tools that wish to integrate with Gradle.</p>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:basic_usage"></a>60.1.&nbsp;基本用法</h2>
-       <h4 class="title"><a name="sec:basic_usage"></a>60.1.&nbsp;Basic usage</h4>
-      </div>
-     </div>
-    </div>
-    <p>初始化脚本类似于 Gradle 中的其他脚本，但是这些脚本在构建启动之前就运行。以下是几种可能的用法： <br>Initialization scripts (a.k.a. <em class="firstterm">init scripts</em>) are similar to other scripts in Gradle. These scripts, however, are run before the build starts. Here are several possible uses:</p>
-    <div class="itemizedlist">
-     <ul class="itemizedlist">
-      <li class="listitem"><p>设置一些企业范围的配置，比如在哪里查找自定义插件。</p><p>Set up enterprise-wide configuration, such as where to find custom plugins.</p></li>
-      <li class="listitem"><p>基于当前环境（比如开发人员的机器与持续集成服务器）来设置属性。 </p><p>Set up properties based on the current environment, such as a developer's machine vs. a continuous integration server. </p></li>
-      <li class="listitem"><p>提供构建所需要的有关用户的个人信息，比如仓库或数据库认证凭证。 </p><p>Supply personal information about the user that is required by the build, such as repository or database authentication credentials. </p></li>
-      <li class="listitem"><p>定义机器的一些特定信息，比如 JDK 的安装位置。 </p><p>Define machine specific details, such as where JDKs are installed. </p></li>
-      <li class="listitem"><p>注册构建监听器。这对一些希望能够监听 Gradle 事件的外部工具会很有用。 </p><p>Register build listeners. External tools that wish to listen to Gradle events might find this useful. </p></li>
-      <li class="listitem"><p>注册构建记录器。你可能希望自定义 Gradle 对生成的事件的日志打印。 </p><p>Register build loggers. You might wish to customize how Gradle logs the events that it generates. </p></li>
-     </ul>
-    </div>
-    <p> 初始化脚本的一个主要限制是，它们不能访问 buildSrc 项目里的类（该功能的详细信息可参见 <a class="xref" href="organizing_build_logic.html#sec:build_sources">第&nbsp;59.3节，《的<code class="filename">buildSrc</code> 项目中的构建源代码》</a>）。 <br>One main limitation of init scripts is that they cannot access classes in the buildSrc project (see <a class="xref" href="organizing_build_logic.html#sec:build_sources">Section&nbsp;59.3, “Build sources in the <code class="filename">buildSrc</code> project”</a> for details of this feature).</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N169E1"></a>60.2. 使用初始化脚本</h2>
-       <h4 class="title"><a name="N169E1"></a>60.2.&nbsp;Using an init script</h4>
-      </div>
-     </div>
-    </div>
-    <p>使用一个初始化脚本的方法有几种： <br>There are several ways to use an init script:</p>
-    <div class="itemizedlist">
-     <ul class="itemizedlist">
-      <li class="listitem"><p>在命令行上指定文件。命令行选项为 <code class="option">-I</code> 或 <code class="option">--init-script</code>，后跟脚本路径。这个命令行选项可以出现多次，每次在其后添加另一个 init 脚本。</p><p>Specify a file on the command line. The command line option is <code class="option">-I</code> or <code class="option">--init-script</code> followed by the path to the script. The command line option can appear more than once, each time adding another init script.</p></li>
-      <li class="listitem"><p>把一个 <code class="filename">init.gradle</code> 文件放到 <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.gradle/</code> 目录。</p><p>Put a file called <code class="filename">init.gradle</code> in the <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.gradle/</code> directory.</p></li>
-      <li class="listitem"><p>把一个文件名以 <code class="filename">.gradle</code> 结尾的文件放到 <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.gradle/init.d/</code> 目录。</p><p>Put a file that ends with <code class="filename">.gradle</code> in the <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.gradle/init.d/</code> directory.</p></li>
-      <li class="listitem"><p>把一个文件名以 <code class="filename">.gradle</code> 结尾的文件放到 Gradle 分发包的 <code class="filename"><em class="replaceable"><code>GRADLE_HOME</code></em>/init.d/</code> 目录。这让你能打包一个包含了某些自定义构建逻辑和插件的 Gradle 定制分发包。结合它和 <a class="link" href="gradle_wrapper.html">Gradle wrapper</a>，能使得自定义逻辑在企业中的所有构建中都可用。 </p><p>Put a file that ends with <code class="filename">.gradle</code> in the <code class="filename"><em class="replaceable"><code>GRADLE_HOME</code></em>/init.d/</code> directory, in the Gradle distribution. This allows you to package up a custom Gradle distribution containing some custom build logic and plugins. You can combine this with the <a class="link" href="gradle_wrapper.html">Gradle wrapper</a> as a way to make custom logic available to all builds in your enterprise. </p></li>
-     </ul>
-    </div>
-    <p> 如果 Gradle 找到了多个初始化脚本，那么将按照上面指定的顺序执行这些脚本。而给定目录的脚本，则按照字母顺序执行。这样使得一个工具可以在命令行上指定初始化脚本，并且用户可以放一个初始化脚本在他们的主目录中用于定义环境，而当 Gradle 执行时，这两个脚本会运行。 <br>If more than one init script is found they will all be executed, in the order specified above. Scripts in a given directory are executed in alphabetical order. This allows, for example, a tool to specify an init script on the command line and the user to put one in their home directory for defining the environment and both scripts will run when Gradle is executed.</p>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N16A17"></a>60.3. 写一个初始化脚本</h2>
-       <h4 class="title"><a name="N16A17"></a>60.3.&nbsp;Writing an init script</h4>
-      </div>
-     </div>
-    </div>
-    <p>与 Gradle 构建脚本类似，初始化脚本也是一个 groovy 脚本。每个初始化脚本都有一个与之关联的 <a class="ulink" href="../dsl/org.gradle.api.invocation.Gradle.html" target="_top"><code class="classname">Gradle</code></a> 实例，在这个初始化脚本中的任何属性引用和方法调用，都会委派给这个 <code class="classname">Gradle</code> 实例。 <br>Similar to a Gradle build script, an init script is a groovy script. Each init script has a <a class="ulink" href="../dsl/org.gradle.api.invocation.Gradle.html" target="_top"><code class="classname">Gradle</code></a> instance associated with it. Any property reference and method call in the init script will delegate to this <code class="classname">Gradle</code> instance.</p>
-    <p>每个初始化脚本也都实现了 <a class="ulink" href="../dsl/org.gradle.api.Script.html" target="_top"><code class="classname">Script</code></a> 接口。<br>Each init script also implements the <a class="ulink" href="../dsl/org.gradle.api.Script.html" target="_top"><code class="classname">Script</code></a> interface.</p>
-    <div class="section">
-     <div class="titlepage">
-      <div>
-       <div>
-        <h3 class="title"><a name="N16A2B"></a>60.3.1.&nbsp;从一个初始化脚本中配置项目</h3>
-        <h5 class="title"><a name="N16A2B"></a>60.3.1.&nbsp;Configuring projects from an init script</h5>
-       </div>
-      </div>
-     </div>
-     <p>你可以在构建中使用初始化脚本配置项目，类似于在多项目构建中配置项目。以下的例子展示了如何在项目被评估 <span class="emphasis"><em>之前</em></span> 从初始化脚本中执行额外的配置。这个示例使用此功能来配置一个额外仅用于特定环境的仓库。 <br>You can use an init script to configure the projects in the build. This works in a similar way to configuring projects in a multi-project build. The following sample shows how to perform extra configuration from an init script <span class="emphasis"><em>before</em></span> the projects are evaluated. This sample uses this feature to configure an extra repository to be used only for certain environments.</p>
-     <div class="example">
-      <a name="initScriptConfiguration"></a>
-      <p class="title"><b>示例 60.1. 使用初始化脚本在项目评估之前执行额外的配置 - Example&nbsp;60.1.&nbsp;Using init script to perform extra configuration before projects are evaluated</b></p>
-      <div class="example-contents">
-       <p><code class="filename">build.gradle</code></p>
-       <pre class="programlisting">repositories {
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Initialization Scripts - Gradle User Guide Version 2.14.1</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 2.14.1"><link rel="up" href="pt04.html" title="Part&nbsp;IV.&nbsp;Extending the build"><link rel="prev" href="organizing_build_logic.html" title="Organizing Build Logic - Gradle User Guide Version 2.14.1"><link rel="next" href="test_kit.html" title="The Gradle TestKit - Gradle User Guide Version 2.14.1"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="organizing_build_logic.html" title="Organizing Build Logic - Gradle User Guide Version 2.14.1">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="test_kit.html" title="The Gradle TestKit - Gradle User Guide Version 2.14.1">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="init_scripts"></a>Chapter&nbsp;42.&nbsp;Initialization Scripts</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="init_scripts.html#sec:basic_usage">42.1. Basic usage</a></span></dt><dt><span class="section"><a href="init_scripts.html#N14B7D">42.2. Using an init script</a></span></dt><dt><span class="section"><a href="init_scripts.html#N14BB3">42.3. Writing an init script</a></span></dt><dt><span class="section"><a href="init_scripts.html#sec:custom_classpath">42.4. External dependencies for the init script</a></span></dt><dt><span class="section"><a href="init_scripts.html#N14C1D">42.5. Init script plugins</a></span></dt></dl></div><p>Gradle provides a powerful mechanism to allow customizing the build based on the current environment.  This
+        mechanism also supports tools that wish to integrate with Gradle.
+    </p><p>Note that this is completely different from the &ldquo;<code class="literal">init</code>&rdquo; task
+    provided by the &ldquo;<code class="literal">build-init</code>&rdquo; incubating plugin (see <a class="xref" href="build_init_plugin.html">Chapter&nbsp;15, <i>Build Init Plugin</i></a>).
+    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:basic_usage" class="section-anchor" href="#sec:basic_usage"></a>42.1.&nbsp;Basic usage</h2></div></div></div><p>Initialization scripts (a.k.a. <em class="firstterm">init scripts</em>) are similar to other scripts in Gradle.
+            These scripts, however, are run before the build starts.  Here are several possible uses:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Set up enterprise-wide configuration, such as where to find custom plugins.</p></li><li class="listitem"><p>Set up properties based on the current environment, such as a developer's machine vs. a
+                        continuous integration server.
+                    </p></li><li class="listitem"><p>Supply personal information about the user that is required by the build, such as repository or database
+                        authentication credentials.
+                    </p></li><li class="listitem"><p>Define machine specific details, such as where JDKs are installed.
+                    </p></li><li class="listitem"><p>Register build listeners.  External tools that wish to listen to Gradle events might find
+                        this useful.
+                    </p></li><li class="listitem"><p>Register build loggers.  You might wish to customize how Gradle logs the events that it generates.
+                    </p></li></ul></div><p>
+            One main limitation of init scripts is that they cannot access classes in the <code class="literal">buildSrc</code> project (see
+            <a class="xref" href="organizing_build_logic.html#sec:build_sources">Section&nbsp;41.4, &ldquo;Build sources in the <code class="filename">buildSrc</code> project&rdquo;</a> for details of this feature).
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N14B7D" class="section-anchor" href="#N14B7D"></a>42.2.&nbsp;Using an init script</h2></div></div></div><p>There are several ways to use an init script:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Specify a file on the command line.  The command line option is <code class="option">-I</code> or <code class="option">--init-script</code> followed
+                    by the path to the script.  The command line option can appear more than once, each time adding another init script.</p></li><li class="listitem"><p>Put a file called <code class="filename">init.gradle</code> in the <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.gradle/</code> directory.</p></li><li class="listitem"><p>Put a file that ends with <code class="filename">.gradle</code> in the <code class="filename"><em class="replaceable"><code>USER_HOME</code></em>/.gradle/init.d/</code> directory.</p></li><li class="listitem"><p>Put a file that ends with <code class="filename">.gradle</code> in the <code class="filename"><em class="replaceable"><code>GRADLE_HOME</code></em>/init.d/</code>
+                    directory, in the Gradle distribution. This allows you to package up a custom Gradle distribution containing some custom build logic and plugins. You can
+                    combine this with the <a class="link" href="gradle_wrapper.html">Gradle wrapper</a> as a way to make custom logic available to all builds
+                    in your enterprise.
+                </p></li></ul></div><p>
+            If more than one init script is found they will all be executed, in the order specified above. Scripts in a given directory are executed
+            in alphabetical order.
+            This allows, for example, a tool to specify an init script on the command line and the user to put one in their home directory for defining
+            the environment and both scripts will run when Gradle is executed.
+        </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N14BB3" class="section-anchor" href="#N14BB3"></a>42.3.&nbsp;Writing an init script</h2></div></div></div><p>Similar to a Gradle build script, an init script is a Groovy script. Each init script has a
+            <a class="ulink" href="../dsl/org.gradle.api.invocation.Gradle.html" target="_top"><code class="classname">Gradle</code></a> instance associated with it. Any property reference
+            and method call in the init script will delegate to this <code class="classname">Gradle</code> instance.
+        </p><p>Each init script also implements the <a class="ulink" href="../dsl/org.gradle.api.Script.html" target="_top"><code class="classname">Script</code></a> interface.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N14BC7" class="section-anchor" href="#N14BC7"></a>42.3.1.&nbsp;Configuring projects from an init script</h3></div></div></div><p>You can use an init script to configure the projects in the build. This works in a similar way to configuring projects in a
+                multi-project build.
+                The following sample shows how to perform extra configuration from an init script <span class="emphasis"><em>before</em></span> the projects are evaluated.
+                This sample uses this feature to configure an extra repository to be used only for certain environments.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="initScriptConfiguration"></a><p class="title"><b>Example&nbsp;42.1.&nbsp;Using init script to perform extra configuration before projects are evaluated</b></p><div class="example-contents"><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories {
     mavenCentral()
 }
 
 task showRepos &lt;&lt; {
     println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"All repos:"</span>
     println repositories.collect { it.name }
-}</pre>
-       <p><code class="filename">init.gradle</code></p>
-       <pre class="programlisting">allprojects {
+}
+</pre><p><code class="filename">init.gradle</code></p><pre class="programlisting">allprojects {
     repositories {
         mavenLocal()
     }
-}</pre>
-       <p><strong class="userinput"><code>gradle --init-script init.gradle -q showRepos</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle --init-script init.gradle -q showRepos</code></strong></p>
-       <pre class="screen">&gt; gradle --init-script init.gradle -q showRepos
+}
+</pre><p>Output of <strong class="userinput"><code>gradle --init-script init.gradle -q showRepos</code></strong></p><pre class="screen">&gt; gradle --init-script init.gradle -q showRepos
 All repos:
-[MavenLocal, MavenRepo]</pre>
-      </div>
-     </div>
-     <br class="example-break">
-    </div>
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="sec:custom_classpath"></a>60.4. 初始化脚本的外部依赖</h2>
-       <h4 class="title"><a name="sec:custom_classpath"></a>60.4.&nbsp;External dependencies for the init script</h4>
-      </div>
-     </div>
-    </div>
-    <p>在 <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">第 59.5 节，《构建脚本的外部依赖》</a> 中，已经解释了如何向构建脚本添加外部依赖。初始化脚本同样可以定义外部依赖。通过使用 <code class="literal">initscript()</code> 方法，传入一个声明了初始化脚本类路径的闭包就可以了。 <br>In <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;59.5, “External dependencies for the build script”</a> is was explained how to add external dependencies to a build script. Init scripts can similarly have external dependencies defined. You do this using the <code class="literal">initscript()</code> method, passing in a closure which declares the init script classpath.</p>
-    <div class="example">
-     <a name="declareExternalInitDependency"></a>
-     <p class="title"><b>示例 60.2. 声明构建脚本的外部依赖 - Example&nbsp;60.2.&nbsp;Declaring external dependencies for an init script</b></p>
-     <div class="example-contents">
-      <p><code class="filename">init.gradle</code></p>
-      <pre class="programlisting">initscript {
+[MavenLocal, MavenRepo]</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="sec:custom_classpath" class="section-anchor" href="#sec:custom_classpath"></a>42.4.&nbsp;External dependencies for the init script</h2></div></div></div><p>In <a class="xref" href="organizing_build_logic.html#sec:external_dependencies">Section&nbsp;41.6, &ldquo;External dependencies for the build script&rdquo;</a> it was explained how to add external dependencies to a
+            build script. Init scripts can also declare dependencies.  You do this with the
+            <code class="literal">initscript()</code> method, passing in a closure which declares the init script classpath.
+        </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="declareExternalInitDependency"></a><p class="title"><b>Example&nbsp;42.2.&nbsp;Declaring external dependencies for an init script</b></p><div class="example-contents"><p><code class="filename">init.gradle</code></p><pre class="programlisting">initscript {
     repositories {
         mavenCentral()
-}
     }
     dependencies {
         classpath group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.apache.commons'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-math'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'2.0'</span>
     }
-}</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>这个传给 <code class="literal">initscript()</code> 方法的闭包配置了一个 <a class="ulink" href="../javadoc/org/gradle/api/initialization/dsl/ScriptHandler.html" target="_top"><code class="classname">ScriptHandler</code></a> 实例。你可以通过将依赖添加到 <code class="literal">classpath</code> 配置的方式来声明初始化脚本类路径。这与 Java 编译类路径的声明方式是一样的。你可以使用<a class="xref" href="dependency_management.html#sec:how_to_declare_your_dependencies">第 50.4 节，《如何声明你的依赖》</a>中描述的除项目依赖之外的任何依赖类型。<br>The closure passed to the <code class="literal">initscript()</code> method configures a <a class="ulink" href="../javadoc/org/gradle/api/initialization/dsl/ScriptHandler.html" target="_top"><code class="classname">ScriptHandler</code></a> instance. You declare the init script classpath by adding dependencies to the <code class="literal">classpath</code> configuration. This is the same way you declare, for example, the Java compilation classpath. You can use any of the dependency types described in <a class="xref" href="dependency_management.html#sec:how_to_declare_your_dependencies">Section&nbsp;50.4, “How to declare your dependencies”</a>, except project dependencies.</p>
-    <p>声明了初始化脚本类路径后，你可以在初始化脚本中使用这些类，就像使用其他在类路径上的类一样。以下示例是在上一示例的基础上，增加了使用初始化脚本类路径中的类。<br>Having declared the init script classpath, you can use the classes in your init script as you would any other classes on the classpath. The following example adds to the previous example, and uses classes from the init script classpath.</p>
-    <div class="example">
-     <a name="externalInitDependency"></a>
-     <p class="title"><b>示例 60.3. 具有外部依赖的初始化脚本 - Example&nbsp;60.3.&nbsp;An init script with external dependencies</b></p>
-     <div class="example-contents">
-      <p><code class="filename">init.gradle</code></p>
-      <pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.apache.commons.math.fraction.Fraction
+}
+</pre></div></div><br class="example-break"><p>The closure passed to the <code class="literal">initscript()</code> method configures a
+            <a class="ulink" href="../javadoc/org/gradle/api/initialization/dsl/ScriptHandler.html" target="_top"><code class="classname">ScriptHandler</code></a> instance. You declare the init script
+            classpath by adding dependencies to the <code class="literal">classpath</code> configuration. This is the same way
+            you declare, for example, the Java compilation classpath. You can use any of the dependency types described
+            in <a class="xref" href="dependency_management.html#sec:how_to_declare_your_dependencies">Section&nbsp;23.4, &ldquo;How to declare your dependencies&rdquo;</a>, except project dependencies.</p><p>Having declared the init script classpath, you can use the classes in your init script as you would
+            any other classes on the classpath. The following example adds to the previous example, and uses classes
+            from the init script classpath.</p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="externalInitDependency"></a><p class="title"><b>Example&nbsp;42.3.&nbsp;An init script with external dependencies</b></p><div class="example-contents"><p><code class="filename">init.gradle</code></p><pre class="programlisting"><span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">import</span> org.apache.commons.math.fraction.Fraction
 
 initscript {
     repositories {
         mavenCentral()
-}
     }
     dependencies {
         classpath group: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'org.apache.commons'</span>, name: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'commons-math'</span>, version: <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">'2.0'</span>
     }
 }
 
-println Fraction.ONE_FIFTH.multiply(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">2</span>)</pre>
-      <p><strong class="userinput"><code>gradle --init-script init.gradle -q doNothing</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle --init-script init.gradle -q doNothing</code></strong></p>
-      <pre class="screen">&gt; gradle --init-script init.gradle -q doNothing
-2 / 5</pre>
-     </div>
-    </div>
-    <br class="example-break">
-   </div>
-   <div class="section">
-    <div class="titlepage">
-     <div>
-      <div>
-       <h2 class="title"><a name="N16A81"></a>60.5. 初始化脚本插件</h2>
-       <h4 class="title"><a name="N16A81"></a>60.5.&nbsp;Init script plugins</h4>
-      </div>
-     </div>
-    </div>
-    <p>与 Gradle 构建脚本类似，插件也可以应用在初始化脚本上。 <br>Similar to a Gradle build script or a Gradle settings file, plugins can be applied on init scripts.</p>
-    <div class="example">
-     <a name="usePluginsInInitScripts"></a>
-     <p class="title"><b>示例 60.4. 在初始化脚本中使用插件 - Example&nbsp;60.4.&nbsp;Using plugins in init scripts</b></p>
-     <div class="example-contents">
-      <p><code class="filename">init.gradle</code></p>
-      <pre class="programlisting">apply plugin:EnterpriseRepositoryPlugin
+println Fraction.ONE_FIFTH.multiply(<span xmlns:xslthl="http://xslthl.sf.net" class="hl-number">2</span>)
+</pre><p>Output of <strong class="userinput"><code>gradle --init-script init.gradle -q doNothing</code></strong></p><pre class="screen">&gt; gradle --init-script init.gradle -q doNothing
+2 / 5
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N14C1D" class="section-anchor" href="#N14C1D"></a>42.5.&nbsp;Init script plugins</h2></div></div></div><p>Similar to a Gradle build script or a Gradle settings file, plugins can be applied on init scripts.
+            </p><div class="example"><a xmlns:xslthl="http://xslthl.sf.net" name="usePluginsInInitScripts"></a><p class="title"><b>Example&nbsp;42.4.&nbsp;Using plugins in init scripts</b></p><div class="example-contents"><p><code class="filename">init.gradle</code></p><pre class="programlisting">
+apply plugin:EnterpriseRepositoryPlugin
 
 <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">class</span> EnterpriseRepositoryPlugin <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">implements</span> Plugin&lt;Gradle&gt; {
 
-    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">private</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">static</span> String ENTERPRISE_REPOSITORY_URL = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"http://repo.gradle.org/gradle/repo"</span>
+    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">private</span> <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">static</span> String ENTERPRISE_REPOSITORY_URL = <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"https://repo.gradle.org/gradle/repo"</span>
 
     <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">void</span> apply(Gradle gradle) {
         <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// ONLY USE ENTERPRISE REPO FOR DEPENDENCIES</span>
         gradle.allprojects{ project -&gt;
             project.repositories {
 
-                <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">//remove all repositories not pointing to the enterprise repository url</span>
+                <span xmlns:xslthl="http://xslthl.sf.net" class="hl-comment">// Remove all repositories not pointing to the enterprise repository url</span>
                 all { ArtifactRepository repo -&gt;
-                    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (!(repo <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">instanceof</span> MavenArtifactRepository) || repo.url.toString() != ENTERPRISE_REPOSITORY_URL) {
+                    <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">if</span> (!(repo <span xmlns:xslthl="http://xslthl.sf.net" class="hl-keyword">instanceof</span> MavenArtifactRepository) ||
+                          repo.url.toString() != ENTERPRISE_REPOSITORY_URL) {
                         project.logger.lifecycle <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"Repository ${repo.url} removed. Only $ENTERPRISE_REPOSITORY_URL is allowed"</span>
                         remove repo
                     }
@@ -220,9 +109,8 @@ println Fraction.ONE_FIFTH.multiply(<span xmlns:xslthl="http://xslthl.sf.net" cl
             }
         }
     }
-}</pre>
-      <p><code class="filename">build.gradle</code></p>
-      <pre class="programlisting">repositories{
+}
+</pre><p><code class="filename">build.gradle</code></p><pre class="programlisting">repositories{
     mavenCentral()
 }
 
@@ -230,27 +118,11 @@ println Fraction.ONE_FIFTH.multiply(<span xmlns:xslthl="http://xslthl.sf.net" cl
     repositories.each{
         println <span xmlns:xslthl="http://xslthl.sf.net" class="hl-string">"repository: ${it.name} ('${it.url}')"</span>
     }
-}</pre>
-      <p><strong class="userinput"><code>gradle -I init.gradle showRepositories</code></strong> 的输出结果<br>Output of <strong class="userinput"><code>gradle -q -I init.gradle showRepositories</code></strong></p>
-      <pre class="screen">&gt; gradle -q -I init.gradle showRepositories
-repository: STANDARD_ENTERPRISE_REPO ('http://repo.gradle.org/gradle/repo')</pre>
-     </div>
-    </div>
-    <br class="example-break">
-    <p>这个在示例的初始化脚本中的插件，确保了当执行构建时只使用一个指定的仓库。 <br>The plugin in the sample init scripts ensures, that only a specified repository is used when running the build.</p>
-    <p>当在初始化脚本中应用插件时，Gradle 将实例化插件并调用插件实例的 <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html#apply(T)" target="_top"><code class="classname">Plugin.apply()</code></a> 方法。然后 <code class="literal">gradle</code> 对象作为参数传入，用于配置构建的所有方面。当然，应用的插件也可以解析为外部依赖，如<a class="xref" href="init_scripts.html#sec:custom_classpath">第 60.4 节，《初始化脚本的外部依赖》</a>中所述。 <br>When applying plugins within the init script, Gradle instantiates the plugin and calls the plugin instance's <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html#apply(T)" target="_top"><code class="classname">Plugin.apply()</code></a> method. The <code class="literal">gradle</code> object is passed as a parameter, which can be used to configure all aspects of a build. Of course, the applied plugin can be resolved as external dependency as described in <a class="xref" href="init_scripts.html#sec:custom_classpath">Section&nbsp;60.4, “External dependencies for the init script”</a></p>
-   </div>
-  </div>
-  <div class="navfooter">
-   <div>
-    <div class="navbar">
-     <a xmlns:xslthl="http://xslthl.sf.net" href="organizing_build_logic.html" title="第五十九章. 组织构建逻辑">上一章</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南">目录</a>
-     <span>|</span>
-     <a xmlns:xslthl="http://xslthl.sf.net" href="gradle_wrapper.html" title="第六十一章.&nbsp;Gradle 包装器">下一章</a>
-    </div>
-   </div>
-  </div>
- </body>
-</html>
+}
+</pre><p>Output of <strong class="userinput"><code>gradle -q -I init.gradle showRepositories</code></strong></p><pre class="screen">&gt; gradle -q -I init.gradle showRepositories
+repository: STANDARD_ENTERPRISE_REPO ('https://repo.gradle.org/gradle/repo')</pre></div></div><br class="example-break"><p>The plugin in the init script ensures that only a specified repository is used when running the build.
+            </p><p>When applying plugins within the init script, Gradle instantiates the plugin and calls the plugin
+                instance's <a class="ulink" href="../javadoc/org/gradle/api/Plugin.html#apply(T)" target="_top"><code class="classname">Plugin.apply(T)</code></a> method. The <code class="literal">gradle</code> object is passed as a parameter,
+                which can be used to configure all aspects of a build.
+                Of course, the applied plugin can be resolved as an external dependency as described in <a class="xref" href="init_scripts.html#sec:custom_classpath">Section&nbsp;42.4, &ldquo;External dependencies for the init script&rdquo;</a>
+            </p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="organizing_build_logic.html" title="Organizing Build Logic - Gradle User Guide Version 2.14.1">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="test_kit.html" title="The Gradle TestKit - Gradle User Guide Version 2.14.1">Next</a></div></div></div></body></html>
