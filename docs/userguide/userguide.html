@@ -1,4 +1,2686 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Gradle User Guide Version 2.14.1</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 2.14.1"><link rel="next" href="pt01.html" title="Part&nbsp;I.&nbsp;About Gradle"></head><body><div class="book"><div xmlns:xslthl="http://xslthl.sf.net" class="titlepage"><div class="title"><div><h1 class="title"><a name="N10002"></a>Gradle User Guide</h1></div><div><h3 class="releaseinfo">Version 2.14.1</h3></div></div><div><p class="copyright">Copyright &copy; 2007-2015 Hans Dockter, Adam Murdoch</p></div><div><div class="legalnotice" title="Legal Notice"><a name="N1000D"></a><p>Copies of this document may be made for your own use and for distribution to others, provided that you
-                do not charge any fee for such copies and further provided that each copy contains this Copyright
-                Notice, whether distributed in print or electronically.
-            </p></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="part"><a href="pt01.html">I. About Gradle</a></span></dt><dd><dl><dt><span class="chapter"><a href="introduction.html">1. Introduction</a></span></dt><dt><span class="chapter"><a href="overview.html">2. Overview</a></span></dt></dl></dd><dt><span class="part"><a href="pt02.html">II. Working with existing builds</a></span></dt><dd><dl><dt><span class="chapter"><a href="installation.html">3. Installing Gradle</a></span></dt><dt><span class="chapter"><a href="tutorial_gradle_command_line.html">4. Using the Gradle Command-Line</a></span></dt><dt><span class="chapter"><a href="gradle_wrapper.html">5. The Gradle Wrapper</a></span></dt><dt><span class="chapter"><a href="gradle_daemon.html">6. The Gradle Daemon</a></span></dt><dt><span class="chapter"><a href="artifact_dependencies_tutorial.html">7. Dependency Management Basics</a></span></dt><dt><span class="chapter"><a href="intro_multi_project_builds.html">8. Introduction to multi-project builds</a></span></dt><dt><span class="chapter"><a href="continuous_build.html">9. Continuous build</a></span></dt><dt><span class="chapter"><a href="tutorial_gradle_gui.html">10. Using the Gradle Graphical User Interface</a></span></dt><dt><span class="chapter"><a href="build_environment.html">11. The Build Environment</a></span></dt><dt><span class="chapter"><a href="troubleshooting.html">12. Troubleshooting</a></span></dt><dt><span class="chapter"><a href="embedding.html">13. Embedding Gradle using the Tooling API</a></span></dt></dl></dd><dt><span class="part"><a href="pt03.html">III. Writing Gradle build scripts</a></span></dt><dd><dl><dt><span class="chapter"><a href="tutorial_using_tasks.html">14. Build Script Basics</a></span></dt><dt><span class="chapter"><a href="build_init_plugin.html">15. Build Init Plugin</a></span></dt><dt><span class="chapter"><a href="writing_build_scripts.html">16. Writing Build Scripts</a></span></dt><dt><span class="chapter"><a href="more_about_tasks.html">17. More about Tasks</a></span></dt><dt><span class="chapter"><a href="working_with_files.html">18. Working With Files</a></span></dt><dt><span class="chapter"><a href="ant.html">19. Using Ant from Gradle</a></span></dt><dt><span class="chapter"><a href="build_lifecycle.html">20. The Build Lifecycle</a></span></dt><dt><span class="chapter"><a href="wrapper_plugin.html">21. Wrapper Plugin</a></span></dt><dt><span class="chapter"><a href="logging.html">22. Logging</a></span></dt><dt><span class="chapter"><a href="dependency_management.html">23. Dependency Management</a></span></dt><dt><span class="chapter"><a href="multi_project_builds.html">24. Multi-project Builds</a></span></dt><dt><span class="chapter"><a href="plugins.html">25. Gradle Plugins</a></span></dt><dt><span class="chapter"><a href="standard_plugins.html">26. Standard Gradle plugins</a></span></dt><dt><span class="chapter"><a href="project_reports_plugin.html">27. The Project Report Plugin</a></span></dt><dt><span class="chapter"><a href="buildDashboard_plugin.html">28. The Build Dashboard Plugin</a></span></dt><dt><span class="chapter"><a href="comparing_builds.html">29. Comparing Builds</a></span></dt><dt><span class="chapter"><a href="artifact_management.html">30. Publishing artifacts</a></span></dt><dt><span class="chapter"><a href="maven_plugin.html">31. The Maven Plugin</a></span></dt><dt><span class="chapter"><a href="signing_plugin.html">32. The Signing Plugin</a></span></dt><dt><span class="chapter"><a href="publishing_ivy.html">33. Ivy Publishing (new)</a></span></dt><dt><span class="chapter"><a href="publishing_maven.html">34. Maven Publishing (new)</a></span></dt><dt><span class="chapter"><a href="distribution_plugin.html">35. The Distribution Plugin</a></span></dt><dt><span class="chapter"><a href="announce_plugin.html">36. The Announce Plugin</a></span></dt><dt><span class="chapter"><a href="build_announcements_plugin.html">37. The Build Announcements Plugin</a></span></dt></dl></dd><dt><span class="part"><a href="pt04.html">IV. Extending the build</a></span></dt><dd><dl><dt><span class="chapter"><a href="custom_tasks.html">38. Writing Custom Task Classes</a></span></dt><dt><span class="chapter"><a href="custom_plugins.html">39. Writing Custom Plugins</a></span></dt><dt><span class="chapter"><a href="javaGradle_plugin.html">40. The Java Gradle Plugin Development Plugin</a></span></dt><dt><span class="chapter"><a href="organizing_build_logic.html">41. Organizing Build Logic</a></span></dt><dt><span class="chapter"><a href="init_scripts.html">42. Initialization Scripts</a></span></dt><dt><span class="chapter"><a href="test_kit.html">43. The Gradle TestKit</a></span></dt></dl></dd><dt><span class="part"><a href="pt05.html">V. Building JVM projects</a></span></dt><dd><dl><dt><span class="chapter"><a href="tutorial_java_projects.html">44. Java Quickstart</a></span></dt><dt><span class="chapter"><a href="java_plugin.html">45. The Java Plugin</a></span></dt><dt><span class="chapter"><a href="web_project_tutorial.html">46. Web Application Quickstart</a></span></dt><dt><span class="chapter"><a href="war_plugin.html">47. The War Plugin</a></span></dt><dt><span class="chapter"><a href="ear_plugin.html">48. The Ear Plugin</a></span></dt><dt><span class="chapter"><a href="jetty_plugin.html">49. The Jetty Plugin</a></span></dt><dt><span class="chapter"><a href="application_plugin.html">50. The Application Plugin</a></span></dt><dt><span class="chapter"><a href="javaLibraryDistribution_plugin.html">51. The Java Library Distribution Plugin</a></span></dt><dt><span class="chapter"><a href="tutorial_groovy_projects.html">52. Groovy Quickstart</a></span></dt><dt><span class="chapter"><a href="groovy_plugin.html">53. The Groovy Plugin</a></span></dt><dt><span class="chapter"><a href="scala_plugin.html">54. The Scala Plugin</a></span></dt><dt><span class="chapter"><a href="antlr_plugin.html">55. The ANTLR Plugin</a></span></dt><dt><span class="chapter"><a href="checkstyle_plugin.html">56. The Checkstyle Plugin</a></span></dt><dt><span class="chapter"><a href="codenarc_plugin.html">57. The CodeNarc Plugin</a></span></dt><dt><span class="chapter"><a href="findbugs_plugin.html">58. The FindBugs Plugin</a></span></dt><dt><span class="chapter"><a href="jdepend_plugin.html">59. The JDepend Plugin</a></span></dt><dt><span class="chapter"><a href="pmd_plugin.html">60. The PMD Plugin</a></span></dt><dt><span class="chapter"><a href="jacoco_plugin.html">61. The JaCoCo Plugin</a></span></dt><dt><span class="chapter"><a href="sonar_plugin.html">62. The Sonar Plugin</a></span></dt><dt><span class="chapter"><a href="sonar_runner_plugin.html">63. The SonarQube Runner Plugin</a></span></dt><dt><span class="chapter"><a href="osgi_plugin.html">64. The OSGi Plugin</a></span></dt><dt><span class="chapter"><a href="eclipse_plugin.html">65. The Eclipse Plugins</a></span></dt><dt><span class="chapter"><a href="idea_plugin.html">66. The IDEA Plugin</a></span></dt></dl></dd><dt><span class="part"><a href="pt06.html">VI. The Software model - Next generation Gradle builds</a></span></dt><dd><dl><dt><span class="chapter"><a href="software_model.html">67. Rule based model configuration</a></span></dt><dt><span class="chapter"><a href="software_model_concepts.html">68. Software model concepts</a></span></dt><dt><span class="chapter"><a href="implement_rule_source.html">69. Implementing model rules in a plugin</a></span></dt><dt><span class="chapter"><a href="java_software.html">70. Building Java Libraries</a></span></dt><dt><span class="chapter"><a href="play_plugin.html">71. Building Play applications</a></span></dt><dt><span class="chapter"><a href="native_software.html">72. Building native software</a></span></dt><dt><span class="chapter"><a href="software_model_extend.html">73. Extending the software model</a></span></dt></dl></dd><dt><span class="part"><a href="pt07.html">VII. Appendix</a></span></dt><dd><dl><dt><span class="appendix"><a href="sample_list.html">A. Gradle Samples</a></span></dt><dt><span class="appendix"><a href="potential_traps.html">B. Potential Traps</a></span></dt><dt><span class="appendix"><a href="feature_lifecycle.html">C. The Feature Lifecycle</a></span></dt><dt><span class="appendix"><a href="gradle_command_line.html">D. Gradle Command Line</a></span></dt><dt><span class="appendix"><a href="licenses.html">E. Documentation licenses</a></span></dt><dt><span class="glossary"><a href="go01.html">Glossary</a></span></dt></dl></dd></dl></div><div class="list-of-examples"><p><b>List of Examples</b></p><dl><dt>4.1. <a href="tutorial_gradle_command_line.html#multipleTasksFromCommandLine">Executing multiple tasks</a></dt><dt>4.2. <a href="tutorial_gradle_command_line.html#excludeTask">Excluding tasks</a></dt><dt>4.3. <a href="tutorial_gradle_command_line.html#abbreviateTaskName">Abbreviated task name</a></dt><dt>4.4. <a href="tutorial_gradle_command_line.html#abbreviateCamelCaseTaskName">Abbreviated camel case task name</a></dt><dt>4.5. <a href="tutorial_gradle_command_line.html#selectProjectUsingBuildFile">Selecting the project using a build file</a></dt><dt>4.6. <a href="tutorial_gradle_command_line.html#selectProjectUsingProjectDir">Selecting the project using project directory</a></dt><dt>4.7. <a href="tutorial_gradle_command_line.html#rerunTasks">Forcing tasks to run</a></dt><dt>4.8. <a href="tutorial_gradle_command_line.html#projectListReport">Obtaining information about projects</a></dt><dt>4.9. <a href="tutorial_gradle_command_line.html#projectListReport">Providing a description for a project</a></dt><dt>4.10. <a href="tutorial_gradle_command_line.html#taskListReport">Obtaining information about tasks</a></dt><dt>4.11. <a href="tutorial_gradle_command_line.html#taskListReport">Changing the content of the task report</a></dt><dt>4.12. <a href="tutorial_gradle_command_line.html#taskListAllReport">Obtaining more information about tasks</a></dt><dt>4.13. <a href="tutorial_gradle_command_line.html#taskHelp">Obtaining detailed help for tasks</a></dt><dt>4.14. <a href="tutorial_gradle_command_line.html#dependencyListReport">Obtaining information about dependencies</a></dt><dt>4.15. <a href="tutorial_gradle_command_line.html#dependencyListReportFiltered">Filtering dependency report by configuration</a></dt><dt>4.16. <a href="tutorial_gradle_command_line.html#dependencyInsightReport">Getting the insight into a particular dependency</a></dt><dt>4.17. <a href="tutorial_gradle_command_line.html#propertyListReport">Information about properties</a></dt><dt>5.1. <a href="gradle_wrapper.html#wrapperCommandLine">Running the Wrapper task</a></dt><dt>5.2. <a href="gradle_wrapper.html#wrapperSimple">Wrapper task</a></dt><dt>5.3. <a href="gradle_wrapper.html#wrapperSimple">Wrapper generated files</a></dt><dt>5.4. <a href="gradle_wrapper.html#N10442">Generating a SHA-256 hash</a></dt><dt>5.5. <a href="gradle_wrapper.html#N1044F">Configuring SHA-256 checksum verification</a></dt><dt>7.1. <a href="artifact_dependencies_tutorial.html#basicDependencyDeclarations">Declaring dependencies</a></dt><dt>7.2. <a href="artifact_dependencies_tutorial.html#externalDependencies">Definition of an external dependency</a></dt><dt>7.3. <a href="artifact_dependencies_tutorial.html#externalDependencies">Shortcut definition of an external dependency</a></dt><dt>7.4. <a href="artifact_dependencies_tutorial.html#defineMavenCentral">Usage of Maven central repository</a></dt><dt>7.5. <a href="artifact_dependencies_tutorial.html#defineJCenter">Usage of JCenter repository</a></dt><dt>7.6. <a href="artifact_dependencies_tutorial.html#defineRemoteMavenRepo">Usage of a remote Maven repository</a></dt><dt>7.7. <a href="artifact_dependencies_tutorial.html#defineRemoteIvyRepo">Usage of a remote Ivy directory</a></dt><dt>7.8. <a href="artifact_dependencies_tutorial.html#defineRemoteIvyRepo">Usage of a local Ivy directory</a></dt><dt>7.9. <a href="artifact_dependencies_tutorial.html#publishIvyRepository">Publishing to an Ivy repository</a></dt><dt>7.10. <a href="artifact_dependencies_tutorial.html#publishMavenRepository">Publishing to a Maven repository</a></dt><dt>8.1. <a href="intro_multi_project_builds.html#listProjects">Listing the projects in a build</a></dt><dt>10.1. <a href="tutorial_gradle_gui.html#N108D1">Launching the GUI</a></dt><dt>11.1. <a href="build_environment.html#properties">Setting properties with a gradle.properties file</a></dt><dt>11.2. <a href="build_environment.html#N10A53">Configuring an HTTP proxy</a></dt><dt>11.3. <a href="build_environment.html#N10A5D">Configuring an HTTPS proxy</a></dt><dt>14.1. <a href="tutorial_using_tasks.html#hello">Your first build script</a></dt><dt>14.2. <a href="tutorial_using_tasks.html#hello">Execution of a build script</a></dt><dt>14.3. <a href="tutorial_using_tasks.html#helloShortcut">A task definition shortcut</a></dt><dt>14.4. <a href="tutorial_using_tasks.html#upper">Using Groovy in Gradle's tasks</a></dt><dt>14.5. <a href="tutorial_using_tasks.html#count">Using Groovy in Gradle's tasks</a></dt><dt>14.6. <a href="tutorial_using_tasks.html#intro">Declaration of task that depends on other task</a></dt><dt>14.7. <a href="tutorial_using_tasks.html#lazyDependsOn">Lazy dependsOn - the other task does not exist (yet)</a></dt><dt>14.8. <a href="tutorial_using_tasks.html#dynamic">Dynamic creation of a task</a></dt><dt>14.9. <a href="tutorial_using_tasks.html#dynamicDepends">Accessing a task via API - adding a dependency</a></dt><dt>14.10. <a href="tutorial_using_tasks.html#helloEnhanced">Accessing a task via API - adding behaviour</a></dt><dt>14.11. <a href="tutorial_using_tasks.html#helloWithShortCut">Accessing task as a property of the build script</a></dt><dt>14.12. <a href="tutorial_using_tasks.html#extraTaskProperties">Adding extra properties to a task</a></dt><dt>14.13. <a href="tutorial_using_tasks.html#antLoadfile">Using AntBuilder to execute ant.loadfile target</a></dt><dt>14.14. <a href="tutorial_using_tasks.html#antLoadfileWithMethod">Using methods to organize your build logic</a></dt><dt>14.15. <a href="tutorial_using_tasks.html#defaultTasks">Defining a default task</a></dt><dt>14.16. <a href="tutorial_using_tasks.html#configByDagNoRelease">Different outcomes of build depending on chosen tasks</a></dt><dt>16.1. <a href="writing_build_scripts.html#projectApi">Accessing property of the Project object</a></dt><dt>16.2. <a href="writing_build_scripts.html#localVariables">Using local variables</a></dt><dt>16.3. <a href="writing_build_scripts.html#extraProperties">Using extra properties</a></dt><dt>16.4. <a href="writing_build_scripts.html#configureObject">Configuring arbitrary objects</a></dt><dt>16.5. <a href="writing_build_scripts.html#configureObjectUsingScript">Configuring arbitrary objects using a script</a></dt><dt>16.6. <a href="writing_build_scripts.html#groovyBasics">Groovy JDK methods</a></dt><dt>16.7. <a href="writing_build_scripts.html#groovyBasics">Property accessors</a></dt><dt>16.8. <a href="writing_build_scripts.html#groovyBasics">Method call without parentheses</a></dt><dt>16.9. <a href="writing_build_scripts.html#groovyBasics">List and map literals</a></dt><dt>16.10. <a href="writing_build_scripts.html#groovyBasics">Closure as method parameter</a></dt><dt>16.11. <a href="writing_build_scripts.html#groovyBasics">Closure delegates</a></dt><dt>17.1. <a href="more_about_tasks.html#defineAsExpression">Defining tasks</a></dt><dt>17.2. <a href="more_about_tasks.html#defineUsingStringTaskNames">Defining tasks - using strings for task names</a></dt><dt>17.3. <a href="more_about_tasks.html#addToTaskContainer">Defining tasks with alternative syntax</a></dt><dt>17.4. <a href="more_about_tasks.html#accessAsProperty">Accessing tasks as properties</a></dt><dt>17.5. <a href="more_about_tasks.html#accessFromTaskContainer">Accessing tasks via tasks collection</a></dt><dt>17.6. <a href="more_about_tasks.html#accessUsingPath">Accessing tasks by path</a></dt><dt>17.7. <a href="more_about_tasks.html#declareTask">Creating a copy task</a></dt><dt>17.8. <a href="more_about_tasks.html#configureUsingVar">Configuring a task - various ways</a></dt><dt>17.9. <a href="more_about_tasks.html#configureUsingClosure">Configuring a task - with closure</a></dt><dt>17.10. <a href="more_about_tasks.html#defineAndConfigure">Defining a task with closure</a></dt><dt>17.11. <a href="more_about_tasks.html#addDependencyUsingPath">Adding dependency on task from another project</a></dt><dt>17.12. <a href="more_about_tasks.html#addDependencyUsingTask">Adding dependency using task object</a></dt><dt>17.13. <a href="more_about_tasks.html#addDependencyUsingClosure">Adding dependency using closure</a></dt><dt>17.14. <a href="more_about_tasks.html#mustRunAfter">Adding a 'must run after' task ordering</a></dt><dt>17.15. <a href="more_about_tasks.html#shouldRunAfter">Adding a 'should run after' task ordering</a></dt><dt>17.16. <a href="more_about_tasks.html#mustRunAfterSingleTask">Task ordering does not imply task execution</a></dt><dt>17.17. <a href="more_about_tasks.html#shouldRunAfterWithCycle">A 'should run after' task ordering is ignored if it introduces an ordering cycle</a></dt><dt>17.18. <a href="more_about_tasks.html#describeTask">Adding a description to a task</a></dt><dt>17.19. <a href="more_about_tasks.html#replaceTask">Overwriting a task</a></dt><dt>17.20. <a href="more_about_tasks.html#taskOnlyIf">Skipping a task using a predicate</a></dt><dt>17.21. <a href="more_about_tasks.html#stopExecutionException">Skipping tasks with StopExecutionException</a></dt><dt>17.22. <a href="more_about_tasks.html#disableTask">Enabling and disabling tasks</a></dt><dt>17.23. <a href="more_about_tasks.html#generatorTask">A generator task</a></dt><dt>17.24. <a href="more_about_tasks.html#incrementalTask">Declaring the inputs and outputs of a task</a></dt><dt>17.25. <a href="more_about_tasks.html#taskRule">Task rule</a></dt><dt>17.26. <a href="more_about_tasks.html#taskRuleDependsOn">Dependency on rule based tasks</a></dt><dt>17.27. <a href="more_about_tasks.html#taskFinalizers">Adding a task finalizer</a></dt><dt>17.28. <a href="more_about_tasks.html#taskFinalizersWithFailure">Task finalizer for a failing task</a></dt><dt>18.1. <a href="working_with_files.html#resolveFile">Locating files</a></dt><dt>18.2. <a href="working_with_files.html#fileCollections">Creating a file collection</a></dt><dt>18.3. <a href="working_with_files.html#fileCollections">Using a file collection</a></dt><dt>18.4. <a href="working_with_files.html#fileCollections">Implementing a file collection</a></dt><dt>18.5. <a href="working_with_files.html#fileTrees">Creating a file tree</a></dt><dt>18.6. <a href="working_with_files.html#fileTrees">Using a file tree</a></dt><dt>18.7. <a href="working_with_files.html#fileTrees">Using an archive as a file tree</a></dt><dt>18.8. <a href="working_with_files.html#inputFiles">Specifying a set of files</a></dt><dt>18.9. <a href="working_with_files.html#copy">Copying files using the copy task</a></dt><dt>18.10. <a href="working_with_files.html#copy">Specifying copy task source files and destination directory</a></dt><dt>18.11. <a href="working_with_files.html#copy">Selecting the files to copy</a></dt><dt>18.12. <a href="working_with_files.html#copy">Copying files using the copy() method without up-to-date check</a></dt><dt>18.13. <a href="working_with_files.html#copy">Copying files using the copy() method with up-to-date check</a></dt><dt>18.14. <a href="working_with_files.html#renameOnCopy">Renaming files as they are copied</a></dt><dt>18.15. <a href="working_with_files.html#filterOnCopy">Filtering files as they are copied</a></dt><dt>18.16. <a href="working_with_files.html#nestedCopySpecs">Nested copy specs</a></dt><dt>18.17. <a href="working_with_files.html#syncDependencies">Using the Sync task to copy dependencies</a></dt><dt>18.18. <a href="working_with_files.html#createZip">Creating a ZIP archive</a></dt><dt>18.19. <a href="working_with_files.html#archiveNaming">Creation of ZIP archive</a></dt><dt>18.20. <a href="working_with_files.html#zipWithCustomName">Configuration of archive task - custom archive name</a></dt><dt>18.21. <a href="working_with_files.html#zipWithArguments">Configuration of archive task - appendix &amp; classifier</a></dt><dt>19.1. <a href="ant.html#useAntTask">Using an Ant task</a></dt><dt>19.2. <a href="ant.html#taskWithNestedText">Passing nested text to an Ant task</a></dt><dt>19.3. <a href="ant.html#taskWithNestedElements">Passing nested elements to an Ant task</a></dt><dt>19.4. <a href="ant.html#useAntType">Using an Ant type</a></dt><dt>19.5. <a href="ant.html#useExternalAntTask">Using a custom Ant task</a></dt><dt>19.6. <a href="ant.html#useExternalAntTaskWithConfig">Declaring the classpath for a custom Ant task</a></dt><dt>19.7. <a href="ant.html#useExternalAntTaskWithConfig">Using a custom Ant task and dependency management together</a></dt><dt>19.8. <a href="ant.html#antHello">Importing an Ant build</a></dt><dt>19.9. <a href="ant.html#dependsOnAntTarget">Task that depends on Ant target</a></dt><dt>19.10. <a href="ant.html#addBehaviourToAntTarget">Adding behaviour to an Ant target</a></dt><dt>19.11. <a href="ant.html#dependsOnTask">Ant target that depends on Gradle task</a></dt><dt>19.12. <a href="ant.html#renameAntDelegate">Renaming imported Ant targets</a></dt><dt>19.13. <a href="ant.html#antProperties">Setting an Ant property</a></dt><dt>19.14. <a href="ant.html#antProperties">Getting an Ant property</a></dt><dt>19.15. <a href="ant.html#antProperties">Setting an Ant reference</a></dt><dt>19.16. <a href="ant.html#antProperties">Getting an Ant reference</a></dt><dt>19.17. <a href="ant.html#antLogging">Fine tuning Ant logging</a></dt><dt>20.1. <a href="build_lifecycle.html#buildlifecycle">Single project build</a></dt><dt>20.2. <a href="build_lifecycle.html#standardLayouts">Hierarchical layout</a></dt><dt>20.3. <a href="build_lifecycle.html#standardLayouts">Flat layout</a></dt><dt>20.4. <a href="build_lifecycle.html#customLayout">Modification of elements of the project tree</a></dt><dt>20.5. <a href="build_lifecycle.html#projectEvaluateEvents">Adding of test task to each project which has certain property set</a></dt><dt>20.6. <a href="build_lifecycle.html#buildProjectEvaluateEvents">Notifications</a></dt><dt>20.7. <a href="build_lifecycle.html#taskCreationEvents">Setting of certain property to all tasks</a></dt><dt>20.8. <a href="build_lifecycle.html#taskExecutionEvents">Logging of start and end of each task execution</a></dt><dt>22.1. <a href="logging.html#logging_to_stdout">Using stdout to write log messages</a></dt><dt>22.2. <a href="logging.html#logging_ex">Writing your own log messages</a></dt><dt>22.3. <a href="logging.html#logging_with_slf4j">Using SLF4J to write log messages</a></dt><dt>22.4. <a href="logging.html#project_stdout_capture">Configuring standard output capture</a></dt><dt>22.5. <a href="logging.html#task_stdout_capture">Configuring standard output capture for a task</a></dt><dt>22.6. <a href="logging.html#custom_logging_ui">Customizing what Gradle logs</a></dt><dt>23.1. <a href="dependency_management.html#defineConfiguration">Definition of a configuration</a></dt><dt>23.2. <a href="dependency_management.html#defineConfiguration">Accessing a configuration</a></dt><dt>23.3. <a href="dependency_management.html#defineConfiguration">Configuration of a configuration</a></dt><dt>23.4. <a href="dependency_management.html#moduleDependencies">Module dependencies</a></dt><dt>23.5. <a href="dependency_management.html#artifactOnly">Artifact only notation</a></dt><dt>23.6. <a href="dependency_management.html#classifier">Dependency with classifier</a></dt><dt>23.7. <a href="dependency_management.html#externalDependencies">Iterating over a configuration</a></dt><dt>23.8. <a href="dependency_management.html#client-modules">Client module dependencies - transitive dependencies</a></dt><dt>23.9. <a href="dependency_management.html#project-dependencies">Project dependencies</a></dt><dt>23.10. <a href="dependency_management.html#file-dependencies">File dependencies</a></dt><dt>23.11. <a href="dependency_management.html#generatedFileDependencies">Generated file dependencies</a></dt><dt>23.12. <a href="dependency_management.html#gradle-api-dependencies">Gradle API dependencies</a></dt><dt>23.13. <a href="dependency_management.html#local-groovy-dependencies">Gradle's Groovy dependencies</a></dt><dt>23.14. <a href="dependency_management.html#exclude-dependencies">Excluding transitive dependencies</a></dt><dt>23.15. <a href="dependency_management.html#dependenciesWithEmptyAttributes">Optional attributes of dependencies</a></dt><dt>23.16. <a href="dependency_management.html#listGrouping">Collections and arrays of dependencies</a></dt><dt>23.17. <a href="dependency_management.html#dependencyConfigurations">Dependency configurations</a></dt><dt>23.18. <a href="dependency_management.html#dependencyConfigurationsProjects">Dependency configurations for project</a></dt><dt>23.19. <a href="dependency_management.html#configurationHandlingSetup">Configuration.copy</a></dt><dt>23.20. <a href="dependency_management.html#configurationHandlingDependencies">Accessing declared dependencies</a></dt><dt>23.21. <a href="dependency_management.html#configurationHandlingAllFiles">Configuration.files</a></dt><dt>23.22. <a href="dependency_management.html#configurationHandlingFiles">Configuration.files with spec</a></dt><dt>23.23. <a href="dependency_management.html#configurationHandlingCopy">Configuration.copy</a></dt><dt>23.24. <a href="dependency_management.html#configurationHandlingCopyVsFiles">Configuration.copy vs. Configuration.files</a></dt><dt>23.25. <a href="dependency_management.html#mavenCentral">Adding central Maven repository</a></dt><dt>23.26. <a href="dependency_management.html#mavenJcenter">Adding Bintray's JCenter Maven repository</a></dt><dt>23.27. <a href="dependency_management.html#mavenJcenter">Using Bintrays's JCenter with HTTP</a></dt><dt>23.28. <a href="dependency_management.html#mavenLocalRepo">Adding the local Maven cache as a repository</a></dt><dt>23.29. <a href="dependency_management.html#mavenLikeRepo">Adding custom Maven repository</a></dt><dt>23.30. <a href="dependency_management.html#mavenLikeRepoWithJarRepo">Adding additional Maven repositories for JAR files</a></dt><dt>23.31. <a href="dependency_management.html#mavenPasswordProtectedRepo">Accessing password protected Maven repository</a></dt><dt>23.32. <a href="dependency_management.html#flatDirMulti">Flat repository resolver</a></dt><dt>23.33. <a href="dependency_management.html#ivyRepository">Ivy repository</a></dt><dt>23.34. <a href="dependency_management.html#ivyRepository">Ivy repository with named layout</a></dt><dt>23.35. <a href="dependency_management.html#ivyRepository">Ivy repository with pattern layout</a></dt><dt>23.36. <a href="dependency_management.html#ivyRepository">Ivy repository with multiple custom patterns</a></dt><dt>23.37. <a href="dependency_management.html#ivyRepository">Ivy repository with Maven compatible layout</a></dt><dt>23.38. <a href="dependency_management.html#ivyRepository">Ivy repository</a></dt><dt>23.39. <a href="dependency_management.html#mavenIvyRepositoriesNoAuth">Declaring a Maven and Ivy repository</a></dt><dt>23.40. <a href="dependency_management.html#mavenIvyRepositoriesAuth">Providing credentials to a Maven and Ivy repository</a></dt><dt>23.41. <a href="dependency_management.html#mavenIvyS3RepositoriesAuth">Declaring a S3 backed Maven and Ivy repository</a></dt><dt>23.42. <a href="dependency_management.html#digestAuthentication">Configure repository to use only digest authentication</a></dt><dt>23.43. <a href="dependency_management.html#preemptiveAuthentication">Configure repository to use preemptive authentication</a></dt><dt>23.44. <a href="dependency_management.html#defineRepository">Accessing a repository</a></dt><dt>23.45. <a href="dependency_management.html#defineRepository">Configuration of a repository</a></dt><dt>23.46. <a href="dependency_management.html#fileSystemResolver">Definition of a custom repository</a></dt><dt>23.47. <a href="dependency_management.html#releasable-unit">Forcing consistent version for a group of libraries</a></dt><dt>23.48. <a href="dependency_management.html#custom-versioning-scheme">Using a custom versioning scheme</a></dt><dt>23.49. <a href="dependency_management.html#blacklisting_version">Blacklisting a version with a replacement</a></dt><dt>23.50. <a href="dependency_management.html#module_substitution">Changing dependency group and/or name at the resolution</a></dt><dt>23.51. <a href="dependency_management.html#module_to_project_substitution">Substituting a module with a project</a></dt><dt>23.52. <a href="dependency_management.html#project_to_module_substitution">Substituting a project with a module</a></dt><dt>23.53. <a href="dependency_management.html#project_substitution">Conditionally substituting a dependency</a></dt><dt>23.54. <a href="dependency_management.html#configuration_default_dependencies">Specifying default dependencies on a configuration</a></dt><dt>23.55. <a href="dependency_management.html#dynamicResolveMode">Enabling dynamic resolve mode</a></dt><dt>23.56. <a href="dependency_management.html#latestSelector">'Latest' version selector</a></dt><dt>23.57. <a href="dependency_management.html#customStatusScheme">Custom status scheme</a></dt><dt>23.58. <a href="dependency_management.html#customStatusSchemeModule">Custom status scheme by module</a></dt><dt>23.59. <a href="dependency_management.html#ivyComponentMetadataRule">Ivy component metadata rule</a></dt><dt>23.60. <a href="dependency_management.html#ruleSourceComponentMetadataRule">Rule source component metadata rule</a></dt><dt>23.61. <a href="dependency_management.html#componentSelectionRulesReject">Component selection rule</a></dt><dt>23.62. <a href="dependency_management.html#componentSelectionRulesTarget">Component selection rule with module target</a></dt><dt>23.63. <a href="dependency_management.html#componentSelectionRulesMetadata">Component selection rule with metadata</a></dt><dt>23.64. <a href="dependency_management.html#componentSelectionRulesRuleSource">Component selection rule using a rule source object</a></dt><dt>23.65. <a href="dependency_management.html#module_replacement_declaration">Declaring module replacement</a></dt><dt>23.66. <a href="dependency_management.html#dynamic-version-cache-control">Dynamic version cache control</a></dt><dt>23.67. <a href="dependency_management.html#changing-module-cache-control">Changing module cache control</a></dt><dt>24.1. <a href="multi_project_builds.html#multiprojectFirstExample">Multi-project tree - water &amp; bluewhale projects</a></dt><dt>24.2. <a href="multi_project_builds.html#multiprojectFirstExample">Build script of water (parent) project</a></dt><dt>24.3. <a href="multi_project_builds.html#multiprojectAddKrill">Multi-project tree - water, bluewhale  &amp; krill projects</a></dt><dt>24.4. <a href="multi_project_builds.html#multiprojectAddKrill">Water project build script</a></dt><dt>24.5. <a href="multi_project_builds.html#multiprojectUseSubprojects">Defining common behavior of all projects and subprojects</a></dt><dt>24.6. <a href="multi_project_builds.html#multiprojectSubprojectsAddFromTop">Defining specific behaviour for particular project</a></dt><dt>24.7. <a href="multi_project_builds.html#multiprojectSpreadSpecifics">Defining specific behaviour for project krill</a></dt><dt>24.8. <a href="multi_project_builds.html#multiprojectAddTropical">Adding custom behaviour to some projects (filtered by project name)</a></dt><dt>24.9. <a href="multi_project_builds.html#multiprojectTropicalWithProperties">Adding custom behaviour to some projects (filtered by project properties)</a></dt><dt>24.10. <a href="multi_project_builds.html#multiprojectSubBuild">Running build from subproject</a></dt><dt>24.11. <a href="multi_project_builds.html#multiprojectPartialTasks">Evaluation and execution of projects</a></dt><dt>24.12. <a href="multi_project_builds.html#multiprojectPartialTasksNotQuiet">Evaluation and execution of projects</a></dt><dt>24.13. <a href="multi_project_builds.html#multiprojectAbsoluteTaskPaths">Running tasks by their absolute path</a></dt><dt>24.14. <a href="multi_project_builds.html#multiprojectFirstMessages">Dependencies and execution order</a></dt><dt>24.15. <a href="multi_project_builds.html#multiprojectMessagesHack">Dependencies and execution order</a></dt><dt>24.16. <a href="multi_project_builds.html#multiprojectMessagesHackBroken">Dependencies and execution order</a></dt><dt>24.17. <a href="multi_project_builds.html#multiprojectMessagesDependencies">Declaring dependencies</a></dt><dt>24.18. <a href="multi_project_builds.html#multiprojectMessagesDependenciesSubBuild">Declaring dependencies</a></dt><dt>24.19. <a href="multi_project_builds.html#multiprojectMessagesTaskDependencies">Cross project task dependencies</a></dt><dt>24.20. <a href="multi_project_builds.html#multiprojectMessagesConfigDependenciesBroken">Configuration time dependencies</a></dt><dt>24.21. <a href="multi_project_builds.html#multiprojectMessagesConfigDependencies">Configuration time dependencies - evaluationDependsOn</a></dt><dt>24.22. <a href="multi_project_builds.html#multiprojectMessagesConfigDependenciesAltSolution">Configuration time dependencies</a></dt><dt>24.23. <a href="multi_project_builds.html#webdist">Dependencies - real life example - crossproject configuration</a></dt><dt>24.24. <a href="multi_project_builds.html#javadependencies_1">Project lib dependencies</a></dt><dt>24.25. <a href="multi_project_builds.html#javadependencies_2">Project lib dependencies</a></dt><dt>24.26. <a href="multi_project_builds.html#javaWithCustomConf">Fine grained control over dependencies</a></dt><dt>24.27. <a href="multi_project_builds.html#multitestingBuild">Build and Test Single Project</a></dt><dt>24.28. <a href="multi_project_builds.html#multitestingBuildDashA">Partial Build and Test Single Project</a></dt><dt>24.29. <a href="multi_project_builds.html#multitestingBuildNeeded">Build and Test Depended On Projects</a></dt><dt>24.30. <a href="multi_project_builds.html#multitestingBuildDependents">Build and Test Dependent Projects</a></dt><dt>25.1. <a href="plugins.html#configureProjectUsingScript">Applying a script plugin</a></dt><dt>25.2. <a href="plugins.html#useJavaPlugin">Applying a binary plugin</a></dt><dt>25.3. <a href="plugins.html#pluginIntro">Applying a binary plugin by type</a></dt><dt>25.4. <a href="plugins.html#applyPluginBuildscript">Applying a plugin with the buildscript block</a></dt><dt>25.5. <a href="plugins.html#useJavaPluginDSL">Applying a core plugin</a></dt><dt>25.6. <a href="plugins.html#useCommunityPluginDSL">Applying a community plugin</a></dt><dt>25.7. <a href="plugins.html#customPluginRepositories">Using plugins from custom plugin repositories.</a></dt><dt>25.8. <a href="plugins.html#completePluginPublishing">Complete Plugin Publishing Sample</a></dt><dt>28.1. <a href="buildDashboard_plugin.html#useBuildDashboardPlugin">Using the Build Dashboard plugin</a></dt><dt>30.1. <a href="artifact_management.html#archiveTaskArtifact">Defining an artifact using an archive task</a></dt><dt>30.2. <a href="artifact_management.html#fileArtifact">Defining an artifact using a file</a></dt><dt>30.3. <a href="artifact_management.html#fileArtifact">Customizing an artifact</a></dt><dt>30.4. <a href="artifact_management.html#fileArtifact">Map syntax for defining an artifact using a file</a></dt><dt>30.5. <a href="artifact_management.html#uploading">Configuration of the upload task</a></dt><dt>31.1. <a href="maven_plugin.html#useMavenPlugin">Using the Maven plugin</a></dt><dt>31.2. <a href="maven_plugin.html#newPom">Creating a stand alone pom.</a></dt><dt>31.3. <a href="maven_plugin.html#uploadFile">Upload of file to remote Maven repository</a></dt><dt>31.4. <a href="maven_plugin.html#uploadWithSsh">Upload of file via SSH</a></dt><dt>31.5. <a href="maven_plugin.html#customizePom">Customization of pom</a></dt><dt>31.6. <a href="maven_plugin.html#pomBuilder">Builder style customization of pom</a></dt><dt>31.7. <a href="maven_plugin.html#pomBuilder">Modifying auto-generated content</a></dt><dt>31.8. <a href="maven_plugin.html#customizeInstaller">Customization of Maven installer</a></dt><dt>31.9. <a href="maven_plugin.html#multiplePoms">Generation of multiple poms</a></dt><dt>31.10. <a href="maven_plugin.html#mappings">Accessing a mapping configuration</a></dt><dt>32.1. <a href="signing_plugin.html#useSigningPlugin">Using the Signing plugin</a></dt><dt>32.2. <a href="signing_plugin.html#signingArchives">Signing a configuration</a></dt><dt>32.3. <a href="signing_plugin.html#signingArchivesOutput">Signing a configuration output</a></dt><dt>32.4. <a href="signing_plugin.html#signingTasks">Signing a task</a></dt><dt>32.5. <a href="signing_plugin.html#signingTaskOutput">Signing a task output</a></dt><dt>32.6. <a href="signing_plugin.html#conditionalSigning">Conditional signing</a></dt><dt>32.7. <a href="signing_plugin.html#signingMavenPom">Signing a POM for deployment</a></dt><dt>33.1. <a href="publishing_ivy.html#publishing_ivy:apply-plugin-snippet">Applying the &ldquo;ivy-publish&rdquo; plugin</a></dt><dt>33.2. <a href="publishing_ivy.html#publishing_ivy:publish-component-snippet">Publishing a Java module to Ivy</a></dt><dt>33.3. <a href="publishing_ivy.html#publishing_ivy:publish-custom-artifact-snippet">Publishing additional artifact to Ivy</a></dt><dt>33.4. <a href="publishing_ivy.html#publishing_ivy:publish-customize-identity">customizing the publication identity</a></dt><dt>33.5. <a href="publishing_ivy.html#publishing_ivy:descriptor-customization-snippet">Customizing the module descriptor file</a></dt><dt>33.6. <a href="publishing_ivy.html#publishing_ivy:publish-multiple-publications">Publishing multiple modules from a single project</a></dt><dt>33.7. <a href="publishing_ivy.html#publishing_ivy:sample_repositories">Declaring repositories to publish to</a></dt><dt>33.8. <a href="publishing_ivy.html#publishingIvyPublishSingle">Choosing a particular publication to publish</a></dt><dt>33.9. <a href="publishing_ivy.html#publishingIvyPublishLifecycle">Publishing all publications via the &ldquo;publish&rdquo; lifecycle task</a></dt><dt>33.10. <a href="publishing_ivy.html#publishingIvyGenerateDescriptor">Generating the Ivy module descriptor file</a></dt><dt>33.11. <a href="publishing_ivy.html#publishing_ivy:complete_example">Publishing a Java module</a></dt><dt>33.12. <a href="publishing_ivy.html#publishing_ivy:output_ivy.xml">Example generated ivy.xml</a></dt><dt>34.1. <a href="publishing_maven.html#publishing_maven:apply_plugin">Applying the 'maven-publish' plugin</a></dt><dt>34.2. <a href="publishing_maven.html#publishing_maven:publish-component">Adding a MavenPublication for a Java component</a></dt><dt>34.3. <a href="publishing_maven.html#publishing_maven:publish-custom-artifact">Adding additional artifact to a MavenPublication</a></dt><dt>34.4. <a href="publishing_maven.html#publishing_maven:publish-customize-identity">customizing the publication identity</a></dt><dt>34.5. <a href="publishing_maven.html#publishing_maven:pom_modification">Modifying the POM file</a></dt><dt>34.6. <a href="publishing_maven.html#publishing_maven:publish-multiple-publications">Publishing multiple modules from a single project</a></dt><dt>34.7. <a href="publishing_maven.html#publishing_maven:repositories">Declaring repositories to publish to</a></dt><dt>34.8. <a href="publishing_maven.html#publishingMavenPublishMinimal">Publishing a project to a Maven repository</a></dt><dt>34.9. <a href="publishing_maven.html#publishingMavenPublishLocal">Publish a project to the Maven local repository</a></dt><dt>34.10. <a href="publishing_maven.html#publishingMavenGeneratePom">Generate a POM file without publishing</a></dt><dt>35.1. <a href="distribution_plugin.html#useDistributionPlugin">Using the distribution plugin</a></dt><dt>35.2. <a href="distribution_plugin.html#multipleDistribution">Adding extra distributions</a></dt><dt>35.3. <a href="distribution_plugin.html#configureDistribution">Configuring the main distribution</a></dt><dt>35.4. <a href="distribution_plugin.html#publishDistribution">publish main distribution</a></dt><dt>36.1. <a href="announce_plugin.html#useAnnouncePlugin">Using the announce plugin</a></dt><dt>36.2. <a href="announce_plugin.html#useAnnouncePlugin">Configure the announce plugin</a></dt><dt>36.3. <a href="announce_plugin.html#useAnnouncePlugin">Using the announce plugin</a></dt><dt>37.1. <a href="build_announcements_plugin.html#useBuildAnnouncementsPlugin">Using the build announcements plugin</a></dt><dt>37.2. <a href="build_announcements_plugin.html#useBuildAnnouncementsPlugin">Using the build announcements plugin from an init script</a></dt><dt>38.1. <a href="custom_tasks.html#customTask">Defining a custom task</a></dt><dt>38.2. <a href="custom_tasks.html#customTaskWithAction">A hello world task</a></dt><dt>38.3. <a href="custom_tasks.html#customTaskWithProperty">A customizable hello world task</a></dt><dt>38.4. <a href="custom_tasks.html#customTaskStandalone">A build for a custom task</a></dt><dt>38.5. <a href="custom_tasks.html#customTaskStandalone">A custom task</a></dt><dt>38.6. <a href="custom_tasks.html#usingCustomTask">Using a custom task in another project</a></dt><dt>38.7. <a href="custom_tasks.html#customTaskStandalone">Testing a custom task</a></dt><dt>38.8. <a href="custom_tasks.html#taskDefinition">Defining an incremental task action</a></dt><dt>38.9. <a href="custom_tasks.html#incrementalTaskFirstRun">Running the incremental task for the first time</a></dt><dt>38.10. <a href="custom_tasks.html#incrementalTaskNoChange">Running the incremental task with unchanged inputs</a></dt><dt>38.11. <a href="custom_tasks.html#incrementalTaskUpdatedInputs">Running the incremental task with updated input files</a></dt><dt>38.12. <a href="custom_tasks.html#incrementalTaskRemovedInput">Running the incremental task with an input file removed</a></dt><dt>38.13. <a href="custom_tasks.html#incrementalTaskRemovedOutput">Running the incremental task with an output file removed</a></dt><dt>38.14. <a href="custom_tasks.html#incrementalTaskChangedProperty">Running the incremental task with an input property changed</a></dt><dt>39.1. <a href="custom_plugins.html#customPlugin">A custom plugin</a></dt><dt>39.2. <a href="custom_plugins.html#customPluginWithConvention">A custom plugin extension</a></dt><dt>39.3. <a href="custom_plugins.html#customPluginWithAdvancedConvention">A custom plugin with configuration closure</a></dt><dt>39.4. <a href="custom_plugins.html#lazyFileProperties">Evaluating file properties lazily</a></dt><dt>39.5. <a href="custom_plugins.html#customPluginStandalone">A build for a custom plugin</a></dt><dt>39.6. <a href="custom_plugins.html#customPluginStandalone">Wiring for a custom plugin</a></dt><dt>39.7. <a href="custom_plugins.html#customPluginStandalone">Using a custom plugin in another project</a></dt><dt>39.8. <a href="custom_plugins.html#useCommunityPluginDSL">Applying a community plugin with the plugins DSL</a></dt><dt>39.9. <a href="custom_plugins.html#customPluginStandalone">Testing a custom plugin</a></dt><dt>39.10. <a href="custom_plugins.html#useJavaGradlePluginPlugin">Using the Java Gradle Plugin Development plugin</a></dt><dt>39.11. <a href="custom_plugins.html#domainObjectContainer">Managing domain objects</a></dt><dt>40.1. <a href="javaGradle_plugin.html#useJavaGradlePluginPlugin">Using the Java Gradle Plugin Development plugin</a></dt><dt>40.2. <a href="javaGradle_plugin.html#gradlePluginBlock">Using the gradlePlugin {} block.</a></dt><dt>41.1. <a href="organizing_build_logic.html#inheritedBuildLogic">Using inherited properties and methods</a></dt><dt>41.2. <a href="organizing_build_logic.html#injectedBuildLogic">Using injected properties and methods</a></dt><dt>41.3. <a href="organizing_build_logic.html#configureProjectUsingScript">Configuring the project using an external build script</a></dt><dt>41.4. <a href="organizing_build_logic.html#customBuildSrcBuild">Custom buildSrc build script</a></dt><dt>41.5. <a href="organizing_build_logic.html#multiProjectBuildSrc">Adding subprojects to the root buildSrc project</a></dt><dt>41.6. <a href="organizing_build_logic.html#nestedBuild">Running another build from a build</a></dt><dt>41.7. <a href="organizing_build_logic.html#declareExternalBuildDependency">Declaring external dependencies for the build script</a></dt><dt>41.8. <a href="organizing_build_logic.html#externalBuildDependency">A build script with external dependencies</a></dt><dt>41.9. <a href="organizing_build_logic.html#buildLogic">Ant optional dependencies</a></dt><dt>42.1. <a href="init_scripts.html#initScriptConfiguration">Using init script to perform extra configuration before projects are evaluated</a></dt><dt>42.2. <a href="init_scripts.html#declareExternalInitDependency">Declaring external dependencies for an init script</a></dt><dt>42.3. <a href="init_scripts.html#externalInitDependency">An init script with external dependencies</a></dt><dt>42.4. <a href="init_scripts.html#usePluginsInInitScripts">Using plugins in init scripts</a></dt><dt>43.1. <a href="test_kit.html#testKitDependency">Declaring the TestKit dependency</a></dt><dt>43.2. <a href="test_kit.html#junitDependency">Declaring the JUnit dependency</a></dt><dt>43.3. <a href="test_kit.html#testKitFunctionalTestJunit">Using GradleRunner with JUnit</a></dt><dt>43.4. <a href="test_kit.html#testKitFunctionalTestSpock">Using GradleRunner with Spock</a></dt><dt>43.5. <a href="test_kit.html#testKitFunctionalTestSpockClassesBuildConfig">Making the code under test classpath available to the tests</a></dt><dt>43.6. <a href="test_kit.html#testKitFunctionalTestSpockClassesTestConfig">Injecting the code under test classes into test builds</a></dt><dt>43.7. <a href="test_kit.html#testKitFunctionalTestSpockAutomaticClasspath">Using the Java Gradle Development plugin for generating the plugin metadata</a></dt><dt>43.8. <a href="test_kit.html#testKitFunctionalTestSpockAutomaticClassesTestConfig">Automatically injecting the code under test classes into test builds</a></dt><dt>43.9. <a href="test_kit.html#testKitFunctionalTestSpockAutomaticClasspath">Reconfiguring the classpath generation conventions of the Java Gradle Development plugin</a></dt><dt>43.10. <a href="test_kit.html#testKitFunctionalTestSpockGradleDistribution">Specifying a Gradle version for test execution</a></dt><dt>44.1. <a href="tutorial_java_projects.html#javaQuickstart">Using the Java plugin</a></dt><dt>44.2. <a href="tutorial_java_projects.html#javaQuickstart">Building a Java project</a></dt><dt>44.3. <a href="tutorial_java_projects.html#javaQuickstart">Adding Maven repository</a></dt><dt>44.4. <a href="tutorial_java_projects.html#javaQuickstart">Adding dependencies</a></dt><dt>44.5. <a href="tutorial_java_projects.html#javaQuickstart">Customization of MANIFEST.MF</a></dt><dt>44.6. <a href="tutorial_java_projects.html#javaQuickstart">Adding a test system property</a></dt><dt>44.7. <a href="tutorial_java_projects.html#javaQuickstart">Publishing the JAR file</a></dt><dt>44.8. <a href="tutorial_java_projects.html#javaQuickstart">Eclipse plugin</a></dt><dt>44.9. <a href="tutorial_java_projects.html#javaQuickstart">Java example - complete build file</a></dt><dt>44.10. <a href="tutorial_java_projects.html#javaMultiProject">Multi-project build - hierarchical layout</a></dt><dt>44.11. <a href="tutorial_java_projects.html#javaMultiProject">Multi-project build - settings.gradle file</a></dt><dt>44.12. <a href="tutorial_java_projects.html#javaMultiProject">Multi-project build - common configuration</a></dt><dt>44.13. <a href="tutorial_java_projects.html#javaMultiProject">Multi-project build - dependencies between projects</a></dt><dt>44.14. <a href="tutorial_java_projects.html#javaMultiProject">Multi-project build - distribution file</a></dt><dt>45.1. <a href="java_plugin.html#useJavaPlugin">Using the Java plugin</a></dt><dt>45.2. <a href="java_plugin.html#customJavaSourceLayout">Custom Java source layout</a></dt><dt>45.3. <a href="java_plugin.html#defineSourceSet">Accessing a source set</a></dt><dt>45.4. <a href="java_plugin.html#configureSourceSet">Configuring the source directories of a source set</a></dt><dt>45.5. <a href="java_plugin.html#defineSourceSet">Defining a source set</a></dt><dt>45.6. <a href="java_plugin.html#sourceSetDependencies">Defining source set dependencies</a></dt><dt>45.7. <a href="java_plugin.html#compileSourceSet">Compiling a source set</a></dt><dt>45.8. <a href="java_plugin.html#configureSourceSet">Assembling a JAR for a source set</a></dt><dt>45.9. <a href="java_plugin.html#configureSourceSet">Generating the Javadoc for a source set</a></dt><dt>45.10. <a href="java_plugin.html#configureSourceSet">Running tests in a source set</a></dt><dt>45.11. <a href="java_plugin.html#testfiltering">Filtering tests in the build script</a></dt><dt>45.12. <a href="java_plugin.html#junitcategories">JUnit Categories</a></dt><dt>45.13. <a href="java_plugin.html#testnggrouping">Grouping TestNG tests</a></dt><dt>45.14. <a href="java_plugin.html#testngpreserveorder">Preserving order of TestNG tests</a></dt><dt>45.15. <a href="java_plugin.html#testnggroupbyinstances">Grouping TestNG tests by instances</a></dt><dt>45.16. <a href="java_plugin.html#subProjectsTestReport">Creating a unit test report for subprojects</a></dt><dt>45.17. <a href="java_plugin.html#manifest">Customization of MANIFEST.MF</a></dt><dt>45.18. <a href="java_plugin.html#manifest">Creating a manifest object.</a></dt><dt>45.19. <a href="java_plugin.html#manifest">Separate MANIFEST.MF for a particular archive</a></dt><dt>46.1. <a href="web_project_tutorial.html#webQuickstart">War plugin</a></dt><dt>46.2. <a href="web_project_tutorial.html#webQuickstart">Running web application with Jetty plugin</a></dt><dt>47.1. <a href="war_plugin.html#useWarPlugin">Using the War plugin</a></dt><dt>47.2. <a href="war_plugin.html#webproject">Customization of war plugin</a></dt><dt>48.1. <a href="ear_plugin.html#earWithWar">Using the Ear plugin</a></dt><dt>48.2. <a href="ear_plugin.html#earCustomized">Customization of ear plugin</a></dt><dt>49.1. <a href="jetty_plugin.html#useJettyPlugin">Using the Jetty plugin</a></dt><dt>50.1. <a href="application_plugin.html#useApplicationPlugin">Using the application plugin</a></dt><dt>50.2. <a href="application_plugin.html#useApplicationPlugin">Configure the application main class</a></dt><dt>50.3. <a href="application_plugin.html#configureApplicationDefaultJvmArgs">Configure default JVM settings</a></dt><dt>50.4. <a href="application_plugin.html#includeTaskOutputInApplicationDistribution">Include output from other tasks in the application distribution</a></dt><dt>50.5. <a href="application_plugin.html#dependentTaskForApplicationDistributionOutput">Automatically creating files for distribution</a></dt><dt>51.1. <a href="javaLibraryDistribution_plugin.html#usejavaLibraryPlugin">Using the Java library distribution plugin</a></dt><dt>51.2. <a href="javaLibraryDistribution_plugin.html#useApplicationPlugin">Configure the distribution name</a></dt><dt>51.3. <a href="javaLibraryDistribution_plugin.html#includeTaskOutputInApplicationDistribution">Include files in the distribution</a></dt><dt>52.1. <a href="tutorial_groovy_projects.html#groovyQuickstart">Groovy plugin</a></dt><dt>52.2. <a href="tutorial_groovy_projects.html#groovyQuickstart">Dependency on Groovy</a></dt><dt>52.3. <a href="tutorial_groovy_projects.html#groovyQuickstart">Groovy example - complete build file</a></dt><dt>53.1. <a href="groovy_plugin.html#useGroovyPlugin">Using the Groovy plugin</a></dt><dt>53.2. <a href="groovy_plugin.html#customGroovySourceLayout">Custom Groovy source layout</a></dt><dt>53.3. <a href="groovy_plugin.html#quickstartGroovyDependency">Configuration of Groovy dependency</a></dt><dt>53.4. <a href="groovy_plugin.html#groovyTestDependency">Configuration of Groovy test dependency</a></dt><dt>53.5. <a href="groovy_plugin.html#bundledGroovyDependency">Configuration of bundled Groovy dependency</a></dt><dt>53.6. <a href="groovy_plugin.html#groovyFileDependency">Configuration of Groovy file dependency</a></dt><dt>54.1. <a href="scala_plugin.html#useScalaPlugin">Using the Scala plugin</a></dt><dt>54.2. <a href="scala_plugin.html#customScalaSourceLayout">Custom Scala source layout</a></dt><dt>54.3. <a href="scala_plugin.html#declareScalaDependency">Declaring a Scala dependency for production code</a></dt><dt>54.4. <a href="scala_plugin.html#declareScalaTestDependency">Declaring a Scala dependency for test code</a></dt><dt>54.5. <a href="scala_plugin.html#zinc">Adjusting memory settings</a></dt><dt>54.6. <a href="scala_plugin.html#zinc">Forcing all code to be compiled</a></dt><dt>54.7. <a href="scala_plugin.html#ideaTargetVersion">Explicitly specify a target IntelliJ IDEA version</a></dt><dt>55.1. <a href="antlr_plugin.html#useAntlrPlugin">Using the ANTLR plugin</a></dt><dt>55.2. <a href="antlr_plugin.html#declareAntlrVersion">Declare ANTLR version</a></dt><dt>55.3. <a href="antlr_plugin.html#advanced">setting custom max heap size and extra arguments for ANTLR</a></dt><dt>56.1. <a href="checkstyle_plugin.html#useCheckstylePlugin">Using the Checkstyle plugin</a></dt><dt>56.2. <a href="checkstyle_plugin.html#customizeCheckstyleReport">Customizing the HTML report</a></dt><dt>57.1. <a href="codenarc_plugin.html#useCodeNarcPlugin">Using the CodeNarc plugin</a></dt><dt>58.1. <a href="findbugs_plugin.html#useFindBugsPlugin">Using the FindBugs plugin</a></dt><dt>58.2. <a href="findbugs_plugin.html#customizeFindbugsReport">Customizing the HTML report</a></dt><dt>59.1. <a href="jdepend_plugin.html#useJDependPlugin">Using the JDepend plugin</a></dt><dt>60.1. <a href="pmd_plugin.html#usePmdPlugin">Using the PMD plugin</a></dt><dt>61.1. <a href="jacoco_plugin.html#applyJacoco">Applying the JaCoCo plugin</a></dt><dt>61.2. <a href="jacoco_plugin.html#configJacoco">Configuring JaCoCo plugin settings</a></dt><dt>61.3. <a href="jacoco_plugin.html#configJacocoReport">Configuring test task</a></dt><dt>61.4. <a href="jacoco_plugin.html#jacocotesttast">Configuring test task</a></dt><dt>61.5. <a href="jacoco_plugin.html#jacoco-application-setup">Using application plugin to generate code coverage data</a></dt><dt>61.6. <a href="jacoco_plugin.html#jacoco-application-output">Coverage reports generated by applicationCodeCoverageReport</a></dt><dt>62.1. <a href="sonar_plugin.html#quickstart">Applying the Sonar plugin</a></dt><dt>62.2. <a href="sonar_plugin.html#quickstart">Configuring Sonar connection settings</a></dt><dt>62.3. <a href="sonar_plugin.html#quickstart">Configuring Sonar project settings</a></dt><dt>62.4. <a href="sonar_plugin.html#multiProject">Global configuration in a multi-project build</a></dt><dt>62.5. <a href="sonar_plugin.html#multiProject">Common project configuration in a multi-project build</a></dt><dt>62.6. <a href="sonar_plugin.html#multiProject">Individual project configuration in a multi-project build</a></dt><dt>62.7. <a href="sonar_plugin.html#multiProject">Configuring the language to be analyzed</a></dt><dt>62.8. <a href="sonar_plugin.html#multiProject">Using property syntax</a></dt><dt>62.9. <a href="sonar_plugin.html#advanced">Analyzing custom source sets</a></dt><dt>62.10. <a href="sonar_plugin.html#advanced">Analyzing languages other than Java</a></dt><dt>62.11. <a href="sonar_plugin.html#advanced">Setting custom global properties</a></dt><dt>62.12. <a href="sonar_plugin.html#advanced">Setting custom project properties</a></dt><dt>62.13. <a href="sonar_plugin.html#advanced">Implementing custom command line properties</a></dt><dt>63.1. <a href="sonar_runner_plugin.html#quickstart">Applying the SonarQube Runner plugin</a></dt><dt>63.2. <a href="sonar_runner_plugin.html#quickstart">Configuring SonarQube connection settings</a></dt><dt>63.3. <a href="sonar_runner_plugin.html#quickstart">Configuring SonarQube runner version</a></dt><dt>63.4. <a href="sonar_runner_plugin.html#multiProject">Global configuration settings</a></dt><dt>63.5. <a href="sonar_runner_plugin.html#multiProject">Shared configuration settings</a></dt><dt>63.6. <a href="sonar_runner_plugin.html#multiProject">Individual configuration settings</a></dt><dt>63.7. <a href="sonar_runner_plugin.html#multiProject">Skipping analysis of a project</a></dt><dt>63.8. <a href="sonar_runner_plugin.html#advanced">Analyzing custom source sets</a></dt><dt>63.9. <a href="sonar_runner_plugin.html#advanced">Analyzing languages other than Java</a></dt><dt>63.10. <a href="sonar_runner_plugin.html#advanced">setting custom SonarQube Runner fork options</a></dt><dt>64.1. <a href="osgi_plugin.html#useOsgiPlugin">Using the OSGi plugin</a></dt><dt>64.2. <a href="osgi_plugin.html#osgi">Configuration of OSGi MANIFEST.MF file</a></dt><dt>65.1. <a href="eclipse_plugin.html#useEclipsePlugin">Using the Eclipse plugin</a></dt><dt>65.2. <a href="eclipse_plugin.html#useEclipseWtpPlugin">Using the Eclipse WTP plugin</a></dt><dt>65.3. <a href="eclipse_plugin.html#partialOverwrites">Partial Overwrite for Classpath</a></dt><dt>65.4. <a href="eclipse_plugin.html#partialOverwritesProject">Partial Overwrite for Project</a></dt><dt>65.5. <a href="eclipse_plugin.html#exportDependencies">Export Dependencies</a></dt><dt>65.6. <a href="eclipse_plugin.html#wtpWithXml">Customizing the XML</a></dt><dt>66.1. <a href="idea_plugin.html#useIdeaPlugin">Using the IDEA plugin</a></dt><dt>66.2. <a href="idea_plugin.html#partialRewrites">Partial Rewrite for Module</a></dt><dt>66.3. <a href="idea_plugin.html#partialRewritesProject">Partial Rewrite for Project</a></dt><dt>66.4. <a href="idea_plugin.html#exportDependencies">Export Dependencies</a></dt><dt>66.5. <a href="idea_plugin.html#projectWithXml">Customizing the XML</a></dt><dt>67.1. <a href="software_model.html#basicRuleSourcePlugin-all">applying a rule source plugin</a></dt><dt>67.2. <a href="software_model.html#basicRuleSourcePlugin">a model creation rule</a></dt><dt>67.3. <a href="software_model.html#basicRuleSourcePlugin">a model mutation rule</a></dt><dt>67.4. <a href="software_model.html#basicRuleSourcePlugin">creating a task</a></dt><dt>67.5. <a href="software_model.html#basicRuleSourcePlugin">a managed type</a></dt><dt>67.6. <a href="software_model.html#basicRuleSourcePlugin">a String property</a></dt><dt>67.7. <a href="software_model.html#basicRuleSourcePlugin">a File property</a></dt><dt>67.8. <a href="software_model.html#basicRuleSourcePlugin">a Long property</a></dt><dt>67.9. <a href="software_model.html#basicRuleSourcePlugin">a boolean property</a></dt><dt>67.10. <a href="software_model.html#basicRuleSourcePlugin">an int property</a></dt><dt>67.11. <a href="software_model.html#basicRuleSourcePlugin">a managed property</a></dt><dt>67.12. <a href="software_model.html#basicRuleSourcePlugin">an enumeration type property</a></dt><dt>67.13. <a href="software_model.html#basicRuleSourcePlugin">a managed set</a></dt><dt>67.14. <a href="software_model.html#model-language-support-all">strongly modelling sources sets</a></dt><dt>67.15. <a href="software_model.html#ruleSourcePluginEach">a DSL example applying a rule to every element in a scope</a></dt><dt>67.16. <a href="software_model.html#modelDslConfigure">DSL configuration rule</a></dt><dt>67.17. <a href="software_model.html#modelDslConfigureRuleRunWhenRequired">Configuration run when required</a></dt><dt>67.18. <a href="software_model.html#modelDslConfigureRuleNotRunWhenNotRequired">Configuration not run when not required</a></dt><dt>67.19. <a href="software_model.html#modelDslCreate">DSL creation rule</a></dt><dt>67.20. <a href="software_model.html#modelDslCreateNoConfig">DSL creation rule without initialization</a></dt><dt>67.21. <a href="software_model.html#modelDslInitializationRuleRunsBeforeConfigurationRule">Initialization before configuration</a></dt><dt>67.22. <a href="software_model.html#modelDslModelMapNestedCreate">Nested DSL creation rule</a></dt><dt>67.23. <a href="software_model.html#modelDslModelMapNestedConfig">Nested DSL configuration rule</a></dt><dt>67.24. <a href="software_model.html#modelDslModelMapNestedAll">DSL configuration rule for each element in a map</a></dt><dt>67.25. <a href="software_model.html#modelDslManagedTypeNestedConfigure">Nested DSL property configuration</a></dt><dt>67.26. <a href="software_model.html#modelDslConversions">a DSL example showing type conversions</a></dt><dt>67.27. <a href="software_model.html#modelDslRuleInputs">a DSL rule using inputs</a></dt><dt>67.28. <a href="software_model.html#basicRuleSourcePlugin-model-task">model task output</a></dt><dt>70.1. <a href="java_software.html#javaLibraryQuickstart">Using the Java software plugins</a></dt><dt>70.2. <a href="java_software.html#javaLibraryQuickstart">Creating a java library</a></dt><dt>70.3. <a href="java_software.html#javaLibraryQuickstart">Configuring a source set</a></dt><dt>70.4. <a href="java_software.html#javaLibraryQuickstart">Creating a new source set</a></dt><dt>70.5. <a href="java_software.html#javaLibraryComponentReport">The components report</a></dt><dt>70.6. <a href="java_software.html#javaLibraryMultiComponents">Declaring a dependency onto a library</a></dt><dt>70.7. <a href="java_software.html#javaLibraryMultiComponents">Declaring a dependency onto a project with an explicit library</a></dt><dt>70.8. <a href="java_software.html#javaLibraryMultiComponents">Declaring a dependency onto a project with an implicit library</a></dt><dt>70.9. <a href="java_software.html#javaLibraryMultiComponents">Declaring a dependency onto a library published to a Maven repository</a></dt><dt>70.10. <a href="java_software.html#javaLibraryMultiComponents">Declaring a module dependency using shorthand notation</a></dt><dt>70.11. <a href="java_software.html#javaLibraryMultiComponents">Configuring repositories for dependency resolution</a></dt><dt>70.12. <a href="java_software.html#apiSpecification">Specifying api packages</a></dt><dt>70.13. <a href="java_software.html#apiDependencies">Specifying api dependencies</a></dt><dt>70.14. <a href="java_software.html#apiSpecification-main-classes">Main sources</a></dt><dt>70.15. <a href="java_software.html#apiSpecification-client">Client component</a></dt><dt>70.16. <a href="java_software.html#apiSpecification-brokenclient">Broken client component</a></dt><dt>70.17. <a href="java_software.html#apiSpecification-client">Recompiling the client</a></dt><dt>70.18. <a href="java_software.html#javaLibraryTargetPlatforms">Declaring target platforms</a></dt><dt>70.19. <a href="java_software.html#javaLibraryTargetPlatforms-java6MainJar">Declaring binary specific sources</a></dt><dt>70.20. <a href="java_software.html#javaLibraryTargetPlatforms-server">Declaring target platforms</a></dt><dt>70.21. <a href="java_software.html#testing-junit-standalone">Using the JUnit plugin</a></dt><dt>70.22. <a href="java_software.html#testing-junit-standalone-run">Executing the test suite</a></dt><dt>70.23. <a href="java_software.html#testing-junit-standalone-resources">Executing the test suite</a></dt><dt>70.24. <a href="java_software.html#testing-junit-component-under-test">Declaring a component under test</a></dt><dt>70.25. <a href="java_software.html#javaLibraryPlugin/toolchains">Declaring local Java installations</a></dt><dt>71.1. <a href="play_plugin.html#usePlayPlugin">Using the Play plugin</a></dt><dt>71.2. <a href="play_plugin.html#playComponentReport">The components report</a></dt><dt>71.3. <a href="play_plugin.html#specifyPlayVersion">Selecting a version of the Play Framework</a></dt><dt>71.4. <a href="play_plugin.html#addPlayDependencies">Adding dependencies to a Play application</a></dt><dt>71.5. <a href="play_plugin.html#addExtraPlaySourcesets">Adding extra source sets to a Play application</a></dt><dt>71.6. <a href="play_plugin.html#configureScalaCompiler">Configuring Scala compiler options</a></dt><dt>71.7. <a href="play_plugin.html#configureRoutesCompiler">Configuring routes style</a></dt><dt>71.8. <a href="play_plugin.html#customAssetsPipeline">Configuring a custom asset pipeline</a></dt><dt>71.9. <a href="play_plugin.html#playMultiProjectDependencies">Configuring dependencies on Play subprojects</a></dt><dt>71.10. <a href="play_plugin.html#addFilesToPlayDistribution">Add extra files to a Play application distribution</a></dt><dt>71.11. <a href="play_plugin.html#applyPlayIde">Applying both the Play and IDEA plugins</a></dt><dt>72.1. <a href="native_software.html#cppLibraries">Defining a library component</a></dt><dt>72.2. <a href="native_software.html#cppExecutables">Defining executable components</a></dt><dt>72.3. <a href="native_software.html#nativeComponentReport">The components report</a></dt><dt>72.4. <a href="native_software.html#cppPlugin">The 'cpp' plugin</a></dt><dt>72.5. <a href="native_software.html#cppSourceSet">C++ source set</a></dt><dt>72.6. <a href="native_software.html#cPlugin">The 'c' plugin</a></dt><dt>72.7. <a href="native_software.html#cSourceSet">C source set</a></dt><dt>72.8. <a href="native_software.html#assemblerPlugin">The 'assembler' plugin</a></dt><dt>72.9. <a href="native_software.html#objectiveCPlugin">The 'objective-c' plugin</a></dt><dt>72.10. <a href="native_software.html#objectiveCppPlugin">The 'objective-cpp' plugin</a></dt><dt>72.11. <a href="native_software.html#allBinarySettings">Settings that apply to all binaries</a></dt><dt>72.12. <a href="native_software.html#allSharedLibraryBinarySettings">Settings that apply to all shared libraries</a></dt><dt>72.13. <a href="native_software.html#componentBinarySettings">Settings that apply to all binaries produced for the 'main' executable component</a></dt><dt>72.14. <a href="native_software.html#sharedLibraryArgs">Settings that apply only to shared libraries produced for the 'main' library component</a></dt><dt>72.15. <a href="native_software.html#windowsResourcesPlugin">The 'windows-resources' plugin</a></dt><dt>72.16. <a href="native_software.html#windowsResourceSet">Configuring the location of Windows resource sources</a></dt><dt>72.17. <a href="native_software.html#resourceOnlyDll">Building a resource-only dll</a></dt><dt>72.18. <a href="native_software.html#cppSourceLibrary">Providing a library dependency to the source set</a></dt><dt>72.19. <a href="native_software.html#cppBinaryLibrary">Providing a library dependency to the binary</a></dt><dt>72.20. <a href="native_software.html#cppProjectDependencies">Declaring project dependencies</a></dt><dt>72.21. <a href="native_software.html#preCompiledHeaderFile">Creating a precompiled header file</a></dt><dt>72.22. <a href="native_software.html#preCompiledHeaderFile">Including a precompiled header file in a source file</a></dt><dt>72.23. <a href="native_software.html#preCompiledHeaderConfig">Configuring a precompiled header</a></dt><dt>72.24. <a href="native_software.html#buildTypes">Defining build types</a></dt><dt>72.25. <a href="native_software.html#buildTypeConfig">Configuring debug binaries</a></dt><dt>72.26. <a href="native_software.html#platforms">Defining platforms</a></dt><dt>72.27. <a href="native_software.html#flavors">Defining flavors</a></dt><dt>72.28. <a href="native_software.html#targets">Targeting a component at particular platforms</a></dt><dt>72.29. <a href="native_software.html#buildable">Building all possible variants</a></dt><dt>72.30. <a href="native_software.html#toolChains">Defining tool chains</a></dt><dt>72.31. <a href="native_software.html#withArguments">Reconfigure tool arguments</a></dt><dt>72.32. <a href="native_software.html#targetPlatforms">Defining target platforms</a></dt><dt>72.33. <a href="native_software.html#cunitSources">Registering CUnit tests</a></dt><dt>72.34. <a href="native_software.html#completeCUnitExample">Running CUnit tests</a></dt><dt>72.35. <a href="native_software.html#googleTestSources">Registering GoogleTest tests</a></dt><dt>73.1. <a href="software_model_extend.html#sm-extensible-build-script">an example of using a custom software model</a></dt><dt>73.2. <a href="software_model_extend.html#component-declaration">Declare a custom component</a></dt><dt>73.3. <a href="software_model_extend.html#component-registration">Register a custom component</a></dt><dt>73.4. <a href="software_model_extend.html#binary-declaration">Declare a custom binary</a></dt><dt>73.5. <a href="software_model_extend.html#binary-registration">Register a custom binary</a></dt><dt>73.6. <a href="software_model_extend.html#markdown-lang-declaration">Declare a custom source set</a></dt><dt>73.7. <a href="software_model_extend.html#markdown-lang-registration">Register a custom source set</a></dt><dt>73.8. <a href="software_model_extend.html#binaries-gen">Generates documentation binaries</a></dt><dt>73.9. <a href="software_model_extend.html#text-tasks-gen">Generates tasks for text source sets</a></dt><dt>73.10. <a href="software_model_extend.html#markdown-tasks-gen">Register a custom source set</a></dt><dt>73.11. <a href="software_model_extend.html#sm-extensible-build-script-re">an example of using a custom software model</a></dt><dt>73.12. <a href="software_model_extend.html#softwareModelExtend-components">foo bar</a></dt><dt>73.13. <a href="software_model_extend.html#iv-type-declaration">public type and internal view declaration</a></dt><dt>73.14. <a href="software_model_extend.html#iv-type-registration">type registration</a></dt><dt>73.15. <a href="software_model_extend.html#iv-view-mutation">public and internal data mutation</a></dt><dt>73.16. <a href="software_model_extend.html#softwareModelExtend-iv-model">example build script and model report output</a></dt><dt>B.1. <a href="potential_traps.html#scope">Variables scope: local and script wide</a></dt><dt>B.2. <a href="potential_traps.html#mkdirTrap">Distinct configuration and execution phase</a></dt></dl></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="pt01.html" title="Part&nbsp;I.&nbsp;About Gradle">Next</a></div></div></div></body></html>
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Gradle 用户指南版本 2.14.1 - Gradle User Guide Version 2.14.1</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南版本 2.14.1">
+  <link rel="next" href="pt01.html" title="第一部分. 关于 Gradle">
+ </head>
+ <body>
+  <div class="book">
+   <div xmlns:xslthl="http://xslthl.sf.net" class="titlepage">
+    <div class="title">
+     <div>
+      <h1 class="title"><a name="N10002"></a>Gradle 用户指南</h1>
+      <h3 class="title"><a name="N10002"></a>Gradle User Guide</h3>
+     </div>
+     <div>
+      <h3 class="releaseinfo">版本 2.14.1</h3>
+      <h5 class="releaseinfo">Version 2.14.1</h5>
+     </div>
+    </div>
+    <div>
+     <p class="copyright">版权所有 © 2007-2015 Hans Dockter, Adam Murdoch<br>Copyright © 2007-2015 Hans Dockter, Adam Murdoch</p>
+    </div>
+    <div>
+     <div class="legalnotice" title="法律声明">
+      <a name="N1000D"></a>
+      <p>本文档的副本可以供你自己使用或分发给其他人，前提是你不对此类副本收取任何费用，并且每份副本都包含本版权声明，无论是印刷版还是电子版。 <br>Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.</p>
+     </div>
+    </div>
+   </div>
+   <div class="toc">
+    <p><b>目录</b><br><b>Table of Contents</b></p>
+    <dl>
+     <dt>
+      <span class="part"><a href="pt01.html">一、关于 Gradle</a><br><a href="pt01.html">I. About Gradle</a></span>
+     </dt>
+     <dd>
+      <dl>
+       <dt>
+        <span class="chapter"><a href="introduction.html">1. 简介 - Introduction</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="overview.html">2. 概述 - Overview</a></span>
+       </dt>
+      </dl>
+     </dd>
+     <dt>
+      <span class="part"><a href="pt02.html">二、使用现有内部版本</a><br><a href="pt02.html">II. Working with existing builds</a></span>
+     </dt>
+     <dd>
+      <dl>
+       <dt>
+        <span class="chapter"><a href="installation.html">3. 安装 Gradle - Installing Gradle</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="tutorial_gradle_command_line.html">4. 使用 Gradle 命令行 - Using the Gradle Command-Line</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="gradle_wrapper.html">5. Gradle 包装器 - The Gradle Wrapper</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="gradle_daemon.html">6. Gradle 守护进程 - The Gradle Daemon</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="artifact_dependencies_tutorial.html">7. 依赖管理基础 - Dependency Management Basics</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="intro_multi_project_builds.html">8. 多项目构建简介 - Introduction to multi-project builds</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="continuous_build.html">9. 持续构建 - Continuous build</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="tutorial_gradle_gui.html">10. 使用 Gradle 图形用户界面 - Using the Gradle Graphical User Interface</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="build_environment.html">11. 构建环境 - The Build Environment</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="troubleshooting.html">12. 故障排除 - Troubleshooting</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="embedding.html">13. 使用 Tooling API 嵌入 Gradle - Embedding Gradle using the Tooling API</a></span>
+       </dt>
+      </dl>
+     </dd>
+     <dt>
+      <span class="part"><a href="pt03.html">三、编写 Gradle 构建脚本</a><br><a href="pt03.html">III. Writing Gradle build scripts</a></span>
+     </dt>
+     <dd>
+      <dl>
+       <dt>
+        <span class="chapter"><a href="tutorial_using_tasks.html">14. Build Script Basics</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="build_init_plugin.html">15. Build Init Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="writing_build_scripts.html">16. Writing Build Scripts</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="more_about_tasks.html">17. More about Tasks</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="working_with_files.html">18. Working With Files</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="ant.html">19. Using Ant from Gradle</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="build_lifecycle.html">20. The Build Lifecycle</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="wrapper_plugin.html">21. Wrapper Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="logging.html">22. Logging</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="dependency_management.html">23. Dependency Management</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="multi_project_builds.html">24. Multi-project Builds</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="plugins.html">25. Gradle Plugins</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="standard_plugins.html">26. Standard Gradle plugins</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="project_reports_plugin.html">27. The Project Report Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="buildDashboard_plugin.html">28. The Build Dashboard Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="comparing_builds.html">29. Comparing Builds</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="artifact_management.html">30. Publishing artifacts</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="maven_plugin.html">31. The Maven Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="signing_plugin.html">32. The Signing Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="publishing_ivy.html">33. Ivy Publishing (new)</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="publishing_maven.html">34. Maven Publishing (new)</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="distribution_plugin.html">35. The Distribution Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="announce_plugin.html">36. The Announce Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="build_announcements_plugin.html">37. The Build Announcements Plugin</a></span>
+       </dt>
+      </dl>
+     </dd>
+     <dt>
+      <span class="part"><a href="pt04.html">IV. Extending the build</a></span>
+     </dt>
+     <dd>
+      <dl>
+       <dt>
+        <span class="chapter"><a href="custom_tasks.html">38. Writing Custom Task Classes</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="custom_plugins.html">39. Writing Custom Plugins</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="javaGradle_plugin.html">40. The Java Gradle Plugin Development Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="organizing_build_logic.html">41. Organizing Build Logic</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="init_scripts.html">42. Initialization Scripts</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="test_kit.html">43. The Gradle TestKit</a></span>
+       </dt>
+      </dl>
+     </dd>
+     <dt>
+      <span class="part"><a href="pt05.html">V. Building JVM projects</a></span>
+     </dt>
+     <dd>
+      <dl>
+       <dt>
+        <span class="chapter"><a href="tutorial_java_projects.html">44. Java Quickstart</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="java_plugin.html">45. The Java Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="web_project_tutorial.html">46. Web Application Quickstart</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="war_plugin.html">47. The War Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="ear_plugin.html">48. The Ear Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="jetty_plugin.html">49. The Jetty Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="application_plugin.html">50. The Application Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="javaLibraryDistribution_plugin.html">51. The Java Library Distribution Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="tutorial_groovy_projects.html">52. Groovy Quickstart</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="groovy_plugin.html">53. The Groovy Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="scala_plugin.html">54. The Scala Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="antlr_plugin.html">55. The ANTLR Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="checkstyle_plugin.html">56. The Checkstyle Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="codenarc_plugin.html">57. The CodeNarc Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="findbugs_plugin.html">58. The FindBugs Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="jdepend_plugin.html">59. The JDepend Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="pmd_plugin.html">60. The PMD Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="jacoco_plugin.html">61. The JaCoCo Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="sonar_plugin.html">62. The Sonar Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="sonar_runner_plugin.html">63. The SonarQube Runner Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="osgi_plugin.html">64. The OSGi Plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="eclipse_plugin.html">65. The Eclipse Plugins</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="idea_plugin.html">66. The IDEA Plugin</a></span>
+       </dt>
+      </dl>
+     </dd>
+     <dt>
+      <span class="part"><a href="pt06.html">VI. The Software model - Next generation Gradle builds</a></span>
+     </dt>
+     <dd>
+      <dl>
+       <dt>
+        <span class="chapter"><a href="software_model.html">67. Rule based model configuration</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="software_model_concepts.html">68. Software model concepts</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="implement_rule_source.html">69. Implementing model rules in a plugin</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="java_software.html">70. Building Java Libraries</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="play_plugin.html">71. Building Play applications</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="native_software.html">72. Building native software</a></span>
+       </dt>
+       <dt>
+        <span class="chapter"><a href="software_model_extend.html">73. Extending the software model</a></span>
+       </dt>
+      </dl>
+     </dd>
+     <dt>
+      <span class="part"><a href="pt07.html">VII. Appendix</a></span>
+     </dt>
+     <dd>
+      <dl>
+       <dt>
+        <span class="appendix"><a href="sample_list.html">A. Gradle Samples</a></span>
+       </dt>
+       <dt>
+        <span class="appendix"><a href="potential_traps.html">B. Potential Traps</a></span>
+       </dt>
+       <dt>
+        <span class="appendix"><a href="feature_lifecycle.html">C. The Feature Lifecycle</a></span>
+       </dt>
+       <dt>
+        <span class="appendix"><a href="gradle_command_line.html">D. Gradle Command Line</a></span>
+       </dt>
+       <dt>
+        <span class="appendix"><a href="licenses.html">E. Documentation licenses</a></span>
+       </dt>
+       <dt>
+        <span class="glossary"><a href="go01.html">Glossary</a></span>
+       </dt>
+      </dl>
+     </dd>
+    </dl>
+   </div>
+   <div class="list-of-examples">
+    <p><b>List of Examples</b></p>
+    <dl>
+     <dt>
+      4.1. 
+      <a href="tutorial_gradle_command_line.html#multipleTasksFromCommandLine">Executing multiple tasks</a>
+     </dt>
+     <dt>
+      4.2. 
+      <a href="tutorial_gradle_command_line.html#excludeTask">Excluding tasks</a>
+     </dt>
+     <dt>
+      4.3. 
+      <a href="tutorial_gradle_command_line.html#abbreviateTaskName">Abbreviated task name</a>
+     </dt>
+     <dt>
+      4.4. 
+      <a href="tutorial_gradle_command_line.html#abbreviateCamelCaseTaskName">Abbreviated camel case task name</a>
+     </dt>
+     <dt>
+      4.5. 
+      <a href="tutorial_gradle_command_line.html#selectProjectUsingBuildFile">Selecting the project using a build file</a>
+     </dt>
+     <dt>
+      4.6. 
+      <a href="tutorial_gradle_command_line.html#selectProjectUsingProjectDir">Selecting the project using project directory</a>
+     </dt>
+     <dt>
+      4.7. 
+      <a href="tutorial_gradle_command_line.html#rerunTasks">Forcing tasks to run</a>
+     </dt>
+     <dt>
+      4.8. 
+      <a href="tutorial_gradle_command_line.html#projectListReport">Obtaining information about projects</a>
+     </dt>
+     <dt>
+      4.9. 
+      <a href="tutorial_gradle_command_line.html#projectListReport">Providing a description for a project</a>
+     </dt>
+     <dt>
+      4.10. 
+      <a href="tutorial_gradle_command_line.html#taskListReport">Obtaining information about tasks</a>
+     </dt>
+     <dt>
+      4.11. 
+      <a href="tutorial_gradle_command_line.html#taskListReport">Changing the content of the task report</a>
+     </dt>
+     <dt>
+      4.12. 
+      <a href="tutorial_gradle_command_line.html#taskListAllReport">Obtaining more information about tasks</a>
+     </dt>
+     <dt>
+      4.13. 
+      <a href="tutorial_gradle_command_line.html#taskHelp">Obtaining detailed help for tasks</a>
+     </dt>
+     <dt>
+      4.14. 
+      <a href="tutorial_gradle_command_line.html#dependencyListReport">Obtaining information about dependencies</a>
+     </dt>
+     <dt>
+      4.15. 
+      <a href="tutorial_gradle_command_line.html#dependencyListReportFiltered">Filtering dependency report by configuration</a>
+     </dt>
+     <dt>
+      4.16. 
+      <a href="tutorial_gradle_command_line.html#dependencyInsightReport">Getting the insight into a particular dependency</a>
+     </dt>
+     <dt>
+      4.17. 
+      <a href="tutorial_gradle_command_line.html#propertyListReport">Information about properties</a>
+     </dt>
+     <dt>
+      5.1. 
+      <a href="gradle_wrapper.html#wrapperCommandLine">Running the Wrapper task</a>
+     </dt>
+     <dt>
+      5.2. 
+      <a href="gradle_wrapper.html#wrapperSimple">Wrapper task</a>
+     </dt>
+     <dt>
+      5.3. 
+      <a href="gradle_wrapper.html#wrapperSimple">Wrapper generated files</a>
+     </dt>
+     <dt>
+      5.4. 
+      <a href="gradle_wrapper.html#N10442">Generating a SHA-256 hash</a>
+     </dt>
+     <dt>
+      5.5. 
+      <a href="gradle_wrapper.html#N1044F">Configuring SHA-256 checksum verification</a>
+     </dt>
+     <dt>
+      7.1. 
+      <a href="artifact_dependencies_tutorial.html#basicDependencyDeclarations">Declaring dependencies</a>
+     </dt>
+     <dt>
+      7.2. 
+      <a href="artifact_dependencies_tutorial.html#externalDependencies">Definition of an external dependency</a>
+     </dt>
+     <dt>
+      7.3. 
+      <a href="artifact_dependencies_tutorial.html#externalDependencies">Shortcut definition of an external dependency</a>
+     </dt>
+     <dt>
+      7.4. 
+      <a href="artifact_dependencies_tutorial.html#defineMavenCentral">Usage of Maven central repository</a>
+     </dt>
+     <dt>
+      7.5. 
+      <a href="artifact_dependencies_tutorial.html#defineJCenter">Usage of JCenter repository</a>
+     </dt>
+     <dt>
+      7.6. 
+      <a href="artifact_dependencies_tutorial.html#defineRemoteMavenRepo">Usage of a remote Maven repository</a>
+     </dt>
+     <dt>
+      7.7. 
+      <a href="artifact_dependencies_tutorial.html#defineRemoteIvyRepo">Usage of a remote Ivy directory</a>
+     </dt>
+     <dt>
+      7.8. 
+      <a href="artifact_dependencies_tutorial.html#defineRemoteIvyRepo">Usage of a local Ivy directory</a>
+     </dt>
+     <dt>
+      7.9. 
+      <a href="artifact_dependencies_tutorial.html#publishIvyRepository">Publishing to an Ivy repository</a>
+     </dt>
+     <dt>
+      7.10. 
+      <a href="artifact_dependencies_tutorial.html#publishMavenRepository">Publishing to a Maven repository</a>
+     </dt>
+     <dt>
+      8.1. 
+      <a href="intro_multi_project_builds.html#listProjects">Listing the projects in a build</a>
+     </dt>
+     <dt>
+      10.1. 
+      <a href="tutorial_gradle_gui.html#N108D1">Launching the GUI</a>
+     </dt>
+     <dt>
+      11.1. 
+      <a href="build_environment.html#properties">Setting properties with a gradle.properties file</a>
+     </dt>
+     <dt>
+      11.2. 
+      <a href="build_environment.html#N10A53">Configuring an HTTP proxy</a>
+     </dt>
+     <dt>
+      11.3. 
+      <a href="build_environment.html#N10A5D">Configuring an HTTPS proxy</a>
+     </dt>
+     <dt>
+      14.1. 
+      <a href="tutorial_using_tasks.html#hello">Your first build script</a>
+     </dt>
+     <dt>
+      14.2. 
+      <a href="tutorial_using_tasks.html#hello">Execution of a build script</a>
+     </dt>
+     <dt>
+      14.3. 
+      <a href="tutorial_using_tasks.html#helloShortcut">A task definition shortcut</a>
+     </dt>
+     <dt>
+      14.4. 
+      <a href="tutorial_using_tasks.html#upper">Using Groovy in Gradle's tasks</a>
+     </dt>
+     <dt>
+      14.5. 
+      <a href="tutorial_using_tasks.html#count">Using Groovy in Gradle's tasks</a>
+     </dt>
+     <dt>
+      14.6. 
+      <a href="tutorial_using_tasks.html#intro">Declaration of task that depends on other task</a>
+     </dt>
+     <dt>
+      14.7. 
+      <a href="tutorial_using_tasks.html#lazyDependsOn">Lazy dependsOn - the other task does not exist (yet)</a>
+     </dt>
+     <dt>
+      14.8. 
+      <a href="tutorial_using_tasks.html#dynamic">Dynamic creation of a task</a>
+     </dt>
+     <dt>
+      14.9. 
+      <a href="tutorial_using_tasks.html#dynamicDepends">Accessing a task via API - adding a dependency</a>
+     </dt>
+     <dt>
+      14.10. 
+      <a href="tutorial_using_tasks.html#helloEnhanced">Accessing a task via API - adding behaviour</a>
+     </dt>
+     <dt>
+      14.11. 
+      <a href="tutorial_using_tasks.html#helloWithShortCut">Accessing task as a property of the build script</a>
+     </dt>
+     <dt>
+      14.12. 
+      <a href="tutorial_using_tasks.html#extraTaskProperties">Adding extra properties to a task</a>
+     </dt>
+     <dt>
+      14.13. 
+      <a href="tutorial_using_tasks.html#antLoadfile">Using AntBuilder to execute ant.loadfile target</a>
+     </dt>
+     <dt>
+      14.14. 
+      <a href="tutorial_using_tasks.html#antLoadfileWithMethod">Using methods to organize your build logic</a>
+     </dt>
+     <dt>
+      14.15. 
+      <a href="tutorial_using_tasks.html#defaultTasks">Defining a default task</a>
+     </dt>
+     <dt>
+      14.16. 
+      <a href="tutorial_using_tasks.html#configByDagNoRelease">Different outcomes of build depending on chosen tasks</a>
+     </dt>
+     <dt>
+      16.1. 
+      <a href="writing_build_scripts.html#projectApi">Accessing property of the Project object</a>
+     </dt>
+     <dt>
+      16.2. 
+      <a href="writing_build_scripts.html#localVariables">Using local variables</a>
+     </dt>
+     <dt>
+      16.3. 
+      <a href="writing_build_scripts.html#extraProperties">Using extra properties</a>
+     </dt>
+     <dt>
+      16.4. 
+      <a href="writing_build_scripts.html#configureObject">Configuring arbitrary objects</a>
+     </dt>
+     <dt>
+      16.5. 
+      <a href="writing_build_scripts.html#configureObjectUsingScript">Configuring arbitrary objects using a script</a>
+     </dt>
+     <dt>
+      16.6. 
+      <a href="writing_build_scripts.html#groovyBasics">Groovy JDK methods</a>
+     </dt>
+     <dt>
+      16.7. 
+      <a href="writing_build_scripts.html#groovyBasics">Property accessors</a>
+     </dt>
+     <dt>
+      16.8. 
+      <a href="writing_build_scripts.html#groovyBasics">Method call without parentheses</a>
+     </dt>
+     <dt>
+      16.9. 
+      <a href="writing_build_scripts.html#groovyBasics">List and map literals</a>
+     </dt>
+     <dt>
+      16.10. 
+      <a href="writing_build_scripts.html#groovyBasics">Closure as method parameter</a>
+     </dt>
+     <dt>
+      16.11. 
+      <a href="writing_build_scripts.html#groovyBasics">Closure delegates</a>
+     </dt>
+     <dt>
+      17.1. 
+      <a href="more_about_tasks.html#defineAsExpression">Defining tasks</a>
+     </dt>
+     <dt>
+      17.2. 
+      <a href="more_about_tasks.html#defineUsingStringTaskNames">Defining tasks - using strings for task names</a>
+     </dt>
+     <dt>
+      17.3. 
+      <a href="more_about_tasks.html#addToTaskContainer">Defining tasks with alternative syntax</a>
+     </dt>
+     <dt>
+      17.4. 
+      <a href="more_about_tasks.html#accessAsProperty">Accessing tasks as properties</a>
+     </dt>
+     <dt>
+      17.5. 
+      <a href="more_about_tasks.html#accessFromTaskContainer">Accessing tasks via tasks collection</a>
+     </dt>
+     <dt>
+      17.6. 
+      <a href="more_about_tasks.html#accessUsingPath">Accessing tasks by path</a>
+     </dt>
+     <dt>
+      17.7. 
+      <a href="more_about_tasks.html#declareTask">Creating a copy task</a>
+     </dt>
+     <dt>
+      17.8. 
+      <a href="more_about_tasks.html#configureUsingVar">Configuring a task - various ways</a>
+     </dt>
+     <dt>
+      17.9. 
+      <a href="more_about_tasks.html#configureUsingClosure">Configuring a task - with closure</a>
+     </dt>
+     <dt>
+      17.10. 
+      <a href="more_about_tasks.html#defineAndConfigure">Defining a task with closure</a>
+     </dt>
+     <dt>
+      17.11. 
+      <a href="more_about_tasks.html#addDependencyUsingPath">Adding dependency on task from another project</a>
+     </dt>
+     <dt>
+      17.12. 
+      <a href="more_about_tasks.html#addDependencyUsingTask">Adding dependency using task object</a>
+     </dt>
+     <dt>
+      17.13. 
+      <a href="more_about_tasks.html#addDependencyUsingClosure">Adding dependency using closure</a>
+     </dt>
+     <dt>
+      17.14. 
+      <a href="more_about_tasks.html#mustRunAfter">Adding a 'must run after' task ordering</a>
+     </dt>
+     <dt>
+      17.15. 
+      <a href="more_about_tasks.html#shouldRunAfter">Adding a 'should run after' task ordering</a>
+     </dt>
+     <dt>
+      17.16. 
+      <a href="more_about_tasks.html#mustRunAfterSingleTask">Task ordering does not imply task execution</a>
+     </dt>
+     <dt>
+      17.17. 
+      <a href="more_about_tasks.html#shouldRunAfterWithCycle">A 'should run after' task ordering is ignored if it introduces an ordering cycle</a>
+     </dt>
+     <dt>
+      17.18. 
+      <a href="more_about_tasks.html#describeTask">Adding a description to a task</a>
+     </dt>
+     <dt>
+      17.19. 
+      <a href="more_about_tasks.html#replaceTask">Overwriting a task</a>
+     </dt>
+     <dt>
+      17.20. 
+      <a href="more_about_tasks.html#taskOnlyIf">Skipping a task using a predicate</a>
+     </dt>
+     <dt>
+      17.21. 
+      <a href="more_about_tasks.html#stopExecutionException">Skipping tasks with StopExecutionException</a>
+     </dt>
+     <dt>
+      17.22. 
+      <a href="more_about_tasks.html#disableTask">Enabling and disabling tasks</a>
+     </dt>
+     <dt>
+      17.23. 
+      <a href="more_about_tasks.html#generatorTask">A generator task</a>
+     </dt>
+     <dt>
+      17.24. 
+      <a href="more_about_tasks.html#incrementalTask">Declaring the inputs and outputs of a task</a>
+     </dt>
+     <dt>
+      17.25. 
+      <a href="more_about_tasks.html#taskRule">Task rule</a>
+     </dt>
+     <dt>
+      17.26. 
+      <a href="more_about_tasks.html#taskRuleDependsOn">Dependency on rule based tasks</a>
+     </dt>
+     <dt>
+      17.27. 
+      <a href="more_about_tasks.html#taskFinalizers">Adding a task finalizer</a>
+     </dt>
+     <dt>
+      17.28. 
+      <a href="more_about_tasks.html#taskFinalizersWithFailure">Task finalizer for a failing task</a>
+     </dt>
+     <dt>
+      18.1. 
+      <a href="working_with_files.html#resolveFile">Locating files</a>
+     </dt>
+     <dt>
+      18.2. 
+      <a href="working_with_files.html#fileCollections">Creating a file collection</a>
+     </dt>
+     <dt>
+      18.3. 
+      <a href="working_with_files.html#fileCollections">Using a file collection</a>
+     </dt>
+     <dt>
+      18.4. 
+      <a href="working_with_files.html#fileCollections">Implementing a file collection</a>
+     </dt>
+     <dt>
+      18.5. 
+      <a href="working_with_files.html#fileTrees">Creating a file tree</a>
+     </dt>
+     <dt>
+      18.6. 
+      <a href="working_with_files.html#fileTrees">Using a file tree</a>
+     </dt>
+     <dt>
+      18.7. 
+      <a href="working_with_files.html#fileTrees">Using an archive as a file tree</a>
+     </dt>
+     <dt>
+      18.8. 
+      <a href="working_with_files.html#inputFiles">Specifying a set of files</a>
+     </dt>
+     <dt>
+      18.9. 
+      <a href="working_with_files.html#copy">Copying files using the copy task</a>
+     </dt>
+     <dt>
+      18.10. 
+      <a href="working_with_files.html#copy">Specifying copy task source files and destination directory</a>
+     </dt>
+     <dt>
+      18.11. 
+      <a href="working_with_files.html#copy">Selecting the files to copy</a>
+     </dt>
+     <dt>
+      18.12. 
+      <a href="working_with_files.html#copy">Copying files using the copy() method without up-to-date check</a>
+     </dt>
+     <dt>
+      18.13. 
+      <a href="working_with_files.html#copy">Copying files using the copy() method with up-to-date check</a>
+     </dt>
+     <dt>
+      18.14. 
+      <a href="working_with_files.html#renameOnCopy">Renaming files as they are copied</a>
+     </dt>
+     <dt>
+      18.15. 
+      <a href="working_with_files.html#filterOnCopy">Filtering files as they are copied</a>
+     </dt>
+     <dt>
+      18.16. 
+      <a href="working_with_files.html#nestedCopySpecs">Nested copy specs</a>
+     </dt>
+     <dt>
+      18.17. 
+      <a href="working_with_files.html#syncDependencies">Using the Sync task to copy dependencies</a>
+     </dt>
+     <dt>
+      18.18. 
+      <a href="working_with_files.html#createZip">Creating a ZIP archive</a>
+     </dt>
+     <dt>
+      18.19. 
+      <a href="working_with_files.html#archiveNaming">Creation of ZIP archive</a>
+     </dt>
+     <dt>
+      18.20. 
+      <a href="working_with_files.html#zipWithCustomName">Configuration of archive task - custom archive name</a>
+     </dt>
+     <dt>
+      18.21. 
+      <a href="working_with_files.html#zipWithArguments">Configuration of archive task - appendix &amp; classifier</a>
+     </dt>
+     <dt>
+      19.1. 
+      <a href="ant.html#useAntTask">Using an Ant task</a>
+     </dt>
+     <dt>
+      19.2. 
+      <a href="ant.html#taskWithNestedText">Passing nested text to an Ant task</a>
+     </dt>
+     <dt>
+      19.3. 
+      <a href="ant.html#taskWithNestedElements">Passing nested elements to an Ant task</a>
+     </dt>
+     <dt>
+      19.4. 
+      <a href="ant.html#useAntType">Using an Ant type</a>
+     </dt>
+     <dt>
+      19.5. 
+      <a href="ant.html#useExternalAntTask">Using a custom Ant task</a>
+     </dt>
+     <dt>
+      19.6. 
+      <a href="ant.html#useExternalAntTaskWithConfig">Declaring the classpath for a custom Ant task</a>
+     </dt>
+     <dt>
+      19.7. 
+      <a href="ant.html#useExternalAntTaskWithConfig">Using a custom Ant task and dependency management together</a>
+     </dt>
+     <dt>
+      19.8. 
+      <a href="ant.html#antHello">Importing an Ant build</a>
+     </dt>
+     <dt>
+      19.9. 
+      <a href="ant.html#dependsOnAntTarget">Task that depends on Ant target</a>
+     </dt>
+     <dt>
+      19.10. 
+      <a href="ant.html#addBehaviourToAntTarget">Adding behaviour to an Ant target</a>
+     </dt>
+     <dt>
+      19.11. 
+      <a href="ant.html#dependsOnTask">Ant target that depends on Gradle task</a>
+     </dt>
+     <dt>
+      19.12. 
+      <a href="ant.html#renameAntDelegate">Renaming imported Ant targets</a>
+     </dt>
+     <dt>
+      19.13. 
+      <a href="ant.html#antProperties">Setting an Ant property</a>
+     </dt>
+     <dt>
+      19.14. 
+      <a href="ant.html#antProperties">Getting an Ant property</a>
+     </dt>
+     <dt>
+      19.15. 
+      <a href="ant.html#antProperties">Setting an Ant reference</a>
+     </dt>
+     <dt>
+      19.16. 
+      <a href="ant.html#antProperties">Getting an Ant reference</a>
+     </dt>
+     <dt>
+      19.17. 
+      <a href="ant.html#antLogging">Fine tuning Ant logging</a>
+     </dt>
+     <dt>
+      20.1. 
+      <a href="build_lifecycle.html#buildlifecycle">Single project build</a>
+     </dt>
+     <dt>
+      20.2. 
+      <a href="build_lifecycle.html#standardLayouts">Hierarchical layout</a>
+     </dt>
+     <dt>
+      20.3. 
+      <a href="build_lifecycle.html#standardLayouts">Flat layout</a>
+     </dt>
+     <dt>
+      20.4. 
+      <a href="build_lifecycle.html#customLayout">Modification of elements of the project tree</a>
+     </dt>
+     <dt>
+      20.5. 
+      <a href="build_lifecycle.html#projectEvaluateEvents">Adding of test task to each project which has certain property set</a>
+     </dt>
+     <dt>
+      20.6. 
+      <a href="build_lifecycle.html#buildProjectEvaluateEvents">Notifications</a>
+     </dt>
+     <dt>
+      20.7. 
+      <a href="build_lifecycle.html#taskCreationEvents">Setting of certain property to all tasks</a>
+     </dt>
+     <dt>
+      20.8. 
+      <a href="build_lifecycle.html#taskExecutionEvents">Logging of start and end of each task execution</a>
+     </dt>
+     <dt>
+      22.1. 
+      <a href="logging.html#logging_to_stdout">Using stdout to write log messages</a>
+     </dt>
+     <dt>
+      22.2. 
+      <a href="logging.html#logging_ex">Writing your own log messages</a>
+     </dt>
+     <dt>
+      22.3. 
+      <a href="logging.html#logging_with_slf4j">Using SLF4J to write log messages</a>
+     </dt>
+     <dt>
+      22.4. 
+      <a href="logging.html#project_stdout_capture">Configuring standard output capture</a>
+     </dt>
+     <dt>
+      22.5. 
+      <a href="logging.html#task_stdout_capture">Configuring standard output capture for a task</a>
+     </dt>
+     <dt>
+      22.6. 
+      <a href="logging.html#custom_logging_ui">Customizing what Gradle logs</a>
+     </dt>
+     <dt>
+      23.1. 
+      <a href="dependency_management.html#defineConfiguration">Definition of a configuration</a>
+     </dt>
+     <dt>
+      23.2. 
+      <a href="dependency_management.html#defineConfiguration">Accessing a configuration</a>
+     </dt>
+     <dt>
+      23.3. 
+      <a href="dependency_management.html#defineConfiguration">Configuration of a configuration</a>
+     </dt>
+     <dt>
+      23.4. 
+      <a href="dependency_management.html#moduleDependencies">Module dependencies</a>
+     </dt>
+     <dt>
+      23.5. 
+      <a href="dependency_management.html#artifactOnly">Artifact only notation</a>
+     </dt>
+     <dt>
+      23.6. 
+      <a href="dependency_management.html#classifier">Dependency with classifier</a>
+     </dt>
+     <dt>
+      23.7. 
+      <a href="dependency_management.html#externalDependencies">Iterating over a configuration</a>
+     </dt>
+     <dt>
+      23.8. 
+      <a href="dependency_management.html#client-modules">Client module dependencies - transitive dependencies</a>
+     </dt>
+     <dt>
+      23.9. 
+      <a href="dependency_management.html#project-dependencies">Project dependencies</a>
+     </dt>
+     <dt>
+      23.10. 
+      <a href="dependency_management.html#file-dependencies">File dependencies</a>
+     </dt>
+     <dt>
+      23.11. 
+      <a href="dependency_management.html#generatedFileDependencies">Generated file dependencies</a>
+     </dt>
+     <dt>
+      23.12. 
+      <a href="dependency_management.html#gradle-api-dependencies">Gradle API dependencies</a>
+     </dt>
+     <dt>
+      23.13. 
+      <a href="dependency_management.html#local-groovy-dependencies">Gradle's Groovy dependencies</a>
+     </dt>
+     <dt>
+      23.14. 
+      <a href="dependency_management.html#exclude-dependencies">Excluding transitive dependencies</a>
+     </dt>
+     <dt>
+      23.15. 
+      <a href="dependency_management.html#dependenciesWithEmptyAttributes">Optional attributes of dependencies</a>
+     </dt>
+     <dt>
+      23.16. 
+      <a href="dependency_management.html#listGrouping">Collections and arrays of dependencies</a>
+     </dt>
+     <dt>
+      23.17. 
+      <a href="dependency_management.html#dependencyConfigurations">Dependency configurations</a>
+     </dt>
+     <dt>
+      23.18. 
+      <a href="dependency_management.html#dependencyConfigurationsProjects">Dependency configurations for project</a>
+     </dt>
+     <dt>
+      23.19. 
+      <a href="dependency_management.html#configurationHandlingSetup">Configuration.copy</a>
+     </dt>
+     <dt>
+      23.20. 
+      <a href="dependency_management.html#configurationHandlingDependencies">Accessing declared dependencies</a>
+     </dt>
+     <dt>
+      23.21. 
+      <a href="dependency_management.html#configurationHandlingAllFiles">Configuration.files</a>
+     </dt>
+     <dt>
+      23.22. 
+      <a href="dependency_management.html#configurationHandlingFiles">Configuration.files with spec</a>
+     </dt>
+     <dt>
+      23.23. 
+      <a href="dependency_management.html#configurationHandlingCopy">Configuration.copy</a>
+     </dt>
+     <dt>
+      23.24. 
+      <a href="dependency_management.html#configurationHandlingCopyVsFiles">Configuration.copy vs. Configuration.files</a>
+     </dt>
+     <dt>
+      23.25. 
+      <a href="dependency_management.html#mavenCentral">Adding central Maven repository</a>
+     </dt>
+     <dt>
+      23.26. 
+      <a href="dependency_management.html#mavenJcenter">Adding Bintray's JCenter Maven repository</a>
+     </dt>
+     <dt>
+      23.27. 
+      <a href="dependency_management.html#mavenJcenter">Using Bintrays's JCenter with HTTP</a>
+     </dt>
+     <dt>
+      23.28. 
+      <a href="dependency_management.html#mavenLocalRepo">Adding the local Maven cache as a repository</a>
+     </dt>
+     <dt>
+      23.29. 
+      <a href="dependency_management.html#mavenLikeRepo">Adding custom Maven repository</a>
+     </dt>
+     <dt>
+      23.30. 
+      <a href="dependency_management.html#mavenLikeRepoWithJarRepo">Adding additional Maven repositories for JAR files</a>
+     </dt>
+     <dt>
+      23.31. 
+      <a href="dependency_management.html#mavenPasswordProtectedRepo">Accessing password protected Maven repository</a>
+     </dt>
+     <dt>
+      23.32. 
+      <a href="dependency_management.html#flatDirMulti">Flat repository resolver</a>
+     </dt>
+     <dt>
+      23.33. 
+      <a href="dependency_management.html#ivyRepository">Ivy repository</a>
+     </dt>
+     <dt>
+      23.34. 
+      <a href="dependency_management.html#ivyRepository">Ivy repository with named layout</a>
+     </dt>
+     <dt>
+      23.35. 
+      <a href="dependency_management.html#ivyRepository">Ivy repository with pattern layout</a>
+     </dt>
+     <dt>
+      23.36. 
+      <a href="dependency_management.html#ivyRepository">Ivy repository with multiple custom patterns</a>
+     </dt>
+     <dt>
+      23.37. 
+      <a href="dependency_management.html#ivyRepository">Ivy repository with Maven compatible layout</a>
+     </dt>
+     <dt>
+      23.38. 
+      <a href="dependency_management.html#ivyRepository">Ivy repository</a>
+     </dt>
+     <dt>
+      23.39. 
+      <a href="dependency_management.html#mavenIvyRepositoriesNoAuth">Declaring a Maven and Ivy repository</a>
+     </dt>
+     <dt>
+      23.40. 
+      <a href="dependency_management.html#mavenIvyRepositoriesAuth">Providing credentials to a Maven and Ivy repository</a>
+     </dt>
+     <dt>
+      23.41. 
+      <a href="dependency_management.html#mavenIvyS3RepositoriesAuth">Declaring a S3 backed Maven and Ivy repository</a>
+     </dt>
+     <dt>
+      23.42. 
+      <a href="dependency_management.html#digestAuthentication">Configure repository to use only digest authentication</a>
+     </dt>
+     <dt>
+      23.43. 
+      <a href="dependency_management.html#preemptiveAuthentication">Configure repository to use preemptive authentication</a>
+     </dt>
+     <dt>
+      23.44. 
+      <a href="dependency_management.html#defineRepository">Accessing a repository</a>
+     </dt>
+     <dt>
+      23.45. 
+      <a href="dependency_management.html#defineRepository">Configuration of a repository</a>
+     </dt>
+     <dt>
+      23.46. 
+      <a href="dependency_management.html#fileSystemResolver">Definition of a custom repository</a>
+     </dt>
+     <dt>
+      23.47. 
+      <a href="dependency_management.html#releasable-unit">Forcing consistent version for a group of libraries</a>
+     </dt>
+     <dt>
+      23.48. 
+      <a href="dependency_management.html#custom-versioning-scheme">Using a custom versioning scheme</a>
+     </dt>
+     <dt>
+      23.49. 
+      <a href="dependency_management.html#blacklisting_version">Blacklisting a version with a replacement</a>
+     </dt>
+     <dt>
+      23.50. 
+      <a href="dependency_management.html#module_substitution">Changing dependency group and/or name at the resolution</a>
+     </dt>
+     <dt>
+      23.51. 
+      <a href="dependency_management.html#module_to_project_substitution">Substituting a module with a project</a>
+     </dt>
+     <dt>
+      23.52. 
+      <a href="dependency_management.html#project_to_module_substitution">Substituting a project with a module</a>
+     </dt>
+     <dt>
+      23.53. 
+      <a href="dependency_management.html#project_substitution">Conditionally substituting a dependency</a>
+     </dt>
+     <dt>
+      23.54. 
+      <a href="dependency_management.html#configuration_default_dependencies">Specifying default dependencies on a configuration</a>
+     </dt>
+     <dt>
+      23.55. 
+      <a href="dependency_management.html#dynamicResolveMode">Enabling dynamic resolve mode</a>
+     </dt>
+     <dt>
+      23.56. 
+      <a href="dependency_management.html#latestSelector">'Latest' version selector</a>
+     </dt>
+     <dt>
+      23.57. 
+      <a href="dependency_management.html#customStatusScheme">Custom status scheme</a>
+     </dt>
+     <dt>
+      23.58. 
+      <a href="dependency_management.html#customStatusSchemeModule">Custom status scheme by module</a>
+     </dt>
+     <dt>
+      23.59. 
+      <a href="dependency_management.html#ivyComponentMetadataRule">Ivy component metadata rule</a>
+     </dt>
+     <dt>
+      23.60. 
+      <a href="dependency_management.html#ruleSourceComponentMetadataRule">Rule source component metadata rule</a>
+     </dt>
+     <dt>
+      23.61. 
+      <a href="dependency_management.html#componentSelectionRulesReject">Component selection rule</a>
+     </dt>
+     <dt>
+      23.62. 
+      <a href="dependency_management.html#componentSelectionRulesTarget">Component selection rule with module target</a>
+     </dt>
+     <dt>
+      23.63. 
+      <a href="dependency_management.html#componentSelectionRulesMetadata">Component selection rule with metadata</a>
+     </dt>
+     <dt>
+      23.64. 
+      <a href="dependency_management.html#componentSelectionRulesRuleSource">Component selection rule using a rule source object</a>
+     </dt>
+     <dt>
+      23.65. 
+      <a href="dependency_management.html#module_replacement_declaration">Declaring module replacement</a>
+     </dt>
+     <dt>
+      23.66. 
+      <a href="dependency_management.html#dynamic-version-cache-control">Dynamic version cache control</a>
+     </dt>
+     <dt>
+      23.67. 
+      <a href="dependency_management.html#changing-module-cache-control">Changing module cache control</a>
+     </dt>
+     <dt>
+      24.1. 
+      <a href="multi_project_builds.html#multiprojectFirstExample">Multi-project tree - water &amp; bluewhale projects</a>
+     </dt>
+     <dt>
+      24.2. 
+      <a href="multi_project_builds.html#multiprojectFirstExample">Build script of water (parent) project</a>
+     </dt>
+     <dt>
+      24.3. 
+      <a href="multi_project_builds.html#multiprojectAddKrill">Multi-project tree - water, bluewhale &amp; krill projects</a>
+     </dt>
+     <dt>
+      24.4. 
+      <a href="multi_project_builds.html#multiprojectAddKrill">Water project build script</a>
+     </dt>
+     <dt>
+      24.5. 
+      <a href="multi_project_builds.html#multiprojectUseSubprojects">Defining common behavior of all projects and subprojects</a>
+     </dt>
+     <dt>
+      24.6. 
+      <a href="multi_project_builds.html#multiprojectSubprojectsAddFromTop">Defining specific behaviour for particular project</a>
+     </dt>
+     <dt>
+      24.7. 
+      <a href="multi_project_builds.html#multiprojectSpreadSpecifics">Defining specific behaviour for project krill</a>
+     </dt>
+     <dt>
+      24.8. 
+      <a href="multi_project_builds.html#multiprojectAddTropical">Adding custom behaviour to some projects (filtered by project name)</a>
+     </dt>
+     <dt>
+      24.9. 
+      <a href="multi_project_builds.html#multiprojectTropicalWithProperties">Adding custom behaviour to some projects (filtered by project properties)</a>
+     </dt>
+     <dt>
+      24.10. 
+      <a href="multi_project_builds.html#multiprojectSubBuild">Running build from subproject</a>
+     </dt>
+     <dt>
+      24.11. 
+      <a href="multi_project_builds.html#multiprojectPartialTasks">Evaluation and execution of projects</a>
+     </dt>
+     <dt>
+      24.12. 
+      <a href="multi_project_builds.html#multiprojectPartialTasksNotQuiet">Evaluation and execution of projects</a>
+     </dt>
+     <dt>
+      24.13. 
+      <a href="multi_project_builds.html#multiprojectAbsoluteTaskPaths">Running tasks by their absolute path</a>
+     </dt>
+     <dt>
+      24.14. 
+      <a href="multi_project_builds.html#multiprojectFirstMessages">Dependencies and execution order</a>
+     </dt>
+     <dt>
+      24.15. 
+      <a href="multi_project_builds.html#multiprojectMessagesHack">Dependencies and execution order</a>
+     </dt>
+     <dt>
+      24.16. 
+      <a href="multi_project_builds.html#multiprojectMessagesHackBroken">Dependencies and execution order</a>
+     </dt>
+     <dt>
+      24.17. 
+      <a href="multi_project_builds.html#multiprojectMessagesDependencies">Declaring dependencies</a>
+     </dt>
+     <dt>
+      24.18. 
+      <a href="multi_project_builds.html#multiprojectMessagesDependenciesSubBuild">Declaring dependencies</a>
+     </dt>
+     <dt>
+      24.19. 
+      <a href="multi_project_builds.html#multiprojectMessagesTaskDependencies">Cross project task dependencies</a>
+     </dt>
+     <dt>
+      24.20. 
+      <a href="multi_project_builds.html#multiprojectMessagesConfigDependenciesBroken">Configuration time dependencies</a>
+     </dt>
+     <dt>
+      24.21. 
+      <a href="multi_project_builds.html#multiprojectMessagesConfigDependencies">Configuration time dependencies - evaluationDependsOn</a>
+     </dt>
+     <dt>
+      24.22. 
+      <a href="multi_project_builds.html#multiprojectMessagesConfigDependenciesAltSolution">Configuration time dependencies</a>
+     </dt>
+     <dt>
+      24.23. 
+      <a href="multi_project_builds.html#webdist">Dependencies - real life example - crossproject configuration</a>
+     </dt>
+     <dt>
+      24.24. 
+      <a href="multi_project_builds.html#javadependencies_1">Project lib dependencies</a>
+     </dt>
+     <dt>
+      24.25. 
+      <a href="multi_project_builds.html#javadependencies_2">Project lib dependencies</a>
+     </dt>
+     <dt>
+      24.26. 
+      <a href="multi_project_builds.html#javaWithCustomConf">Fine grained control over dependencies</a>
+     </dt>
+     <dt>
+      24.27. 
+      <a href="multi_project_builds.html#multitestingBuild">Build and Test Single Project</a>
+     </dt>
+     <dt>
+      24.28. 
+      <a href="multi_project_builds.html#multitestingBuildDashA">Partial Build and Test Single Project</a>
+     </dt>
+     <dt>
+      24.29. 
+      <a href="multi_project_builds.html#multitestingBuildNeeded">Build and Test Depended On Projects</a>
+     </dt>
+     <dt>
+      24.30. 
+      <a href="multi_project_builds.html#multitestingBuildDependents">Build and Test Dependent Projects</a>
+     </dt>
+     <dt>
+      25.1. 
+      <a href="plugins.html#configureProjectUsingScript">Applying a script plugin</a>
+     </dt>
+     <dt>
+      25.2. 
+      <a href="plugins.html#useJavaPlugin">Applying a binary plugin</a>
+     </dt>
+     <dt>
+      25.3. 
+      <a href="plugins.html#pluginIntro">Applying a binary plugin by type</a>
+     </dt>
+     <dt>
+      25.4. 
+      <a href="plugins.html#applyPluginBuildscript">Applying a plugin with the buildscript block</a>
+     </dt>
+     <dt>
+      25.5. 
+      <a href="plugins.html#useJavaPluginDSL">Applying a core plugin</a>
+     </dt>
+     <dt>
+      25.6. 
+      <a href="plugins.html#useCommunityPluginDSL">Applying a community plugin</a>
+     </dt>
+     <dt>
+      25.7. 
+      <a href="plugins.html#customPluginRepositories">Using plugins from custom plugin repositories.</a>
+     </dt>
+     <dt>
+      25.8. 
+      <a href="plugins.html#completePluginPublishing">Complete Plugin Publishing Sample</a>
+     </dt>
+     <dt>
+      28.1. 
+      <a href="buildDashboard_plugin.html#useBuildDashboardPlugin">Using the Build Dashboard plugin</a>
+     </dt>
+     <dt>
+      30.1. 
+      <a href="artifact_management.html#archiveTaskArtifact">Defining an artifact using an archive task</a>
+     </dt>
+     <dt>
+      30.2. 
+      <a href="artifact_management.html#fileArtifact">Defining an artifact using a file</a>
+     </dt>
+     <dt>
+      30.3. 
+      <a href="artifact_management.html#fileArtifact">Customizing an artifact</a>
+     </dt>
+     <dt>
+      30.4. 
+      <a href="artifact_management.html#fileArtifact">Map syntax for defining an artifact using a file</a>
+     </dt>
+     <dt>
+      30.5. 
+      <a href="artifact_management.html#uploading">Configuration of the upload task</a>
+     </dt>
+     <dt>
+      31.1. 
+      <a href="maven_plugin.html#useMavenPlugin">Using the Maven plugin</a>
+     </dt>
+     <dt>
+      31.2. 
+      <a href="maven_plugin.html#newPom">Creating a stand alone pom.</a>
+     </dt>
+     <dt>
+      31.3. 
+      <a href="maven_plugin.html#uploadFile">Upload of file to remote Maven repository</a>
+     </dt>
+     <dt>
+      31.4. 
+      <a href="maven_plugin.html#uploadWithSsh">Upload of file via SSH</a>
+     </dt>
+     <dt>
+      31.5. 
+      <a href="maven_plugin.html#customizePom">Customization of pom</a>
+     </dt>
+     <dt>
+      31.6. 
+      <a href="maven_plugin.html#pomBuilder">Builder style customization of pom</a>
+     </dt>
+     <dt>
+      31.7. 
+      <a href="maven_plugin.html#pomBuilder">Modifying auto-generated content</a>
+     </dt>
+     <dt>
+      31.8. 
+      <a href="maven_plugin.html#customizeInstaller">Customization of Maven installer</a>
+     </dt>
+     <dt>
+      31.9. 
+      <a href="maven_plugin.html#multiplePoms">Generation of multiple poms</a>
+     </dt>
+     <dt>
+      31.10. 
+      <a href="maven_plugin.html#mappings">Accessing a mapping configuration</a>
+     </dt>
+     <dt>
+      32.1. 
+      <a href="signing_plugin.html#useSigningPlugin">Using the Signing plugin</a>
+     </dt>
+     <dt>
+      32.2. 
+      <a href="signing_plugin.html#signingArchives">Signing a configuration</a>
+     </dt>
+     <dt>
+      32.3. 
+      <a href="signing_plugin.html#signingArchivesOutput">Signing a configuration output</a>
+     </dt>
+     <dt>
+      32.4. 
+      <a href="signing_plugin.html#signingTasks">Signing a task</a>
+     </dt>
+     <dt>
+      32.5. 
+      <a href="signing_plugin.html#signingTaskOutput">Signing a task output</a>
+     </dt>
+     <dt>
+      32.6. 
+      <a href="signing_plugin.html#conditionalSigning">Conditional signing</a>
+     </dt>
+     <dt>
+      32.7. 
+      <a href="signing_plugin.html#signingMavenPom">Signing a POM for deployment</a>
+     </dt>
+     <dt>
+      33.1. 
+      <a href="publishing_ivy.html#publishing_ivy:apply-plugin-snippet">Applying the “ivy-publish” plugin</a>
+     </dt>
+     <dt>
+      33.2. 
+      <a href="publishing_ivy.html#publishing_ivy:publish-component-snippet">Publishing a Java module to Ivy</a>
+     </dt>
+     <dt>
+      33.3. 
+      <a href="publishing_ivy.html#publishing_ivy:publish-custom-artifact-snippet">Publishing additional artifact to Ivy</a>
+     </dt>
+     <dt>
+      33.4. 
+      <a href="publishing_ivy.html#publishing_ivy:publish-customize-identity">customizing the publication identity</a>
+     </dt>
+     <dt>
+      33.5. 
+      <a href="publishing_ivy.html#publishing_ivy:descriptor-customization-snippet">Customizing the module descriptor file</a>
+     </dt>
+     <dt>
+      33.6. 
+      <a href="publishing_ivy.html#publishing_ivy:publish-multiple-publications">Publishing multiple modules from a single project</a>
+     </dt>
+     <dt>
+      33.7. 
+      <a href="publishing_ivy.html#publishing_ivy:sample_repositories">Declaring repositories to publish to</a>
+     </dt>
+     <dt>
+      33.8. 
+      <a href="publishing_ivy.html#publishingIvyPublishSingle">Choosing a particular publication to publish</a>
+     </dt>
+     <dt>
+      33.9. 
+      <a href="publishing_ivy.html#publishingIvyPublishLifecycle">Publishing all publications via the “publish” lifecycle task</a>
+     </dt>
+     <dt>
+      33.10. 
+      <a href="publishing_ivy.html#publishingIvyGenerateDescriptor">Generating the Ivy module descriptor file</a>
+     </dt>
+     <dt>
+      33.11. 
+      <a href="publishing_ivy.html#publishing_ivy:complete_example">Publishing a Java module</a>
+     </dt>
+     <dt>
+      33.12. 
+      <a href="publishing_ivy.html#publishing_ivy:output_ivy.xml">Example generated ivy.xml</a>
+     </dt>
+     <dt>
+      34.1. 
+      <a href="publishing_maven.html#publishing_maven:apply_plugin">Applying the 'maven-publish' plugin</a>
+     </dt>
+     <dt>
+      34.2. 
+      <a href="publishing_maven.html#publishing_maven:publish-component">Adding a MavenPublication for a Java component</a>
+     </dt>
+     <dt>
+      34.3. 
+      <a href="publishing_maven.html#publishing_maven:publish-custom-artifact">Adding additional artifact to a MavenPublication</a>
+     </dt>
+     <dt>
+      34.4. 
+      <a href="publishing_maven.html#publishing_maven:publish-customize-identity">customizing the publication identity</a>
+     </dt>
+     <dt>
+      34.5. 
+      <a href="publishing_maven.html#publishing_maven:pom_modification">Modifying the POM file</a>
+     </dt>
+     <dt>
+      34.6. 
+      <a href="publishing_maven.html#publishing_maven:publish-multiple-publications">Publishing multiple modules from a single project</a>
+     </dt>
+     <dt>
+      34.7. 
+      <a href="publishing_maven.html#publishing_maven:repositories">Declaring repositories to publish to</a>
+     </dt>
+     <dt>
+      34.8. 
+      <a href="publishing_maven.html#publishingMavenPublishMinimal">Publishing a project to a Maven repository</a>
+     </dt>
+     <dt>
+      34.9. 
+      <a href="publishing_maven.html#publishingMavenPublishLocal">Publish a project to the Maven local repository</a>
+     </dt>
+     <dt>
+      34.10. 
+      <a href="publishing_maven.html#publishingMavenGeneratePom">Generate a POM file without publishing</a>
+     </dt>
+     <dt>
+      35.1. 
+      <a href="distribution_plugin.html#useDistributionPlugin">Using the distribution plugin</a>
+     </dt>
+     <dt>
+      35.2. 
+      <a href="distribution_plugin.html#multipleDistribution">Adding extra distributions</a>
+     </dt>
+     <dt>
+      35.3. 
+      <a href="distribution_plugin.html#configureDistribution">Configuring the main distribution</a>
+     </dt>
+     <dt>
+      35.4. 
+      <a href="distribution_plugin.html#publishDistribution">publish main distribution</a>
+     </dt>
+     <dt>
+      36.1. 
+      <a href="announce_plugin.html#useAnnouncePlugin">Using the announce plugin</a>
+     </dt>
+     <dt>
+      36.2. 
+      <a href="announce_plugin.html#useAnnouncePlugin">Configure the announce plugin</a>
+     </dt>
+     <dt>
+      36.3. 
+      <a href="announce_plugin.html#useAnnouncePlugin">Using the announce plugin</a>
+     </dt>
+     <dt>
+      37.1. 
+      <a href="build_announcements_plugin.html#useBuildAnnouncementsPlugin">Using the build announcements plugin</a>
+     </dt>
+     <dt>
+      37.2. 
+      <a href="build_announcements_plugin.html#useBuildAnnouncementsPlugin">Using the build announcements plugin from an init script</a>
+     </dt>
+     <dt>
+      38.1. 
+      <a href="custom_tasks.html#customTask">Defining a custom task</a>
+     </dt>
+     <dt>
+      38.2. 
+      <a href="custom_tasks.html#customTaskWithAction">A hello world task</a>
+     </dt>
+     <dt>
+      38.3. 
+      <a href="custom_tasks.html#customTaskWithProperty">A customizable hello world task</a>
+     </dt>
+     <dt>
+      38.4. 
+      <a href="custom_tasks.html#customTaskStandalone">A build for a custom task</a>
+     </dt>
+     <dt>
+      38.5. 
+      <a href="custom_tasks.html#customTaskStandalone">A custom task</a>
+     </dt>
+     <dt>
+      38.6. 
+      <a href="custom_tasks.html#usingCustomTask">Using a custom task in another project</a>
+     </dt>
+     <dt>
+      38.7. 
+      <a href="custom_tasks.html#customTaskStandalone">Testing a custom task</a>
+     </dt>
+     <dt>
+      38.8. 
+      <a href="custom_tasks.html#taskDefinition">Defining an incremental task action</a>
+     </dt>
+     <dt>
+      38.9. 
+      <a href="custom_tasks.html#incrementalTaskFirstRun">Running the incremental task for the first time</a>
+     </dt>
+     <dt>
+      38.10. 
+      <a href="custom_tasks.html#incrementalTaskNoChange">Running the incremental task with unchanged inputs</a>
+     </dt>
+     <dt>
+      38.11. 
+      <a href="custom_tasks.html#incrementalTaskUpdatedInputs">Running the incremental task with updated input files</a>
+     </dt>
+     <dt>
+      38.12. 
+      <a href="custom_tasks.html#incrementalTaskRemovedInput">Running the incremental task with an input file removed</a>
+     </dt>
+     <dt>
+      38.13. 
+      <a href="custom_tasks.html#incrementalTaskRemovedOutput">Running the incremental task with an output file removed</a>
+     </dt>
+     <dt>
+      38.14. 
+      <a href="custom_tasks.html#incrementalTaskChangedProperty">Running the incremental task with an input property changed</a>
+     </dt>
+     <dt>
+      39.1. 
+      <a href="custom_plugins.html#customPlugin">A custom plugin</a>
+     </dt>
+     <dt>
+      39.2. 
+      <a href="custom_plugins.html#customPluginWithConvention">A custom plugin extension</a>
+     </dt>
+     <dt>
+      39.3. 
+      <a href="custom_plugins.html#customPluginWithAdvancedConvention">A custom plugin with configuration closure</a>
+     </dt>
+     <dt>
+      39.4. 
+      <a href="custom_plugins.html#lazyFileProperties">Evaluating file properties lazily</a>
+     </dt>
+     <dt>
+      39.5. 
+      <a href="custom_plugins.html#customPluginStandalone">A build for a custom plugin</a>
+     </dt>
+     <dt>
+      39.6. 
+      <a href="custom_plugins.html#customPluginStandalone">Wiring for a custom plugin</a>
+     </dt>
+     <dt>
+      39.7. 
+      <a href="custom_plugins.html#customPluginStandalone">Using a custom plugin in another project</a>
+     </dt>
+     <dt>
+      39.8. 
+      <a href="custom_plugins.html#useCommunityPluginDSL">Applying a community plugin with the plugins DSL</a>
+     </dt>
+     <dt>
+      39.9. 
+      <a href="custom_plugins.html#customPluginStandalone">Testing a custom plugin</a>
+     </dt>
+     <dt>
+      39.10. 
+      <a href="custom_plugins.html#useJavaGradlePluginPlugin">Using the Java Gradle Plugin Development plugin</a>
+     </dt>
+     <dt>
+      39.11. 
+      <a href="custom_plugins.html#domainObjectContainer">Managing domain objects</a>
+     </dt>
+     <dt>
+      40.1. 
+      <a href="javaGradle_plugin.html#useJavaGradlePluginPlugin">Using the Java Gradle Plugin Development plugin</a>
+     </dt>
+     <dt>
+      40.2. 
+      <a href="javaGradle_plugin.html#gradlePluginBlock">Using the gradlePlugin {} block.</a>
+     </dt>
+     <dt>
+      41.1. 
+      <a href="organizing_build_logic.html#inheritedBuildLogic">Using inherited properties and methods</a>
+     </dt>
+     <dt>
+      41.2. 
+      <a href="organizing_build_logic.html#injectedBuildLogic">Using injected properties and methods</a>
+     </dt>
+     <dt>
+      41.3. 
+      <a href="organizing_build_logic.html#configureProjectUsingScript">Configuring the project using an external build script</a>
+     </dt>
+     <dt>
+      41.4. 
+      <a href="organizing_build_logic.html#customBuildSrcBuild">Custom buildSrc build script</a>
+     </dt>
+     <dt>
+      41.5. 
+      <a href="organizing_build_logic.html#multiProjectBuildSrc">Adding subprojects to the root buildSrc project</a>
+     </dt>
+     <dt>
+      41.6. 
+      <a href="organizing_build_logic.html#nestedBuild">Running another build from a build</a>
+     </dt>
+     <dt>
+      41.7. 
+      <a href="organizing_build_logic.html#declareExternalBuildDependency">Declaring external dependencies for the build script</a>
+     </dt>
+     <dt>
+      41.8. 
+      <a href="organizing_build_logic.html#externalBuildDependency">A build script with external dependencies</a>
+     </dt>
+     <dt>
+      41.9. 
+      <a href="organizing_build_logic.html#buildLogic">Ant optional dependencies</a>
+     </dt>
+     <dt>
+      42.1. 
+      <a href="init_scripts.html#initScriptConfiguration">Using init script to perform extra configuration before projects are evaluated</a>
+     </dt>
+     <dt>
+      42.2. 
+      <a href="init_scripts.html#declareExternalInitDependency">Declaring external dependencies for an init script</a>
+     </dt>
+     <dt>
+      42.3. 
+      <a href="init_scripts.html#externalInitDependency">An init script with external dependencies</a>
+     </dt>
+     <dt>
+      42.4. 
+      <a href="init_scripts.html#usePluginsInInitScripts">Using plugins in init scripts</a>
+     </dt>
+     <dt>
+      43.1. 
+      <a href="test_kit.html#testKitDependency">Declaring the TestKit dependency</a>
+     </dt>
+     <dt>
+      43.2. 
+      <a href="test_kit.html#junitDependency">Declaring the JUnit dependency</a>
+     </dt>
+     <dt>
+      43.3. 
+      <a href="test_kit.html#testKitFunctionalTestJunit">Using GradleRunner with JUnit</a>
+     </dt>
+     <dt>
+      43.4. 
+      <a href="test_kit.html#testKitFunctionalTestSpock">Using GradleRunner with Spock</a>
+     </dt>
+     <dt>
+      43.5. 
+      <a href="test_kit.html#testKitFunctionalTestSpockClassesBuildConfig">Making the code under test classpath available to the tests</a>
+     </dt>
+     <dt>
+      43.6. 
+      <a href="test_kit.html#testKitFunctionalTestSpockClassesTestConfig">Injecting the code under test classes into test builds</a>
+     </dt>
+     <dt>
+      43.7. 
+      <a href="test_kit.html#testKitFunctionalTestSpockAutomaticClasspath">Using the Java Gradle Development plugin for generating the plugin metadata</a>
+     </dt>
+     <dt>
+      43.8. 
+      <a href="test_kit.html#testKitFunctionalTestSpockAutomaticClassesTestConfig">Automatically injecting the code under test classes into test builds</a>
+     </dt>
+     <dt>
+      43.9. 
+      <a href="test_kit.html#testKitFunctionalTestSpockAutomaticClasspath">Reconfiguring the classpath generation conventions of the Java Gradle Development plugin</a>
+     </dt>
+     <dt>
+      43.10. 
+      <a href="test_kit.html#testKitFunctionalTestSpockGradleDistribution">Specifying a Gradle version for test execution</a>
+     </dt>
+     <dt>
+      44.1. 
+      <a href="tutorial_java_projects.html#javaQuickstart">Using the Java plugin</a>
+     </dt>
+     <dt>
+      44.2. 
+      <a href="tutorial_java_projects.html#javaQuickstart">Building a Java project</a>
+     </dt>
+     <dt>
+      44.3. 
+      <a href="tutorial_java_projects.html#javaQuickstart">Adding Maven repository</a>
+     </dt>
+     <dt>
+      44.4. 
+      <a href="tutorial_java_projects.html#javaQuickstart">Adding dependencies</a>
+     </dt>
+     <dt>
+      44.5. 
+      <a href="tutorial_java_projects.html#javaQuickstart">Customization of MANIFEST.MF</a>
+     </dt>
+     <dt>
+      44.6. 
+      <a href="tutorial_java_projects.html#javaQuickstart">Adding a test system property</a>
+     </dt>
+     <dt>
+      44.7. 
+      <a href="tutorial_java_projects.html#javaQuickstart">Publishing the JAR file</a>
+     </dt>
+     <dt>
+      44.8. 
+      <a href="tutorial_java_projects.html#javaQuickstart">Eclipse plugin</a>
+     </dt>
+     <dt>
+      44.9. 
+      <a href="tutorial_java_projects.html#javaQuickstart">Java example - complete build file</a>
+     </dt>
+     <dt>
+      44.10. 
+      <a href="tutorial_java_projects.html#javaMultiProject">Multi-project build - hierarchical layout</a>
+     </dt>
+     <dt>
+      44.11. 
+      <a href="tutorial_java_projects.html#javaMultiProject">Multi-project build - settings.gradle file</a>
+     </dt>
+     <dt>
+      44.12. 
+      <a href="tutorial_java_projects.html#javaMultiProject">Multi-project build - common configuration</a>
+     </dt>
+     <dt>
+      44.13. 
+      <a href="tutorial_java_projects.html#javaMultiProject">Multi-project build - dependencies between projects</a>
+     </dt>
+     <dt>
+      44.14. 
+      <a href="tutorial_java_projects.html#javaMultiProject">Multi-project build - distribution file</a>
+     </dt>
+     <dt>
+      45.1. 
+      <a href="java_plugin.html#useJavaPlugin">Using the Java plugin</a>
+     </dt>
+     <dt>
+      45.2. 
+      <a href="java_plugin.html#customJavaSourceLayout">Custom Java source layout</a>
+     </dt>
+     <dt>
+      45.3. 
+      <a href="java_plugin.html#defineSourceSet">Accessing a source set</a>
+     </dt>
+     <dt>
+      45.4. 
+      <a href="java_plugin.html#configureSourceSet">Configuring the source directories of a source set</a>
+     </dt>
+     <dt>
+      45.5. 
+      <a href="java_plugin.html#defineSourceSet">Defining a source set</a>
+     </dt>
+     <dt>
+      45.6. 
+      <a href="java_plugin.html#sourceSetDependencies">Defining source set dependencies</a>
+     </dt>
+     <dt>
+      45.7. 
+      <a href="java_plugin.html#compileSourceSet">Compiling a source set</a>
+     </dt>
+     <dt>
+      45.8. 
+      <a href="java_plugin.html#configureSourceSet">Assembling a JAR for a source set</a>
+     </dt>
+     <dt>
+      45.9. 
+      <a href="java_plugin.html#configureSourceSet">Generating the Javadoc for a source set</a>
+     </dt>
+     <dt>
+      45.10. 
+      <a href="java_plugin.html#configureSourceSet">Running tests in a source set</a>
+     </dt>
+     <dt>
+      45.11. 
+      <a href="java_plugin.html#testfiltering">Filtering tests in the build script</a>
+     </dt>
+     <dt>
+      45.12. 
+      <a href="java_plugin.html#junitcategories">JUnit Categories</a>
+     </dt>
+     <dt>
+      45.13. 
+      <a href="java_plugin.html#testnggrouping">Grouping TestNG tests</a>
+     </dt>
+     <dt>
+      45.14. 
+      <a href="java_plugin.html#testngpreserveorder">Preserving order of TestNG tests</a>
+     </dt>
+     <dt>
+      45.15. 
+      <a href="java_plugin.html#testnggroupbyinstances">Grouping TestNG tests by instances</a>
+     </dt>
+     <dt>
+      45.16. 
+      <a href="java_plugin.html#subProjectsTestReport">Creating a unit test report for subprojects</a>
+     </dt>
+     <dt>
+      45.17. 
+      <a href="java_plugin.html#manifest">Customization of MANIFEST.MF</a>
+     </dt>
+     <dt>
+      45.18. 
+      <a href="java_plugin.html#manifest">Creating a manifest object.</a>
+     </dt>
+     <dt>
+      45.19. 
+      <a href="java_plugin.html#manifest">Separate MANIFEST.MF for a particular archive</a>
+     </dt>
+     <dt>
+      46.1. 
+      <a href="web_project_tutorial.html#webQuickstart">War plugin</a>
+     </dt>
+     <dt>
+      46.2. 
+      <a href="web_project_tutorial.html#webQuickstart">Running web application with Jetty plugin</a>
+     </dt>
+     <dt>
+      47.1. 
+      <a href="war_plugin.html#useWarPlugin">Using the War plugin</a>
+     </dt>
+     <dt>
+      47.2. 
+      <a href="war_plugin.html#webproject">Customization of war plugin</a>
+     </dt>
+     <dt>
+      48.1. 
+      <a href="ear_plugin.html#earWithWar">Using the Ear plugin</a>
+     </dt>
+     <dt>
+      48.2. 
+      <a href="ear_plugin.html#earCustomized">Customization of ear plugin</a>
+     </dt>
+     <dt>
+      49.1. 
+      <a href="jetty_plugin.html#useJettyPlugin">Using the Jetty plugin</a>
+     </dt>
+     <dt>
+      50.1. 
+      <a href="application_plugin.html#useApplicationPlugin">Using the application plugin</a>
+     </dt>
+     <dt>
+      50.2. 
+      <a href="application_plugin.html#useApplicationPlugin">Configure the application main class</a>
+     </dt>
+     <dt>
+      50.3. 
+      <a href="application_plugin.html#configureApplicationDefaultJvmArgs">Configure default JVM settings</a>
+     </dt>
+     <dt>
+      50.4. 
+      <a href="application_plugin.html#includeTaskOutputInApplicationDistribution">Include output from other tasks in the application distribution</a>
+     </dt>
+     <dt>
+      50.5. 
+      <a href="application_plugin.html#dependentTaskForApplicationDistributionOutput">Automatically creating files for distribution</a>
+     </dt>
+     <dt>
+      51.1. 
+      <a href="javaLibraryDistribution_plugin.html#usejavaLibraryPlugin">Using the Java library distribution plugin</a>
+     </dt>
+     <dt>
+      51.2. 
+      <a href="javaLibraryDistribution_plugin.html#useApplicationPlugin">Configure the distribution name</a>
+     </dt>
+     <dt>
+      51.3. 
+      <a href="javaLibraryDistribution_plugin.html#includeTaskOutputInApplicationDistribution">Include files in the distribution</a>
+     </dt>
+     <dt>
+      52.1. 
+      <a href="tutorial_groovy_projects.html#groovyQuickstart">Groovy plugin</a>
+     </dt>
+     <dt>
+      52.2. 
+      <a href="tutorial_groovy_projects.html#groovyQuickstart">Dependency on Groovy</a>
+     </dt>
+     <dt>
+      52.3. 
+      <a href="tutorial_groovy_projects.html#groovyQuickstart">Groovy example - complete build file</a>
+     </dt>
+     <dt>
+      53.1. 
+      <a href="groovy_plugin.html#useGroovyPlugin">Using the Groovy plugin</a>
+     </dt>
+     <dt>
+      53.2. 
+      <a href="groovy_plugin.html#customGroovySourceLayout">Custom Groovy source layout</a>
+     </dt>
+     <dt>
+      53.3. 
+      <a href="groovy_plugin.html#quickstartGroovyDependency">Configuration of Groovy dependency</a>
+     </dt>
+     <dt>
+      53.4. 
+      <a href="groovy_plugin.html#groovyTestDependency">Configuration of Groovy test dependency</a>
+     </dt>
+     <dt>
+      53.5. 
+      <a href="groovy_plugin.html#bundledGroovyDependency">Configuration of bundled Groovy dependency</a>
+     </dt>
+     <dt>
+      53.6. 
+      <a href="groovy_plugin.html#groovyFileDependency">Configuration of Groovy file dependency</a>
+     </dt>
+     <dt>
+      54.1. 
+      <a href="scala_plugin.html#useScalaPlugin">Using the Scala plugin</a>
+     </dt>
+     <dt>
+      54.2. 
+      <a href="scala_plugin.html#customScalaSourceLayout">Custom Scala source layout</a>
+     </dt>
+     <dt>
+      54.3. 
+      <a href="scala_plugin.html#declareScalaDependency">Declaring a Scala dependency for production code</a>
+     </dt>
+     <dt>
+      54.4. 
+      <a href="scala_plugin.html#declareScalaTestDependency">Declaring a Scala dependency for test code</a>
+     </dt>
+     <dt>
+      54.5. 
+      <a href="scala_plugin.html#zinc">Adjusting memory settings</a>
+     </dt>
+     <dt>
+      54.6. 
+      <a href="scala_plugin.html#zinc">Forcing all code to be compiled</a>
+     </dt>
+     <dt>
+      54.7. 
+      <a href="scala_plugin.html#ideaTargetVersion">Explicitly specify a target IntelliJ IDEA version</a>
+     </dt>
+     <dt>
+      55.1. 
+      <a href="antlr_plugin.html#useAntlrPlugin">Using the ANTLR plugin</a>
+     </dt>
+     <dt>
+      55.2. 
+      <a href="antlr_plugin.html#declareAntlrVersion">Declare ANTLR version</a>
+     </dt>
+     <dt>
+      55.3. 
+      <a href="antlr_plugin.html#advanced">setting custom max heap size and extra arguments for ANTLR</a>
+     </dt>
+     <dt>
+      56.1. 
+      <a href="checkstyle_plugin.html#useCheckstylePlugin">Using the Checkstyle plugin</a>
+     </dt>
+     <dt>
+      56.2. 
+      <a href="checkstyle_plugin.html#customizeCheckstyleReport">Customizing the HTML report</a>
+     </dt>
+     <dt>
+      57.1. 
+      <a href="codenarc_plugin.html#useCodeNarcPlugin">Using the CodeNarc plugin</a>
+     </dt>
+     <dt>
+      58.1. 
+      <a href="findbugs_plugin.html#useFindBugsPlugin">Using the FindBugs plugin</a>
+     </dt>
+     <dt>
+      58.2. 
+      <a href="findbugs_plugin.html#customizeFindbugsReport">Customizing the HTML report</a>
+     </dt>
+     <dt>
+      59.1. 
+      <a href="jdepend_plugin.html#useJDependPlugin">Using the JDepend plugin</a>
+     </dt>
+     <dt>
+      60.1. 
+      <a href="pmd_plugin.html#usePmdPlugin">Using the PMD plugin</a>
+     </dt>
+     <dt>
+      61.1. 
+      <a href="jacoco_plugin.html#applyJacoco">Applying the JaCoCo plugin</a>
+     </dt>
+     <dt>
+      61.2. 
+      <a href="jacoco_plugin.html#configJacoco">Configuring JaCoCo plugin settings</a>
+     </dt>
+     <dt>
+      61.3. 
+      <a href="jacoco_plugin.html#configJacocoReport">Configuring test task</a>
+     </dt>
+     <dt>
+      61.4. 
+      <a href="jacoco_plugin.html#jacocotesttast">Configuring test task</a>
+     </dt>
+     <dt>
+      61.5. 
+      <a href="jacoco_plugin.html#jacoco-application-setup">Using application plugin to generate code coverage data</a>
+     </dt>
+     <dt>
+      61.6. 
+      <a href="jacoco_plugin.html#jacoco-application-output">Coverage reports generated by applicationCodeCoverageReport</a>
+     </dt>
+     <dt>
+      62.1. 
+      <a href="sonar_plugin.html#quickstart">Applying the Sonar plugin</a>
+     </dt>
+     <dt>
+      62.2. 
+      <a href="sonar_plugin.html#quickstart">Configuring Sonar connection settings</a>
+     </dt>
+     <dt>
+      62.3. 
+      <a href="sonar_plugin.html#quickstart">Configuring Sonar project settings</a>
+     </dt>
+     <dt>
+      62.4. 
+      <a href="sonar_plugin.html#multiProject">Global configuration in a multi-project build</a>
+     </dt>
+     <dt>
+      62.5. 
+      <a href="sonar_plugin.html#multiProject">Common project configuration in a multi-project build</a>
+     </dt>
+     <dt>
+      62.6. 
+      <a href="sonar_plugin.html#multiProject">Individual project configuration in a multi-project build</a>
+     </dt>
+     <dt>
+      62.7. 
+      <a href="sonar_plugin.html#multiProject">Configuring the language to be analyzed</a>
+     </dt>
+     <dt>
+      62.8. 
+      <a href="sonar_plugin.html#multiProject">Using property syntax</a>
+     </dt>
+     <dt>
+      62.9. 
+      <a href="sonar_plugin.html#advanced">Analyzing custom source sets</a>
+     </dt>
+     <dt>
+      62.10. 
+      <a href="sonar_plugin.html#advanced">Analyzing languages other than Java</a>
+     </dt>
+     <dt>
+      62.11. 
+      <a href="sonar_plugin.html#advanced">Setting custom global properties</a>
+     </dt>
+     <dt>
+      62.12. 
+      <a href="sonar_plugin.html#advanced">Setting custom project properties</a>
+     </dt>
+     <dt>
+      62.13. 
+      <a href="sonar_plugin.html#advanced">Implementing custom command line properties</a>
+     </dt>
+     <dt>
+      63.1. 
+      <a href="sonar_runner_plugin.html#quickstart">Applying the SonarQube Runner plugin</a>
+     </dt>
+     <dt>
+      63.2. 
+      <a href="sonar_runner_plugin.html#quickstart">Configuring SonarQube connection settings</a>
+     </dt>
+     <dt>
+      63.3. 
+      <a href="sonar_runner_plugin.html#quickstart">Configuring SonarQube runner version</a>
+     </dt>
+     <dt>
+      63.4. 
+      <a href="sonar_runner_plugin.html#multiProject">Global configuration settings</a>
+     </dt>
+     <dt>
+      63.5. 
+      <a href="sonar_runner_plugin.html#multiProject">Shared configuration settings</a>
+     </dt>
+     <dt>
+      63.6. 
+      <a href="sonar_runner_plugin.html#multiProject">Individual configuration settings</a>
+     </dt>
+     <dt>
+      63.7. 
+      <a href="sonar_runner_plugin.html#multiProject">Skipping analysis of a project</a>
+     </dt>
+     <dt>
+      63.8. 
+      <a href="sonar_runner_plugin.html#advanced">Analyzing custom source sets</a>
+     </dt>
+     <dt>
+      63.9. 
+      <a href="sonar_runner_plugin.html#advanced">Analyzing languages other than Java</a>
+     </dt>
+     <dt>
+      63.10. 
+      <a href="sonar_runner_plugin.html#advanced">setting custom SonarQube Runner fork options</a>
+     </dt>
+     <dt>
+      64.1. 
+      <a href="osgi_plugin.html#useOsgiPlugin">Using the OSGi plugin</a>
+     </dt>
+     <dt>
+      64.2. 
+      <a href="osgi_plugin.html#osgi">Configuration of OSGi MANIFEST.MF file</a>
+     </dt>
+     <dt>
+      65.1. 
+      <a href="eclipse_plugin.html#useEclipsePlugin">Using the Eclipse plugin</a>
+     </dt>
+     <dt>
+      65.2. 
+      <a href="eclipse_plugin.html#useEclipseWtpPlugin">Using the Eclipse WTP plugin</a>
+     </dt>
+     <dt>
+      65.3. 
+      <a href="eclipse_plugin.html#partialOverwrites">Partial Overwrite for Classpath</a>
+     </dt>
+     <dt>
+      65.4. 
+      <a href="eclipse_plugin.html#partialOverwritesProject">Partial Overwrite for Project</a>
+     </dt>
+     <dt>
+      65.5. 
+      <a href="eclipse_plugin.html#exportDependencies">Export Dependencies</a>
+     </dt>
+     <dt>
+      65.6. 
+      <a href="eclipse_plugin.html#wtpWithXml">Customizing the XML</a>
+     </dt>
+     <dt>
+      66.1. 
+      <a href="idea_plugin.html#useIdeaPlugin">Using the IDEA plugin</a>
+     </dt>
+     <dt>
+      66.2. 
+      <a href="idea_plugin.html#partialRewrites">Partial Rewrite for Module</a>
+     </dt>
+     <dt>
+      66.3. 
+      <a href="idea_plugin.html#partialRewritesProject">Partial Rewrite for Project</a>
+     </dt>
+     <dt>
+      66.4. 
+      <a href="idea_plugin.html#exportDependencies">Export Dependencies</a>
+     </dt>
+     <dt>
+      66.5. 
+      <a href="idea_plugin.html#projectWithXml">Customizing the XML</a>
+     </dt>
+     <dt>
+      67.1. 
+      <a href="software_model.html#basicRuleSourcePlugin-all">applying a rule source plugin</a>
+     </dt>
+     <dt>
+      67.2. 
+      <a href="software_model.html#basicRuleSourcePlugin">a model creation rule</a>
+     </dt>
+     <dt>
+      67.3. 
+      <a href="software_model.html#basicRuleSourcePlugin">a model mutation rule</a>
+     </dt>
+     <dt>
+      67.4. 
+      <a href="software_model.html#basicRuleSourcePlugin">creating a task</a>
+     </dt>
+     <dt>
+      67.5. 
+      <a href="software_model.html#basicRuleSourcePlugin">a managed type</a>
+     </dt>
+     <dt>
+      67.6. 
+      <a href="software_model.html#basicRuleSourcePlugin">a String property</a>
+     </dt>
+     <dt>
+      67.7. 
+      <a href="software_model.html#basicRuleSourcePlugin">a File property</a>
+     </dt>
+     <dt>
+      67.8. 
+      <a href="software_model.html#basicRuleSourcePlugin">a Long property</a>
+     </dt>
+     <dt>
+      67.9. 
+      <a href="software_model.html#basicRuleSourcePlugin">a boolean property</a>
+     </dt>
+     <dt>
+      67.10. 
+      <a href="software_model.html#basicRuleSourcePlugin">an int property</a>
+     </dt>
+     <dt>
+      67.11. 
+      <a href="software_model.html#basicRuleSourcePlugin">a managed property</a>
+     </dt>
+     <dt>
+      67.12. 
+      <a href="software_model.html#basicRuleSourcePlugin">an enumeration type property</a>
+     </dt>
+     <dt>
+      67.13. 
+      <a href="software_model.html#basicRuleSourcePlugin">a managed set</a>
+     </dt>
+     <dt>
+      67.14. 
+      <a href="software_model.html#model-language-support-all">strongly modelling sources sets</a>
+     </dt>
+     <dt>
+      67.15. 
+      <a href="software_model.html#ruleSourcePluginEach">a DSL example applying a rule to every element in a scope</a>
+     </dt>
+     <dt>
+      67.16. 
+      <a href="software_model.html#modelDslConfigure">DSL configuration rule</a>
+     </dt>
+     <dt>
+      67.17. 
+      <a href="software_model.html#modelDslConfigureRuleRunWhenRequired">Configuration run when required</a>
+     </dt>
+     <dt>
+      67.18. 
+      <a href="software_model.html#modelDslConfigureRuleNotRunWhenNotRequired">Configuration not run when not required</a>
+     </dt>
+     <dt>
+      67.19. 
+      <a href="software_model.html#modelDslCreate">DSL creation rule</a>
+     </dt>
+     <dt>
+      67.20. 
+      <a href="software_model.html#modelDslCreateNoConfig">DSL creation rule without initialization</a>
+     </dt>
+     <dt>
+      67.21. 
+      <a href="software_model.html#modelDslInitializationRuleRunsBeforeConfigurationRule">Initialization before configuration</a>
+     </dt>
+     <dt>
+      67.22. 
+      <a href="software_model.html#modelDslModelMapNestedCreate">Nested DSL creation rule</a>
+     </dt>
+     <dt>
+      67.23. 
+      <a href="software_model.html#modelDslModelMapNestedConfig">Nested DSL configuration rule</a>
+     </dt>
+     <dt>
+      67.24. 
+      <a href="software_model.html#modelDslModelMapNestedAll">DSL configuration rule for each element in a map</a>
+     </dt>
+     <dt>
+      67.25. 
+      <a href="software_model.html#modelDslManagedTypeNestedConfigure">Nested DSL property configuration</a>
+     </dt>
+     <dt>
+      67.26. 
+      <a href="software_model.html#modelDslConversions">a DSL example showing type conversions</a>
+     </dt>
+     <dt>
+      67.27. 
+      <a href="software_model.html#modelDslRuleInputs">a DSL rule using inputs</a>
+     </dt>
+     <dt>
+      67.28. 
+      <a href="software_model.html#basicRuleSourcePlugin-model-task">model task output</a>
+     </dt>
+     <dt>
+      70.1. 
+      <a href="java_software.html#javaLibraryQuickstart">Using the Java software plugins</a>
+     </dt>
+     <dt>
+      70.2. 
+      <a href="java_software.html#javaLibraryQuickstart">Creating a java library</a>
+     </dt>
+     <dt>
+      70.3. 
+      <a href="java_software.html#javaLibraryQuickstart">Configuring a source set</a>
+     </dt>
+     <dt>
+      70.4. 
+      <a href="java_software.html#javaLibraryQuickstart">Creating a new source set</a>
+     </dt>
+     <dt>
+      70.5. 
+      <a href="java_software.html#javaLibraryComponentReport">The components report</a>
+     </dt>
+     <dt>
+      70.6. 
+      <a href="java_software.html#javaLibraryMultiComponents">Declaring a dependency onto a library</a>
+     </dt>
+     <dt>
+      70.7. 
+      <a href="java_software.html#javaLibraryMultiComponents">Declaring a dependency onto a project with an explicit library</a>
+     </dt>
+     <dt>
+      70.8. 
+      <a href="java_software.html#javaLibraryMultiComponents">Declaring a dependency onto a project with an implicit library</a>
+     </dt>
+     <dt>
+      70.9. 
+      <a href="java_software.html#javaLibraryMultiComponents">Declaring a dependency onto a library published to a Maven repository</a>
+     </dt>
+     <dt>
+      70.10. 
+      <a href="java_software.html#javaLibraryMultiComponents">Declaring a module dependency using shorthand notation</a>
+     </dt>
+     <dt>
+      70.11. 
+      <a href="java_software.html#javaLibraryMultiComponents">Configuring repositories for dependency resolution</a>
+     </dt>
+     <dt>
+      70.12. 
+      <a href="java_software.html#apiSpecification">Specifying api packages</a>
+     </dt>
+     <dt>
+      70.13. 
+      <a href="java_software.html#apiDependencies">Specifying api dependencies</a>
+     </dt>
+     <dt>
+      70.14. 
+      <a href="java_software.html#apiSpecification-main-classes">Main sources</a>
+     </dt>
+     <dt>
+      70.15. 
+      <a href="java_software.html#apiSpecification-client">Client component</a>
+     </dt>
+     <dt>
+      70.16. 
+      <a href="java_software.html#apiSpecification-brokenclient">Broken client component</a>
+     </dt>
+     <dt>
+      70.17. 
+      <a href="java_software.html#apiSpecification-client">Recompiling the client</a>
+     </dt>
+     <dt>
+      70.18. 
+      <a href="java_software.html#javaLibraryTargetPlatforms">Declaring target platforms</a>
+     </dt>
+     <dt>
+      70.19. 
+      <a href="java_software.html#javaLibraryTargetPlatforms-java6MainJar">Declaring binary specific sources</a>
+     </dt>
+     <dt>
+      70.20. 
+      <a href="java_software.html#javaLibraryTargetPlatforms-server">Declaring target platforms</a>
+     </dt>
+     <dt>
+      70.21. 
+      <a href="java_software.html#testing-junit-standalone">Using the JUnit plugin</a>
+     </dt>
+     <dt>
+      70.22. 
+      <a href="java_software.html#testing-junit-standalone-run">Executing the test suite</a>
+     </dt>
+     <dt>
+      70.23. 
+      <a href="java_software.html#testing-junit-standalone-resources">Executing the test suite</a>
+     </dt>
+     <dt>
+      70.24. 
+      <a href="java_software.html#testing-junit-component-under-test">Declaring a component under test</a>
+     </dt>
+     <dt>
+      70.25. 
+      <a href="java_software.html#javaLibraryPlugin/toolchains">Declaring local Java installations</a>
+     </dt>
+     <dt>
+      71.1. 
+      <a href="play_plugin.html#usePlayPlugin">Using the Play plugin</a>
+     </dt>
+     <dt>
+      71.2. 
+      <a href="play_plugin.html#playComponentReport">The components report</a>
+     </dt>
+     <dt>
+      71.3. 
+      <a href="play_plugin.html#specifyPlayVersion">Selecting a version of the Play Framework</a>
+     </dt>
+     <dt>
+      71.4. 
+      <a href="play_plugin.html#addPlayDependencies">Adding dependencies to a Play application</a>
+     </dt>
+     <dt>
+      71.5. 
+      <a href="play_plugin.html#addExtraPlaySourcesets">Adding extra source sets to a Play application</a>
+     </dt>
+     <dt>
+      71.6. 
+      <a href="play_plugin.html#configureScalaCompiler">Configuring Scala compiler options</a>
+     </dt>
+     <dt>
+      71.7. 
+      <a href="play_plugin.html#configureRoutesCompiler">Configuring routes style</a>
+     </dt>
+     <dt>
+      71.8. 
+      <a href="play_plugin.html#customAssetsPipeline">Configuring a custom asset pipeline</a>
+     </dt>
+     <dt>
+      71.9. 
+      <a href="play_plugin.html#playMultiProjectDependencies">Configuring dependencies on Play subprojects</a>
+     </dt>
+     <dt>
+      71.10. 
+      <a href="play_plugin.html#addFilesToPlayDistribution">Add extra files to a Play application distribution</a>
+     </dt>
+     <dt>
+      71.11. 
+      <a href="play_plugin.html#applyPlayIde">Applying both the Play and IDEA plugins</a>
+     </dt>
+     <dt>
+      72.1. 
+      <a href="native_software.html#cppLibraries">Defining a library component</a>
+     </dt>
+     <dt>
+      72.2. 
+      <a href="native_software.html#cppExecutables">Defining executable components</a>
+     </dt>
+     <dt>
+      72.3. 
+      <a href="native_software.html#nativeComponentReport">The components report</a>
+     </dt>
+     <dt>
+      72.4. 
+      <a href="native_software.html#cppPlugin">The 'cpp' plugin</a>
+     </dt>
+     <dt>
+      72.5. 
+      <a href="native_software.html#cppSourceSet">C++ source set</a>
+     </dt>
+     <dt>
+      72.6. 
+      <a href="native_software.html#cPlugin">The 'c' plugin</a>
+     </dt>
+     <dt>
+      72.7. 
+      <a href="native_software.html#cSourceSet">C source set</a>
+     </dt>
+     <dt>
+      72.8. 
+      <a href="native_software.html#assemblerPlugin">The 'assembler' plugin</a>
+     </dt>
+     <dt>
+      72.9. 
+      <a href="native_software.html#objectiveCPlugin">The 'objective-c' plugin</a>
+     </dt>
+     <dt>
+      72.10. 
+      <a href="native_software.html#objectiveCppPlugin">The 'objective-cpp' plugin</a>
+     </dt>
+     <dt>
+      72.11. 
+      <a href="native_software.html#allBinarySettings">Settings that apply to all binaries</a>
+     </dt>
+     <dt>
+      72.12. 
+      <a href="native_software.html#allSharedLibraryBinarySettings">Settings that apply to all shared libraries</a>
+     </dt>
+     <dt>
+      72.13. 
+      <a href="native_software.html#componentBinarySettings">Settings that apply to all binaries produced for the 'main' executable component</a>
+     </dt>
+     <dt>
+      72.14. 
+      <a href="native_software.html#sharedLibraryArgs">Settings that apply only to shared libraries produced for the 'main' library component</a>
+     </dt>
+     <dt>
+      72.15. 
+      <a href="native_software.html#windowsResourcesPlugin">The 'windows-resources' plugin</a>
+     </dt>
+     <dt>
+      72.16. 
+      <a href="native_software.html#windowsResourceSet">Configuring the location of Windows resource sources</a>
+     </dt>
+     <dt>
+      72.17. 
+      <a href="native_software.html#resourceOnlyDll">Building a resource-only dll</a>
+     </dt>
+     <dt>
+      72.18. 
+      <a href="native_software.html#cppSourceLibrary">Providing a library dependency to the source set</a>
+     </dt>
+     <dt>
+      72.19. 
+      <a href="native_software.html#cppBinaryLibrary">Providing a library dependency to the binary</a>
+     </dt>
+     <dt>
+      72.20. 
+      <a href="native_software.html#cppProjectDependencies">Declaring project dependencies</a>
+     </dt>
+     <dt>
+      72.21. 
+      <a href="native_software.html#preCompiledHeaderFile">Creating a precompiled header file</a>
+     </dt>
+     <dt>
+      72.22. 
+      <a href="native_software.html#preCompiledHeaderFile">Including a precompiled header file in a source file</a>
+     </dt>
+     <dt>
+      72.23. 
+      <a href="native_software.html#preCompiledHeaderConfig">Configuring a precompiled header</a>
+     </dt>
+     <dt>
+      72.24. 
+      <a href="native_software.html#buildTypes">Defining build types</a>
+     </dt>
+     <dt>
+      72.25. 
+      <a href="native_software.html#buildTypeConfig">Configuring debug binaries</a>
+     </dt>
+     <dt>
+      72.26. 
+      <a href="native_software.html#platforms">Defining platforms</a>
+     </dt>
+     <dt>
+      72.27. 
+      <a href="native_software.html#flavors">Defining flavors</a>
+     </dt>
+     <dt>
+      72.28. 
+      <a href="native_software.html#targets">Targeting a component at particular platforms</a>
+     </dt>
+     <dt>
+      72.29. 
+      <a href="native_software.html#buildable">Building all possible variants</a>
+     </dt>
+     <dt>
+      72.30. 
+      <a href="native_software.html#toolChains">Defining tool chains</a>
+     </dt>
+     <dt>
+      72.31. 
+      <a href="native_software.html#withArguments">Reconfigure tool arguments</a>
+     </dt>
+     <dt>
+      72.32. 
+      <a href="native_software.html#targetPlatforms">Defining target platforms</a>
+     </dt>
+     <dt>
+      72.33. 
+      <a href="native_software.html#cunitSources">Registering CUnit tests</a>
+     </dt>
+     <dt>
+      72.34. 
+      <a href="native_software.html#completeCUnitExample">Running CUnit tests</a>
+     </dt>
+     <dt>
+      72.35. 
+      <a href="native_software.html#googleTestSources">Registering GoogleTest tests</a>
+     </dt>
+     <dt>
+      73.1. 
+      <a href="software_model_extend.html#sm-extensible-build-script">an example of using a custom software model</a>
+     </dt>
+     <dt>
+      73.2. 
+      <a href="software_model_extend.html#component-declaration">Declare a custom component</a>
+     </dt>
+     <dt>
+      73.3. 
+      <a href="software_model_extend.html#component-registration">Register a custom component</a>
+     </dt>
+     <dt>
+      73.4. 
+      <a href="software_model_extend.html#binary-declaration">Declare a custom binary</a>
+     </dt>
+     <dt>
+      73.5. 
+      <a href="software_model_extend.html#binary-registration">Register a custom binary</a>
+     </dt>
+     <dt>
+      73.6. 
+      <a href="software_model_extend.html#markdown-lang-declaration">Declare a custom source set</a>
+     </dt>
+     <dt>
+      73.7. 
+      <a href="software_model_extend.html#markdown-lang-registration">Register a custom source set</a>
+     </dt>
+     <dt>
+      73.8. 
+      <a href="software_model_extend.html#binaries-gen">Generates documentation binaries</a>
+     </dt>
+     <dt>
+      73.9. 
+      <a href="software_model_extend.html#text-tasks-gen">Generates tasks for text source sets</a>
+     </dt>
+     <dt>
+      73.10. 
+      <a href="software_model_extend.html#markdown-tasks-gen">Register a custom source set</a>
+     </dt>
+     <dt>
+      73.11. 
+      <a href="software_model_extend.html#sm-extensible-build-script-re">an example of using a custom software model</a>
+     </dt>
+     <dt>
+      73.12. 
+      <a href="software_model_extend.html#softwareModelExtend-components">foo bar</a>
+     </dt>
+     <dt>
+      73.13. 
+      <a href="software_model_extend.html#iv-type-declaration">public type and internal view declaration</a>
+     </dt>
+     <dt>
+      73.14. 
+      <a href="software_model_extend.html#iv-type-registration">type registration</a>
+     </dt>
+     <dt>
+      73.15. 
+      <a href="software_model_extend.html#iv-view-mutation">public and internal data mutation</a>
+     </dt>
+     <dt>
+      73.16. 
+      <a href="software_model_extend.html#softwareModelExtend-iv-model">example build script and model report output</a>
+     </dt>
+     <dt>
+      B.1. 
+      <a href="potential_traps.html#scope">Variables scope: local and script wide</a>
+     </dt>
+     <dt>
+      B.2. 
+      <a href="potential_traps.html#mkdirTrap">Distinct configuration and execution phase</a>
+     </dt>
+    </dl>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南版本 2.14.1">Contents</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="pt01.html" title="第一部分. 关于 Gradle">Next</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

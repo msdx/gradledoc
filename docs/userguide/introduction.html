@@ -1,24 +1,83 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Introduction - Gradle User Guide Version 2.14.1</title><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css"><link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css"><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><link rel="home" href="userguide.html" title="Gradle User Guide Version 2.14.1"><link rel="up" href="pt01.html" title="Part&nbsp;I.&nbsp;About Gradle"><link rel="prev" href="pt01.html" title="Part&nbsp;I.&nbsp;About Gradle"><link rel="next" href="overview.html" title="Overview - Gradle User Guide Version 2.14.1"></head><body><div class="navheader"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pt01.html" title="Part&nbsp;I.&nbsp;About Gradle">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="overview.html" title="Overview - Gradle User Guide Version 2.14.1">Next</a></div></div></div><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="introduction"></a>Chapter&nbsp;1.&nbsp;Introduction</h1></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="introduction.html#N1004B">1.1. About this user guide</a></span></dt></dl></div><p>We would like to introduce Gradle to you, a build system that we think is a quantum leap for build technology
-        in the Java (JVM) world. Gradle provides:
-    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>A very flexible general purpose build tool like Ant.
-            </p></li><li class="listitem"><p>Switchable, build-by-convention frameworks a la Maven. But we never lock you in!
-            </p></li><li class="listitem"><p>Very powerful support for multi-project builds.
-            </p></li><li class="listitem"><p>Very powerful dependency management (based on Apache Ivy).
-            </p></li><li class="listitem"><p>Full support for your existing Maven or Ivy repository infrastructure.
-            </p></li><li class="listitem"><p>Support for transitive dependency management without the need for remote repositories or
-                <code class="filename">pom.xml</code> and <code class="filename">ivy.xml</code> files.
-            </p></li><li class="listitem"><p>Ant tasks and builds as first class citizens.
-            </p></li><li class="listitem"><p>
-                <span class="emphasis"><em>Groovy</em></span> build scripts.
-            </p></li><li class="listitem"><p>A rich domain model for describing your build.
-            </p></li></ul></div><p>
-        In <a class="xref" href="overview.html">Chapter&nbsp;2, <i>Overview</i></a> you will find a detailed overview of Gradle. Otherwise, the
-        <a class="link" href="">tutorials</a> are waiting, have fun :)
-    </p><div class="section"><div class="titlepage"><div><div><h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N1004B" class="section-anchor" href="#N1004B"></a>1.1.&nbsp;About this user guide</h2></div></div></div><p>This user guide, like Gradle itself, is under very active development. Some parts of Gradle aren't
-            documented as completely as they need to be. Some of the content presented won't be entirely clear or
-            will assume that you know more about Gradle than you do. We need your help to improve this user
-            guide. You can find out more about contributing to the documentation at the
-            <a class="ulink" href="http://www.gradle.org/contribute" target="_top">Gradle web site</a>.
-        </p><p>Throughout the user guide, you will find some diagrams that represent dependency relationships
-        between Gradle tasks. These use something analogous to the UML dependency notation, which renders an
-        arrow from one task to the task that the first task depends on.</p></div></div><div class="navfooter"><div><div class="navbar"><a xmlns:xslthl="http://xslthl.sf.net" href="pt01.html" title="Part&nbsp;I.&nbsp;About Gradle">Previous</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle User Guide Version 2.14.1">Contents</a><span>|</span><a xmlns:xslthl="http://xslthl.sf.net" href="overview.html" title="Overview - Gradle User Guide Version 2.14.1">Next</a></div></div></div></body></html>
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>概述——Gradle 用户指南 2.14.1版 - Introduction - Gradle User Guide Version 2.14.1</title>
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="base.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="docs.css">
+  <link xmlns:xslthl="http://xslthl.sf.net" type="text/css" rel="stylesheet" href="userguide.css">
+  <meta content="DocBook XSL Stylesheets V1.75.2" name="generator">
+  <link rel="home" href="userguide.html" title="Gradle 用户指南 2.14.1版">
+  <link rel="up" href="pt01.html" title="第一部分. 关于 Gradle">
+  <link rel="prev" href="pt01.html" title="第一部分. 关于 Gradle">
+  <link rel="next" href="overview.html" title="概述——Gradle 用户指南 2.14.1版">
+ </head>
+ <body>
+  <div class="navheader">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="pt01.html" title="第一部分. 关于 Gradle">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南 2.14.1版">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="overview.html" title="概述——Gradle 用户指南 2.14.1版">下一章</a>
+    </div>
+   </div>
+  </div>
+  <div class="chapter">
+   <div class="titlepage">
+    <div>
+     <div>
+      <h1 xmlns:xslthl="http://xslthl.sf.net"><a name="introduction"></a>第一章. 简介</h1>
+      <h3 xmlns:xslthl="http://xslthl.sf.net"><a name="introduction"></a>Chapter&nbsp;1.&nbsp;Introduction</h3>
+     </div>
+    </div>
+   </div>
+   <div class="toc">
+    <p><b>目录</b><br><b>Table of Contents</b></p>
+    <dl>
+     <dt>
+      <span class="section"><a href="introduction.html#N1004B">1.1. 关于本用户指南 - About this user guide</a></span>
+     </dt>
+    </dl>
+   </div>
+   <p>我们很高兴向你介绍Gradle，一个我们认为在Java（JVM）世界的构建技术上有巨大飞跃的构建系统。它提供了： <br>We would like to introduce Gradle to you, a build system that we think is a quantum leap for build technology in the Java (JVM) world. Gradle provides:</p>
+   <div class="itemizedlist">
+    <ul class="itemizedlist">
+     <li class="listitem"><p>一个像Ant一样非常灵活的通用构建工具。 </p><p>A very flexible general purpose build tool like Ant. </p></li>
+     <li class="listitem"><p>可切换的，按 Maven 的方式约定构建。但我们不会去限定你！ </p><p>Switchable, build-by-convention frameworks a la Maven. But we never lock you in! </p></li>
+     <li class="listitem"><p>对多项目构建的强大支持。 </p><p>Very powerful support for multi-project builds. </p></li>
+     <li class="listitem"><p>（基于Apache Ivy的）非常强大的依赖管理。 </p><p>Very powerful dependency management (based on Apache Ivy). </p></li>
+     <li class="listitem"><p>完全支持现有的Maven或Ivy仓库结构。 </p><p>Full support for your existing Maven or Ivy repository infrastructure. </p></li>
+     <li class="listitem"><p>支持可传递依赖管理，而不需要远程仓库或是 <code class="filename">pom.xml</code> 以及 <code class="filename">ivy.xml</code> 文件。 </p><p>Support for transitive dependency management without the need for remote repositories or <code class="filename">pom.xml</code> and <code class="filename">ivy.xml</code> files. </p></li>
+     <li class="listitem"><p>Ant 任务和构建是Gradle的第一公民。 </p><p>Ant tasks and builds as first class citizens. </p></li>
+     <li class="listitem"><p> <span class="emphasis"><em>Groovy</em></span> 构建脚本。 </p><p> <span class="emphasis"><em>Groovy</em></span> build scripts. </p></li>
+     <li class="listitem"><p>用于描述构建的丰富域模型。 </p><p>A rich domain model for describing your build. </p></li>
+    </ul>
+   </div>
+   <p> 在 《<a class="xref" href="overview.html">第二章，<i>概述</i></a>》，你将会看到有关Gradle的详细介绍。另一方面， <a class="link" href="">教程</a> 在等你，开始吧。 <br>In <a class="xref" href="overview.html">Chapter&nbsp;2, <i>Overview</i></a> you will find a detailed overview of Gradle. Otherwise, the <a class="link" href="">tutorials</a> are waiting, have fun :)</p>
+   <div class="section">
+    <div class="titlepage">
+     <div>
+      <div>
+       <h2 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N1004B" class="section-anchor" href="#N1004B"></a>1.1. 关于本用户指南</h2>
+       <h4 class="title"><a xmlns:xslthl="http://xslthl.sf.net" name="N1004B" class="section-anchor" href="#N1004B"></a>1.1.&nbsp;About this user guide</h4>
+      </div>
+     </div>
+    </div>
+    <p>与Gradle本身一样，本指南也在不断地更新。一些Gradle的内容并没有像它们所需要的那样完全地记录下来。有些内容并未完整描述，或者是假定了你对Gradle有一定的了解。我们需要你来帮助一起改进本用户指南。有关如何参与贡献文档的更多信息，可以在 <a class="ulink" href="http://www.gradle.org/contribute" target="_top">Gradle 官方网站</a>上找到。 <br>This user guide, like Gradle itself, is under very active development. Some parts of Gradle aren't documented as completely as they need to be. Some of the content presented won't be entirely clear or will assume that you know more about Gradle than you do. We need your help to improve this user guide. You can find out more about contributing to the documentation at the <a class="ulink" href="http://www.gradle.org/contribute" target="_top">Gradle web site</a>.</p>
+    <p>在整个用户指南中，你会看到一些表示 Gradle 任务之间依赖关系的关系图。它们使用类似于 UML 依赖关系表示法的东西，这种表示法使用箭头，从一个任务指向它所依赖的任务。<br>Throughout the user guide, you will find some diagrams that represent dependency relationships between Gradle tasks. These use something analogous to the UML dependency notation, which renders an arrow from one task to the task that the first task depends on.</p>
+   </div>
+  </div>
+  <div class="navfooter">
+   <div>
+    <div class="navbar">
+     <a xmlns:xslthl="http://xslthl.sf.net" href="pt01.html" title="第一部分. 关于 Gradle">上一章</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="userguide.html" title="Gradle 用户指南 2.14.1版">目录</a>
+     <span>|</span>
+     <a xmlns:xslthl="http://xslthl.sf.net" href="overview.html" title="概述——Gradle 用户指南 2.14.1版">下一章</a>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
